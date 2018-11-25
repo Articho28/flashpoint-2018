@@ -10,7 +10,7 @@ public class NewGame: MonoBehaviour {
 		
 	}
     public void switchScenes (){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("SELECT GAME MODE",LoadSceneMode.Single);
     }
     public void switchScenesPlayersOnline()
     {

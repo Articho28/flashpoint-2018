@@ -11,6 +11,6 @@ public class Login : MonoBehaviour {
 	}
 
     public void switchScenes(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
+        SceneManager.LoadScene("MAIN MENU",LoadSceneMode.Single);
     }
 }

@@ -11,6 +11,6 @@ public class ExperiencedMode : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("DIFFICULTY LEVEL",LoadSceneMode.Single);
     }
 }

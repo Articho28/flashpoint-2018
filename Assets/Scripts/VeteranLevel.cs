@@ -16,6 +16,6 @@ public class VeteranLevel : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 0);
+        SceneManager.LoadScene("LOOKING FOR PLAYERS", LoadSceneMode.Single);
     }
 }

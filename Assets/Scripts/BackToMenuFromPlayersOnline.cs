@@ -16,6 +16,6 @@ public class BackToMenuFromPlayersOnline : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 5);
+        SceneManager.LoadScene("MAIN MENU",LoadSceneMode.Single);
     }
 }

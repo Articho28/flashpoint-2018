@@ -16,6 +16,6 @@ public class BackToLoginMenuFromRegister : MonoBehaviour {
 	}
 
     public void switchScenes(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2);
+        SceneManager.LoadScene("LoginMenu",LoadSceneMode.Single);
     }
 }

@@ -16,6 +16,6 @@ public class BackToMenuFromLookingForPlayers : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 4);
+        SceneManager.LoadScene("MAIN MENU",LoadSceneMode.Single);
     }
 }

@@ -16,6 +16,6 @@ public class BackToStartScene : MonoBehaviour {
 	}
 
     public void switchScenes(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("StartScreen",LoadSceneMode.Single);
     }
 }

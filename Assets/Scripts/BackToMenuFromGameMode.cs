@@ -16,6 +16,6 @@ public class BackToMenuFromGameMode : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("MAIN MENU",LoadSceneMode.Single);
     }
 }

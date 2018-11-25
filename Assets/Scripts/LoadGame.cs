@@ -11,7 +11,7 @@ public class LoadGame : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
+        SceneManager.LoadScene("SAVED GAMES",LoadSceneMode.Single);
     }
     public void switchScenesPlayersOnline()
     {

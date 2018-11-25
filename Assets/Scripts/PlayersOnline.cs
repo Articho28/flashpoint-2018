@@ -16,6 +16,6 @@ public class PlayersOnline : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 5);
+        SceneManager.LoadScene("MENU WITH PLAYERS ONLINE",LoadSceneMode.Single);
     }
 }

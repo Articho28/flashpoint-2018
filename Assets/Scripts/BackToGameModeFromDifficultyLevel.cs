@@ -16,6 +16,6 @@ public class BackToGameModeFromDifficultyLevel : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("SELECT GAME MODE");
     }
 }
