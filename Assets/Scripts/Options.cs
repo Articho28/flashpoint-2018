@@ -11,10 +11,6 @@ public class Options : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene("OPTIONS",LoadSceneMode.Single);
-    }
-    public void switchScenesPlayersOnline()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("OPTIONS", LoadSceneMode.Single);
     }
 }
