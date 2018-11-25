@@ -1,0 +1,11 @@
+#Scripts meta
+*.cs.meta
+
+#Scene meta
+*.unity.meta
+
+#Font meta
+*.ttf.meta
+
+#Any meta
+*.meta
