@@ -358,6 +358,7 @@ GameObject:
   - component: {fileID: 606173970}
   - component: {fileID: 606173969}
   - component: {fileID: 606173972}
+  - component: {fileID: 606173973}
   m_Layer: 5
   m_Name: back button
   m_TagString: Untagged
@@ -423,7 +424,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 606173972}
+      - m_Target: {fileID: 606173973}
         m_MethodName: switchScenes
         m_Mode: 1
         m_Arguments:
@@ -479,6 +480,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10fa57140309741a8987f33ce68f0b1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &606173973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 606173967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fd33c5a95158451a83fba22d149bc24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &655292829
@@ -1001,6 +1013,7 @@ GameObject:
   - component: {fileID: 2112776655}
   - component: {fileID: 2112776654}
   - component: {fileID: 2112776657}
+  - component: {fileID: 2112776658}
   m_Layer: 5
   m_Name: FAMILY MODE
   m_TagString: Untagged
@@ -1066,8 +1079,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2112776657}
-        m_MethodName: switchScenes
+      - m_Target: {fileID: 2112776658}
+        m_MethodName: switchScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1122,5 +1135,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc05e310aed2847dfbc81433d151477c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2112776658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2112776652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d9b4627abc34f8d8a3725dd4ab9b26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -592,6 +592,7 @@ GameObject:
   - component: {fileID: 740450752}
   - component: {fileID: 740450751}
   - component: {fileID: 740450754}
+  - component: {fileID: 740450755}
   m_Layer: 5
   m_Name: back button
   m_TagString: Untagged
@@ -657,7 +658,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 740450754}
+      - m_Target: {fileID: 740450755}
         m_MethodName: switchScenes
         m_Mode: 1
         m_Arguments:
@@ -713,6 +714,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e04c32e065b34fefb0130eed774cd7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &740450755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 740450749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fd33c5a95158451a83fba22d149bc24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &759364327

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class HeroicLevel : MonoBehaviour {
+public class BackToGameMode : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +16,6 @@ public class HeroicLevel : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene("LOOKING FOR PLAYERS",LoadSceneMode.Single);
+        SceneManager.LoadScene("SELECT GAME MODE",LoadSceneMode.Single);
     }
 }
