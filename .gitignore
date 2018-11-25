@@ -1,11 +1,2 @@
-#Scripts meta
-*.cs.meta
-
-#Scene meta
-*.unity.meta
-
-#Font meta
-*.ttf.meta
-
-#Any meta
-*.meta
+#Add any files you want to ignore
+#P.S.: DO NOT IGNORE THE .META FILES AS THEY ARE IMPORTANT.
