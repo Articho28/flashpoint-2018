@@ -11,7 +11,7 @@ public class Quit : MonoBehaviour {
 	}
     public void switchScenes()
     {
-        SceneManager.LoadScene("LoginMenu",LoadSceneMode.Single);
+        SceneManager.LoadScene("LOGIN MENU",LoadSceneMode.Single);
     }
     public void switchScenesPlayersOnline()
     {

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class BackToLoginMenu : MonoBehaviour {
 
     public void switchScenes(){
-        SceneManager.LoadScene("LoginMenu", LoadSceneMode.Single);
+        SceneManager.LoadScene("LOGIN MENU", LoadSceneMode.Single);
     }
 
 
