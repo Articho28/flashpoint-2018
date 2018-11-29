@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class Firefighter : MonoBehaviour {
 
     [SerializeField] int actionPoints = 4;
@@ -28,6 +27,13 @@ public class Firefighter : MonoBehaviour {
             bool validAction = IsValidAction(tilePos);
             if (validAction) {
                 transform.position = tilePos;
+                //Reduce the action points
+                //WAEL ADDED THIS, EVERYTHING BELOW
+                actionPoints--;
+                Debug.Log(actionPoints);
+            }
+            else{
+                Debug.Log("Not enough AP");
             }
         }
     }
@@ -39,8 +45,9 @@ public class Firefighter : MonoBehaviour {
         }
 
         //tile is reachable with player's AP
+        //WAEL MODIFIED THIS: I ADDED  "&& actionPoints > 0"
         if ((tilePos.x - transform.position.x) +
-            (tilePos.y - transform.position.y) < actionPoints) {
+            (tilePos.y - transform.position.y) < actionPoints && actionPoints > 0) {
             return true;
         }
 
