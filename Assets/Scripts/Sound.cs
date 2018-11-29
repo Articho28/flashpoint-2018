@@ -6,10 +6,14 @@ using UnityEngine.Audio;
 public class Sound : MonoBehaviour
 {
 
-    public AudioMixer mixer;
+    AudioSource fxSound; // Emitir sons
+    public AudioClip backMusic; // Som de fundo
 
-    public void SetLevel(float sliderValue)
+                                // Use this for initialization
+    void Start()
     {
-        mixer.SetFloat("MusicVol", Mathf.Log10(sliderValue) * 20);
+        // Audio Source responsavel por emitir os sons
+        fxSound = GetComponent<AudioSource>();
+        fxSound.Play();
     }
 }

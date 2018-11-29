@@ -1,25 +1,33 @@
 ﻿using UnityEngine;
-using System.Collections;
-
+using UnityEngine.UI;
 public class Brightness : MonoBehaviour
 {
 
-    public float GammaCorrection;
+    public Color ambientDarkest = Color.black;
 
-    public Rect SliderLocation;
+    public Color ambientLightest = Color.white;
+
+    public Slider slider;
+
+    public float sliderValue;
+    
+    void Start()
+    {
+        // Make the ambient lighting red
+        RenderSettings.ambientLight = ambientDarkest;
+    }
 
     void Update()
     {
-
-        RenderSettings.ambientLight = new Color(GammaCorrection, GammaCorrection, GammaCorrection, 1.0f);
+        slider = GameObject.Find("BrightnessSlider").GetComponent<Slider>();
+        sliderValue = GameObject.Find("BrightnessSlider").GetComponent<Slider>().value;
+        slider.value = sliderValue;
+        ChangeBrightness(sliderValue);
 
     }
 
-    public void brightnessSlider()
-    {
-
-        GammaCorrection = GUI.HorizontalSlider(SliderLocation, GammaCorrection, 0, 1.0f);
-
+    public void ChangeBrightness(float value){
+        RenderSettings.ambientLight = Color.Lerp(ambientDarkest, ambientLightest, value);
     }
 
 }
