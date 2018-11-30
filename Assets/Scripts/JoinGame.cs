@@ -15,7 +15,7 @@ public class JoinGame : MonoBehaviour {
 		
 	}
     public void switchScenes(){
-        SceneManager.LoadScene("LOOKING FOR PLAYERS",LoadSceneMode.Single);
+        SceneManager.LoadScene("JoinGame",LoadSceneMode.Single);
     }
 
 }
