@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public class Firefighter : MonoBehaviour {
 
     [SerializeField] int actionPoints = 4;
+    //WAEL ADDED THIS
+    string updateAP = "Player 1: Arty\nAP: ";
 
 
     // Use this for initialization
@@ -27,12 +30,23 @@ public class Firefighter : MonoBehaviour {
             bool validAction = IsValidAction(tilePos);
             if (validAction) {
                 transform.position = tilePos;
-                //Reduce the action points
+
                 //WAEL ADDED THIS, EVERYTHING BELOW
+
+                //Reduce the action points
                 actionPoints--;
-                Debug.Log(actionPoints);
+
+                //Find all the scroll rect objects, navigate PlayerID UI and update its text.
+                ScrollRect [] scrollRects = FindObjectsOfType<ScrollRect>();
+                foreach (ScrollRect sr in scrollRects)
+                {
+                    if (sr.name.Equals("PlayerID UI")){
+                        Text srText = sr.GetComponentInChildren<Text>();//get the text of the component
+                        srText.text = updateAP + actionPoints; //update the text
+                    }
+                }
             }
-            else{
+            else{//if there not enoug AP, write to console.
                 Debug.Log("Not enough AP");
             }
         }
