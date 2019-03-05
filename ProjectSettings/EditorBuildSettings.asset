@@ -4,5 +4,47 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/Game.unity
+    guid: 1566d55ccb6364052909b853a3c02226
+  - enabled: 1
+    path: Assets/Scenes/StartScreen.unity
+    guid: 5c42647653e784eacb93073c14240651
+  - enabled: 1
+    path: Assets/Scenes/LOGIN MENU.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/CreateAnAccount.unity
+    guid: 812cd2d46523e4f2099bbed9f965ae92
+  - enabled: 1
+    path: Assets/Scenes/ForgotPassword.unity
+    guid: 807b8ebc39a184d32aa7004dbc0da5b1
+  - enabled: 1
+    path: Assets/Scenes/MAIN MENU.unity
+    guid: a0e9d4f6a44b44aa69ed79d7033667fd
+  - enabled: 1
+    path: Assets/Scenes/MENU WITH PLAYERS ONLINE.unity
+    guid: c0463abd8a23443c996a2944ece3a411
+  - enabled: 1
+    path: Assets/Scenes/SELECT GAME MODE.unity
+    guid: 587d90bd3ebfa453a8c7731a3261a4c5
+  - enabled: 1
+    path: Assets/Scenes/DIFFICULTY LEVEL.unity
+    guid: c01833291b8a745ed82f122a60ab917f
+  - enabled: 1
+    path: Assets/Scenes/SelectNumberOfPlayers.unity
+    guid: cc62a5a87bc9848558e5513048f4d995
+  - enabled: 1
+    path: Assets/Scenes/LOOKING FOR PLAYERS.unity
+    guid: 6b2860a8ee0be45a686749791203b905
+  - enabled: 1
+    path: Assets/Scenes/JoinGame.unity
+    guid: ab7235efc36794ce6931274474deafeb
+  - enabled: 1
+    path: Assets/Scenes/OPTIONS.unity
+    guid: 71062ff6625a64544882a4d35aca28ba
+  - enabled: 1
+    path: Assets/Scenes/SAVED GAMES.unity
+    guid: 78119c9efe8014f92881432332a458bd
   m_configObjects: {}
