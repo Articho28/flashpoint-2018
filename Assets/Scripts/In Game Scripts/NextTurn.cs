@@ -10,8 +10,8 @@ public class NextTurn : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         firefighters = FindObjectsOfType<Firefighter>();
-        Debug.Log(firefighters.Length);
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {

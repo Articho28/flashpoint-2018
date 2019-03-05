@@ -1,0 +1,20 @@
+﻿<Properties StartupConfiguration="{41FA59E1-456F-8AC7-59DE-3BA5EF3BFD1E}|">
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="Unity.Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/In Game Scripts/StateManager.cs">
+    <Files>
+      <File FileName="Assets/Scripts/In Game Scripts/Tile.cs" Line="15" Column="24" />
+      <File FileName="Assets/Scripts/In Game Scripts/TileGrid.cs" Line="89" Column="1" />
+      <File FileName="Assets/Scripts/In Game Scripts/FirefighterManager.cs" Line="32" Column="69" />
+      <File FileName="Assets/Scripts/In Game Scripts/Firefighter.cs" Line="7" Column="33" />
+      <File FileName="Assets/Scripts/In Game Scripts/Pathfinding.cs" Line="18" Column="57" />
+      <File FileName="Assets/Scripts/In Game Scripts/StateManager.cs" Line="18" Column="28" />
+      <File FileName="Assets/Scripts/In Game Scripts/NextTurn.cs" Line="13" Column="9" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
