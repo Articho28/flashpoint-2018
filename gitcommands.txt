@@ -1,0 +1,1 @@
+git clone -b new-master --single-branch https://github.com/COMP361/f2018-group2.git
