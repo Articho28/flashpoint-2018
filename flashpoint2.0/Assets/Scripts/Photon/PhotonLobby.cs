@@ -31,7 +31,6 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
         Debug.Log("Connecting to server clicked.");
         connectToServerButton.SetActive(false);
         connectToServerText.SetActive(true);
-        cancelButton.SetActive(true);
         Debug.Log("Connecting to server...");
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -40,6 +39,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     {
         Debug.Log("Connected to server successfully!");
         connectToServerText.SetActive(false);
+        cancelButton.SetActive(false);
         connectionSuccessfulText.SetActive(true);
 
     }
@@ -51,6 +51,7 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
         cancelButton.SetActive(false);
         connectToServerText.SetActive(false);
         connectToServerButton.SetActive(true);
+
     }
 
     // Update is called once per frame
