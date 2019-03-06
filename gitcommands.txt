@@ -1,1 +1,25 @@
+
+#To clone only from the new master.
+
 git clone -b new-master --single-branch https://github.com/COMP361/f2018-group2.git
+
+
+#To pull changes only from new master.
+
+git pull origin new-master
+
+#To push changes only to new master
+git push origin new-master
+
+#To check which branch you're on
+git branch
+
+#To create a new branch
+git checkout -b new-branch-name
+
+#To merge current branch with new master
+git merge new-master
+
+#To merge your changes with new-master once you know it works (make sure you are in new-branch before doing this)
+git merge your-branch
+
