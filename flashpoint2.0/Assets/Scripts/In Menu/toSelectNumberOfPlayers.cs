@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class toSelectNumberOfPlayers : MonoBehaviour {
 
-    public void switchScene(){
-        SceneManager.LoadScene("PlayerNumberSelectionScreen", LoadSceneMode.Single);
+    public void SwitchScene(){
+        SceneManager.LoadScene("PlayerNumberSelectionScreenFamilyGame", LoadSceneMode.Single);
     }
 }

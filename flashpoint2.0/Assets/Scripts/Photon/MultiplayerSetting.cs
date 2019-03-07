@@ -25,7 +25,7 @@ public class MultiplayerSetting : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
     }
-
+   
     public void SetNumberOfPlayers(int number)
     {
         numOfPlayers = number;
@@ -39,6 +39,7 @@ public class MultiplayerSetting : MonoBehaviour
     {
         this.gameRoomName = name;
     }
+
 
 
 }

@@ -9,10 +9,10 @@ public class NewGame: MonoBehaviour {
 	void Update () {
 		
 	}
-    public void switchScenes (){
+    public void SwitchScenes (){
         SceneManager.LoadScene("SELECT GAME MODE",LoadSceneMode.Single);
     }
-    public void switchScenesPlayersOnline()
+    public void SwitchScenesPlayersOnline()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 4);
     }

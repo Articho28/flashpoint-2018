@@ -15,11 +15,13 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
     public GameObject connectToServerText;
     public GameObject cancelButton;
     public GameObject connectionSuccessfulText;
+    public string gameRoomName;
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Showing button.");
+        gameRoomName = MultiplayerSetting.MS.gameRoomName;
         connectToServerText.SetActive(false);
         connectToServerButton.SetActive(true);
         cancelButton.SetActive(false);
@@ -41,7 +43,13 @@ public class PhotonLobby : MonoBehaviourPunCallbacks
         connectToServerText.SetActive(false);
         cancelButton.SetActive(false);
         connectionSuccessfulText.SetActive(true);
+        CreateRoom();
 
+    }
+
+    void CreateRoom()
+    {
+        //PhotonNetwork.CreateRoom(MultiplayerSetting.MS., )
     }
 
 

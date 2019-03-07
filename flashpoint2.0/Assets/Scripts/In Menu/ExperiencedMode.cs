@@ -9,7 +9,7 @@ public class ExperiencedMode : MonoBehaviour {
 	void Update () {
 		
 	}
-    public void switchScenes()
+    public void SwitchScenes()
     {
         SceneManager.LoadScene("DIFFICULTY LEVEL",LoadSceneMode.Single);
     }
