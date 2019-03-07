@@ -7,8 +7,8 @@ public class MultiplayerSetting : MonoBehaviour
 
     public static MultiplayerSetting MS;
     public int numOfPlayers;
-    public bool IsFamilyGame;
-
+    public bool isFamilyGame;
+    public string gameRoomName;
 
     private void Awake()
     {
@@ -26,13 +26,18 @@ public class MultiplayerSetting : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    public void setNumberOfPlayers(int number)
+    public void SetNumberOfPlayers(int number)
     {
         numOfPlayers = number;
     }
-    public void setFamilyGame(bool isFamilyGame)
+
+    public void SetFamilyGame(bool isFamilyGame)
     {
-        this.IsFamilyGame = isFamilyGame;
+        this.isFamilyGame = isFamilyGame;
+    }
+    public void SetGameRoomName(string name)
+    {
+        this.gameRoomName = name;
     }
 
 
