@@ -6,8 +6,25 @@ public class Space {
     public bool isOutside;
     public int indexX;
     public int indexY;
+    SpaceStatus status;
+    SpaceKind kind;
     Wall[] walls = new Wall[4];
     Door[] doors = new Door[4];
+
+    //default constructor
+    public Space()
+    {
+        worldPosition = new Vector3(0, 0, 0);
+        isOutside = false;
+        indexX = 0;
+        indexY = 0;
+        d1 = null;
+        w1 = null;
+        status = SpaceStatus.Safe;
+        kind = SpaceKind.Indoor;
+
+    }
+    
 
     public Space(Vector2 _worldPos, bool _isOutside, int _indexX, int _indexY) {
         worldPosition = new Vector3(_worldPos.x, _worldPos.y, 0);
@@ -26,5 +43,25 @@ public class Space {
     public void addDoor(Door door, int index)
     {
         this.doors[index] = door;
+    }
+
+    public SpaceStatus GetSpaceStatus()
+    {
+        return this.status;
+    }
+
+    public void setSpaceStatus(SpaceStatus newStatus)
+    {
+        this.status = newStatus;
+    }
+
+    public SpaceKind GetSpaceKind()
+    {
+        return this.kind;
+    }
+
+    public void setSpaceKind(SpaceKind newKind)
+    {
+        this.kind = newKind;
     }
 }
