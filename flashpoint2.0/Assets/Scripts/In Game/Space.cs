@@ -43,23 +43,5 @@ public class Space {
         this.doors[index] = door;
     }
 
-    public SpaceStatus GetSpaceStatus()
-    {
-        return this.status;
-    }
-
-    public void setSpaceStatus(SpaceStatus newStatus)
-    {
-        this.status = newStatus;
-    }
-
-    public SpaceKind GetSpaceKind()
-    {
-        return this.kind;
-    }
-
-    public void setSpaceKind(SpaceKind newKind)
-    {
-        this.kind = newKind;
-    }
+    public SpaceStatus getSpaceStatus()     {         return this.status;     }      public void setSpaceStatus(SpaceStatus newStatus)     {         this.status = newStatus;     }      public SpaceKind getSpaceKind()     {         return this.kind;     }      public void setSpaceKind(SpaceKind newKind)     {         this.kind = newKind;     } 
 }
