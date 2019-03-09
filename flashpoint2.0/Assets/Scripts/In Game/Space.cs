@@ -18,8 +18,6 @@ public class Space {
         isOutside = false;
         indexX = 0;
         indexY = 0;
-        d1 = null;
-        w1 = null;
         status = SpaceStatus.Safe;
         kind = SpaceKind.Indoor;
 
