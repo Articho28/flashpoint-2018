@@ -7,11 +7,47 @@ public class Space {
     public int indexY;
     Door d1;
     Wall w1;
+    SpaceStatus status;
+    SpaceKind kind;
+
+    //default constructor
+    public Space()
+    {
+        worldPosition = new Vector3(0, 0, 0);
+        isOutside = false;
+        indexX = 0;
+        indexY = 0;
+        d1 = null;
+        w1 = null;
+        status = SpaceStatus.Safe;
+        kind = SpaceKind.Indoor;
+
+    }
 
     public Space(Vector2 _worldPos, bool _isOutside, int _indexX, int _indexY) {
         worldPosition = new Vector3(_worldPos.x, _worldPos.y, 0);
         isOutside = _isOutside;
         indexX = _indexX;
         indexY = _indexY;
+    }
+
+    public SpaceStatus GetSpaceStatus()
+    {
+        return this.status;
+    }
+
+    public void setSpaceStatus(SpaceStatus newStatus)
+    {
+        this.status = newStatus;
+    }
+
+    public SpaceKind GetSpaceKind()
+    {
+        return this.kind;
+    }
+
+    public void setSpaceKind(SpaceKind newKind)
+    {
+        this.kind = newKind;
     }
 }

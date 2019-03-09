@@ -21,21 +21,25 @@ public class Game : MonoBehaviour
     int savedVictimCounter;
     int lostVictimCounter;
 
-    public Game create(int numPlayers, Player firstP)
+    /*public Game create(int numPlayers, Player firstP)
     {
         //TODO
-    }
+    }*/
 
-    public void setFiremanStartingSpace(Fireman f)
+    /*public void setFiremanStartingSpace(Fireman f)
     {
-        //TODO
-    }
+        Space startingSpace = new Space();
+        if(startingSpace.getSpaceKind() == Outdoor)
+        {
+            f.setCurrentSpace(startingSpace);
+        }
+    }*/
 
     public GameState getGameState() {
         return this.gState;
     }
 
-     public setGameState(GameState newGState)
+     public void setGameState(GameState newGState)
     {
         this.gState = newGState;
     }
@@ -104,7 +108,7 @@ public class Game : MonoBehaviour
         this.lostVictimCounter++;
     }
 
-    public int getActivePOIs()
+    /*public int getActivePOIs()
     {
         //TODO
     }
@@ -127,5 +131,5 @@ public class Game : MonoBehaviour
     public resolveFlashover()
     {
         //TODO
-    }
+    }*/
 }
