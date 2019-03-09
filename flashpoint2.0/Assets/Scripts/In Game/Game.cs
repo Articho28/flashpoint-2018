@@ -39,7 +39,8 @@ public class Game : MonoBehaviour
         return this.gState;
     }
 
-     public void setGameState(GameState newGState)
+
+    public void setGameState(GameState newGState)
     {
         this.gState = newGState;
     }
@@ -123,12 +124,12 @@ public class Game : MonoBehaviour
         //TODO
     }
 
-    public resolveShockwave()
+    public void resolveShockwave()
     {
         //TODO
     }
 
-    public resolveFlashover()
+    public void resolveFlashover()
     {
         //TODO
     }*/

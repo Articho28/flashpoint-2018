@@ -25,18 +25,40 @@ public class SpaceGrid : MonoBehaviour {
         Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
             Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
 
-        for (int x = 0; x < gridSizeX; x++) {
-            for (int y = 0; y < gridSizeY; y++) {
-                Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius)
-                                                              + Vector2.up * (y * spaceDiameter + spaceRadius);
-                bool isOutsideSpace = false;
+        //creating outside spaces
+        createFirstRowOutsideSpace();
+        createLastRowOutsideSpace();
+        createFirstColumnOutsideSpace();
+        createLastColumnOutsideSpace();
 
-                if (x == 0 || x == gridSizeX - 1 || y == 0 || y == gridSizeY - 1) {
-                    isOutsideSpace = true;
-                }
-                grid[x, y] = new Space(worldPoint, isOutsideSpace, x, y);
-            }
-        }
+        //create inside spaces
+        createFirstRowInsideSpace();
+        createSecondRowInsideSpace();
+        createThirdRowInsideSpace();
+        createFourthRowInsideSpace();
+        createFifthRowInsideSpace();
+        createSixthRowInsideSpace();
+
+        //corners
+        Vector2 worldPoint00 = worldBottomLeft + Vector2.right * (0 * spaceDiameter + spaceRadius)
+        + Vector2.up * (0 * spaceDiameter + spaceRadius);
+        grid[0, 0] = new Space(worldPoint00, true, 0, 0);
+
+        Vector2 worldPoint90 = worldBottomLeft + Vector2.right * (9 * spaceDiameter + spaceRadius)
+        + Vector2.up * (0 * spaceDiameter + spaceRadius);
+        grid[9, 0] = new Space(worldPoint90, true, 9, 0);
+
+        Vector2 worldPoint07 = worldBottomLeft + Vector2.right * (0 * spaceDiameter + spaceRadius)
+        + Vector2.up * (7 * spaceDiameter + spaceRadius);
+        grid[0, 7] = new Space(worldPoint07, true, 0, 7);
+
+        Vector2 worldPoint97 = worldBottomLeft + Vector2.right * (9 * spaceDiameter + spaceRadius)
+        + Vector2.up * (7 * spaceDiameter + spaceRadius);
+        grid[9, 7] = new Space(worldPoint97, true, 9, 7);
+
+
+
+
     }
 
     public List<Space> GetNeighbours(Space tile) {
@@ -90,4 +112,369 @@ public class SpaceGrid : MonoBehaviour {
             }
         }
     }
+
+    public void createFirstRowOutsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for(int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (0 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, true, x, 0);
+            if (x == 6)
+            {
+                space.addDoor(new Door(DoorStatus.Open), 2);
+            }
+            else
+            {
+                space.addWall(new Wall(), 2);
+            }
+            grid[x, 0] = space;
+        }
+    }
+
+    public void createLastRowOutsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (7 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, true, x, 7);
+            if (x == 3)
+            {
+                space.addDoor(new Door(DoorStatus.Open), 0);
+            }
+            else
+            {
+                space.addWall(new Wall(), 0);
+            }
+            grid[x, 7] = space;
+        }
+    }
+
+    public void createFirstColumnOutsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int y = 1; y < gridSizeY - 1; y++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (0 * spaceDiameter + spaceRadius) + Vector2.up * (y * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, true, 0, y);
+            if (y == 3)
+            {
+                space.addDoor(new Door(DoorStatus.Open), 1);
+            }
+            else
+            {
+                space.addWall(new Wall(), 1);
+            }
+            grid[0, y] = space;
+        }
+    }
+
+    public void createLastColumnOutsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int y = 1; y < gridSizeY - 1; y++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (9 * spaceDiameter + spaceRadius) + Vector2.up * (y * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, true, 9, y);
+            if(y == 4)
+            {
+                space.addDoor(new Door(DoorStatus.Open), 3);
+            }
+            else
+            {
+                space.addWall(new Wall(), 3);
+            }
+            grid[9, y] = space;
+        }
+    }
+
+    public void createFirstRowInsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (1 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, false, x, 1);
+            if (x == 1)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 3);
+            }
+            else if(x == 2)
+            {
+                space.addWall(new Wall(), 0);
+            }
+            else if(x == 3)
+            {
+                space.addWall(new Wall(), 0);
+                space.addDoor(new Door(DoorStatus.Closed), 1);
+            }
+            else if(x == 4)
+            {
+                space.addWall(new Wall(), 0);
+                space.addDoor(new Door(DoorStatus.Closed), 3);
+            }
+            else if(x == 5)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 1);
+            }
+            else if(x == 6)
+            {
+                space.addWall(new Wall(), 3);
+                space.addDoor(new Door(DoorStatus.Open), 0);
+            }
+            else if(x == 7)
+            {
+                space.addWall(new Wall(), 0);
+            }
+            else if(x == 8)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 1);
+            }
+            grid[x, 1] = space;
+        }
+    }
+
+    public void createSecondRowInsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (2 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, false, x, 2);
+            if (x == 1)
+            {
+                space.addWall(new Wall(), 0);
+            }
+            else if (x == 3)
+            {
+                space.addWall(new Wall(), 1);
+                space.addWall(new Wall(), 2);
+            }
+            else if (x == 4)
+            {
+                space.addWall(new Wall(), 2);
+                space.addWall(new Wall(), 3);
+            }
+            else if (x == 5)
+            {
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Closed), 1);
+            }
+            else if (x == 6)
+            {
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Closed), 3);
+            }
+            else if (x == 7)
+            {
+                space.addWall(new Wall(), 2);
+            }
+            else if (x == 8)
+            {
+                space.addWall(new Wall(), 1);
+                space.addDoor(new Door(DoorStatus.Closed), 2);
+            }
+            grid[x, 2] = space;
+        }
+    }
+
+    public void createThirdRowInsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (3 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, false, x, 3);
+            if (x == 1)
+            {
+                space.addDoor(new Door(DoorStatus.Open), 3);
+            }
+            else if (x == 2)
+            {
+                space.addDoor(new Door(DoorStatus.Closed), 1);
+            }
+            else if (x == 3)
+            {
+                space.addWall(new Wall(), 0);
+                space.addDoor(new Door(DoorStatus.Closed), 3);
+            }
+            else if (x == 4 || x == 5)
+            {
+                space.addWall(new Wall(), 0);
+            }
+            else if (x == 6)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 1);
+            }
+            else if (x == 7)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 3);
+            }
+            else if (x == 8)
+            {
+                space.addWall(new Wall(), 1);
+                space.addDoor(new Door(DoorStatus.Closed), 0);
+            }
+            grid[x, 3] = space;
+        }
+    }
+
+    public void createFourthRowInsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (4 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, false, x, 4);
+            if (x == 1)
+            {
+                space.addWall(new Wall(), 3);
+                space.addWall(new Wall(), 2);
+            }
+            else if (x == 2)
+            {
+                space.addWall(new Wall(), 1);
+                space.addWall(new Wall(), 2);
+            }
+            else if (x == 3)
+            {
+                space.addWall(new Wall(), 3);
+                space.addWall(new Wall(), 2);
+            }
+            else if (x == 4)
+            {
+                space.addDoor(new Door(DoorStatus.Closed), 2);
+            }
+            else if(x == 5)
+            {
+                space.addWall(new Wall(), 2);
+            }
+            else if (x == 6)
+            {
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Closed), 1);
+            }
+            else if (x == 7)
+            {
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Closed), 3);
+            }
+            else if (x == 8)
+            {
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Open), 1);
+            }
+            grid[x, 4] = space;
+        }
+    }
+
+    public void createFifthRowInsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (5 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, false, x, 5);
+            if (x == 1)
+            {
+                space.addWall(new Wall(), 3);
+                space.addWall(new Wall(), 0);
+            }
+            else if (x == 2 || x == 3)
+            {
+                space.addWall(new Wall(), 0);
+            }
+            else if (x == 4)
+            {
+                space.addDoor(new Door(DoorStatus.Closed), 0);
+            }
+            else if (x == 5 || x == 7)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 1);
+            }
+            else if (x == 6)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 3);
+            }
+            else if (x == 8)
+            {
+                space.addWall(new Wall(), 0);
+                space.addWall(new Wall(), 1);
+                space.addWall(new Wall(), 3);
+
+            }
+            grid[x, 5] = space;
+        }
+    }
+
+    public void createSixthRowInsideSpace()
+    {
+        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+
+        for (int x = 1; x < gridSizeX - 1; x++)
+        {
+            Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius) + Vector2.up * (6 * spaceDiameter + spaceRadius);
+            Space space = new Space(worldPoint, false, x, 6);
+            if (x == 1)
+            {
+                space.addWall(new Wall(), 3);
+                space.addWall(new Wall(), 2);
+            }
+            else if (x == 2 || x == 4)
+            {
+                space.addWall(new Wall(), 2);
+            }
+            else if(x == 3)
+            {
+                space.addDoor(new Door(DoorStatus.Open), 2);
+            }
+            else if (x == 5 || x == 7)
+            {
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Closed), 1);
+            }
+            else if (x == 6)
+            {
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Closed), 3);
+            }
+            else if (x == 8)
+            {
+                space.addWall(new Wall(), 1);
+                space.addWall(new Wall(), 2);
+                space.addDoor(new Door(DoorStatus.Closed), 3);
+
+            }
+            grid[x, 6] = space;
+        }
+    }
+
+
 }

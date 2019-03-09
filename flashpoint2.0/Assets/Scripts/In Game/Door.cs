@@ -7,9 +7,9 @@ public class Door : EdgeObstacleObject
     DoorStatus status;
 
     //constructor
-    public Door()
+    public Door(DoorStatus status)
     {
-        //TODO
+        this.status = status;
     }
 
     //door status getter

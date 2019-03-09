@@ -1,14 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Space {
     public Vector3 worldPosition;
     public bool isOutside;
     public int indexX;
     public int indexY;
-    Door d1;
-    Wall w1;
     SpaceStatus status;
     SpaceKind kind;
+    Wall[] walls = new Wall[4];
+    Door[] doors = new Door[4];
 
     //default constructor
     public Space()
@@ -23,12 +24,25 @@ public class Space {
         kind = SpaceKind.Indoor;
 
     }
+    
 
     public Space(Vector2 _worldPos, bool _isOutside, int _indexX, int _indexY) {
         worldPosition = new Vector3(_worldPos.x, _worldPos.y, 0);
         isOutside = _isOutside;
         indexX = _indexX;
         indexY = _indexY;
+    }
+
+    //function to add walls at a certain index
+    public void addWall(Wall wall, int index)
+    {
+        this.walls[index] = wall;
+    }
+
+    //function to add doors at a certain index
+    public void addDoor(Door door, int index)
+    {
+        this.doors[index] = door;
     }
 
     public SpaceStatus GetSpaceStatus()
