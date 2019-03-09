@@ -19,10 +19,19 @@ public class Wall : EdgeObstacleObject
         return this.status;
     }
 
-    //wall status setter
-    public void setWallStatus(WallStatus status)
+    //damage the wall
+    public bool addDamage() 
     {
-        this.status = status;
+        if (status == WallStatus.Intact) {
+            status = WallStatus.Damaged;
+            return true;
+        }
+        else if (status == WallStatus.Damaged) {
+            status = WallStatus.Destroyed;
+            return true;
+        }
+
+        return false;
     }
 
     //function that increments the damage marker
