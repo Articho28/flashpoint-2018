@@ -59,7 +59,7 @@ public class Fireman : GameUnit
 
     public void chopWall(Wall wall)
     {
-        //TODO
+        if (wall.addDamage() && AP >= 2) AP -= 2;
     }
 
     public void move(Space destination)
