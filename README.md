@@ -1,1 +1,5 @@
-!!!This is the new master!!!
+#THIS IS THE NEW MASTER
+
+##NUMBERING THE DIRECTIONS, NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3.
+
+
