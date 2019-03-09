@@ -4,13 +4,68 @@ using UnityEngine;
 
 public class Fireman : GameUnit
 {
-    int actionPoints;
+    int AP;
+    FMStatus status;
+    Victim carriedVictim;
 
-    public int getActionPoints() {
-        return actionPoints;
+    public void createFM(int numOfPlayers)
+    {
+        //TODO
     }
 
-    public void chopWall(Wall wall) {
-        if (wall.addDamage() && actionPoints >= 2) actionPoints -= 2;
+    public int getAP() {
+        return AP;
     }
+
+    public void setAP(int newAP)
+    {
+        AP = newAP;
+    }
+
+    public void decrementAP()
+    {
+        //TODO
+    }
+
+    public FMStatus getStatus()
+    {
+        return this.status;
+    }
+
+    public void setStatus(FMStatus newStatus)
+    {
+        this.status = newStatus;
+    }
+
+    public Victim getVictim()
+    {
+        return this.carriedVictim;
+    }
+
+    public void setVictim(Victim v)
+    {
+        this.carriedVictim = v;
+    }
+
+    public void deassociateVictim()
+    {
+        this.carriedVictim = null;
+    }
+
+    public void extinguishFire(Space destination)
+    {
+        //TODO
+    }
+
+    public void chopWall(Wall wall)
+    {
+        if (wall.addDamage() && AP >= 2) AP -= 2;
+    }
+
+    public void move(Space destination)
+    {
+
+    }
+
+    //void setCurrentSpace() is already in GameUnit, but we put it in this class again in UML for M5
 }
