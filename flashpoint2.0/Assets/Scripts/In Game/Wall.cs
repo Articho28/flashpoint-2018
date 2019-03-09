@@ -10,6 +10,7 @@ public class Wall : EdgeObstacleObject
     //constructor
     public Wall()
     {
+        this.status = WallStatus.Intact;
         this.damageMarker = 0;
     }
 
