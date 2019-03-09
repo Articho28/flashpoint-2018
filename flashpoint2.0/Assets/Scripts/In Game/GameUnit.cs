@@ -5,6 +5,9 @@ using UnityEngine;
 public class GameUnit : MonoBehaviour {
     Space currentSpace;
 
+    private void Start() {
+    }
+
     public Space getCurrentSpace() {
         return this.currentSpace;
     }

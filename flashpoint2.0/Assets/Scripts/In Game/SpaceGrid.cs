@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpaceGrid : MonoBehaviour {
 
     public Transform firefighter;
-    public Vector2 gridWorldSize;
+    Vector2 gridWorldSize;
     Space[,] grid;
 
     [SerializeField] float spaceRadius;
@@ -13,6 +13,7 @@ public class SpaceGrid : MonoBehaviour {
     int gridSizeX, gridSizeY;
 
     private void Start() {
+        gridWorldSize = new Vector2(10, 8);
         spaceDiameter = spaceRadius * 2;
         gridSizeX = 10;
         gridSizeY = 8;
@@ -99,7 +100,7 @@ public class SpaceGrid : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        //Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y, 1));
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, gridWorldSize.y, 1));
 
         if (grid != null) {
             foreach (Space t in grid) {
@@ -107,7 +108,6 @@ public class SpaceGrid : MonoBehaviour {
                 if (t.isOutside == true) {
                     Gizmos.color = Color.cyan;
                 }
-                print("worldpos: " + t.worldPosition);
                 Gizmos.DrawWireCube(t.worldPosition, new Vector3(spaceDiameter - 0.01f, spaceDiameter - 0.01f, 1));
             }
         }
