@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player :MonoBehaviour
+public class Player : GameUnit
 {
     PlayerStatus status;
     bool firstPlayer;
@@ -47,7 +47,7 @@ public class Player :MonoBehaviour
 
     public void setFiremanStartingSpace(Space newSpace)
     {
-        this.f.space = newSpace;
+        this.f.setCurrentSpace(newSpace);
     }
 
     public void endTurn()

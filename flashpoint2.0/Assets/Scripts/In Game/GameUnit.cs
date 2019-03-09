@@ -6,10 +6,10 @@ public class GameUnit : MonoBehaviour {
     Space currentSpace;
 
     public Space getCurrentSpace() {
-        return currentSpace;
+        return this.currentSpace;
     }
 
     public void setCurrentSpace(Space space) {
-        currentSpace = space;
+        this.currentSpace = space;
     }
 }
