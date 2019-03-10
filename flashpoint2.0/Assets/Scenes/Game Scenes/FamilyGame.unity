@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 225468942}
   - component: {fileID: 225468943}
   m_Layer: 0
-  m_Name: doorRow45
+  m_Name: doorRow56
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -774,7 +774,7 @@ GameObject:
   - component: {fileID: 873022161}
   - component: {fileID: 873022162}
   m_Layer: 0
-  m_Name: doorCol56
+  m_Name: doorCol67
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -853,7 +853,7 @@ GameObject:
   - component: {fileID: 1235477748}
   - component: {fileID: 1235477749}
   m_Layer: 0
-  m_Name: doorRow23
+  m_Name: doorRow34
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1014,7 +1014,7 @@ GameObject:
   - component: {fileID: 1312344457}
   - component: {fileID: 1312344458}
   m_Layer: 0
-  m_Name: doorCol67
+  m_Name: doorCol78
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1373,7 +1373,7 @@ GameObject:
   - component: {fileID: 1531096387}
   - component: {fileID: 1531096388}
   m_Layer: 0
-  m_Name: doorCol34
+  m_Name: doorCol45
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1452,7 +1452,7 @@ GameObject:
   - component: {fileID: 1560180786}
   - component: {fileID: 1560180787}
   m_Layer: 0
-  m_Name: doorCol45
+  m_Name: doorCol56
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1466,7 +1466,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1560180785}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.03, y: -2.63, z: -2}
+  m_LocalPosition: {x: -0.03, y: -2.73, z: -2}
   m_LocalScale: {x: 0.1739578, y: 0.2050442, z: 1}
   m_Children: []
   m_Father: {fileID: 233568738}
@@ -1768,7 +1768,7 @@ GameObject:
   - component: {fileID: 1734189784}
   - component: {fileID: 1734189785}
   m_Layer: 0
-  m_Name: doorCol23
+  m_Name: doorCol34
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2084,7 +2084,7 @@ GameObject:
   - component: {fileID: 2109590837}
   - component: {fileID: 2109590838}
   m_Layer: 0
-  m_Name: doorCol78
+  m_Name: doorCol89
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
