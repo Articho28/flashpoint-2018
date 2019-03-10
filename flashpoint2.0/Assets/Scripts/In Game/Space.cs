@@ -49,8 +49,10 @@ public class Space {
     {
         foreach(Door door in doors)
         {
-            if (door != null) return door;
+            if (door != null) 
+            return door;
         }
+        return null;
     }
 
     public Wall getWall(int index)
