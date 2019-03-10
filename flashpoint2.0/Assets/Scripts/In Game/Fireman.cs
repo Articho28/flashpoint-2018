@@ -22,9 +22,9 @@ public class Fireman : GameUnit
         AP = newAP;
     }
 
-    public void decrementAP()
+    public void decrementAP(int amount)
     {
-        //TODO
+        this.AP -= amount;
     }
 
     public FMStatus getStatus()
@@ -65,6 +65,24 @@ public class Fireman : GameUnit
     public void move(Space destination)
     {
 
+    }
+
+    public void openDoor()
+    {
+        if (getAP() >= 1)
+        {
+            decrementAP(1);
+            this.getCurrentSpace().getDoor().setDoorStatus(DoorStatus.Open);
+        }
+    }
+
+    public void closeDoor()
+    {
+        if (getAP() >= 1)
+        {
+            decrementAP(1);
+            this.getCurrentSpace().getDoor().setDoorStatus(DoorStatus.Closed);
+        }
     }
 
     //void setCurrentSpace() is already in GameUnit, but we put it in this class again in UML for M5

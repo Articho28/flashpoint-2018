@@ -43,5 +43,18 @@ public class Space {
         this.doors[index] = door;
     }
 
-    public SpaceStatus getSpaceStatus()     {         return this.status;     }      public void setSpaceStatus(SpaceStatus newStatus)     {         this.status = newStatus;     }      public SpaceKind getSpaceKind()     {         return this.kind;     }      public void setSpaceKind(SpaceKind newKind)     {         this.kind = newKind;     } 
+    public SpaceStatus getSpaceStatus()     {         return this.status;     }      public void setSpaceStatus(SpaceStatus newStatus)     {         this.status = newStatus;     }      public SpaceKind getSpaceKind()     {         return this.kind;     }      public void setSpaceKind(SpaceKind newKind)     {         this.kind = newKind;     }
+
+    public Door getDoor()
+    {
+        foreach(Door door in doors)
+        {
+            if (door != null) return door;
+        }
+    }
+
+    public Wall getWall(int index)
+    {
+        return this.walls[index];
+    } 
 }
