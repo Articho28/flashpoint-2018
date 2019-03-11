@@ -136,6 +136,13 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         SetActivePanel(RoomListPanel.name);
     }
 
+
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        SetActivePanel(SelectionPanel.name);
+    }
+
     // Start function.
 
     public void Start()
