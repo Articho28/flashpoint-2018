@@ -112,7 +112,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         PhotonNetwork.CreateRoom(roomName, options, null);
     }
-    //Function associated with back button.
+    // Function associated with back button.
 
     public void OnBackButtonClicked()
     {
@@ -122,6 +122,18 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         }
 
         SetActivePanel(SelectionPanel.name);
+    }
+
+    // On Room list button is clicked.
+
+    public void OnRoomListButtonClicked()
+    {
+        if (!PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.JoinLobby();
+        }
+
+        SetActivePanel(RoomListPanel.name);
     }
 
     // Start function.
