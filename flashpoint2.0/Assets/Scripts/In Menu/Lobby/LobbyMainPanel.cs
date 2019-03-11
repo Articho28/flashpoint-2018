@@ -112,6 +112,17 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         PhotonNetwork.CreateRoom(roomName, options, null);
     }
+    //Function associated with back button.
+
+    public void OnBackButtonClicked()
+    {
+        if (PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.LeaveLobby();
+        }
+
+        SetActivePanel(SelectionPanel.name);
+    }
 
     // Start function.
 
