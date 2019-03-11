@@ -20,16 +20,10 @@ public class SpaceGrid : MonoBehaviour {
         CreateGrid();
     }
 
+    //updates every frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")){
-            GameObject openDoor = new GameObject("Door");
-            openDoor.AddComponent<SpriteRenderer>();
-            openDoor.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/open door");
-            Vector3 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-            openDoor.GetComponent<Transform>().position = new Vector3(position.x, position.y, -2);
-            openDoor.GetComponent<Transform>().localScale = new Vector3(0.1739578F, 0.2050442F, 1);
-        }
+
     }
 
     private void CreateGrid() {
