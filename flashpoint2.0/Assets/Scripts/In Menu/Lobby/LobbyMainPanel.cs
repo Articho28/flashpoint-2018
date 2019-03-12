@@ -239,5 +239,36 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         roomListEntries.Clear();
     }
 
+    public void LocalPlayerPropertiesUpdated()
+    {
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
+    }
+
+    private bool CheckPlayersReady()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return false;
+        }
+
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
+            {
+                if (!(bool)isPlayerReady)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
 }

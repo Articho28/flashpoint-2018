@@ -29,7 +29,11 @@ public class PlayerEntry : MonoBehaviour
                 SetPlayerReady(isPlayerReady);
                 Hashtable props = new Hashtable() { { "IsPlayerReady", isPlayerReady } };
                 PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-                //TODO call callback on player properties changed. 
+
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    FindObjectOfType<LobbyMainPanel>().LocalPlayerPropertiesUpdated();
+                }
             });
 
     }
