@@ -107,7 +107,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
             GameObject entry = Instantiate(PlayerListEntryPrefab);
             entry.transform.SetParent(RoomPlayerListContent.transform);
             entry.transform.localScale = Vector3.one;
-            entry.GetComponent<PlayerEntry>().Initialize(p.NickName);
+            entry.GetComponent<PlayerEntry>().Initialize(p.ActorNumber, p.NickName);
         }
 
 
