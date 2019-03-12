@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
+using ExitGames.Client.Photon;
+
 
 public class LobbyMainPanel : MonoBehaviourPunCallbacks
 {
@@ -36,6 +37,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
     public GameObject InsideRoomPanel;
 
     public Button StartGameButton;
+    public GameObject RoomPlayerListContent;
     public GameObject PlayerListEntryPrefab;
 
     private Dictionary<string, RoomInfo> cachedRoomList;
@@ -84,6 +86,34 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         this.SetActivePanel(SelectionPanel.name);
 
     }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        SetActivePanel(SelectionPanel.name);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        SetActivePanel(InsideRoomPanel.name);
+
+        if (playerListEntries == null)
+        {
+            playerListEntries = new Dictionary<int, GameObject>();
+        }
+
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            Debug.Log("Finding player " + p.NickName);
+            GameObject entry = Instantiate(PlayerListEntryPrefab);
+            entry.transform.SetParent(RoomPlayerListContent.transform);
+            entry.transform.localScale = Vector3.one;
+            entry.GetComponent<PlayerEntry>().Initialize(p.NickName);
+        }
+
+
+
+    }
+
 
 
 
