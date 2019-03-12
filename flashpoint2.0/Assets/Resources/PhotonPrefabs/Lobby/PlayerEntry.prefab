@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6344029346554508272}
   - component: {fileID: 6344029346554508285}
   - component: {fileID: 6344029346554508274}
-  - component: {fileID: 6344029346554508275}
   m_Layer: 5
   m_Name: ReadyCheckMarkImage
   m_TagString: Untagged
@@ -75,21 +74,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
---- !u!114 &6344029346554508275
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6344029346554508273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb66e661a975242c49d0224138399b9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerNameText: {fileID: 0}
-  PlayerReadyButton: {fileID: 0}
-  PlayerReadyImage: {fileID: 0}
 --- !u!1 &6344029347514720797
 GameObject:
   m_ObjectHideFlags: 0
