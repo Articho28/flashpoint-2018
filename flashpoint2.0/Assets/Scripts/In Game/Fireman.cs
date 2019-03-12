@@ -73,6 +73,8 @@ public class Fireman : GameUnit
         {
             decrementAP(1);
             this.getCurrentSpace().getDoor().setDoorStatus(DoorStatus.Open);
+            string doorObjectPath = "Board/doorCol45";
+            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/open door");
         }
     }
 
@@ -82,6 +84,8 @@ public class Fireman : GameUnit
         {
             decrementAP(1);
             this.getCurrentSpace().getDoor().setDoorStatus(DoorStatus.Closed);
+            string doorObjectPath = "Board/doorCol45";
+            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/closed door");
         }
     }
 
