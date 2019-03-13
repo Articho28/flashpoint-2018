@@ -5,6 +5,7 @@ using UnityEngine;
 public class Fireman : GameUnit
 {
     int AP;
+    int savedAP;
     FMStatus status;
     Victim carriedVictim;
 
@@ -20,6 +21,16 @@ public class Fireman : GameUnit
     public void setAP(int newAP)
     {
         AP = newAP;
+    }
+
+    public int getSavedAP()
+    {
+        return AP;
+    }
+
+    public void setSavedAP(int newSavedAP)
+    {
+        AP = newSavedAP;
     }
 
     public void decrementAP(int amount)
@@ -64,6 +75,68 @@ public class Fireman : GameUnit
 
     public void move(Space destination)
     {
+        //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
+        int ap = this.getAP();
+        Victim v = this.getVictim();
+        bool reachable = true; //destination.isReachable(); //TODO
+        SpaceStatus sp = destination.getSpaceStatus();
+
+        if (reachable)
+        {
+            if (sp == SpaceStatus.Fire)
+            {
+                if (ap >= 2 && v == null) //&&f has enough to move
+                {
+                    this.setCurrentSpace(destination);
+                    this.decrementAP(2);
+                }
+                else
+                {
+                    //displayActionResult("ERROR"); // TODO say what the error is with if stattements
+                }
+            }
+            else
+            {
+                if (v == null)
+                {
+                    this.setCurrentSpace(destination);
+                    this.decrementAP(1);
+                }
+                else //if the fireman is carrying a victim
+                {
+                    this.setCurrentSpace(destination);
+                    this.decrementAP(2);
+                }
+            }
+        }
+
+        //after the move
+
+        List<GameUnit> occ = destination.getOccupants();
+        foreach (GameUnit gu in occ)
+        {
+            if(gu is POI)
+            {
+                POIKind gukind = ((POI)gu).getPOIKind();
+                if (gukind == POIKind.FalseAlarm)
+                {
+                    //TODO remove false alarm
+                }
+            }
+        }
+
+        if (v != null && destination.getSpaceKind() == SpaceKind.Outdoor)
+        {
+            v.setVictimStatus(VictimStatus.Rescued);
+            Game.incrementNumSavedVictims();
+            this.deassociateVictim();
+            if (Game.getNumSavedVictims() >= 7)
+            {
+                Game.setGameWon(true);
+                Game.setGameState(GameState.Completed);
+            }
+        }
+
 
     }
 

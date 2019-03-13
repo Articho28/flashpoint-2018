@@ -5,7 +5,7 @@ using System;
 
 public class Game : MonoBehaviour
 {
-    GameState gState;
+    static GameState gState;
     int numOfPlayers;
     Rules rules;
     HashSet<Space> newSpaces;
@@ -15,34 +15,36 @@ public class Game : MonoBehaviour
     HashSet<Fireman> newFiremen;
     HashSet<Victim> newVictims;
     HashSet<FalseAlarm> newFalseAlarms;
-    int blackDice;
-    int redDice;
-    int bldgDamageCounter;
-    int savedVictimCounter;
-    int lostVictimCounter;
+    static int blackDice;
+    static int redDice;
+    static int bldgDamageCounter;
+    static int savedVictimCounter;
+    static int lostVictimCounter;
+    static int activePOICounter;
+    static bool won;
 
     /*public Game create(int numPlayers, Player firstP)
     {
         //TODO
     }*/
 
-    /*public void setFiremanStartingSpace(Fireman f)
+    public void setFiremanStartingSpace(Fireman f)
     {
-        Space startingSpace = new Space();
-        if(startingSpace.getSpaceKind() == Outdoor)
+        Space startingSpace = new Space(); //TODO change this to get clicked tile
+        if(startingSpace.getSpaceKind() == SpaceKind.Outdoor)
         {
             f.setCurrentSpace(startingSpace);
         }
-    }*/
+    }
 
-    public GameState getGameState() {
-        return this.gState;
+    public static GameState getGameState() {
+        return gState;
     }
 
 
-    public void setGameState(GameState newGState)
+    public static void setGameState(GameState newGState)
     {
-        this.gState = newGState;
+        gState = newGState;
     }
 
     public Rules getRules()
@@ -62,75 +64,131 @@ public class Game : MonoBehaviour
 
     //TODO get functions for all the HASHSETS
 
-    public void rollDice()
+    public static void rollDice()
     {
         System.Random r = new System.Random();
-        this.blackDice = r.Next(1,9);
-        this.redDice = r.Next(1, 7);
+        blackDice = r.Next(1,9);
+        redDice = r.Next(1, 7);
     }
 
-    public int getBlackDice()
+    public static int getBlackDice()
     {
-        return this.blackDice;
+        return blackDice;
     }
 
-    public int getRedDice()
+    public static int getRedDice()
     {
-        return this.redDice;
+        return redDice;
     }
 
-    public int getBuildingDamage()
+    public static int getBuildingDamage()
     {
-        return this.bldgDamageCounter;
+        return bldgDamageCounter;
     }
 
-    public void incrementBuildingDamage()
+    public static void incrementBuildingDamage()
     {
-        this.bldgDamageCounter++;
+        bldgDamageCounter++;
     }
 
-    public int getNumSavedVictims()
+    public static int getNumSavedVictims()
     {
-        return this.savedVictimCounter;
+        return savedVictimCounter;
     }
 
-    public void incrementNumSavedVictims()
+    public static void incrementNumSavedVictims()
     {
-        this.savedVictimCounter++;
+        savedVictimCounter++;
     }
 
-    public int getNumLostVictims()
+    public static int getNumLostVictims()
     {
-        return this.lostVictimCounter;
+        return lostVictimCounter;
     }
 
-    public void incrementNumLostVictims()
+    public static void incrementNumLostVictims()
     {
-        this.lostVictimCounter++;
+        lostVictimCounter++;
     }
 
-    /*public int getActivePOIs()
+    public static bool getGameWon()
+    {
+        return won;
+    }
+
+    public static void setGameWon(Boolean newWon)
+    {
+        won = newWon;
+    }
+
+    public static int getActivePOIs()
+    {
+        //TODO
+        return 0;
+    }
+
+    public static void placeRandomPOIs()
     {
         //TODO
     }
 
-    public void placeRandomPOIs()
+    public static void resolveFirePlacement(Space s)
     {
         //TODO
     }
 
-    public void resolveFirePlacement(Space s)
+    public static void resolveShockwave(Space space, Space neighbour)
     {
         //TODO
     }
 
-    public void resolveShockwave()
+    public static void resolveFlashover()
     {
         //TODO
     }
 
-    public void resolveFlashover()
+    public static void removeFalseAlarm(POI fa)
     {
-        //TODO
-    }*/
+
+    }
+
+    public void endTurn()
+    {
+        rollDice();
+        Space s = new Space();//getSpace(Game.getRedDice(), Game.getBlackDice()); TODO function
+        List<Space> neighbours = SpaceGrid.GetNeighbours(s);
+        Boolean onFire = false;
+        foreach(Space n in neighbours){
+            if (n.getSpaceStatus() == SpaceStatus.Fire) onFire = true;
+        }
+        if (s.getSpaceStatus() == SpaceStatus.Safe && onFire == false)
+        {
+            s.setSpaceStatus(SpaceStatus.Smoke);
+        }
+        else if (s.getSpaceStatus() == SpaceStatus.Smoke || onFire == true)
+        {
+            s.setSpaceStatus(SpaceStatus.Fire);
+            resolveFirePlacement(s);
+        }
+        else
+        {
+            foreach (Space n in neighbours)
+            {
+                resolveShockwave(s, n);
+            }
+            resolveFlashover();
+        }
+        int numPOI = getActivePOIs();
+        while(numPOI < 3)
+        {
+            placeRandomPOIs();
+        }
+        int endBuildingDamage = getBuildingDamage();
+        int numVictimLost = getNumLostVictims();
+        if (endBuildingDamage >= 24 || numVictimLost >= 4)
+        {
+            setGameState(GameState.Completed);
+            setGameWon(false);
+        }
+    }
 }

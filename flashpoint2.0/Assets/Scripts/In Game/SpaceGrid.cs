@@ -6,11 +6,11 @@ public class SpaceGrid : MonoBehaviour {
 
     public Transform firefighter;
     Vector2 gridWorldSize;
-    Space[,] grid;
+    static Space[,] grid;
 
     [SerializeField] float spaceRadius;
     float spaceDiameter;
-    int gridSizeX, gridSizeY;
+    static int gridSizeX, gridSizeY;
 
     private void Start() {
         gridWorldSize = new Vector2(10, 8);
@@ -68,7 +68,7 @@ public class SpaceGrid : MonoBehaviour {
 
     }
 
-    public List<Space> GetNeighbours(Space tile) {
+    public static List<Space> GetNeighbours(Space tile) {
         List<Space> neighbours = new List<Space>();
 
         //  _________
