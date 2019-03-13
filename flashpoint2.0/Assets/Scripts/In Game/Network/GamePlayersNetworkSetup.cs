@@ -1,16 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
+using ExitGames.Client.Photon;
+
 
 public class GamePlayersNetworkSetup : MonoBehaviour
 {
 
     private static GamePlayersNetworkSetup GS;
     public string status;
-    public ArrayList players;
+    public ArrayList photonPlayers;
 
     private void OnEnable()
     {
@@ -22,26 +24,24 @@ public class GamePlayersNetworkSetup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsConnected)
         {
-            foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
-            {
-                Debug.Log("Master is looking at " + p.NickName);
-                if (PhotonNetwork.IsConnected)
-                {
-                    GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
-              "PhotonPlayers",
-                  "PhotonPlayer"),
-              transform.position,
-              Quaternion.identity, 0);
-                    entry.GetComponent<PhotonPlayer>().Initialize(PhotonNetwork.LocalPlayer.NickName);
-
-                }
-
-            }
+            Debug.Log("This is Player " + PhotonNetwork.LocalPlayer.NickName);
+            GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
+               "PhotonPlayers",
+                   "PhotonPlayer"),
+               transform.position,
+               Quaternion.identity, 0);
+            entry.GetComponent<PhotonPlayer>().Initialize(PhotonNetwork.LocalPlayer.NickName);
+            photonPlayers.Add(entry);
         }
 
-       
+        /*if (PhotonNetwork.IsMasterClient)
+        {
+            foreach(GameObject go in photonPlayers)
+            {
+                Debug.Log("This is " + go.GetComponent<PhotonPlayer>().playerName);
+            }
+        }*/
     }
 }
