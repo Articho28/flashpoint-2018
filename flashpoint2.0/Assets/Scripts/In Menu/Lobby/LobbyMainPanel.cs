@@ -200,7 +200,26 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         StartGameButton.gameObject.SetActive(CheckPlayersReady());
     }
 
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
+        {
+            StartGameButton.gameObject.SetActive(CheckPlayersReady());
+        }
+    }
 
+    public override void OnLeftRoom()
+    {
+        SetActivePanel(SelectionPanel.name);
+
+        foreach (GameObject entry in playerListEntries.Values)
+        {
+            Destroy(entry.gameObject);
+        }
+
+        playerListEntries.Clear();
+        playerListEntries = null;
+    }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
