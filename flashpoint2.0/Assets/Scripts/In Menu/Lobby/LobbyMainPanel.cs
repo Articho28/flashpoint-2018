@@ -208,6 +208,12 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         }
     }
 
+    public void OnLeaveGameButtonClicked()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " Left game!");
+        PhotonNetwork.LeaveRoom();
+    }
+
     public override void OnLeftRoom()
     {
         SetActivePanel(SelectionPanel.name);
@@ -219,6 +225,15 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         playerListEntries.Clear();
         playerListEntries = null;
+    }
+
+    public void OnStartGameButtonClicked()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+
+        Debug.Log("Room Joined!");
+        //PhotonNetwork.LoadLevel("FamilyGame");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
