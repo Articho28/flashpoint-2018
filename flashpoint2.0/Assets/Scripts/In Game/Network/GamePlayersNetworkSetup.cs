@@ -33,7 +33,6 @@ public class GamePlayersNetworkSetup : MonoBehaviour
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
-            entry.GetComponent<PhotonPlayer>().Initialize(PhotonNetwork.LocalPlayer.NickName);
             photonPlayers.Add(entry);
         }
               
