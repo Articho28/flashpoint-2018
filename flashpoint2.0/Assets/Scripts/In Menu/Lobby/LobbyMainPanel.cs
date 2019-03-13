@@ -183,7 +183,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         GameObject entry = Instantiate(PlayerListEntryPrefab);
-        entry.transform.SetParent(InsideRoomPanel.transform);
+        entry.transform.SetParent(RoomPlayerListContent.transform);
         entry.transform.localScale = Vector3.one;
         entry.GetComponent<PlayerEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
 
