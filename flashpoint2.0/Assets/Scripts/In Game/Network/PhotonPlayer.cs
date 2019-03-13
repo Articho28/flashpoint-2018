@@ -18,7 +18,7 @@ public class PhotonPlayer : MonoBehaviour
         {
             myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "fireman",
-                   "F1Prefab"),
+                   "Firefighter for testing move function"),
               new Vector3(0,0,-5),
                Quaternion.identity, 0);
         }
