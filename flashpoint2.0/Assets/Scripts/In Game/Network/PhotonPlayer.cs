@@ -16,6 +16,8 @@ public class PhotonPlayer : MonoBehaviour
         PV = GetComponent<PhotonView>();
         if (PV.IsMine)
         {
+            int myPlayer = PhotonNetwork.LocalPlayer.ActorNumber;
+            Debug.Log(myPlayer + " is " + PhotonNetwork.LocalPlayer.NickName + " ActorNumber");
             myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "fireman",
                    "Firefighter1"),
