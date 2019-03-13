@@ -42,7 +42,7 @@ public class PlayerEntry : MonoBehaviour
     {
         PlayerReadyButton.GetComponentInChildren<Text>().text = playerReady ? "Ready!" : "Ready?";
 
-        PlayerReadyImage.enabled = playerReady;
+        PlayerReadyImage.gameObject.SetActive(playerReady);
     }
 
     public void Initialize(int playerID, string name)
