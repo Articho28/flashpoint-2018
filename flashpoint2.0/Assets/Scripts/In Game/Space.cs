@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Space {
@@ -10,6 +11,7 @@ public class Space {
     SpaceKind kind;
     Wall[] walls = new Wall[4];
     Door[] doors = new Door[4];
+    List<GameUnit> occupants;
 
     //default constructor
     public Space()
@@ -20,7 +22,7 @@ public class Space {
         indexY = 0;
         status = SpaceStatus.Safe;
         kind = SpaceKind.Indoor;
-
+        occupants = null;
     }
     
 
@@ -58,5 +60,16 @@ public class Space {
     public Wall getWall(int index)
     {
         return this.walls[index];
+    }
+
+    public void addOccupant(GameUnit u)
+    {
+        occupants.Add(u);
+    }
+
+    public List<GameUnit> getOccupants()
+    {
+        return this.occupants;
     } 
+
 }
