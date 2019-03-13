@@ -350,9 +350,22 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         return true;
     }
 
+    private void CheckPlayersStatus()
+    {
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
+            {
+                playerListEntries[p.ActorNumber].GetComponent<Image>().gameObject.SetActive((bool)isPlayerReady);
+            }
+
+        }
+    }
 
     public void Update()
     {
+        CheckPlayersStatus();
         StartGameButton.gameObject.SetActive(CheckPlayersReady());
 
 
