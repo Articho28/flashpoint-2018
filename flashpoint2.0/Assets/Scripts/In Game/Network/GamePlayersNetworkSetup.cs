@@ -35,13 +35,6 @@ public class GamePlayersNetworkSetup : MonoBehaviour
             entry.GetComponent<PhotonPlayer>().Initialize(PhotonNetwork.LocalPlayer.NickName);
             photonPlayers.Add(entry);
         }
-
-        /*if (PhotonNetwork.IsMasterClient)
-        {
-            foreach(GameObject go in photonPlayers)
-            {
-                Debug.Log("This is " + go.GetComponent<PhotonPlayer>().playerName);
-            }
-        }*/
+              
     }
 }
