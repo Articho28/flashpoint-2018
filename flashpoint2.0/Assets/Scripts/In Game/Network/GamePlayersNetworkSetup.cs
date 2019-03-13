@@ -25,21 +25,13 @@ public class GamePlayersNetworkSetup : MonoBehaviour
         if (PhotonNetwork.IsConnected)
         {
             Debug.Log("This is Player " + PhotonNetwork.LocalPlayer.NickName);
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
+            GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "PhotonPlayers",
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
+            entry.GetComponent<PhotonPlayer>().Initialize(PhotonNetwork.LocalPlayer.NickName);
+
         }
-
-       
-
-       
-
-
-
-
     }
-
-   
 }
