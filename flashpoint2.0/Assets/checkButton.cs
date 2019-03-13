@@ -7,15 +7,14 @@ public class checkButton : MonoBehaviour
 {
     // Start is called before the first frame update
     public void Button () {
-    	Text t = transform.Find ("Text").GetComponent <Text>();
-    	t.text = "I was pressed";
-
-
+    	// Text t = transform.Find ("Text").GetComponent <Text>();
+    	// t.text = "I was pressed";
+        Debug.Log("button clicked");
     }
 
-    public void onClick(){
-        Debug.Log("Clicked");
-    }
+    // public void onClick(){
+    //     Debug.Log("Clicked");
+    // }
     void Start()
     {
         
