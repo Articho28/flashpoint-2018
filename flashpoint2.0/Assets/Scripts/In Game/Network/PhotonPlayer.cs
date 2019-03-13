@@ -13,12 +13,12 @@ public class PhotonPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PV = GetComponent<PhotonView>();
+       /* PV = GetComponent<PhotonView>();
         if (PV.IsMine)
         {
             string name = PhotonNetwork.LocalPlayer.NickName;
             Debug.Log(name +  " sees my Photon View.");
-        }
+        }*/
     }
 
     public void Initialize(string name)
