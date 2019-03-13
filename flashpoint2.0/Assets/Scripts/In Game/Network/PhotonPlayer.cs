@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
 
 public class PhotonPlayer : MonoBehaviour
 {
 
-    public string playerName;
     private PhotonView PV;
     public GameObject myAvatar;
 
@@ -16,15 +16,12 @@ public class PhotonPlayer : MonoBehaviour
         PV = GetComponent<PhotonView>();
         if (PV.IsMine)
         {
-            playerName = PhotonNetwork.LocalPlayer.NickName;
-            Debug.Log(playerName +  " sees my Photon View.");
+            myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "fireman", "f1"), new Vector3(0, 0, -5), Quaternion.identity, 0);
+
         }
     }
 
-    public void Initialize(string name)
-    {
-        playerName = name;
-    }
+
 
 
 }

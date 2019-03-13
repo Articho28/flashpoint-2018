@@ -12,6 +12,7 @@ public class GamePlayersNetworkSetup : MonoBehaviour
 
     private static GamePlayersNetworkSetup GS;
     public string status;
+    [SerializeField]
     public ArrayList photonPlayers;
 
     private void OnEnable()
