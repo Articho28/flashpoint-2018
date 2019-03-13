@@ -180,6 +180,18 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         SetActivePanel(RoomListPanel.name);
     }
 
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        GameObject entry = Instantiate(PlayerListEntryPrefab);
+        entry.transform.SetParent(InsideRoomPanel.transform);
+        entry.transform.localScale = Vector3.one;
+        entry.GetComponent<PlayerEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
+
+        playerListEntries.Add(newPlayer.ActorNumber, entry);
+
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
+    }
+
 
 
     public override void OnCreateRoomFailed(short returnCode, string message)
