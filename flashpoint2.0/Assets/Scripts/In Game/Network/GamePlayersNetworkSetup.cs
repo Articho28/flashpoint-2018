@@ -37,11 +37,15 @@ public class GamePlayersNetworkSetup : MonoBehaviour
         }
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
-            "PhotonPlayers",
-                "PhotonPlayer"),
-            transform.position,
-            Quaternion.identity, 0);
+            foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+            {
+                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
+           "PhotonPlayers",
+               "PhotonPlayer"),
+           transform.position,
+           Quaternion.identity, 0);
+            }
+           
         }
 
 
