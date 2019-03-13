@@ -18,15 +18,22 @@ public class PlayerEntry : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (PhotonNetwork.LocalPlayer.ActorNumber != ownerId)
+        {
+            PlayerReadyButton.gameObject.SetActive(false);
+        }
 
-       
-            PlayerReadyButton.onClick.AddListener(() =>
+        PlayerReadyButton.onClick.AddListener(() =>
             {
                 isPlayerReady = !isPlayerReady;
                 SetPlayerReady(isPlayerReady);
                 Hashtable props = new Hashtable() { { "IsPlayerReady", isPlayerReady } };
                 PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-                //TODO call callback on player properties changed. 
+
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    FindObjectOfType<LobbyMainPanel>().LocalPlayerPropertiesUpdated();
+                }
             });
 
     }
@@ -38,8 +45,9 @@ public class PlayerEntry : MonoBehaviour
         PlayerReadyImage.enabled = playerReady;
     }
 
-    public void Initialize(string name)
+    public void Initialize(int playerID, string name)
     {
+        ownerId = playerID;
         PlayerNameText.text = name;
         PlayerReadyButton.gameObject.SetActive(true);
         SetPlayerReady(false);

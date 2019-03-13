@@ -43,6 +43,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
     private Dictionary<string, RoomInfo> cachedRoomList;
     private Dictionary<string, GameObject> roomListEntries;
     private Dictionary<int, GameObject> playerListEntries;
+    private bool IsAllPlayersReady;
 
     // Awake function.
 
@@ -52,6 +53,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         cachedRoomList = new Dictionary<string, RoomInfo>();
         roomListEntries = new Dictionary<string, GameObject>();
+        IsAllPlayersReady = false;
 
         NoPlayerNameError.SetActive(false);
 
@@ -107,10 +109,24 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
             GameObject entry = Instantiate(PlayerListEntryPrefab);
             entry.transform.SetParent(RoomPlayerListContent.transform);
             entry.transform.localScale = Vector3.one;
-            entry.GetComponent<PlayerEntry>().Initialize(p.NickName);
+            entry.GetComponent<PlayerEntry>().Initialize(p.ActorNumber, p.NickName);
+
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
+            {
+                entry.GetComponent<PlayerEntry>().SetPlayerReady((bool)isPlayerReady);
+            }
+
+            playerListEntries.Add(p.ActorNumber, entry);
         }
 
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
 
+        Hashtable props = new Hashtable
+            {
+                {"IsPlayerLevelLoaded", false }
+            };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
     }
 
@@ -166,7 +182,68 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         SetActivePanel(RoomListPanel.name);
     }
 
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        GameObject entry = Instantiate(PlayerListEntryPrefab);
+        entry.transform.SetParent(RoomPlayerListContent.transform);
+        entry.transform.localScale = Vector3.one;
+        entry.GetComponent<PlayerEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
 
+        playerListEntries.Add(newPlayer.ActorNumber, entry);
+
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
+        playerListEntries.Remove(otherPlayer.ActorNumber);
+
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
+    }
+
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+    {
+        if (PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
+        {
+            StartGameButton.gameObject.SetActive(CheckPlayersReady());
+        }
+    }
+
+    public void OnLeaveGameButtonClicked()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " Left game!");
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftLobby()
+    {
+        cachedRoomList.Clear();
+
+        ClearRoomListView();
+    }
+
+    public override void OnLeftRoom()
+    {
+        SetActivePanel(SelectionPanel.name);
+
+        foreach (GameObject entry in playerListEntries.Values)
+        {
+            Destroy(entry.gameObject);
+        }
+
+        playerListEntries.Clear();
+        playerListEntries = null;
+    }
+
+    public void OnStartGameButtonClicked()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+
+        Debug.Log("Room Joined!");
+        PhotonNetwork.LoadLevel("FamilyGame");
+    }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -238,6 +315,62 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         roomListEntries.Clear();
     }
+
+    public void LocalPlayerPropertiesUpdated()
+    {
+        
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
+
+    }
+
+    private bool CheckPlayersReady()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return false;
+        }
+
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
+            {
+                if (!(bool)isPlayerReady)
+                {
+                    return false;
+                }
+               
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void CheckPlayersStatus()
+    {
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
+            {
+                playerListEntries[p.ActorNumber].GetComponent<PlayerEntry>().SetPlayerReady((bool)isPlayerReady);
+            }
+
+        }
+    }
+
+    public void Update()
+    {
+        CheckPlayersStatus();
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
+
+
+    }
+
 
 
 }
