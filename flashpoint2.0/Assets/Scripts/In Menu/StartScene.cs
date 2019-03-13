@@ -12,6 +12,6 @@ public class StartScene : MonoBehaviour {
 
     //function to move to the next scene
     public void switchScenes(){
-        SceneManager.LoadScene("LOGIN MENU",LoadSceneMode.Single);
+        SceneManager.LoadScene("Lobby",LoadSceneMode.Single);
     }
 }

@@ -11,10 +11,13 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Menu Scenes/PlayerNumberSelectionScreenFamilyGame.unity
     guid: eacc888fe6fbe42268ca4825a78fcdb0
-  - enabled: 1
-    path: Assets/Scenes/Menu Scenes/Lobby.unity
-    guid: 92112ee3e0df14ffc9fbef5a261d2d90
   - enabled: 0
     path: Assets/Scenes/Menu Scenes/StartScreen.unity
     guid: 5c42647653e784eacb93073c14240651
+  - enabled: 1
+    path: Assets/Scenes/Menu Scenes/Lobby.unity
+    guid: 92112ee3e0df14ffc9fbef5a261d2d90
+  - enabled: 1
+    path: Assets/Scenes/Game Scenes/FamilyGame.unity
+    guid: 3f5df51be85384f99b1edab478d12be7
   m_configObjects: {}
