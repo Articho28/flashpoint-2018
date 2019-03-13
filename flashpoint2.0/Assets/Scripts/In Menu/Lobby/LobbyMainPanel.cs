@@ -108,9 +108,23 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
             entry.transform.SetParent(RoomPlayerListContent.transform);
             entry.transform.localScale = Vector3.one;
             entry.GetComponent<PlayerEntry>().Initialize(p.ActorNumber, p.NickName);
+
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
+            {
+                entry.GetComponent<PlayerEntry>().SetPlayerReady((bool)isPlayerReady);
+            }
+
+            playerListEntries.Add(p.ActorNumber, entry);
         }
 
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
 
+        Hashtable props = new Hashtable
+            {
+                {"IsPlayerLevelLoaded", false }
+            };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
     }
 
