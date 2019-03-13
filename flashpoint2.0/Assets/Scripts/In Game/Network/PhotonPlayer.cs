@@ -16,7 +16,8 @@ public class PhotonPlayer : MonoBehaviour
         PV = GetComponent<PhotonView>();
         if (PV.IsMine)
         {
-            Debug.Log("I see my Photon View.");
+            string name = PhotonNetwork.LocalPlayer.NickName;
+            Debug.Log(name +  " sees my Photon View.");
         }
     }
 
