@@ -357,7 +357,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
             object isPlayerReady;
             if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
             {
-                playerListEntries[p.ActorNumber].GetComponent<Image>().gameObject.SetActive((bool)isPlayerReady);
+                playerListEntries[p.ActorNumber].GetComponent<PlayerEntry>().SetPlayerReady((bool)isPlayerReady);
             }
 
         }
