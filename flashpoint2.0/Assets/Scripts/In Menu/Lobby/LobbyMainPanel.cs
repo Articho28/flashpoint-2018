@@ -214,6 +214,13 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
+    public override void OnLeftLobby()
+    {
+        cachedRoomList.Clear();
+
+        ClearRoomListView();
+    }
+
     public override void OnLeftRoom()
     {
         SetActivePanel(SelectionPanel.name);
