@@ -339,10 +339,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
                 {
                     return false;
                 }
-                else
-                {
-                    GetComponent<PlayerEntry>().PlayerReadyImage.gameObject.SetActive((bool) isPlayerReady);
-                }
+               
             }
             else
             {
