@@ -192,6 +192,14 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         StartGameButton.gameObject.SetActive(CheckPlayersReady());
     }
 
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
+        playerListEntries.Remove(otherPlayer.ActorNumber);
+
+        StartGameButton.gameObject.SetActive(CheckPlayersReady());
+    }
+
 
 
     public override void OnCreateRoomFailed(short returnCode, string message)
