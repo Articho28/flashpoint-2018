@@ -22,16 +22,26 @@ public class GamePlayersNetworkSetup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (PhotonNetwork.IsConnected)
-        {
-            Debug.Log("This is Player " + PhotonNetwork.LocalPlayer.NickName);
-            GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
-               "PhotonPlayers",
-                   "PhotonPlayer"),
-               transform.position,
-               Quaternion.identity, 0);
-            entry.GetComponent<PhotonPlayer>().Initialize(PhotonNetwork.LocalPlayer.NickName);
 
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+            {
+                Debug.Log("Master is looking at " + p.NickName);
+                if (PhotonNetwork.IsConnected)
+                {
+                    GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
+              "PhotonPlayers",
+                  "PhotonPlayer"),
+              transform.position,
+              Quaternion.identity, 0);
+                    entry.GetComponent<PhotonPlayer>().Initialize(PhotonNetwork.LocalPlayer.NickName);
+
+                }
+
+            }
         }
+
+       
     }
 }
