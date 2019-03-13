@@ -242,7 +242,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
         Debug.Log("Room Joined!");
-        //PhotonNetwork.LoadLevel("FamilyGame");
+        PhotonNetwork.LoadLevel("FamilyGame");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
