@@ -318,7 +318,9 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
     public void LocalPlayerPropertiesUpdated()
     {
+        
         StartGameButton.gameObject.SetActive(CheckPlayersReady());
+
     }
 
     private bool CheckPlayersReady()
@@ -337,6 +339,10 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
                 {
                     return false;
                 }
+                else
+                {
+                    GetComponent<PlayerEntry>().PlayerReadyImage.gameObject.SetActive((bool) isPlayerReady);
+                }
             }
             else
             {
@@ -347,9 +353,12 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         return true;
     }
 
+
     public void Update()
     {
         StartGameButton.gameObject.SetActive(CheckPlayersReady());
+
+
     }
 
 
