@@ -49,8 +49,7 @@ public class PlayerEntry : MonoBehaviour
     {
         ownerId = playerID;
         PlayerNameText.text = name;
-        //PlayerReadyButton.gameObject.SetActive(true);
-        //SetPlayerReady(false);
+       
        
     }
 
