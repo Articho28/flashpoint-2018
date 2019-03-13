@@ -26,27 +26,17 @@ public class GamePlayersNetworkSetup : MonoBehaviour
         {
             Debug.Log("Player " + p.NickName + " is seen in game scene.");
 
-
-            /*PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", 
+            PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", 
             "PhotonPlayers", 
                 "PhotonPlayer"),
             transform.position,
-            Quaternion.identity, 0);*/
+            Quaternion.identity, 0);
+            GetComponent<PhotonPlayer>().Initialize(p.NickName);
 //            GetComponent<PhotonPlayer>().Initialize(p.NickName);
         
         }
-        if (PhotonNetwork.IsMasterClient)
-        {
-            foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
-            {
-                PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
-           "PhotonPlayers",
-               "PhotonPlayer"),
-           transform.position,
-           Quaternion.identity, 0);
-            }
-           
-        }
+
+       
 
 
 
