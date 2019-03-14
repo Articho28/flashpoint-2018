@@ -42,12 +42,32 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+       if (GameStatus == FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS)
+        {
+            //Nothing to do here, just wait for the spawning to be done.
+        }
+        else if (GameStatus == FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
+        {
+            //Implement Place firefighter function.
+            while (Turn < PhotonNetwork.CountOfPlayers + 1) 
+            {
+                PlaceInitialFireFighter(Turn);
+                Turn++;
+            }
+            Debug.Log("Everyone should have chosen a location.");
+           
+        }
     }
 
     public void OnAllPrefabsSpawned()
     {
         Debug.Log("Turn is " + Turn);
-        Debug.Log("Game statsu is " + GameStatus);
+        Debug.Log("Game status is " + GameStatus);
+    }
+
+    public bool PlaceInitialFireFighter(int Player)
+    {
+        Debug.Log("It's " + PhotonNetwork.PlayerList[Player - 1].NickName + " 's turn to place his firefighter!");
+        return true;
     }
 }
