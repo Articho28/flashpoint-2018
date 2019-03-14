@@ -26,7 +26,7 @@ public class PhotonPlayer : MonoBehaviour
 
             Hashtable props = new Hashtable
             {
-                {"IsPlayerReadyToBePlaced", true }
+                {FlashPointGameConstants.PLAYER_READY_FOR_PLACEMENT, true }
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }

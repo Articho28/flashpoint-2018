@@ -6,24 +6,25 @@ using Photon.Pun;
 public class GameManager : MonoBehaviourPunCallbacks
 {
 
-    public static GameManager GS;
+    public static GameManager GM;
+    public static string GameStatus;
+    public static int Turn;
 
 
     public void Awake()
     {
-        if (GS == null)
+        if (GM == null)
         {
-            GS = this;
+            GM = this;
         }
         else
         {
-            if(GS != this)
+            if(GM != this)
             {
-                Destroy(GS);
-                GS = this;
+                Destroy(GM);
+                GM = this;
             }
         }
-
         Debug.Log("The GameManager was created.");
     }
 
@@ -39,6 +40,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

@@ -126,7 +126,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         Hashtable props = new Hashtable
             {
-                {"IsPlayerLevelLoaded", false }
+                {FlashPointGameConstants.PLAYER_LOADED_LEVEL, false }
             };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
