@@ -20,7 +20,7 @@ public class PhotonPlayer : MonoBehaviour
             Debug.Log(myPlayer + " is " + PhotonNetwork.LocalPlayer.NickName + " ActorNumber");
             myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "fireman",
-                   "Firefighter1"),
+                   "Firefighter" + myPlayer),
               new Vector3(0,0,-5),
                Quaternion.identity, 0);
         }
