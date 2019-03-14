@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
         Debug.Log("The GameManager was created.");
-        Debug.Log("The gamestatus is " + GameStatus);
+        Debug.Log("The gamestatus is at first:  " + GameStatus);
     }
 
 
