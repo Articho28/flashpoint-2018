@@ -10,11 +10,11 @@ using ExitGames.Client.Photon;
 public class GamePlayersNetworkSetup : MonoBehaviour
 {
 
-    private static GamePlayersNetworkSetup GS;
+    public static GamePlayersNetworkSetup GS;
     public string status;
     [SerializeField]
     public ArrayList photonPlayers;
-    public Transform[] initialPositions = new Transform[6];
+    public Vector3[] initialPositions = new Vector3[6];
 
     private void Awake()
     {

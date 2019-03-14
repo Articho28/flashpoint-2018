@@ -21,8 +21,9 @@ public class PhotonPlayer : MonoBehaviour
             myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "fireman",
                    "Firefighter" + myPlayer),
-              new Vector3(0,0,-5),
+                   GamePlayersNetworkSetup.GS.initialPositions[myPlayer - 1],
                Quaternion.identity, 0);
+
         }
     }
 
