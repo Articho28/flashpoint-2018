@@ -15,11 +15,19 @@ public class GamePlayersNetworkSetup : MonoBehaviour
     [SerializeField]
     public ArrayList photonPlayers;
 
-    private void OnEnable()
+    private void Awake()
     {
         if (GamePlayersNetworkSetup.GS == null)
         {
             GamePlayersNetworkSetup.GS = this;
+        }
+        else
+        {
+            if (GamePlayersNetworkSetup.GS != this)
+            {
+                Destroy(GamePlayersNetworkSetup.GS);
+                GamePlayersNetworkSetup.GS = this;
+            }
         }
     }
 
@@ -35,7 +43,7 @@ public class GamePlayersNetworkSetup : MonoBehaviour
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
+            photonPlayers.Add(entry);
         }
-              
     }
 }
