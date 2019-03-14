@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
 using ExitGames.Client.Photon;
-
+using System;
 
 public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 {
@@ -15,6 +15,8 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 
     [SerializeField]
     public Dictionary<int, GameObject> photonPlayersPrefabs;
+
+    [SerializeField]
     public Dictionary<int, GameObject> photonPlayersAvatars;
     public Vector3[] initialPositions;
 
@@ -56,16 +58,24 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
-            photonPlayersPrefabs.Add(PhotonNetwork.LocalPlayer.ActorNumber -1 , entry);
+           // photonPlayersPrefabs.Add(PhotonNetwork.LocalPlayer.ActorNumber , entry);
             GameObject avatar = entry.GetComponent<PhotonPlayer>().myAvatar;
-            photonPlayersAvatars.Add(PhotonNetwork.LocalPlayer.ActorNumber -1 , avatar);
+            //photonPlayersAvatars.Add(PhotonNetwork.LocalPlayer.ActorNumber , avatar);
+            InsertGameObjects(PhotonNetwork.LocalPlayer.ActorNumber, entry);
         }
+    }
+
+    private void InsertGameObjects(int actorNumber, GameObject entry)
+    {
+        photonPlayersPrefabs.Add(actorNumber, entry);
+        photonPlayersAvatars.Add(actorNumber, entry.GetComponent<PhotonPlayer>().myAvatar);
+
     }
 
     public void  OnPlayerLeftLobby(Photon.Realtime.Player otherPlayer)
     {
-        photonPlayersPrefabs.Remove(otherPlayer.ActorNumber -1 );
-        photonPlayersAvatars.Remove(otherPlayer.ActorNumber -1 );
+        photonPlayersPrefabs.Remove(otherPlayer.ActorNumber );
+        photonPlayersAvatars.Remove(otherPlayer.ActorNumber );
     }
 
 }
