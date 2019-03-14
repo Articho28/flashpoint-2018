@@ -56,16 +56,16 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
-            photonPlayersPrefabs.Add(PhotonNetwork.LocalPlayer.ActorNumber, entry);
+            photonPlayersPrefabs.Add(PhotonNetwork.LocalPlayer.ActorNumber -1 , entry);
             GameObject avatar = entry.GetComponent<PhotonPlayer>().myAvatar;
-            photonPlayersAvatars.Add(PhotonNetwork.LocalPlayer.ActorNumber, avatar);
+            photonPlayersAvatars.Add(PhotonNetwork.LocalPlayer.ActorNumber -1 , avatar);
         }
     }
 
     public void  OnPlayerLeftLobby(Photon.Realtime.Player otherPlayer)
     {
-        photonPlayersPrefabs.Remove(otherPlayer.ActorNumber);
-        photonPlayersAvatars.Remove(otherPlayer.ActorNumber);
+        photonPlayersPrefabs.Remove(otherPlayer.ActorNumber -1 );
+        photonPlayersAvatars.Remove(otherPlayer.ActorNumber -1 );
     }
 
 }
