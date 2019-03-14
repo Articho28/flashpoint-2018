@@ -6,7 +6,7 @@ public class SpaceGrid : MonoBehaviour {
 
     public Transform firefighter;
     Vector2 gridWorldSize;
-    static Space[,] grid;
+    public static Space[,] grid;
 
     [SerializeField] float spaceRadius;
     float spaceDiameter;
@@ -69,14 +69,15 @@ public class SpaceGrid : MonoBehaviour {
     }
 
     //list index: 0 top, 1 right, 2 bottom, 3 left
-    public static List<Space> GetNeighbours(Space space) {
-        List<Space> neighbours = new List<Space>();
+    public static Space[] GetNeighbours(Space space) {
+        Space[] neighbours = new Space[4];
 
         //  _________
         // |__|_x|__|
         // |_x|_c|_x| 
         // |__|_x|__| 
         //search neighbour tiles x of c
+        int index = 0;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 if (x == y) continue; //continue if its the middle and corner tile
@@ -101,7 +102,8 @@ public class SpaceGrid : MonoBehaviour {
                         isValid = true;
                     }
 
-                    if (isValid) neighbours.Add(grid[checkX, checkY]);
+                    if (isValid) neighbours[index] = grid[checkX, checkY];
+                    index++;
                 }
             }
         }
@@ -110,8 +112,9 @@ public class SpaceGrid : MonoBehaviour {
     }
 
     private static bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
-        return grid[checkX, checkY].getWall(wallIndex) != default(Wall) &&
-                            grid[checkX, checkY].getWall(wallIndex).getWallStatus() == WallStatus.Destroyed;
+        return true;
+        /*return grid[checkX, checkY].getWall(wallIndex) != default(Wall) &&
+                            grid[checkX, checkY].getWall(wallIndex).getWallStatus() == WallStatus.Destroyed;*/
     }
 
     public Space WorldPointToSpace(Vector3 worldPosition) {
