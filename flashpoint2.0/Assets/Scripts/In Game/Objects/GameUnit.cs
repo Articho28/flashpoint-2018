@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameUnit : MonoBehaviour {
-    Space currentSpace;
-
-    private void Start() {
-    }
+    protected Space currentSpace;
 
     public Space getCurrentSpace() {
         return this.currentSpace;

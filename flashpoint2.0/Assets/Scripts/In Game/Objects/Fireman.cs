@@ -9,6 +9,13 @@ public class Fireman : GameUnit
     FMStatus status;
     Victim carriedVictim;
 
+    public void Start() {
+        AP = 6;
+        savedAP = 0;
+        status = FMStatus.FamilyFireFighter;
+        currentSpace = StateManager.instance.spaceGrid.getGrid()[0, 3];
+    }
+
     public void createFM(int numOfPlayers)
     {
         //TODO

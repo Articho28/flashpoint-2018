@@ -6,7 +6,7 @@ public class SpaceGrid : MonoBehaviour {
 
     public Transform firefighter;
     Vector2 gridWorldSize;
-    static Space[,] grid;
+    Space[,] grid;
 
     [SerializeField] float spaceRadius;
     float spaceDiameter;
@@ -20,10 +20,8 @@ public class SpaceGrid : MonoBehaviour {
         CreateGrid();
     }
 
-    //updates every frame
-    void Update()
-    {
-
+    public Space[,] getGrid() {
+        return grid;
     }
 
     private void CreateGrid() {
@@ -69,7 +67,7 @@ public class SpaceGrid : MonoBehaviour {
     }
 
     //list index: 0 top, 1 right, 2 bottom, 3 left
-    public static List<Space> GetNeighbours(Space space) {
+    public List<Space> GetNeighbours(Space space) {
         List<Space> neighbours = new List<Space>();
 
         //  _________
@@ -109,7 +107,7 @@ public class SpaceGrid : MonoBehaviour {
         return neighbours;
     }
 
-    private static bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
+    private bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
         return grid[checkX, checkY].getWall(wallIndex) != default(Wall) &&
                             grid[checkX, checkY].getWall(wallIndex).getWallStatus() == WallStatus.Destroyed;
     }

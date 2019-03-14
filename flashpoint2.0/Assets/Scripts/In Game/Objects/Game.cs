@@ -156,7 +156,7 @@ public class Game : MonoBehaviour
     {
         rollDice();
         Space s = new Space();//getSpace(Game.getRedDice(), Game.getBlackDice()); TODO function
-        List<Space> neighbours = SpaceGrid.GetNeighbours(s);
+        List<Space> neighbours = StateManager.instance.spaceGrid.GetNeighbours(s);
         Boolean onFire = false;
         foreach(Space n in neighbours){
             if (n.getSpaceStatus() == SpaceStatus.Fire) onFire = true;
