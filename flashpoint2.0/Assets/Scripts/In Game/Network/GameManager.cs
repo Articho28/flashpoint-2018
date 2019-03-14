@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager GM;
     public static string GameStatus;
     public static int Turn;
+    public static int NumberOfPlayers;
 
     [SerializeField]
     public static Dictionary<int, PhotonPlayer> playerPrefabs;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             GM = this;
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
             playerPrefabs = new Dictionary<int, PhotonPlayer>();
+            NumberOfPlayers = PhotonNetwork.CountOfPlayers;
         }
         else
         {
@@ -53,10 +55,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         else if (GameStatus == FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
             //Implement Place firefighter function.
-            if (Turn < PhotonNetwork.CountOfPlayers + 1) 
+            if (Turn <= PhotonNetwork.CountOfPlayers) 
             {
-                PlaceInitialFireFighter(Turn);
-                //Turn++;
+                bool FireFighterIsPlaced = PlaceInitialFireFighter(Turn);
+                if (FireFighterIsPlaced)
+                {
+                    IncrementTurn();
+                }
             }
             Debug.Log("Everyone should have chosen a location.");
            
@@ -98,6 +103,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     public bool PlaceInitialFireFighter(int Player)
     {
         Debug.Log("It's " + PhotonNetwork.PlayerList[Player - 1].NickName + " 's turn to place his firefighter!");
-        return true;
+
+        bool PlayerHasPlacedFirefighter = false;
+        return PlayerHasPlacedFirefighter;
+    }
+
+    public void IncrementTurn()
+    {
+        if (Turn == NumberOfPlayers)
+        {
+            Turn = 1;
+        }
+        else
+        {
+            Turn++;
+        }
     }
 }
