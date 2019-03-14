@@ -216,6 +216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &21551447
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,9 +322,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 8
   status: 0
   kind: 0
 --- !u!1 &25203070
@@ -510,11 +510,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 5
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &28882674
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,9 +619,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 5
   status: 0
   kind: 0
 --- !u!1 &29427870
@@ -806,6 +804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &34451495
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,11 +910,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
+  indexX: 6
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &36487174
 GameObject:
   m_ObjectHideFlags: 0
@@ -1100,11 +1098,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 3
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &49861375
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,6 +1206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &57643647
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,6 +1311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &60254984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1417,6 +1416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &67466366
 GameObject:
   m_ObjectHideFlags: 0
@@ -1756,6 +1756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &88186964
 GameObject:
   m_ObjectHideFlags: 0
@@ -2097,6 +2098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &108841792
 GameObject:
   m_ObjectHideFlags: 0
@@ -2201,6 +2203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &113666864
 GameObject:
   m_ObjectHideFlags: 0
@@ -2306,11 +2309,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
+  indexX: 1
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &126412692
 GameObject:
   m_ObjectHideFlags: 0
@@ -2415,6 +2417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &126901648
 GameObject:
   m_ObjectHideFlags: 0
@@ -2678,9 +2681,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 7
   status: 0
   kind: 0
 --- !u!1 &146732580
@@ -2988,9 +2990,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 7
   status: 0
   kind: 0
 --- !u!1 &190840807
@@ -3098,9 +3099,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 3
   status: 0
   kind: 0
 --- !u!1 &197144099
@@ -3439,11 +3439,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
+  indexX: 5
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &213629765
 GameObject:
   m_ObjectHideFlags: 0
@@ -3695,6 +3694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1 &226907582
 GameObject:
   m_ObjectHideFlags: 0
@@ -3800,9 +3800,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 7
   status: 0
   kind: 0
 --- !u!1 &233568737
@@ -4342,6 +4341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &258259412
 GameObject:
   m_ObjectHideFlags: 0
@@ -4525,6 +4525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &262871835
 GameObject:
   m_ObjectHideFlags: 0
@@ -4629,6 +4630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &279610262
 GameObject:
   m_ObjectHideFlags: 0
@@ -4734,11 +4736,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1001 &288535949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4997,6 +4998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &315101540
 GameObject:
   m_ObjectHideFlags: 0
@@ -5175,6 +5177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &334427876
 GameObject:
   m_ObjectHideFlags: 0
@@ -6381,9 +6384,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 5
   status: 0
   kind: 0
 --- !u!1 &432776114
@@ -6558,6 +6560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &438308724
 GameObject:
   m_ObjectHideFlags: 0
@@ -6819,9 +6822,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 1
   status: 0
   kind: 0
 --- !u!1 &455147347
@@ -6928,6 +6930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &461484040
 GameObject:
   m_ObjectHideFlags: 0
@@ -7111,6 +7114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &462780753
 GameObject:
   m_ObjectHideFlags: 0
@@ -7419,9 +7423,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 4
   status: 0
   kind: 0
 --- !u!1 &471921022
@@ -7607,6 +7610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &485344742
 GameObject:
   m_ObjectHideFlags: 0
@@ -7947,11 +7951,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 6
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1001 &496650972
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8132,11 +8135,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 8
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &520806475
 GameObject:
   m_ObjectHideFlags: 0
@@ -8479,9 +8481,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 5
   status: 0
   kind: 0
 --- !u!1 &545670055
@@ -8666,9 +8667,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 3
   status: 0
   kind: 0
 --- !u!1 &567937370
@@ -8776,11 +8776,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 2
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &569039453
 GameObject:
   m_ObjectHideFlags: 0
@@ -9158,6 +9157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &621356243
 GameObject:
   m_ObjectHideFlags: 0
@@ -9497,6 +9497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &667952625
 GameObject:
   m_ObjectHideFlags: 0
@@ -9602,9 +9603,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 5
   status: 0
   kind: 0
 --- !u!1 &674875039
@@ -9790,6 +9790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &708524800
 GameObject:
   m_ObjectHideFlags: 0
@@ -10053,9 +10054,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 8
   status: 0
   kind: 0
 --- !u!1 &724155521
@@ -10163,9 +10163,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 3
   status: 0
   kind: 0
 --- !u!1 &727502247
@@ -10273,9 +10272,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 2
   status: 0
   kind: 0
 --- !u!1 &742135059
@@ -10383,9 +10381,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 3
   status: 0
   kind: 0
 --- !u!1 &759719232
@@ -10493,11 +10490,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
+  indexX: 2
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &769480721
 GameObject:
   m_ObjectHideFlags: 0
@@ -10682,9 +10678,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 2
   status: 0
   kind: 0
 --- !u!1 &775607013
@@ -10950,9 +10945,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 1
   status: 0
   kind: 0
 --- !u!1 &809137931
@@ -11139,9 +11133,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 1
   status: 0
   kind: 0
 --- !u!1 &818248396
@@ -11249,9 +11242,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 1
   status: 0
   kind: 0
 --- !u!1 &823909493
@@ -11438,9 +11430,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 3
   status: 0
   kind: 0
 --- !u!1 &857831467
@@ -11548,11 +11539,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &858629781
 GameObject:
   m_ObjectHideFlags: 0
@@ -11658,9 +11648,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 3
   status: 0
   kind: 0
 --- !u!1 &863716800
@@ -11768,9 +11757,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 8
   status: 0
   kind: 0
 --- !u!1 &873022160
@@ -11883,6 +11871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1 &878798710
 GameObject:
   m_ObjectHideFlags: 0
@@ -11987,6 +11976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &884225689
 GameObject:
   m_ObjectHideFlags: 0
@@ -12091,6 +12081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &897593783
 GameObject:
   m_ObjectHideFlags: 0
@@ -12195,6 +12186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &916179974
 GameObject:
   m_ObjectHideFlags: 0
@@ -12533,9 +12525,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 6
   status: 0
   kind: 0
 --- !u!1 &944824813
@@ -12643,9 +12634,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 5
   status: 0
   kind: 0
 --- !u!1 &957927529
@@ -12753,11 +12743,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 6
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &962975696
 GameObject:
   m_ObjectHideFlags: 0
@@ -13020,6 +13009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &974111326
 GameObject:
   m_ObjectHideFlags: 0
@@ -13204,9 +13194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 4
   status: 0
   kind: 0
 --- !u!1 &983645778
@@ -13472,11 +13461,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &990655415
 GameObject:
   m_ObjectHideFlags: 0
@@ -13581,6 +13569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &990679907
 GameObject:
   m_ObjectHideFlags: 0
@@ -13686,9 +13675,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 6
   status: 0
   kind: 0
 --- !u!1 &995535879
@@ -13872,6 +13860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1007997838
 GameObject:
   m_ObjectHideFlags: 0
@@ -14055,6 +14044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1026809502
 GameObject:
   m_ObjectHideFlags: 0
@@ -14318,11 +14308,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 4
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1069993751
 GameObject:
   m_ObjectHideFlags: 0
@@ -14427,6 +14416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1074208229
 GameObject:
   m_ObjectHideFlags: 0
@@ -14532,11 +14522,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1077234241
 GameObject:
   m_ObjectHideFlags: 0
@@ -14721,6 +14710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1089894085
 GameObject:
   m_ObjectHideFlags: 0
@@ -14983,6 +14973,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1106998307
 GameObject:
   m_ObjectHideFlags: 0
@@ -15167,9 +15158,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 1
   status: 0
   kind: 0
 --- !u!1 &1127787017
@@ -15277,9 +15267,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 4
   status: 0
   kind: 0
 --- !u!1 &1133195566
@@ -15386,6 +15375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1133874994
 GameObject:
   m_ObjectHideFlags: 0
@@ -15570,9 +15560,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 7
   status: 0
   kind: 0
 --- !u!1 &1150537839
@@ -15680,9 +15669,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 6
   status: 0
   kind: 0
 --- !u!1 &1154277843
@@ -16134,6 +16122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1192560568
 GameObject:
   m_ObjectHideFlags: 0
@@ -16624,11 +16613,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 7
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1213001660
 GameObject:
   m_ObjectHideFlags: 0
@@ -16959,6 +16947,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1 &1235766512
 GameObject:
   m_ObjectHideFlags: 0
@@ -17300,6 +17289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1276227653
 GameObject:
   m_ObjectHideFlags: 0
@@ -17404,6 +17394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1289564077
 GameObject:
   m_ObjectHideFlags: 0
@@ -17670,11 +17661,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1312344456
 GameObject:
   m_ObjectHideFlags: 0
@@ -17768,6 +17758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1 &1313112574
 GameObject:
   m_ObjectHideFlags: 0
@@ -17873,11 +17864,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 2
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1313466400
 GameObject:
   m_ObjectHideFlags: 0
@@ -18061,6 +18051,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1328516177
 GameObject:
   m_ObjectHideFlags: 0
@@ -18166,9 +18157,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 7
   status: 0
   kind: 0
 --- !u!1 &1331359000
@@ -18434,9 +18424,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 1
   status: 0
   kind: 0
 --- !u!1 &1351061243
@@ -18701,6 +18690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1378184220
 GameObject:
   m_ObjectHideFlags: 0
@@ -18805,6 +18795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1378875792
 GameObject:
   m_ObjectHideFlags: 0
@@ -19147,9 +19138,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 5
   status: 0
   kind: 0
 --- !u!1 &1389031686
@@ -19570,6 +19560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1426286818
 GameObject:
   m_ObjectHideFlags: 0
@@ -19674,6 +19665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1427309106
 GameObject:
   m_ObjectHideFlags: 0
@@ -19915,11 +19907,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 4
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1436531022
 GameObject:
   m_ObjectHideFlags: 0
@@ -20182,6 +20173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1452354933
 GameObject:
   m_ObjectHideFlags: 0
@@ -20286,6 +20278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1455336712
 GameObject:
   m_ObjectHideFlags: 0
@@ -20391,11 +20384,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 8
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1456043654
 GameObject:
   m_ObjectHideFlags: 0
@@ -20501,11 +20493,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 1
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1466417315
 GameObject:
   m_ObjectHideFlags: 0
@@ -20611,11 +20602,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
+  indexX: 4
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1001 &1477500403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20940,6 +20930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1531096386
 GameObject:
   m_ObjectHideFlags: 0
@@ -21033,6 +21024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1 &1531436216
 GameObject:
   m_ObjectHideFlags: 0
@@ -21138,9 +21130,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 6
   status: 0
   kind: 0
 --- !u!1 &1549501414
@@ -21248,11 +21239,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
+  indexX: 7
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1552127856
 GameObject:
   m_ObjectHideFlags: 0
@@ -21437,9 +21427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 8
   status: 0
   kind: 0
 --- !u!1 &1560180785
@@ -21535,6 +21524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1001 &1565577942
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21720,6 +21710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1582378670
 GameObject:
   m_ObjectHideFlags: 0
@@ -21983,11 +21974,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 5
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1606710185
 GameObject:
   m_ObjectHideFlags: 0
@@ -22092,6 +22082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1610828996
 GameObject:
   m_ObjectHideFlags: 0
@@ -22354,6 +22345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1620942445
 GameObject:
   m_ObjectHideFlags: 0
@@ -22459,9 +22451,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 6
   status: 0
   kind: 0
 --- !u!1 &1632142925
@@ -22884,6 +22875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1668540738
 GameObject:
   m_ObjectHideFlags: 0
@@ -23146,6 +23138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1681135827
 GameObject:
   m_ObjectHideFlags: 0
@@ -23251,9 +23244,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 2
   status: 0
   kind: 0
 --- !u!1 &1687364053
@@ -23903,6 +23895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1 &1734539364
 GameObject:
   m_ObjectHideFlags: 0
@@ -24087,11 +24080,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1737664082
 GameObject:
   m_ObjectHideFlags: 0
@@ -24355,9 +24347,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 7
   status: 0
   kind: 0
 --- !u!1 &1773004453
@@ -24543,6 +24534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1782846840
 GameObject:
   m_ObjectHideFlags: 0
@@ -24636,6 +24628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1784344993
 GameObject:
   m_ObjectHideFlags: 0
@@ -24741,9 +24734,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 4
   status: 0
   kind: 0
 --- !u!1 &1797137130
@@ -24929,6 +24921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1837848864
 GameObject:
   m_ObjectHideFlags: 0
@@ -25033,6 +25026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1841123929
 GameObject:
   m_ObjectHideFlags: 0
@@ -25296,11 +25290,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1853364463
 GameObject:
   m_ObjectHideFlags: 0
@@ -25406,11 +25399,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 1
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1854573003
 GameObject:
   m_ObjectHideFlags: 0
@@ -25874,9 +25866,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 3
+  indexY: 4
   status: 0
   kind: 0
 --- !u!1001 &1890452009
@@ -26137,6 +26128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1918809969
 GameObject:
   m_ObjectHideFlags: 0
@@ -26400,9 +26392,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 1
+  indexY: 2
   status: 0
   kind: 0
 --- !u!1 &1946176109
@@ -26510,11 +26501,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1964524246
 GameObject:
   m_ObjectHideFlags: 0
@@ -26620,11 +26610,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 9
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &1985625248
 GameObject:
   m_ObjectHideFlags: 0
@@ -26730,9 +26719,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 2
   status: 0
   kind: 0
 --- !u!1 &1985798918
@@ -26839,6 +26827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &1986053233
 GameObject:
   m_ObjectHideFlags: 0
@@ -27023,11 +27012,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
   indexX: 0
-  indexY: 0
+  indexY: 3
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &2004593119
 GameObject:
   m_ObjectHideFlags: 0
@@ -27607,9 +27595,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 6
+  indexY: 8
   status: 0
   kind: 0
 --- !u!1 &2048107805
@@ -27716,6 +27703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &2060576948
 GameObject:
   m_ObjectHideFlags: 0
@@ -27821,9 +27809,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 2
+  indexY: 8
   status: 0
   kind: 0
 --- !u!1 &2070431414
@@ -28010,9 +27997,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 4
+  indexY: 2
   status: 0
   kind: 0
 --- !u!1 &2080114901
@@ -28119,6 +28105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &2088488926
 GameObject:
   m_ObjectHideFlags: 0
@@ -28224,9 +28211,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 4
   status: 0
   kind: 0
 --- !u!1 &2089118043
@@ -28569,9 +28555,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 5
+  indexY: 6
   status: 0
   kind: 0
 --- !u!1 &2100115776
@@ -28825,6 +28810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 1
 --- !u!1 &2114810302
 GameObject:
   m_ObjectHideFlags: 0
@@ -28930,11 +28916,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
-  indexY: 0
+  indexX: 7
+  indexY: 7
   status: 0
-  kind: 0
+  kind: 1
 --- !u!1 &2116140802
 GameObject:
   m_ObjectHideFlags: 0
@@ -29276,6 +29261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &2139898563
 GameObject:
   m_ObjectHideFlags: 0
@@ -29380,6 +29366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de46ff26611ec48e1a3ca96814b5d4d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status: 0
 --- !u!1 &2144547896
 GameObject:
   m_ObjectHideFlags: 0
@@ -29485,11 +29472,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldPosition: {x: 0, y: 0, z: 0}
-  isOutside: 0
-  indexX: 0
+  indexX: 3
   indexY: 0
   status: 0
-  kind: 0
+  kind: 1
 --- !u!4 &358439415600304767 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
