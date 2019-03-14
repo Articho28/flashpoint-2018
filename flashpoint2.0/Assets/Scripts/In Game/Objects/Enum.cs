@@ -84,3 +84,19 @@ public enum Direction
     West,
     South
 }
+
+public enum Action
+{
+    PlaceFire,
+    FlipSmoke,
+    FlipFire,
+    RemoveSmoke,
+    RemoveFire,
+    Move,
+    OpenDoor,
+    CloseDoor,
+    ChopWall,
+    ExtinguishFire,
+    CarryVictim,
+
+} 

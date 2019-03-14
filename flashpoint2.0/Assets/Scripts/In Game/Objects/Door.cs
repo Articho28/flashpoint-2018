@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Door : EdgeObstacleObject
 {
-    DoorStatus status;
+    public DoorStatus status;
 
     //constructor
     public Door(DoorStatus status)
