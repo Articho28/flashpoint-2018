@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (GM == null)
         {
             GM = this;
+            GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
         }
         else
         {
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
         Debug.Log("The GameManager was created.");
+        Debug.Log("The gamestatus is " + GameStatus);
     }
 
 
@@ -34,12 +36,18 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void OnAllPrefabsSpawned()
+    {
+        Debug.Log("Turn is " + Turn);
+        Debug.Log("Game statsu is " + GameStatus);
     }
 }

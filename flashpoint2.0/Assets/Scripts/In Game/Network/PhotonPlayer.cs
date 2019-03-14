@@ -16,12 +16,11 @@ public class PhotonPlayer : MonoBehaviour
         PV = GetComponent<PhotonView>();
         if (PV.IsMine)
         {
-            int myPlayer = PhotonNetwork.LocalPlayer.ActorNumber;
-            Debug.Log(myPlayer + " is " + PhotonNetwork.LocalPlayer.NickName + " ActorNumber");
+            int myPlayerNumber = PhotonNetwork.LocalPlayer.ActorNumber;
             myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "fireman",
-                   "Firefighter" + myPlayer),
-                   GamePlayersNetworkSetup.GS.initialPositions[myPlayer - 1],
+                   "Firefighter" + myPlayerNumber),
+                   GamePlayersNetworkSetup.GS.initialPositions[myPlayerNumber - 1],
                Quaternion.identity, 0);
 
             Hashtable props = new Hashtable

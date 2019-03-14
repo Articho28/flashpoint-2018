@@ -101,9 +101,10 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
             {
                 Debug.Log("All Players are ready to be placed!");
                 IsSpawningPrefabs = false;
-                
+
                 GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
                 GameManager.Turn = 1;
+                GameManager.GM.OnAllPrefabsSpawned();
 
             }
 
