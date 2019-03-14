@@ -23,11 +23,7 @@ public class GamePlayersNetworkSetup : MonoBehaviour
         }
     }
 
-    public void Awake()
-    {
-        PhotonNetwork.AutomaticallySyncScene = true;
-
-    }
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +35,7 @@ public class GamePlayersNetworkSetup : MonoBehaviour
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
+            entry.GetComponent<PhotonPlayer>().myAvatar.SetActive(false);
         }
               
     }
