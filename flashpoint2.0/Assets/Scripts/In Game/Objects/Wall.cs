@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Wall : EdgeObstacleObject
 {
-    WallStatus status;
-    int damageMarker;
+    public WallStatus status;
 
     //constructor
     public Wall()
     {
         this.status = WallStatus.Intact;
-        this.damageMarker = 0;
     }
 
     //wall status getter 
@@ -35,12 +33,6 @@ public class Wall : EdgeObstacleObject
         }
 
         return false;
-    }
-
-    //function that increments the damage marker
-    public void incrementDamageMarker()
-    {
-        this.damageMarker++;
     }
 
 } 

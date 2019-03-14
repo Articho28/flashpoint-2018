@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Space {
+public class Space : MonoBehaviour{
     public Vector3 worldPosition;
-    public bool isOutside;
     public int indexX;
     public int indexY;
-    SpaceStatus status;
-    SpaceKind kind;
+    public SpaceStatus status;
+    public SpaceKind kind;
     Wall[] walls;
     Door[] doors;
     List<GameUnit> occupants;
@@ -17,7 +16,6 @@ public class Space {
     public Space()
     {
         worldPosition = new Vector3(0, 0, 0);
-        isOutside = false;
         indexX = 0;
         indexY = 0;
         status = SpaceStatus.Safe;
@@ -28,7 +26,6 @@ public class Space {
 
     public Space(Vector2 _worldPos, bool _isOutside, int _indexX, int _indexY) {
         worldPosition = new Vector3(_worldPos.x, _worldPos.y, 0);
-        isOutside = _isOutside;
         indexX = _indexX;
         indexY = _indexY;
     }
