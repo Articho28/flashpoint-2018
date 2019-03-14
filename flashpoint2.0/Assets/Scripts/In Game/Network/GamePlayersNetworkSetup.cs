@@ -35,7 +35,6 @@ public class GamePlayersNetworkSetup : MonoBehaviour
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
-            entry.GetComponent<PhotonPlayer>().myAvatar.SetActive(false);
         }
               
     }
