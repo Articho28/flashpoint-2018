@@ -23,7 +23,13 @@ public class PhotonPlayer : MonoBehaviour
                    "Firefighter" + myPlayer),
               new Vector3(0,0,-5),
                Quaternion.identity, 0);
+            myAvatar.SetActive(false);
         }
+    }
+
+    void Update()
+    {
+
     }
 
 

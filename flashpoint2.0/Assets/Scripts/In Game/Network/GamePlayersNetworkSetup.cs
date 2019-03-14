@@ -17,6 +17,7 @@ public class GamePlayersNetworkSetup : MonoBehaviour
 
     private void Awake()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         if (GamePlayersNetworkSetup.GS == null)
         {
             GamePlayersNetworkSetup.GS = this;
@@ -43,7 +44,11 @@ public class GamePlayersNetworkSetup : MonoBehaviour
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
-            //photonPlayers.Add(entry);
         }
+    }
+
+    void Update()
+    {
+
     }
 }
