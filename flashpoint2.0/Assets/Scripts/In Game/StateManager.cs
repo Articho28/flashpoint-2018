@@ -14,11 +14,11 @@ public class StateManager : MonoBehaviour {
     #endregion
 
     [SerializeField] GameObject spaceGridObject;
-    SpaceGrid grid;
+    SpaceGrid spaceGrid;
 
     // Use this for initialization
     void Start() {
-        grid = spaceGridObject.GetComponent<SpaceGrid>();
+        spaceGrid = spaceGridObject.GetComponent<SpaceGrid>();
     }
 
 }

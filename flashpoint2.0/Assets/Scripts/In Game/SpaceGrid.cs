@@ -68,29 +68,50 @@ public class SpaceGrid : MonoBehaviour {
 
     }
 
-    public static List<Space> GetNeighbours(Space tile) {
+    //list index: 0 top, 1 right, 2 bottom, 3 left
+    public static List<Space> GetNeighbours(Space space) {
         List<Space> neighbours = new List<Space>();
 
         //  _________
-        // |__|__|__|
-        // |__|_c|__| 
-        // |__|__|__| 
-        //search neighbour tiles of c
+        // |__|_x|__|
+        // |_x|_c|_x| 
+        // |__|_x|__| 
+        //search neighbour tiles x of c
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                if (x == 0 && y == 0) continue; //continue if its the middle tile
+                if (x == y) continue; //continue if its the middle and corner tile
 
-                int checkX = tile.indexX + x;
-                int checkY = tile.indexY + y;
+                int checkX = space.indexX + x;
+                int checkY = space.indexY + y;
 
                 //check if neighbouring node is valid
-                if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
-                    neighbours.Add(grid[checkX, checkY]);
+                if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) { //within boundaries
+                    bool isValid = false;
+
+                    if (y == 1 && isValidNeighbour(checkX, checkY, 0)) {
+                        isValid = true;
+                    }
+                    else if (x == 1 && isValidNeighbour(checkX, checkY, 1)) {
+                        isValid = true;
+                    }
+                    else if (y == -1 && isValidNeighbour(checkX, checkY, 2)) {
+                        isValid = true;
+                    }
+                    else if(x == -1 && isValidNeighbour(checkX, checkY, 3)) {
+                        isValid = true;
+                    }
+
+                    if (isValid) neighbours.Add(grid[checkX, checkY]);
                 }
             }
         }
 
         return neighbours;
+    }
+
+    private static bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
+        return grid[checkX, checkY].getWall(wallIndex) != default(Wall) &&
+                            grid[checkX, checkY].getWall(wallIndex).getWallStatus() == WallStatus.Destroyed;
     }
 
     public Space WorldPointToSpace(Vector3 worldPosition) {
