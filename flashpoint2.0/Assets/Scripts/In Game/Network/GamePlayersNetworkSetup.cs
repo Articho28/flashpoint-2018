@@ -22,6 +22,12 @@ public class GamePlayersNetworkSetup : MonoBehaviour
             GamePlayersNetworkSetup.GS = this;
         }
     }
+
+    public void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+
+    }
     // Start is called before the first frame update
     void Start()
     {
