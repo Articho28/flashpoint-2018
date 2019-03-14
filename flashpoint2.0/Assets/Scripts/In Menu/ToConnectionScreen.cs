@@ -134,8 +134,8 @@ public class ToConnectionScreen : MonoBehaviour
     //Sets up multiplayer settings.
     void SetMultiplayerSetting()
     {
-        MultiplayerSetting.MS.SetFamilyGame(true);
+/*        MultiplayerSetting.MS.SetFamilyGame(true);
         MultiplayerSetting.MS.SetNumberOfPlayers(numPlayers);
-        MultiplayerSetting.MS.SetGameRoomName(gameRoomInputField.text.ToString());
+        MultiplayerSetting.MS.SetGameRoomName(gameRoomInputField.text.ToString());*/
     }
 }

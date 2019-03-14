@@ -4,7 +4,8 @@ using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.UI;
 using ExitGames.Client.Photon;
-
+using UnityEngine.SceneManagement;
+using System.IO;
 
 public class LobbyMainPanel : MonoBehaviourPunCallbacks
 {
@@ -50,6 +51,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
     public void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.AddCallbackTarget(this);
 
         cachedRoomList = new Dictionary<string, RoomInfo>();
         roomListEntries = new Dictionary<string, GameObject>();
@@ -362,6 +364,8 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         }
     }
+
+  
 
     public void Update()
     {
