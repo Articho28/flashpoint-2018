@@ -15,6 +15,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 
     [SerializeField]
     public Dictionary<int, GameObject> photonPlayersPrefabs;
+    public Dictionary<int, GameObject> photonPlayersAvatars;
     public Vector3[] initialPositions;
 
     private void Awake()
@@ -56,12 +57,15 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
                transform.position,
                Quaternion.identity, 0);
             photonPlayersPrefabs.Add(PhotonNetwork.LocalPlayer.ActorNumber, entry);
+            GameObject avatar = entry.GetComponent<PhotonPlayer>().myAvatar;
+            photonPlayersAvatars.Add(PhotonNetwork.LocalPlayer.ActorNumber, avatar);
         }
     }
 
     public void  OnPlayerLeftLobby(Photon.Realtime.Player otherPlayer)
     {
         photonPlayersPrefabs.Remove(otherPlayer.ActorNumber);
+        photonPlayersAvatars.Remove(otherPlayer.ActorNumber);
     }
 
 }
