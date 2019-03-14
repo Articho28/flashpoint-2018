@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParkingSpot : Space
+public class ParkingSpot
 {
 
     void createPS()

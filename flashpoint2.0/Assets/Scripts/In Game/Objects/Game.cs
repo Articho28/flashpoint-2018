@@ -30,11 +30,11 @@ public class Game : MonoBehaviour
 
     public void setFiremanStartingSpace(Fireman f)
     {
-        Space startingSpace = new Space(); //TODO change this to get clicked tile
-        if (startingSpace.getSpaceKind() == SpaceKind.Outdoor)
-        {
-            f.setCurrentSpace(startingSpace);
-        }
+//        Space startingSpace = new Space(); //TODO change this to get clicked tile
+//        if (startingSpace.getSpaceKind() == SpaceKind.Outdoor)
+//        {
+//            f.setCurrentSpace(startingSpace);
+//        }
     }
 
     public static GameState getGameState() {
@@ -147,9 +147,9 @@ public class Game : MonoBehaviour
     public void advanceFire()
     {
         Game.rollDice();
-        Space rollSpace = SpaceGrid.grid[Game.getRedDice() - 1, Game.getBlackDice() - 1];
+        Space rollSpace = StateManager.instance.spaceGrid.getGrid()[Game.getRedDice() - 1, Game.getBlackDice() - 1];
         SpaceStatus ss = rollSpace.getSpaceStatus();
-        Space[] neighbours = SpaceGrid.GetNeighbours(rollSpace);
+        Space[] neighbours = StateManager.instance.spaceGrid.GetNeighbours(rollSpace);
 
         if (ss == SpaceStatus.Safe) rollSpace.setSpaceStatus(SpaceStatus.Smoke);
         else if (ss == SpaceStatus.Smoke) rollSpace.setSpaceStatus(SpaceStatus.Fire);
@@ -173,7 +173,7 @@ public class Game : MonoBehaviour
 
     public static void explosion (Space s, string action){
 
-        Space[] neighbours = SpaceGrid.GetNeighbours(s);
+        Space[] neighbours = StateManager.instance.spaceGrid.GetNeighbours(s);
         for (int i = 0; i < 4; i++) {
             SpaceStatus ss = neighbours[i].getSpaceStatus();
             if (ss == SpaceStatus.Fire)
@@ -203,7 +203,7 @@ public class Game : MonoBehaviour
 
     public static void Shockwave(Space s, int direction)
     {
-        Space[] neighbours = SpaceGrid.GetNeighbours(s);
+        Space[] neighbours = StateManager.instance.spaceGrid.GetNeighbours(s);
         if (neighbours[direction] == null) //this would mean there's a wall or closed door
         {
             Door[] doors = s.getDoors();
@@ -239,8 +239,8 @@ public class Game : MonoBehaviour
             {
                 //while: there is no Smoke Adjacent to Fire at the end of a turn
                 //flip any Smoke marker in a space Adjacent to Fire to Fire (Remember: Smoke Adjacent to Fire = Fire)
-                Space curr = SpaceGrid.grid[i, j];
-                Space[] neighbours = SpaceGrid.GetNeighbours(curr);
+                Space curr = StateManager.instance.spaceGrid.getGrid()[i, j];
+                Space[] neighbours = StateManager.instance.spaceGrid.GetNeighbours(curr);
                 foreach (Space n in neighbours)
                 {
                     if (curr.getSpaceStatus() == SpaceStatus.Fire && n.getSpaceStatus() == SpaceStatus.Smoke)
@@ -293,8 +293,8 @@ public class Game : MonoBehaviour
     public void endTurn()
         {
             Game.rollDice();
-            Space s = SpaceGrid.grid[Game.getRedDice() - 1, Game.getBlackDice() - 1];
-            Space[] neighbours = SpaceGrid.GetNeighbours(s);
+            Space s = StateManager.instance.spaceGrid.getGrid()[Game.getRedDice() - 1, Game.getBlackDice() - 1];
+            Space[] neighbours = StateManager.instance.spaceGrid.GetNeighbours(s);
             Boolean onFire = false;
             foreach(Space n in neighbours)
             {

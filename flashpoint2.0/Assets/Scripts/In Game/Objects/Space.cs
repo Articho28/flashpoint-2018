@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Space : MonoBehaviour{
+public class Space {
     public Vector3 worldPosition;
     public int indexX;
     public int indexY;
@@ -12,22 +12,17 @@ public class Space : MonoBehaviour{
     Door[] doors;
     List<GameUnit> occupants;
 
-    //default constructor
-    public Space()
-    {
-        worldPosition = new Vector3(0, 0, 0);
-        indexX = 0;
-        indexY = 0;
-        status = SpaceStatus.Safe;
-        kind = SpaceKind.Indoor;
-        occupants = null;
-    }
-    
+
 
     public Space(Vector2 _worldPos, bool _isOutside, int _indexX, int _indexY) {
         worldPosition = new Vector3(_worldPos.x, _worldPos.y, 0);
         indexX = _indexX;
-        indexY = _indexY;
+        indexY = _indexY;
+        walls = new Wall[4];
+        doors = new Door[4];
+        status = SpaceStatus.Safe;
+        kind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
+
     }
 
     //function to add walls at a certain index

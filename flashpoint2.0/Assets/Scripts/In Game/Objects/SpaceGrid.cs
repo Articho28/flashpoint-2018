@@ -7,7 +7,7 @@ public class SpaceGrid : MonoBehaviour {
     public Transform firefighter;
     Vector2 gridWorldSize;
 
-    Space[,] grid;
+    public Space[,] grid;
 
     [SerializeField] float spaceRadius;
     float spaceDiameter;
@@ -133,7 +133,7 @@ public class SpaceGrid : MonoBehaviour {
         if (grid != null) {
             foreach (Space t in grid) {
                 Gizmos.color = Color.red;
-                if (t.isOutside == true) {
+                if (t.kind == SpaceKind.Outdoor) {
                     Gizmos.color = Color.cyan;
                 }
                 Gizmos.DrawWireCube(t.worldPosition, new Vector3(spaceDiameter - 0.01f, spaceDiameter - 0.01f, 1));

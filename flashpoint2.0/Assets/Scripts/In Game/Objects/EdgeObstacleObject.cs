@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EdgeObstacleObject : MonoBehaviour {
+public class EdgeObstacleObject {
     Space[] adjacentSpaces;
 
     //adjacent space getter
