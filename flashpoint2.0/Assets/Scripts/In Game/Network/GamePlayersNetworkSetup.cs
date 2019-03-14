@@ -14,6 +14,7 @@ public class GamePlayersNetworkSetup : MonoBehaviour
     public string status;
     [SerializeField]
     public ArrayList photonPlayers;
+    public Transform[] initialPositions = new Transform[6];
 
     private void Awake()
     {
@@ -47,8 +48,5 @@ public class GamePlayersNetworkSetup : MonoBehaviour
         }
     }
 
-    void Update()
-    {
 
-    }
 }
