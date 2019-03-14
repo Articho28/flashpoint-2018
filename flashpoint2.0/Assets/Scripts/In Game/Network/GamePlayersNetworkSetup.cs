@@ -14,7 +14,7 @@ public class GamePlayersNetworkSetup : MonoBehaviour
     public string status;
     [SerializeField]
     public ArrayList photonPlayers;
-    public Vector3[] initialPositions = new Vector3[6];
+    public Vector3[] initialPositions;
 
     private void Awake()
     {
@@ -22,6 +22,15 @@ public class GamePlayersNetworkSetup : MonoBehaviour
         if (GamePlayersNetworkSetup.GS == null)
         {
             GamePlayersNetworkSetup.GS = this;
+            initialPositions = new Vector3[PhotonNetwork.CountOfPlayers];
+            Vector3 topPosition = new Vector3(-8.9f, 0.32f, 0);
+            for (int i = 0; i < initialPositions.Length; i++)
+            {
+                initialPositions[i] = topPosition;
+                topPosition = new Vector3(topPosition.x, topPosition.y - 0.92f, 0);
+            }
+
+
         }
         else
         {
