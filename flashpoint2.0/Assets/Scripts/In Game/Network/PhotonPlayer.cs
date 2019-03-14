@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Photon.Pun;
 using UnityEngine;
+using ExitGames.Client.Photon;
+
 
 public class PhotonPlayer : MonoBehaviour
 {
@@ -23,7 +23,12 @@ public class PhotonPlayer : MonoBehaviour
                    "Firefighter" + myPlayer),
                    GamePlayersNetworkSetup.GS.initialPositions[myPlayer - 1],
                Quaternion.identity, 0);
-           // GamePlayersNetworkSetup.GS.photonPlayersPrefabs.Add(myPlayer, gameObject);
+
+            Hashtable props = new Hashtable
+            {
+                {"IsPlayerReadyToBePlaced", true }
+            };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
     }
 

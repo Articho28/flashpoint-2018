@@ -11,7 +11,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 {
 
     public static GamePlayersNetworkSetup GS;
-    public string status;
+    public bool status;
 
     [SerializeField]
     public Dictionary<int, GameObject> photonPlayersPrefabs;
@@ -49,6 +49,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        status = true; 
         if (PhotonNetwork.IsConnected)
         {
             Debug.Log("This is Player " + PhotonNetwork.LocalPlayer.NickName);
@@ -61,4 +62,47 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
         }
     }
 
+    private bool CheckPlayersReadyToBePlaced()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return false;
+        }
+
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            Debug.Log("Checking for player " + p.NickName);
+
+            object isPlayerReady;
+            if (p.CustomProperties.TryGetValue("IsPlayerReadyToBePlaced", out isPlayerReady))
+            {
+                if (!(bool)isPlayerReady)
+                {
+                    Debug.Log("Player " + p.NickName + " is not ready to be placed.");
+                    return false;
+                }
+
+            }
+            else
+            {
+                Debug.Log("Could not check status");
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    void Update()
+    {
+        if (status)
+        {
+            if (CheckPlayersReadyToBePlaced())
+            {
+                Debug.Log("All Players are ready to be placed!");
+                status = false;
+            }
+
+        }
+    }
 }
