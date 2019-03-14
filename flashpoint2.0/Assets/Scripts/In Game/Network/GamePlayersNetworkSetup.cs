@@ -7,13 +7,14 @@ using System.IO;
 using ExitGames.Client.Photon;
 
 
-public class GamePlayersNetworkSetup : MonoBehaviour
+public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 {
 
     public static GamePlayersNetworkSetup GS;
     public string status;
+
     [SerializeField]
-    public ArrayList photonPlayers;
+    public Dictionary<int, GameObject> photonPlayersPrefabs;
     public Vector3[] initialPositions;
 
     private void Awake()
@@ -54,8 +55,13 @@ public class GamePlayersNetworkSetup : MonoBehaviour
                    "PhotonPlayer"),
                transform.position,
                Quaternion.identity, 0);
+            photonPlayersPrefabs.Add(PhotonNetwork.LocalPlayer.ActorNumber, entry);
         }
     }
 
+    public void  OnPlayerLeftLobby(Photon.Realtime.Player otherPlayer)
+    {
+        photonPlayersPrefabs.Remove(otherPlayer.ActorNumber);
+    }
 
 }
