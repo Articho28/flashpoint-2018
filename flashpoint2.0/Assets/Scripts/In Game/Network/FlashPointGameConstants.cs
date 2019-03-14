@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class FlashPointGameConstants 
 {
-    public const string PLAYER_LOADED_LEVEL = "IsPlayerLoadedLevel";
+    public const string PLAYER_LOADED_IN_ROOM = "IsPlayerInRoom";
     public const string PLAYER_READY_FOR_PLACEMENT = "IsPlayerReadyForPlacement";
 
     public const string GAME_STATUS_INITIALPLACEMENT = "InitialPlacement";

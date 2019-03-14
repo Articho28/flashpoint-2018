@@ -6,9 +6,10 @@ using ExitGames.Client.Photon;
 
 public class PhotonPlayer : MonoBehaviour
 {
-
     private PhotonView PV;
     public GameObject myAvatar;
+    public int Id;
+    public string PlayerName;
 
     // Start is called before the first frame update
     void Start()
@@ -31,5 +32,9 @@ public class PhotonPlayer : MonoBehaviour
         }
     }
 
-
+    public void Initialize(int id, string name)
+    {
+        Id = id;
+        PlayerName = name;
+    }
 }

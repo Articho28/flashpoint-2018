@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static string GameStatus;
     public static int Turn;
 
+    [SerializeField]
+    public static Dictionary<int, PhotonPlayer> playerPrefabs;
 
     public void Awake()
     {
@@ -17,6 +19,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             GM = this;
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
+            playerPrefabs = new Dictionary<int, PhotonPlayer>();
         }
         else
         {
@@ -46,13 +49,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             //Nothing to do here, just wait for the spawning to be done.
         }
+
         else if (GameStatus == FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
             //Implement Place firefighter function.
-            while (Turn < PhotonNetwork.CountOfPlayers + 1) 
+            if (Turn < PhotonNetwork.CountOfPlayers + 1) 
             {
                 PlaceInitialFireFighter(Turn);
-                Turn++;
+                //Turn++;
             }
             Debug.Log("Everyone should have chosen a location.");
            
@@ -63,6 +67,32 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Turn is " + Turn);
         Debug.Log("Game status is " + GameStatus);
+
+        GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
+        GameManager.Turn = 1;
+
+        Debug.Log("Turn is now " + Turn);
+        Debug.Log("Game status is changed to  " + GameStatus);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonPlayer[] photonPlayers = FindObjectsOfType<PhotonPlayer>();
+            if (photonPlayers[0] != null)
+            {
+           
+                for (int i = 0; i < photonPlayers.Length; i++)
+                {
+                    Debug.Log(photonPlayers[i].PlayerName + " Added to Dictionary ");
+                    Debug.Log(photonPlayers[i]);
+                    playerPrefabs.Add(photonPlayers[i].Id, photonPlayers[i]);
+
+                }
+            }
+            else
+            {
+                Debug.Log("did not find the photonPlayers");
+            }
+        }
     }
 
     public bool PlaceInitialFireFighter(int Player)
