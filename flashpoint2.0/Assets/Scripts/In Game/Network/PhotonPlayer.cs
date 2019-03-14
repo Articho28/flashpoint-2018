@@ -23,7 +23,7 @@ public class PhotonPlayer : MonoBehaviour
                    "Firefighter" + myPlayer),
                    GamePlayersNetworkSetup.GS.initialPositions[myPlayer - 1],
                Quaternion.identity, 0);
-
+           // GamePlayersNetworkSetup.GS.photonPlayersPrefabs.Add(myPlayer, gameObject);
         }
     }
 
