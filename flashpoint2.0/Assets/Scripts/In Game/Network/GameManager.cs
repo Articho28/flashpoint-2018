@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         return PlayerHasPlacedFirefighter;
     }
 
-    public void IncrementTurn()
+    public static void IncrementTurn()
     {
         if (Turn == NumberOfPlayers)
         {
@@ -122,4 +122,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             Turn++;
         }
     }
+
+  
 }
