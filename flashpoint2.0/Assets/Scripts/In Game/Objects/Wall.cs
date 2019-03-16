@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
-public class Wall : EdgeObstacleObject
+public class Wall : MonoBehaviour
 {
     public WallStatus status;
+    GameObject wall;
+
+    [SerializeField] Material intact;
+    [SerializeField] Material broken;
 
     //constructor
     public Wall()
     {
         this.status = WallStatus.Intact;
+
     }
 
     //wall status getter 
@@ -24,16 +30,32 @@ public class Wall : EdgeObstacleObject
         if (status == WallStatus.Intact) {
             status = WallStatus.Damaged;
             Game.incrementBuildingDamage();
+
+            updateMaterial();
             return true;
         }
         else if (status == WallStatus.Damaged) {
             status = WallStatus.Destroyed;
             Game.incrementBuildingDamage();
+
+            updateMaterial();
             return true;
         }
 
         return false;
     }
+
+    private void updateMaterial() { 
+        if(status == WallStatus.Intact) {
+            this.GetComponent<MeshRenderer>().material = intact;
+        }
+        if (status == WallStatus.Damaged) {
+            this.GetComponent<MeshRenderer>().material = broken;
+        }
+        else if(status == WallStatus.Destroyed) {
+            Destroy(this);
+        }
+    }
 
 } 
 

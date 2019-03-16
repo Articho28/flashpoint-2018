@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Space {
-    public Vector3 worldPosition;
-    public int indexX;
-    public int indexY;
+    public Vector3 worldPosition;
+    public int indexX;
+    public int indexY;
     public SpaceStatus status;
-    public SpaceKind kind;
+    public SpaceKind kind;
+
     Wall[] walls;
     Door[] doors;
     List<GameUnit> occupants;
