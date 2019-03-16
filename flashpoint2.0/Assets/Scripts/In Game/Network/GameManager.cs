@@ -5,10 +5,13 @@ using Photon.Pun;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-
+    //Initialize Singleton.
     public static GameManager GM;
+
+    //Variables for game statsu and turn.
     public static string GameStatus;
     public static int Turn;
+    //Local store of NumberOfPlayers.
     public static int NumberOfPlayers;
 
     [SerializeField]
@@ -32,7 +35,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
         Debug.Log("The GameManager was created.");
-        Debug.Log("The gamestatus is at first:  " + GameStatus);
+        Debug.Log("The GameStatus is at first:  " + GameStatus);
     }
 
 
@@ -70,15 +73,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void OnAllPrefabsSpawned()
     {
-        Debug.Log("Turn is " + Turn);
-        Debug.Log("Game status is " + GameStatus);
-
+    
         GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
         GameManager.Turn = 1;
 
-        Debug.Log("Turn is now " + Turn);
-        Debug.Log("Game status is changed to  " + GameStatus);
-
+       
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonPlayer[] photonPlayers = FindObjectsOfType<PhotonPlayer>();
@@ -89,6 +88,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 {
                     Debug.Log(photonPlayers[i].PlayerName + " Added to Dictionary ");
                     Debug.Log(photonPlayers[i]);
+
                     playerPrefabs.Add(photonPlayers[i].Id, photonPlayers[i]);
 
                 }
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public bool PlaceInitialFireFighter(int Player)
     {
         Debug.Log("It's " + PhotonNetwork.PlayerList[Player - 1].NickName + " 's turn to place his firefighter!");
-
+        //TODO link to PlayerMovement Script. 
         bool PlayerHasPlacedFirefighter = false;
         return PlayerHasPlacedFirefighter;
     }

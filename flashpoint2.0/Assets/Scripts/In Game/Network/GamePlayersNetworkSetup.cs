@@ -10,12 +10,12 @@ using System;
 public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 {
 
+    //Singleton
     public static GamePlayersNetworkSetup GS;
+    //Allows to stop Update function once all Players are spawned.
     public bool IsSpawningPrefabs;
 
-    [SerializeField]
-    public Dictionary<int, GameObject> photonPlayersPrefabs;
-
+    //Initial Spawnpoints prior to start position selection. 
     public Vector3[] initialPositions;
 
     private void Awake()
@@ -24,7 +24,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
         if (GamePlayersNetworkSetup.GS == null)
         {
             GamePlayersNetworkSetup.GS = this;
-            initialPositions = new Vector3[PhotonNetwork.CountOfPlayers];
+            initialPositions = new Vector3[6];
             Vector3 topPosition = new Vector3(-8.9f, 0.32f, 0);
             for (int i = 0; i < initialPositions.Length; i++)
             {
@@ -47,6 +47,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 
    
     // Start is called before the first frame update
+    //Instantiates player prefab.
     void Start()
     {
         IsSpawningPrefabs = true; 
@@ -56,15 +57,16 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
             GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "PhotonPlayers",
                    "PhotonPlayer"),
-               transform.position,
+               initialPositions[PhotonNetwork.LocalPlayer.ActorNumber - 1],
                Quaternion.identity, 0);
-            string name = PhotonNetwork.LocalPlayer.NickName;
+            string playerName = PhotonNetwork.LocalPlayer.NickName;
             int id = PhotonNetwork.LocalPlayer.ActorNumber;
-            entry.GetComponent<PhotonPlayer>().Initialize(id, name);
+            entry.GetComponent<PhotonPlayer>().Initialize(id, playerName);
            
         }
     }
 
+    //Checks if all players were spawned.
     private bool CheckPlayersReadyToBePlaced()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -74,8 +76,6 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
 
         foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
         {
-            Debug.Log("Checking for player " + p.NickName);
-
             object isPlayerReady;
             if (p.CustomProperties.TryGetValue(FlashPointGameConstants.PLAYER_READY_FOR_PLACEMENT, out isPlayerReady))
             {
