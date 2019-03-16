@@ -27,6 +27,6 @@ public class FirefighterMovement : MonoBehaviour
 
     public void PlaceFirefighter()
     {
-        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is trying to Move! ");
+        //Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is trying to Move! ");
     }
 }
