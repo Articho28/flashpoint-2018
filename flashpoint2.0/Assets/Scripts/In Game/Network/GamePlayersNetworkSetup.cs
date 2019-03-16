@@ -5,17 +5,15 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.IO;
 using ExitGames.Client.Photon;
-using System;
 
-public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
+
+public class GamePlayersNetworkSetup : MonoBehaviour
 {
 
-    //Singleton
     public static GamePlayersNetworkSetup GS;
-    //Allows to stop Update function once all Players are spawned.
-    public bool IsSpawningPrefabs;
-
-    //Initial Spawnpoints prior to start position selection. 
+    public string status;
+    [SerializeField]
+    public ArrayList photonPlayers;
     public Vector3[] initialPositions;
 
     private void Awake()
@@ -24,7 +22,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
         if (GamePlayersNetworkSetup.GS == null)
         {
             GamePlayersNetworkSetup.GS = this;
-            initialPositions = new Vector3[6];
+            initialPositions = new Vector3[PhotonNetwork.CountOfPlayers];
             Vector3 topPosition = new Vector3(-8.9f, 0.32f, 0);
             for (int i = 0; i < initialPositions.Length; i++)
             {
@@ -40,76 +38,24 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
             {
                 Destroy(GamePlayersNetworkSetup.GS);
                 GamePlayersNetworkSetup.GS = this;
-
             }
         }
     }
 
    
     // Start is called before the first frame update
-    //Instantiates player prefab.
     void Start()
     {
-        IsSpawningPrefabs = true; 
         if (PhotonNetwork.IsConnected)
         {
             Debug.Log("This is Player " + PhotonNetwork.LocalPlayer.NickName);
             GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "PhotonPlayers",
                    "PhotonPlayer"),
-               initialPositions[PhotonNetwork.LocalPlayer.ActorNumber - 1],
+               transform.position,
                Quaternion.identity, 0);
-            string playerName = PhotonNetwork.LocalPlayer.NickName;
-            int id = PhotonNetwork.LocalPlayer.ActorNumber;
-            entry.GetComponent<PhotonPlayer>().Initialize(id, playerName);
-           
         }
     }
 
-    //Checks if all players were spawned.
-    private bool CheckPlayersReadyToBePlaced()
-    {
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            return false;
-        }
 
-        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
-        {
-            object isPlayerReady;
-            if (p.CustomProperties.TryGetValue(FlashPointGameConstants.PLAYER_READY_FOR_PLACEMENT, out isPlayerReady))
-            {
-                if (!(bool)isPlayerReady)
-                {
-                    Debug.Log("Player " + p.NickName + " is not ready to be placed.");
-                    return false;
-                }
-
-            }
-            else
-            {
-                Debug.Log("Could not check status");
-                return false;
-            }
-
-        }
-        return true;
-    }
-
-    void Update()
-    {
-        if (IsSpawningPrefabs)
-        {
-            if (CheckPlayersReadyToBePlaced())
-            {
-                Debug.Log("All Players are ready to be placed!");
-                IsSpawningPrefabs = false;
-
-                GameManager.GM.OnAllPrefabsSpawned();
-
-            }
-
-        }
-       
-    }
 }

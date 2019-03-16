@@ -1,15 +1,14 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using Photon.Pun;
 using UnityEngine;
-using ExitGames.Client.Photon;
-
 
 public class PhotonPlayer : MonoBehaviour
 {
+
     private PhotonView PV;
     public GameObject myAvatar;
-    public int Id;
-    public string PlayerName;
 
     // Start is called before the first frame update
     void Start()
@@ -17,24 +16,16 @@ public class PhotonPlayer : MonoBehaviour
         PV = GetComponent<PhotonView>();
         if (PV.IsMine)
         {
-            int myPlayerNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+            int myPlayer = PhotonNetwork.LocalPlayer.ActorNumber;
+            Debug.Log(myPlayer + " is " + PhotonNetwork.LocalPlayer.NickName + " ActorNumber");
             myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "fireman",
-                   "Firefighter" + myPlayerNumber),
-                   GamePlayersNetworkSetup.GS.initialPositions[myPlayerNumber - 1],
+                   "Firefighter" + myPlayer),
+                   GamePlayersNetworkSetup.GS.initialPositions[myPlayer - 1],
                Quaternion.identity, 0);
 
-            Hashtable props = new Hashtable
-            {
-                {FlashPointGameConstants.PLAYER_READY_FOR_PLACEMENT, true }
-            };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
     }
 
-    public void Initialize(int id, string name)
-    {
-        Id = id;
-        PlayerName = name;
-    }
+
 }
