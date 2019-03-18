@@ -10,7 +10,4 @@ public static class FlashPointGameConstants
     public const string GAME_STATUS_INITIALPLACEMENT = "InitialPlacement";
     public const string GAME_STATUS_SPAWNING_PREFABS = "SpawningPrefabs";
 
-
-
-
 }

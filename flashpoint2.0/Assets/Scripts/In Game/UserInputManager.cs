@@ -41,4 +41,5 @@ public class UserInputManager : MonoBehaviour
     public Space getLastSpaceClicked() {
         return lastSpaceClicked;
     }
+
 }
