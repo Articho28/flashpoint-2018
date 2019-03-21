@@ -92,11 +92,17 @@ public enum Action
     FlipFire,
     RemoveSmoke,
     RemoveFire,
+    RemoveFalseAlarm,
     Move,
     OpenDoor,
     CloseDoor,
     ChopWall,
     ExtinguishFire,
     CarryVictim,
+    PassTurn,
+    SaveAPs,
+    DriveVehicle,
+    FireDeckGun,
+    ChangeCrew
 
 } 
