@@ -49,9 +49,5 @@ public class UserInputManager : MonoBehaviour
     {
         return lastSpaceClicked;
     }
-<<<<<<< HEAD
 }
-=======
 
-}
->>>>>>> arty-continued
