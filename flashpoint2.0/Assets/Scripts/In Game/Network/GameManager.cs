@@ -57,13 +57,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         else if (GameStatus == FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
+            Debug.Log("Current turn is " + Turn);
+
             //Implement Place firefighter function.
             if (Turn <= PhotonNetwork.CountOfPlayers) 
             {
 
-                /*
-                bool FireFighterIsPlaced = PlaceInitialFireFighter(Turn);
-                if (FireFighterIsPlaced)
+                //bool FireFighterIsPlaced = PlaceInitialFireFighter(Turn);
+                /*if (FireFighterIsPlaced)
                 {
                     IncrementTurn();
                 }*/
@@ -113,7 +114,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static void IncrementTurn()
     {
-        if (Turn == NumberOfPlayers)
+        if (Turn > NumberOfPlayers)
         {
             Turn = 1;
         }

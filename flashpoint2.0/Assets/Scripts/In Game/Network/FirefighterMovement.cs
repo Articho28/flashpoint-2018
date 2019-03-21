@@ -24,12 +24,13 @@ public class FirefighterMovement : MonoBehaviour
     void Update()
     {
         if (PV.IsMine && GameManager.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus == 
-        FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT && !IsFinished)
+        FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
             IsFinished = PlaceFirefighter();
             //if the player has selected a starting position, increment Turn. otherwise, wait till he select a starting position
             if (IsFinished)
             {
+                Debug.Log("INCREMENTING TURN");
                 GameManager.IncrementTurn();
             }
         }
