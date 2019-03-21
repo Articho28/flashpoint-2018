@@ -17,18 +17,21 @@ public class FirefighterMovement : MonoBehaviour
         PV = GetComponent<PhotonView>();
         myCC = GetComponent<CharacterController>();
         //myAvatar = GetComponent<PhotonPlayer>().myAvatar;
-        IsFinished = true;
+        IsFinished = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-
         if (PV.IsMine && GameManager.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus == 
         FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT && !IsFinished)
         {
             IsFinished = PlaceFirefighter();
-            GameManager.IncrementTurn();
+            //if the player has selected a starting position, increment Turn. otherwise, wait till he select a starting position
+            if (IsFinished)
+            {
+                GameManager.IncrementTurn();
+            }
         }
 
     }
@@ -36,9 +39,23 @@ public class FirefighterMovement : MonoBehaviour
     public bool PlaceFirefighter()
     {
         //Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is trying to Move! ");
-        Space UserTargetInitialSpace = UserInputManager.instance.getLastSpaceClicked();
-        this.GetComponent<Transform>().transform.position = UserTargetInitialSpace.worldPosition;
-        return true;
+        if (Input.GetMouseButtonDown(0))
+        {
+            Space UserTargetInitialSpace = UserInputManager.instance.getLastSpaceClicked();
+            //check if the space is outside or not
+            if (UserTargetInitialSpace.getSpaceKind() == SpaceKind.Outdoor)
+            {
+                PV.GetComponent<Transform>().position = UserTargetInitialSpace.worldPosition;
+                return true;
+            }
+            Debug.Log("Must be an outdoor space!!");
+            return false;
+
+        }
+        else
+        {
+            return false;
+        }
 
     }
 }
