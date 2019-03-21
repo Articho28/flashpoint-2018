@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            if(GM != this)
+            if (GM != this)
             {
                 Destroy(GM);
                 GM = this;
@@ -44,49 +44,48 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-       
+
     }
 
     // Update is called once per frame
     void Update()
     {
-       if (GameStatus == FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS)
+        if (GameStatus == FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS)
         {
             //Nothing to do here, just wait for the spawning to be done.
         }
 
         else if (GameStatus == FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
-            Debug.Log("Current turn is " + Turn);
-
             //Implement Place firefighter function.
-            if (Turn <= PhotonNetwork.CountOfPlayers) 
+            if (Turn <= PhotonNetwork.CountOfPlayers)
             {
 
-                //bool FireFighterIsPlaced = PlaceInitialFireFighter(Turn);
-                /*if (FireFighterIsPlaced)
+                /*
+                bool FireFighterIsPlaced = PlaceInitialFireFighter(Turn);
+                if (FireFighterIsPlaced)
                 {
                     IncrementTurn();
                 }*/
             }
             Debug.Log("Everyone should have chosen a location.");
-           
+
         }
     }
 
     public void OnAllPrefabsSpawned()
     {
-    
+
         GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
         GameManager.Turn = 1;
 
-       
+
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonPlayer[] photonPlayers = FindObjectsOfType<PhotonPlayer>();
             if (photonPlayers[0] != null)
             {
-           
+
                 for (int i = 0; i < photonPlayers.Length; i++)
                 {
                     Debug.Log(photonPlayers[i].PlayerName + " Added to Dictionary ");
@@ -106,15 +105,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     public bool PlaceInitialFireFighter(int Player)
     {
         Debug.Log("It's " + PhotonNetwork.PlayerList[Player - 1].NickName + " 's turn to place his firefighter!");
-      
-          //TODO link to PlayerMovement Script. 
+
+        //TODO link to PlayerMovement Script. 
         bool PlayerHasPlacedFirefighter = false;
         return PlayerHasPlacedFirefighter;
     }
 
     public static void IncrementTurn()
     {
-        if (Turn > NumberOfPlayers)
+        if (Turn == NumberOfPlayers)
         {
             Turn = 1;
         }
@@ -123,6 +122,4 @@ public class GameManager : MonoBehaviourPunCallbacks
             Turn++;
         }
     }
-
-  
 }
