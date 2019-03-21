@@ -23,7 +23,7 @@ public class FirefighterMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PV.IsMine && GameManager.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus == 
+        if (PV.IsMine && GameManager.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
         FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
             IsFinished = PlaceFirefighter();
