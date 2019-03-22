@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static void IncrementTurn()
     {
-        if (Turn == NumberOfPlayers)
+        if (Turn > NumberOfPlayers)
         {
             Turn = 1;
         }
