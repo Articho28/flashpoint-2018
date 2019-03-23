@@ -39,39 +39,10 @@ public class GameManager : MonoBehaviourPun
         Debug.Log("The GameStatus is at first:  " + GameStatus);
     }
 
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if (GameStatus == FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS)
-        {
-            //Nothing to do here, just wait for the spawning to be done.
-        }
 
-        else if (GameStatus == FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
-        {
-            //Implement Place firefighter function.
-            if (Turn <= PhotonNetwork.CountOfPlayers)
-            {
-
-                /*
-                bool FireFighterIsPlaced = PlaceInitialFireFighter(Turn);
-                if (FireFighterIsPlaced)
-                {
-                    IncrementTurn();
-                }*/
-            }
-            //Debug.Log("Everyone should have chosen a location.");
-
-        }
     }
 
     public void OnAllPrefabsSpawned()
@@ -108,24 +79,9 @@ public class GameManager : MonoBehaviourPun
 
     }
 
-    public bool PlaceInitialFireFighter(int Player)
-    {
-        Debug.Log("It's " + PhotonNetwork.PlayerList[Player - 1].NickName + " 's turn to place his firefighter!");
-
-        //TODO link to PlayerMovement Script. 
-        bool PlayerHasPlacedFirefighter = false;
-        return PlayerHasPlacedFirefighter;
-    }
-
     
     public void IncrementTurn()
     {
-        //Turn++;
-
-        //if (Turn > NumberOfPlayers)
-        //{
-        //    Turn = 1;
-        //}
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
