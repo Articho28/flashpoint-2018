@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviourPun
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
             playerPrefabs = new Dictionary<int, PhotonPlayer>();
             NumberOfPlayers = PhotonNetwork.CountOfPlayers;
-            Turn = 1;
         }
         else
         {
@@ -119,7 +118,7 @@ public class GameManager : MonoBehaviourPun
     }
 
     
-    public void IncrementTurn()
+    public static void IncrementTurn()
     {
         //Turn++;
 
@@ -166,6 +165,7 @@ public class GameManager : MonoBehaviourPun
         }
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireFighter)
         {
+            Turn = 1;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
         }
 

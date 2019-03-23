@@ -13,7 +13,7 @@ public class FirefighterMovement : MonoBehaviourPun
     void Start()
     {
         myCC = GetComponent<CharacterController>();
-        initialPosition = base.photonView.GetComponent<Transform>();
+        initialPosition = GetComponent<Transform>();
         PV = GetComponent<PhotonView>();
     }
 
@@ -27,7 +27,7 @@ public class FirefighterMovement : MonoBehaviourPun
             if (Input.GetMouseButtonDown(0))
             {
                 placeFireFighter();
-                GameManager.GM.IncrementTurn();
+                GameManager.IncrementTurn();
             }
         }
     }
