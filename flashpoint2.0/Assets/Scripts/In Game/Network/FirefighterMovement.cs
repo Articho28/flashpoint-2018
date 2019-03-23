@@ -2,61 +2,92 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using ExitGames.Client.Photon;
 
 public class FirefighterMovement : MonoBehaviourPun
 {
 
-    private PhotonView PV;
     private CharacterController myCC;
-    private bool IsFinished;
-    //private GameObject myAvatar;
+    private Transform initialPosition;
 
     // Start is called before the first frame update
     void Start()
     {
-        PV = GetComponent<PhotonView>();
         myCC = GetComponent<CharacterController>();
-        //myAvatar = GetComponent<PhotonPlayer>().myAvatar;
-        IsFinished = false;
+        initialPosition = base.photonView.GetComponent<Transform>();
     }
 
-    // Update is called once per frame
-    void Update()
+
+    private void Update()
     {
-        if (PV.IsMine && GameManager.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+
+        if (base.photonView.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
         FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
-            IsFinished = PlaceFirefighter();
-            //if the player has selected a starting position, increment Turn. otherwise, wait till he select a starting position
-            if (IsFinished)
+            if (Input.GetMouseButtonDown(0))
             {
-                //PV.RPC("IncrementTurn", RpcTarget.All,null);
-                GameManager.IncrementTurn();
+                placeFireFighter();
+                GameManager.GM.IncrementTurn();
             }
         }
-
     }
 
-    public bool PlaceFirefighter()
+
+
+    public void placeFireFighter()
     {
-        //Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is trying to Move! ");
-        if (Input.GetMouseButtonDown(0))
-        {
-            Space UserTargetInitialSpace = UserInputManager.instance.getLastSpaceClicked();
-            //check if the space is outside or not
-            if (UserTargetInitialSpace.getSpaceKind() == SpaceKind.Outdoor)
-            {
-                PV.GetComponent<Transform>().position = UserTargetInitialSpace.worldPosition;
-                return true;
-            }
-            Debug.Log("Must be an outdoor space!!");
-            return false;
+        Space UserTargetInitialSpace = UserInputManager.instance.getLastSpaceClicked();
+        Vector3 position = UserTargetInitialSpace.worldPosition;
+        SpaceKind kind = UserTargetInitialSpace.getSpaceKind();
 
-        }
-        else
-        {
-            return false;
-        }
 
+        //the data that will be transferred
+        object[] datas = new object[] { base.photonView.ViewID, kind, position };
+
+        Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
+        {
+            CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+            Receivers = Photon.Realtime.ReceiverGroup.All
+        };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.placeFireFighter, datas, options, SendOptions.SendUnreliable);
     }
+
+
+    //  =============== NETWORK SYNCRONIZATION SECTION ===============
+    public void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+    }
+
+    public void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    public void OnEvent(EventData eventData)
+    {
+        byte evCode = eventData.Code;
+
+        //0: placing a firefighter
+        if (evCode == (byte) PhotonEventCodes.placeFireFighter)
+        {
+            object[] data = eventData.CustomData as object[];
+
+            if (data.Length == 3)
+            {
+                Debug.Log(data[0] + " is the viewID");
+                if ((int)data[0] == base.photonView.ViewID)
+                {
+                    SpaceKind kind = (SpaceKind)data[1];
+                    Vector3 position = (Vector3)data[2];
+                    if (kind == SpaceKind.Outdoor)
+                    {
+                        initialPosition.position = position;
+                    }
+                }
+            }
+        }
+    }
+
 }
