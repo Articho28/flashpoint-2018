@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class FirefighterMovement : MonoBehaviour
+public class FirefighterMovement : MonoBehaviourPun
 {
 
     private PhotonView PV;
@@ -30,7 +30,7 @@ public class FirefighterMovement : MonoBehaviour
             //if the player has selected a starting position, increment Turn. otherwise, wait till he select a starting position
             if (IsFinished)
             {
-                Debug.Log("INCREMENTING TURN");
+                //PV.RPC("IncrementTurn", RpcTarget.All,null);
                 GameManager.IncrementTurn();
             }
         }

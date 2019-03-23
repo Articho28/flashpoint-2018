@@ -111,15 +111,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         return PlayerHasPlacedFirefighter;
     }
 
+    [PunRPC]
     public static void IncrementTurn()
     {
-        if (Turn == NumberOfPlayers)
+        Turn++;
+
+        if (Turn > NumberOfPlayers)
         {
             Turn = 1;
-        }
-        else
-        {
-            Turn++;
         }
     }
 }
