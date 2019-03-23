@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using ExitGames.Client.Photon;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviourPun
 {
     //Initialize Singleton.
     public static GameManager GM;
 
     //Variables for game statsu and turn.
     public static string GameStatus;
-    public static int Turn;
+    public int Turn;
     //Local store of NumberOfPlayers.
     public static int NumberOfPlayers;
 
@@ -68,7 +69,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     IncrementTurn();
                 }*/
             }
-            Debug.Log("Everyone should have chosen a location.");
+            //Debug.Log("Everyone should have chosen a location.");
 
         }
     }
@@ -77,7 +78,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
 
         GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-        GameManager.Turn = 1;
+        Turn = 1;
 
 
         if (PhotonNetwork.IsMasterClient)
@@ -111,14 +112,55 @@ public class GameManager : MonoBehaviourPunCallbacks
         return PlayerHasPlacedFirefighter;
     }
 
-    [PunRPC]
-    public static void IncrementTurn()
+    
+    public void IncrementTurn()
     {
-        Turn++;
+        //Turn++;
 
-        if (Turn > NumberOfPlayers)
+        //if (Turn > NumberOfPlayers)
+        //{
+        //    Turn = 1;
+        //}
+
+        Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
-            Turn = 1;
+            CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+            Receivers = Photon.Realtime.ReceiverGroup.All
+        };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.IncrementTurn, null, options, SendOptions.SendUnreliable);
+    }
+
+
+
+//    ================ NETWORK SYNCHRONIZATION SECTION =================
+    public void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+    }
+
+    public void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    public void OnEvent(EventData eventData)
+    {
+        byte evCode = eventData.Code;
+
+        //0: placing a firefighter
+        if (evCode == (byte)PhotonEventCodes.IncrementTurn)
+        {
+            Turn++;
+
+            if (Turn > NumberOfPlayers)
+            {
+                Debug.Log("RESETTING TURN TO 1");
+                Turn = 1;
+            }
+            Debug.Log("Current turn is now " + Turn);
         }
+
+
     }
 }
