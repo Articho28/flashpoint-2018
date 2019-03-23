@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviourPun
     }
 
     
-    public static void IncrementTurn()
+    public void IncrementTurn()
     {
         //Turn++;
 
