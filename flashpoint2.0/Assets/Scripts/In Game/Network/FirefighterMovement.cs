@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 
@@ -9,19 +7,21 @@ public class FirefighterMovement : MonoBehaviourPun
 
     private CharacterController myCC;
     private Transform initialPosition;
+    private PhotonView PV;
 
     // Start is called before the first frame update
     void Start()
     {
         myCC = GetComponent<CharacterController>();
         initialPosition = base.photonView.GetComponent<Transform>();
+        PV = GetComponent<PhotonView>();
     }
 
 
     private void Update()
     {
 
-        if (base.photonView.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+        if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
         FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT)
         {
             if (Input.GetMouseButtonDown(0))
@@ -42,7 +42,7 @@ public class FirefighterMovement : MonoBehaviourPun
 
 
         //the data that will be transferred
-        object[] datas = new object[] { base.photonView.ViewID, kind, position };
+        object[] datas = new object[] { PV.ViewID, kind, position };
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
@@ -76,8 +76,7 @@ public class FirefighterMovement : MonoBehaviourPun
 
             if (data.Length == 3)
             {
-                Debug.Log(data[0] + " is the viewID");
-                if ((int)data[0] == base.photonView.ViewID)
+                if ((int)data[0] == PV.ViewID)
                 {
                     SpaceKind kind = (SpaceKind)data[1];
                     Vector3 position = (Vector3)data[2];

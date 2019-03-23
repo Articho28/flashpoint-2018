@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviourPun
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
             playerPrefabs = new Dictionary<int, PhotonPlayer>();
             NumberOfPlayers = PhotonNetwork.CountOfPlayers;
+            Turn = 1;
         }
         else
         {
@@ -77,10 +78,6 @@ public class GameManager : MonoBehaviourPun
     public void OnAllPrefabsSpawned()
     {
 
-        GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-        Turn = 1;
-
-
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonPlayer[] photonPlayers = FindObjectsOfType<PhotonPlayer>();
@@ -101,6 +98,15 @@ public class GameManager : MonoBehaviourPun
                 Debug.Log("did not find the photonPlayers");
             }
         }
+
+        Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
+        {
+            CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+            Receivers = Photon.Realtime.ReceiverGroup.All
+        };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, options, SendOptions.SendUnreliable);
+
     }
 
     public bool PlaceInitialFireFighter(int Player)
@@ -155,10 +161,12 @@ public class GameManager : MonoBehaviourPun
 
             if (Turn > NumberOfPlayers)
             {
-                Debug.Log("RESETTING TURN TO 1");
                 Turn = 1;
             }
-            Debug.Log("Current turn is now " + Turn);
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireFighter)
+        {
+            GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
         }
 
 
