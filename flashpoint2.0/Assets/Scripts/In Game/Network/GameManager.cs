@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviourPun
     }
 
     
-    public void IncrementTurn()
+    public static void IncrementTurn()
     {
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
