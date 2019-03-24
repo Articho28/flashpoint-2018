@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Space {
     public Vector3 worldPosition;
@@ -77,6 +78,4 @@ public class Space {
     {
         return this.occupants;
     }
-
-
 } 

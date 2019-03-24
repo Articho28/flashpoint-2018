@@ -124,24 +124,61 @@ public class SpaceGrid : MonoBehaviourPun {
         }
     }
 
+    public bool containsFiremarker(int row, int col)
+    {
+        if(row == 2 && col == 2 || row == 2 && col == 3 || row == 3 && col == 2 || row == 3 && col == 3 || row == 3 && col == 4 ||
+        row == 3 && col == 5 || row == 4 && col == 4 || row == 5 && col == 5 || row == 5 && col == 6 || row == 6 && col == 5)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool alreadyPlaced(int row, int col, int[] rows, int[] cols)
+    {
+        for(int i = 0; i < cols.Length; i++)
+        {
+            if(col == cols[i] || row == rows[i])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void randomizePOI()
     {
-        string path = "";
-        //randomize between 1 and 6
-        int row = Random.Range(1, 9);
-        //randomize between 1 and 8
-        int col = Random.Range(1, 7);
-        //randomize between 0 and 1, if its less than 0.5, then initialize false alarm. else initialize a victim.
-        float type = Random.Range(0.0f, 1.0f);
+        string[] paths = new string[3];
+        int[] rows = new int[3];
+        int[] cols = new int[3];
+        int index = 0;
 
-        if(type < 0.5f)
+        while(index < 3)
         {
-            path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs","False alarm");
+            string path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs", "POI");
+            //randomize between 1 and 6
+            int col = Random.Range(1, 8);
+            //randomize between 1 and 8
+            int row = Random.Range(1, 6);
+
+            if (containsFiremarker(row, col))
+            {
+                continue;
+            }
+
+            if (alreadyPlaced(row, col, rows, cols)){
+                continue;
+            }
+
+            paths[index] = path;
+            rows[index] = row;
+            cols[index] = col;
+
+            index++;
+
         }
-        else
-        {
-            path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs", "dog POI");
-        }
+
+     
 
 
 
@@ -150,7 +187,7 @@ public class SpaceGrid : MonoBehaviourPun {
          * 2) position. e.g.grid[1,2].worldPosition
          * FORMAT OF DATA: PATH, POSITION,PATH,POSITION,ETC.        
          */
-        object[] data = new object[] {path,row,col};
+        object[] data = new object[] {paths,rows,cols};
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
@@ -183,14 +220,26 @@ public class SpaceGrid : MonoBehaviourPun {
         if (evCode == (byte)PhotonEventCodes.PlaceGameUnit)
         {
             object[] datas = eventData.CustomData as object[];
-            Space space = grid[(int)datas[1], (int)datas[2]];
-            Vector3 position = space.worldPosition;
 
-            object POI1 = PhotonNetwork.Instantiate((string)datas[0],
-               position,
-               Quaternion.identity, 0);
-            space.addOccupant((GameUnit)POI1);
+            string[] paths = (string[]) datas[0];
+            int[] rows = (int[]) datas[1];
+            int[] cols = (int[]) datas[2];
 
+            for(int i = 0; i < paths.Length; i++)
+            {
+                Space space = grid[cols[i], rows[i]];
+
+                Vector3 position = space.worldPosition;
+
+                GameObject POI1 = PhotonNetwork.Instantiate(paths[i],
+                   position,
+                   Quaternion.identity, 0);
+
+                GameUnit poi = POI1.GetComponent<POI>();
+
+                space.addOccupant(poi);
+
+            }
 
         }
 

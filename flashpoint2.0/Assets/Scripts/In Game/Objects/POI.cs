@@ -6,6 +6,11 @@ public class POI : GameUnit
 {
     POIKind kind;
 
+    void OnEnable()
+    {
+        setPOIKind(POIKind.Victim);
+    }
+
     public void setPOIKind(POIKind newK)
     {
         this.kind = newK;
