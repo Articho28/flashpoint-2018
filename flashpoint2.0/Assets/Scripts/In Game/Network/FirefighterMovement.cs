@@ -27,7 +27,7 @@ public class FirefighterMovement : MonoBehaviourPun
             if (Input.GetMouseButtonDown(0))
             {
                 placeFireFighter();
-                GameManager.GM.IncrementTurn();
+                GameManager.IncrementTurn();
             }
         }
     }
