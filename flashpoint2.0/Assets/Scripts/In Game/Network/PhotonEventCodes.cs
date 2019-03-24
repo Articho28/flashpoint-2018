@@ -6,6 +6,7 @@ public enum PhotonEventCodes
 {
     placeFireFighter = 0,
     IncrementTurn = 1,
-    PlaceInitialFireFighter = 2
+    PlaceInitialFireFighter = 2,
+    PlaceGameUnit = 3
 
 }

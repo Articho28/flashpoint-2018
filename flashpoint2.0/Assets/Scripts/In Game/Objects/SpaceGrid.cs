@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using ExitGames.Client.Photon;
+using System.IO;
 
-public class SpaceGrid : MonoBehaviour {
+public class SpaceGrid : MonoBehaviourPun {
 
     public Transform firefighter;
     Vector2 gridWorldSize;
@@ -19,6 +22,7 @@ public class SpaceGrid : MonoBehaviour {
         gridSizeX = 10;
         gridSizeY = 8;
         CreateGrid();
+        randomizePOI();
     }
 
     public Space[,] getGrid() {
@@ -118,5 +122,77 @@ public class SpaceGrid : MonoBehaviour {
                 Gizmos.DrawWireCube(t.worldPosition, new Vector3(spaceDiameter - 0.01f, spaceDiameter - 0.01f, 1));
             }
         }
+    }
+
+    public void randomizePOI()
+    {
+        string path = "";
+        //randomize between 1 and 6
+        int row = Random.Range(1, 9);
+        //randomize between 1 and 8
+        int col = Random.Range(1, 7);
+        //randomize between 0 and 1, if its less than 0.5, then initialize false alarm. else initialize a victim.
+        float type = Random.Range(0.0f, 1.0f);
+
+        if(type < 0.5f)
+        {
+            path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs","False alarm");
+        }
+        else
+        {
+            path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs", "dog POI");
+        }
+
+
+
+        //THINGS TO PASS TO DATA, repeat 3 times
+        /* 1) String path to prefab
+         * 2) position. e.g.grid[1,2].worldPosition
+         * FORMAT OF DATA: PATH, POSITION,PATH,POSITION,ETC.        
+         */
+        object[] data = new object[] {path,row,col};
+
+        Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
+        {
+            CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+            Receivers = Photon.Realtime.ReceiverGroup.All
+        };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceGameUnit, data, options, SendOptions.SendUnreliable);
+
+    }
+
+
+
+    //    ================ NETWORK SYNCHRONIZATION SECTION =================
+    public void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+    }
+
+    public void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    public void OnEvent(EventData eventData)
+    {
+        byte evCode = eventData.Code;
+
+        //0: placing a firefighter
+        if (evCode == (byte)PhotonEventCodes.PlaceGameUnit)
+        {
+            object[] datas = eventData.CustomData as object[];
+            Space space = grid[(int)datas[1], (int)datas[2]];
+            Vector3 position = space.worldPosition;
+
+            object POI1 = PhotonNetwork.Instantiate((string)datas[0],
+               position,
+               Quaternion.identity, 0);
+            space.addOccupant((GameUnit)POI1);
+
+
+        }
+
     }
 }
