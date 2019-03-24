@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviourPun
     public int Turn;
     //Local store of NumberOfPlayers.
     public static int NumberOfPlayers;
+    public bool isFirstReset;
 
     [SerializeField]
     public static Dictionary<int, PhotonPlayer> playerPrefabs;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviourPun
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
             playerPrefabs = new Dictionary<int, PhotonPlayer>();
             NumberOfPlayers = PhotonNetwork.CountOfPlayers;
+            isFirstReset = true;
         }
         else
         {
@@ -116,6 +118,13 @@ public class GameManager : MonoBehaviourPun
 
             if (Turn > NumberOfPlayers)
             {
+                if (isFirstReset)
+                {
+                    //change the status to play game
+                    Debug.Log("All firefighters have been placed!");
+                    GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
+                    isFirstReset = false;
+                }
                 Turn = 1;
             }
         }
@@ -124,7 +133,6 @@ public class GameManager : MonoBehaviourPun
             Turn = 1;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
         }
-
 
     }
 }
