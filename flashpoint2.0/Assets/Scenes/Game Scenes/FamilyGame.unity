@@ -5112,6 +5112,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199256697}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &201782025 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1415064111572242920, guid: 01f5bf62385644e2f99e128a0d650883,
+    type: 3}
+  m_PrefabInstance: {fileID: 943609502489610406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &210727070
 GameObject:
   m_ObjectHideFlags: 0
@@ -13009,6 +13021,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 538108981}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &543555005 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5867386280615488938, guid: 01f5bf62385644e2f99e128a0d650883,
+    type: 3}
+  m_PrefabInstance: {fileID: 943609502489610406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &545670055
 GameObject:
   m_ObjectHideFlags: 0
@@ -19288,6 +19312,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 824376159}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &834323235 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4854705944914578862, guid: 01f5bf62385644e2f99e128a0d650883,
+    type: 3}
+  m_PrefabInstance: {fileID: 943609502489610406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &834648195
 GameObject:
   m_ObjectHideFlags: 0
@@ -23774,6 +23810,18 @@ MonoBehaviour:
   viewIdField: 73
   InstantiationId: 285
   isRuntimeInstantiated: 0
+--- !u!114 &1043391000 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7800917952231457124, guid: 01f5bf62385644e2f99e128a0d650883,
+    type: 3}
+  m_PrefabInstance: {fileID: 943609502489610406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1051065231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32618,6 +32666,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Turn: 0
   isFirstReset: 0
+  GameUIPanel: {fileID: 2022031029}
 --- !u!114 &1428715777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34208,6 +34257,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1485131280}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1488861034 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3425650394048792866, guid: 01f5bf62385644e2f99e128a0d650883,
+    type: 3}
+  m_PrefabInstance: {fileID: 943609502489610406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1493150837 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8049503502875387525, guid: 979b309e155864f3a900f42f6dc0933c,
@@ -44813,6 +44874,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2022031029 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 766090536030252282, guid: 01f5bf62385644e2f99e128a0d650883,
+    type: 3}
+  m_PrefabInstance: {fileID: 943609502489610406}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2022031030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2022031029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b1256c9786f4236b3b90f57bf69fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameStateText: {fileID: 834323235}
+  savedVictimText: {fileID: 543555005}
+  lostVictimText: {fileID: 1043391000}
+  damageText: {fileID: 1488861034}
+  activePOIText: {fileID: 201782025}
 --- !u!1 &2022804567
 GameObject:
   m_ObjectHideFlags: 0

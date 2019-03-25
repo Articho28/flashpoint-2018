@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviourPun
     public bool isFirstReset;
 
     [SerializeField]
+    GameObject GameUIPanel;
+
+    [SerializeField]
     public static Dictionary<int, PhotonPlayer> playerPrefabs;
 
     public void Awake()
