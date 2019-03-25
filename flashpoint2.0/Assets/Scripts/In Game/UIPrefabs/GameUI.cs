@@ -99,9 +99,9 @@ public class GameUI : MonoBehaviour
         UpdateActivePOI();
     }
 
-    public void UpdatePlayerTurnName()
+    public void UpdatePlayerTurnName(string name)
     {
-        playerTurnNameText.text = "Player's Turn: \n" + playerTurnName;
+        playerTurnNameText.text = "Player's Turn: \n" + name;
     }
 
 }
