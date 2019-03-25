@@ -14,8 +14,5 @@ public class GameUnit : MonoBehaviour {
         this.currentSpace = space;
     }
 
-    public static explicit operator GameUnit(GameObject v)
-    {
-        throw new NotImplementedException();
-    }
+
 }
