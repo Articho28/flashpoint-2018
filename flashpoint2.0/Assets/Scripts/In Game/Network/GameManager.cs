@@ -51,9 +51,8 @@ public class GameManager : MonoBehaviourPun
     }
 
     public void OnAllPrefabsSpawned()
-    {
-        GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-        GameUI.instance.AddGameState(GameStatus);
+    {   
+           
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonPlayer[] photonPlayers = FindObjectsOfType<PhotonPlayer>();
@@ -137,6 +136,8 @@ public class GameManager : MonoBehaviourPun
         {
             Turn = 1;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
+            GameUI.instance.AddGameState(GameStatus);
+
         }
 
     }
