@@ -41,7 +41,6 @@ public class GameUI : MonoBehaviour
         activePOI = 0;
         UpdateActivePOI();
         playerTurnName = "";
-        UpdatePlayerTurnName();
     }
 
     private void UpdateGameState()
