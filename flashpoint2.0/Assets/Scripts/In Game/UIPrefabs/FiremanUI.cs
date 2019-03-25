@@ -16,7 +16,7 @@ public class FiremanUI : MonoBehaviour
 
     void Start()
     {
-        playerNameText.text = "Palyer Name : \n" + PhotonNetwork.LocalPlayer.NickName;
+        playerNameText.text = "Player Name : \n" + PhotonNetwork.LocalPlayer.NickName;
         AP = 0;
         UpdateAP();
     }

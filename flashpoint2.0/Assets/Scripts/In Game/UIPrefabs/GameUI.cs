@@ -101,7 +101,7 @@ public class GameUI : MonoBehaviour
 
     public void UpdatePlayerTurnName()
     {
-        playerTurnNameText.text = "Player Name Text: \n" + playerTurnName;
+        playerTurnNameText.text = "Player's Turn: \n" + playerTurnName;
     }
 
 }
