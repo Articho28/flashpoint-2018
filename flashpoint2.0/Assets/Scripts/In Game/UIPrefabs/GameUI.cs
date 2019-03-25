@@ -16,6 +16,8 @@ public class GameUI : MonoBehaviour
     private int damage;
     public Text activePOIText;
     private int activePOI;
+    public Text playerTurnNameText;
+    private string playerTurnName;
 
 
     private void Awake()
@@ -38,6 +40,8 @@ public class GameUI : MonoBehaviour
         UpdateDamage();
         activePOI = 0;
         UpdateActivePOI();
+        playerTurnName = "";
+        UpdatePlayerTurnName();
     }
 
     private void UpdateGameState()
@@ -93,6 +97,11 @@ public class GameUI : MonoBehaviour
     {
         activePOI--;
         UpdateActivePOI();
+    }
+
+    public void UpdatePlayerTurnName()
+    {
+        playerTurnNameText.text = "Player Name Text: \n" + playerTurnName;
     }
 
 }

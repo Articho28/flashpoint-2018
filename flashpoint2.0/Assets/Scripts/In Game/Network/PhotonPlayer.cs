@@ -11,9 +11,6 @@ public class PhotonPlayer : MonoBehaviour
     public int Id;
     public string PlayerName;
 
-    [SerializeField]
-    GameObject PlayerUI; 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +30,7 @@ public class PhotonPlayer : MonoBehaviour
             };
             PhotonNetwork.LocalPlayer.SetCustomProperties(props);
         }
+
     }
 
     public void Initialize(int id, string name)
