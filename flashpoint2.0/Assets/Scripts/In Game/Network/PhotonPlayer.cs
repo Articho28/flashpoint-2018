@@ -11,6 +11,9 @@ public class PhotonPlayer : MonoBehaviour
     public int Id;
     public string PlayerName;
 
+    [SerializeField]
+    GameObject PlayerUI; 
+
     // Start is called before the first frame update
     void Start()
     {
