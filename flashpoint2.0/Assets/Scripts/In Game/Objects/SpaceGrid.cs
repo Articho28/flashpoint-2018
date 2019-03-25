@@ -126,8 +126,8 @@ public class SpaceGrid : MonoBehaviourPun {
 
     public bool containsFiremarker(int row, int col)
     {
-        if(row == 2 && col == 2 || row == 2 && col == 3 || row == 3 && col == 2 || row == 3 && col == 3 || row == 3 && col == 4 ||
-        row == 3 && col == 5 || row == 4 && col == 4 || row == 5 && col == 5 || row == 5 && col == 6 || row == 6 && col == 5)
+        if( (row == 2 && col == 2) || (row == 2 && col == 3) || (row == 3 && col == 2) || (row == 3 && col == 3) || (row == 3 && col == 4) ||
+        (row == 3 && col == 5) || (row == 4 && col == 4) || (row == 5 && col == 5) || (row == 5 && col == 6) || (row == 6 && col == 5))
         {
             return true;
         }
