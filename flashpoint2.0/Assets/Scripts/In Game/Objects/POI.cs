@@ -5,8 +5,7 @@ using UnityEngine;
 public class POI : GameUnit
 {
     POIKind kind;
-
-    void OnEnable()
+    void Start()
     {
         setPOIKind(POIKind.Victim);
     }

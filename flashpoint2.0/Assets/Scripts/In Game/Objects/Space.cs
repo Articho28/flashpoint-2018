@@ -12,7 +12,7 @@ public class Space {
 
     Wall[] walls;
     Door[] doors;
-    List<GameUnit> occupants;
+    List<GameUnit> occupants = new List<GameUnit>();
 
 
 
@@ -71,7 +71,7 @@ public class Space {
 
     public void addOccupant(GameUnit u)
     {
-        occupants.Add(u);
+        occupants.Add(u);
     }
 
     public List<GameUnit> getOccupants()

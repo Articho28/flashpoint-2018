@@ -22,6 +22,9 @@ public class SpaceGrid : MonoBehaviourPun {
         gridSizeX = 10;
         gridSizeY = 8;
         CreateGrid();
+        placeFireMarker();
+        randomizePOI();
+        randomizePOI();
         randomizePOI();
     }
 
@@ -126,19 +129,19 @@ public class SpaceGrid : MonoBehaviourPun {
 
     public bool containsFiremarker(int row, int col)
     {
-        if( (row == 2 && col == 2) || (row == 2 && col == 3) || (row == 3 && col == 2) || (row == 3 && col == 3) || (row == 3 && col == 4) ||
-        (row == 3 && col == 5) || (row == 4 && col == 4) || (row == 5 && col == 5) || (row == 5 && col == 6) || (row == 6 && col == 5))
+        if( grid[col,row].getSpaceStatus() == SpaceStatus.Fire)
         {
             return true;
         }
         return false;
     }
 
-    public bool alreadyPlaced(int row, int col, int[] rows, int[] cols)
+    public bool alreadyPlaced(int row, int col)
     {
-        for(int i = 0; i < cols.Length; i++)
+        List<GameUnit> occupants = grid[col, row].getOccupants();
+        foreach(GameUnit gu in occupants)
         {
-            if(col == cols[i] || row == rows[i])
+            if (gu.GetType() == typeof(POI))
             {
                 return true;
             }
@@ -146,37 +149,47 @@ public class SpaceGrid : MonoBehaviourPun {
         return false;
     }
 
+    public void placeFireMarker()
+    {
+        int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
+        int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
+
+        object[] data = new object[] { rows, cols };
+
+        Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
+        {
+            CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+            Receivers = Photon.Realtime.ReceiverGroup.All
+        };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data, options, SendOptions.SendUnreliable);
+    }
+
     public void randomizePOI()
     {
-        string[] paths = new string[3];
-        int[] rows = new int[3];
-        int[] cols = new int[3];
-        int index = 0;
+        string path;
+        int col;
+        int row;
 
-        while(index < 3)
-        {
-            string path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs", "POI");
+        do
+        {   
+            path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs", "POI");
             //randomize between 1 and 6
-            int col = Random.Range(1, 8);
+            col = Random.Range(1, 8);
             //randomize between 1 and 8
-            int row = Random.Range(1, 6);
+            row = Random.Range(1, 6);
 
             if (containsFiremarker(row, col))
             {
                 continue;
             }
 
-            if (alreadyPlaced(row, col, rows, cols)){
+            if (alreadyPlaced(row, col))
+            {
                 continue;
             }
 
-            paths[index] = path;
-            rows[index] = row;
-            cols[index] = col;
-
-            index++;
-
-        }
+        } while (false);
 
      
 
@@ -187,7 +200,7 @@ public class SpaceGrid : MonoBehaviourPun {
          * 2) position. e.g.grid[1,2].worldPosition
          * FORMAT OF DATA: PATH, POSITION,PATH,POSITION,ETC.        
          */
-        object[] data = new object[] {paths,rows,cols};
+        object[] data = new object[] {path,row,col};
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
@@ -195,7 +208,7 @@ public class SpaceGrid : MonoBehaviourPun {
             Receivers = Photon.Realtime.ReceiverGroup.All
         };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceGameUnit, data, options, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, options, SendOptions.SendUnreliable);
 
     }
 
@@ -217,30 +230,45 @@ public class SpaceGrid : MonoBehaviourPun {
         byte evCode = eventData.Code;
 
         //0: placing a firefighter
-        if (evCode == (byte)PhotonEventCodes.PlaceGameUnit)
+        if (evCode == (byte)PhotonEventCodes.PlacePOI)
         {
             object[] datas = eventData.CustomData as object[];
 
-            string[] paths = (string[]) datas[0];
-            int[] rows = (int[]) datas[1];
-            int[] cols = (int[]) datas[2];
+            string path = (string) datas[0];
+            int row = (int) datas[1];
+            int col = (int) datas[2];
 
-            for(int i = 0; i < paths.Length; i++)
+
+            Space space = grid[col, row];
+
+            Vector3 position = space.worldPosition;
+
+            GameObject POI = PhotonNetwork.Instantiate(path,
+               position,
+               Quaternion.identity, 0);
+
+            POI poi = POI.GetComponent<POI>();
+
+            space.addOccupant(poi);
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceFireMarker)
+        {
+            object[] datas = eventData.CustomData as object[];
+
+            string path = Path.Combine("PhotonPrefabs", "Prefabs", "FireMarker");
+            int[] rows = (int[])datas[0];
+            int[] cols = (int[])datas[1];
+
+            for(int i = 0; i < rows.Length; i++)
             {
-                Space space = grid[cols[i], rows[i]];
+                Vector3 position = grid[cols[i], rows[i]].worldPosition;
 
-                Vector3 position = space.worldPosition;
+                GameObject POI = PhotonNetwork.Instantiate(path,
+               position,
+               Quaternion.identity, 0);
 
-                GameObject POI1 = PhotonNetwork.Instantiate(paths[i],
-                   position,
-                   Quaternion.identity, 0);
-
-                GameUnit poi = POI1.GetComponent<POI>();
-
-                space.addOccupant(poi);
-
+                grid[cols[i], rows[i]].setSpaceStatus(SpaceStatus.Fire);
             }
-
         }
 
     }
