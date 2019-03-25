@@ -100,9 +100,15 @@ public class GameManager : MonoBehaviourPun
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.IncrementTurn, null, options, SendOptions.SendUnreliable);
     }
 
+    public void DisplayPlayerTurn()
+    {
+        string playerName = PhotonNetwork.PlayerList[Turn].NickName;
+        GameUI.instance.UpdatePlayerTurnName(playerName);
+    }
 
 
-//    ================ NETWORK SYNCHRONIZATION SECTION =================
+
+    //    ================ NETWORK SYNCHRONIZATION SECTION =================
     public void OnEnable()
     {
         PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
@@ -117,7 +123,7 @@ public class GameManager : MonoBehaviourPun
     {
         byte evCode = eventData.Code;
 
-        //0: placing a firefighter
+        //Increment turn.
         if (evCode == (byte)PhotonEventCodes.IncrementTurn)
         {
             Turn++;
@@ -133,8 +139,10 @@ public class GameManager : MonoBehaviourPun
                     isFirstReset = false;
                 }
                 Turn = 1;
+                DisplayPlayerTurn();
             }
         }
+
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireFighter)
         {
             Turn = 1;
