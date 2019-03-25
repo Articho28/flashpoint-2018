@@ -11,4 +11,6 @@ public static class FlashPointGameConstants
     public const string GAME_STATUS_SPAWNING_PREFABS = "SpawningPrefabs";
     public const string GAME_STATUS_PLAY_GAME = "Play Game";
 
+    public const string FEEDBACK_PLACE_FIREFIGHTER = "Please place your firefighter";
+
 }

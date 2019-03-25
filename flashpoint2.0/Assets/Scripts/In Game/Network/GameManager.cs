@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviourPun
     GameObject GameUIPanel;
 
     [SerializeField]
+    GameObject GameConsole;
+
+    [SerializeField]
     public static Dictionary<int, PhotonPlayer> playerPrefabs;
 
     public void Awake()
