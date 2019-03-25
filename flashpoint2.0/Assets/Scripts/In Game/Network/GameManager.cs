@@ -52,7 +52,8 @@ public class GameManager : MonoBehaviourPun
 
     public void OnAllPrefabsSpawned()
     {
-
+        GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
+        GameUI.instance.AddGameState(GameStatus);
         if (PhotonNetwork.IsMasterClient)
         {
             PhotonPlayer[] photonPlayers = FindObjectsOfType<PhotonPlayer>();
@@ -126,6 +127,7 @@ public class GameManager : MonoBehaviourPun
                     //change the status to play game
                     Debug.Log("All firefighters have been placed!");
                     GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
+                    GameUI.instance.AddGameState(GameStatus);
                     isFirstReset = false;
                 }
                 Turn = 1;

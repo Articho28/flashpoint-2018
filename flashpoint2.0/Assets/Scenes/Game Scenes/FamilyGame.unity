@@ -45023,7 +45023,7 @@ MonoBehaviour:
   lostVictimText: {fileID: 1043391000}
   damageText: {fileID: 1488861034}
   activePOIText: {fileID: 201782025}
-  playerTurnNameText: {fileID: 0}
+  playerTurnNameText: {fileID: 943609502489610407}
 --- !u!1 &2022804567
 GameObject:
   m_ObjectHideFlags: 0
@@ -48339,6 +48339,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01f5bf62385644e2f99e128a0d650883, type: 3}
+--- !u!114 &943609502489610407 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8891565337732300466, guid: 01f5bf62385644e2f99e128a0d650883,
+    type: 3}
+  m_PrefabInstance: {fileID: 943609502489610406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1229616016117031095
 PrefabInstance:
   m_ObjectHideFlags: 0

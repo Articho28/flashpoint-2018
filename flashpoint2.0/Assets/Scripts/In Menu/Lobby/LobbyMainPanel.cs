@@ -44,7 +44,6 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
     private Dictionary<string, RoomInfo> cachedRoomList;
     private Dictionary<string, GameObject> roomListEntries;
     private Dictionary<int, GameObject> playerListEntries;
-    private bool IsAllPlayersReady;
 
     // Awake function.
 
@@ -55,7 +54,6 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         cachedRoomList = new Dictionary<string, RoomInfo>();
         roomListEntries = new Dictionary<string, GameObject>();
-        IsAllPlayersReady = false;
 
         NoPlayerNameError.SetActive(false);
 
