@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6389968689208086160}
   - component: {fileID: 6699044411116945027}
   - component: {fileID: 3929085728007992440}
+  - component: {fileID: 2216673320156455201}
   m_Layer: 0
   m_Name: False alarm
   m_TagString: Untagged
@@ -102,3 +103,15 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2216673320156455201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9155463762732553303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8da4c61660054a65a7588910b819be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

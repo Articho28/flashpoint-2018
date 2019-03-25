@@ -91,6 +91,8 @@ GameObject:
   - component: {fileID: 4982664955582455028}
   - component: {fileID: 1613894563476758024}
   - component: {fileID: 3390394086771088710}
+  - component: {fileID: 2515092909956576238}
+  - component: {fileID: 6695023519733621926}
   m_Layer: 11
   m_Name: Firefighter6
   m_TagString: Untagged
@@ -162,3 +164,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f121c46ad8efe4582a675092423072b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2515092909956576238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2253248705934214616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4617a29e117c341ec8552e6fece8f02c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!143 &6695023519733621926
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2253248705934214616}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
