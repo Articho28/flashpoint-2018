@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayPlayerTurn()
     {
-        string playerName = PhotonNetwork.PlayerList[Turn].NickName;
+        string playerName = PhotonNetwork.PlayerList[Turn - 1].NickName;
         GameUI.instance.UpdatePlayerTurnName(playerName);
     }
 

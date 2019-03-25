@@ -22,6 +22,12 @@ public class SpaceGrid : MonoBehaviourPun {
         gridSizeX = 10;
         gridSizeY = 8;
         CreateGrid();
+
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
         placeFireMarker();
         randomizePOI();
         randomizePOI();
