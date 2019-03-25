@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9170629938704774454}
   - component: {fileID: 9170629938704774449}
   - component: {fileID: 4407126750144311652}
+  - component: {fileID: 240425400820741944}
   m_Layer: 10
   m_Name: doorCol45
   m_TagString: Untagged
@@ -103,6 +104,19 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &240425400820741944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9170629938704774455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51613b892198436aaa89bd686f32a64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  status: 0
 --- !u!1001 &9170629938120893262
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -110,11 +124,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9170629938704774454}
     m_Modifications:
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
-      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -169,6 +178,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
