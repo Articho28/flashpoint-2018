@@ -14,6 +14,14 @@ public class FiremanUI : MonoBehaviour
     private int AP;
 
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+
     void Start()
     {
         playerNameText.text = "Player Name : \n" + PhotonNetwork.LocalPlayer.NickName;
