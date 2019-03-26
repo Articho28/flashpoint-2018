@@ -7,7 +7,7 @@ using Photon.Pun;
 
 public class FiremanUI : MonoBehaviour
 {
-    //public static FiremanUI instance; //singleton
+    public static FiremanUI instance; //singleton
 
     public Text playerNameText;
     public Text APText;
