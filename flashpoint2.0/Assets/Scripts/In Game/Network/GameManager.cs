@@ -140,6 +140,7 @@ public class GameManager : MonoBehaviourPun
                     //change the status to play game
                     Debug.Log("All firefighters have been placed!");
                     GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
+                    FiremanUI.instance.AddAP(4);
                     GameUI.instance.AddGameState(GameStatus);
                     isFirstReset = false;
                 }
