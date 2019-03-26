@@ -16,11 +16,7 @@ public class GameManager : MonoBehaviourPun
     public static int NumberOfPlayers;
     public bool isFirstReset;
 
-    [SerializeField]
-    GameObject GameUIPanel;
-
-    [SerializeField]
-    GameObject GameConsoleObject;
+   
 
     [SerializeField]
     public static Dictionary<int, PhotonPlayer> playerPrefabs;

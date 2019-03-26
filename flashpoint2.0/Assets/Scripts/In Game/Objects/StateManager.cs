@@ -13,7 +13,9 @@ public class StateManager : MonoBehaviour {
 
     #endregion
 
-    [SerializeField] GameObject spaceGridObject;
+    [SerializeField] 
+    GameObject spaceGridObject;
+
     public SpaceGrid spaceGrid;
 
     // Use this for initialization

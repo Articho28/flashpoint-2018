@@ -12,7 +12,8 @@ public class SpaceGrid : MonoBehaviourPun {
 
     public Space[,] grid;
 
-    [SerializeField] float spaceRadius;
+    [SerializeField] 
+    float spaceRadius;
     float spaceDiameter;
     static int gridSizeX, gridSizeY;
 
@@ -56,6 +57,9 @@ public class SpaceGrid : MonoBehaviourPun {
     //list index: 0 top, 1 right, 2 bottom, 3 left
     public Space[] GetNeighbours(Space space) {
         Space[] neighbours = new Space[4];
+        Debug.Log("X of curr is " + space.indexX);
+        Debug.Log("Y of curr is " + space.indexY);
+
 
         //  _________
         // |__|_x|__|
@@ -65,7 +69,10 @@ public class SpaceGrid : MonoBehaviourPun {
         int index = 0;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                if (x == y) continue; //continue if its the middle and corner tile
+                if (x == y || x == -y)
+                {
+                    continue; //continue if its the middle and corner tile
+                }
 
                 int checkX = space.indexX + x;
                 int checkY = space.indexY + y;
@@ -87,7 +94,12 @@ public class SpaceGrid : MonoBehaviourPun {
                         isValid = true;
                     }
 
-                    if (isValid) neighbours[index] = grid[checkX, checkY];
+                    if (isValid)
+                    {
+                        neighbours[index] = grid[checkX, checkY];
+                        Debug.Log("this is executing");
+                        Debug.Log("Index x " + checkX + " Index Y " + checkY);
+                    }
                     index++;
                 }
             }
@@ -97,8 +109,9 @@ public class SpaceGrid : MonoBehaviourPun {
     }
 
     private bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
-        return grid[checkX, checkY].getWalls()[wallIndex] != default(Wall) &&
-                            grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed;
+        return true;
+        //return grid[checkX, checkY].getWalls()[wallIndex] != default(Wall) &&
+          //                  grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed;
     }
 
     public Space WorldPointToSpace(Vector3 worldPosition) {
