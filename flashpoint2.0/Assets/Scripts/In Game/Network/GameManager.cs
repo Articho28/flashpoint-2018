@@ -111,6 +111,19 @@ public class GameManager : MonoBehaviourPun
         GameConsole.instance.FeedbackText.text = message;
     }
 
+    public void DisplayToConsolePlayGame(int turn)
+    {
+        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        string message = "It's " + playerName + "'s turn!";
+        GameConsole.instance.FeedbackText.text = message;
+    }
+
+    public void DisplayToConsolePlaceFirefighter(int turn)
+    {
+        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        string message = "It's " + playerName + "'s turn to place their fireFighter";
+        GameConsole.instance.FeedbackText.text = message;
+    }
 
 
     //    ================ NETWORK SYNCHRONIZATION SECTION =================
@@ -146,6 +159,15 @@ public class GameManager : MonoBehaviourPun
                 }
                 Turn = 1;
                 DisplayPlayerTurn();
+                DisplayToConsolePlayGame(Turn);
+            }
+            else
+            {
+                if (isFirstReset)
+                {
+                    DisplayToConsolePlaceFirefighter(Turn);
+                    DisplayPlayerTurn();
+                }
             }
         }
 
@@ -153,6 +175,8 @@ public class GameManager : MonoBehaviourPun
         {
             Turn = 1;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
+            DisplayPlayerTurn();
+            DisplayToConsolePlaceFirefighter(Turn);
             GameUI.instance.AddGameState(GameStatus);
 
         }
