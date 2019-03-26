@@ -97,8 +97,7 @@ public class SpaceGrid : MonoBehaviourPun {
                     if (isValid)
                     {
                         neighbours[index] = grid[checkX, checkY];
-                        Debug.Log("this is executing");
-                        Debug.Log("Index x " + checkX + " Index Y " + checkY);
+
                     }
                     index++;
                 }

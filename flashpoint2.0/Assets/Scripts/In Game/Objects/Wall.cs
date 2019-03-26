@@ -29,14 +29,14 @@ public class Wall : MonoBehaviour
     {
         if (status == WallStatus.Intact) {
             status = WallStatus.Damaged;
-            Game.incrementBuildingDamage();
+            GameManager.GM.buildingDamage++;
 
             updateMaterial();
             return true;
         }
         else if (status == WallStatus.Damaged) {
             status = WallStatus.Destroyed;
-            Game.incrementBuildingDamage();
+            GameManager.GM.buildingDamage++;
 
             updateMaterial();
             return true;
