@@ -121,6 +121,7 @@ public class Fireman : GameUnit
         Victim v = this.getVictim();
         bool reachable = true; //destination.isReachable(); //TODO
         Space curr = this.getCurrentSpace();
+        Debug.Log("Index X is " + curr.indexX + " and Index Y is " + curr.indexY);
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
         //foreach (Space s in neighbors)
         //{
@@ -156,12 +157,13 @@ public class Fireman : GameUnit
                 }
                 else
                 {
-                    //displayActionResult("ERROR"); // TODO say what the error is with if stattements
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                    return;
                 }
             }
             else
             {
-                if (v == null)
+                if (v == null && ap >=1)
                 {
                     this.setCurrentSpace(destination);
                     this.decrementAP(1);
@@ -170,10 +172,15 @@ public class Fireman : GameUnit
                     this.GetComponent<Transform>().position = destination.worldPosition;
 
                 }
-                else //if the fireman is carrying a victim
+                else if (v != null && ap >=2)//if the fireman is carrying a victim
                 {
                     this.setCurrentSpace(destination);
                     this.decrementAP(2);
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                    return;
                 }
             }
         }

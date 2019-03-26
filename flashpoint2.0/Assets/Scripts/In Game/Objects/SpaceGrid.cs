@@ -36,13 +36,13 @@ public class SpaceGrid : MonoBehaviourPun {
     private void CreateGrid() {
         grid = new Space[gridSizeX, gridSizeY];
 
-        Vector2 worldBottomLeft = new Vector2(transform.position.x, transform.position.y) -
-            Vector2.right * gridWorldSize.x / 2 - Vector2.up * gridWorldSize.y / 2;
+        Vector2 worldTopLeft = new Vector2(transform.position.x, transform.position.y) -
+            Vector2.right * gridWorldSize.x / 2 + Vector2.up * gridWorldSize.y / 2;
 
         for (int x = 0; x < gridSizeX; x++) {
             for (int y = 0; y < gridSizeY; y++) {
-                Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * spaceDiameter + spaceRadius)
-                                                              + Vector2.up * (y * spaceDiameter + spaceRadius);
+                Vector2 worldPoint = worldTopLeft + Vector2.right * (x * spaceDiameter + spaceRadius)
+                                                              - Vector2.up * (y * spaceDiameter + spaceRadius);
                 bool isOutsideSpace = false;
 
                 if (x == 0 || x == gridSizeX - 1 || y == 0 || y == gridSizeY - 1) {
