@@ -131,6 +131,12 @@ public class Fireman : GameUnit
         //}
         Space destination = neighbors[direction];
 
+        if (destination == null)
+        {
+            GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
+            return;
+        }
+
         SpaceStatus sp = destination.getSpaceStatus();
 
         if (reachable)

@@ -23,7 +23,7 @@ public class GameConsole : MonoBehaviour
         FeedbackText.text = "";
     }
 
-    void UpdateFeedback(string messageToPlayers)
+    public void UpdateFeedback(string messageToPlayers)
     {
         FeedbackText.text = "Feedback: " + messageToPlayers;
     }

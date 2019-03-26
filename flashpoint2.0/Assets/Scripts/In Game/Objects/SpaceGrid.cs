@@ -57,10 +57,7 @@ public class SpaceGrid : MonoBehaviourPun {
     //list index: 0 top, 1 right, 2 bottom, 3 left
     public Space[] GetNeighbours(Space space) {
         Space[] neighbours = new Space[4];
-        Debug.Log("X of curr is " + space.indexX);
-        Debug.Log("Y of curr is " + space.indexY);
-
-
+       
         //  _________
         // |__|_x|__|
         // |_x|_c|_x| 
@@ -69,6 +66,7 @@ public class SpaceGrid : MonoBehaviourPun {
         int index = 0;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
+
                 if (x == y || x == -y)
                 {
                     continue; //continue if its the middle and corner tile
@@ -79,6 +77,7 @@ public class SpaceGrid : MonoBehaviourPun {
 
                 //check if neighbouring node is valid
                 if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) { //within boundaries
+                    //Setup flag
                     bool isValid = false;
 
                     if (y == 1 && isValidNeighbour(checkX, checkY, 0)) {
