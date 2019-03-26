@@ -36,9 +36,9 @@ public class FiremanUI : MonoBehaviour
         APText.text = "AP: \n" + AP;
     }
 
-    public void AddAP(int APtoAdd)
+    public void SetAP(int newAP)
     {
-        AP = APtoAdd + APtoAdd;
+        AP = newAP;
         UpdateAP();
     }
 }
