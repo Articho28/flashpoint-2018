@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviourPun
     public static int NumberOfPlayers;
     public bool isFirstReset;
 
+    //Game relevant variables
+    public int buildingDamage;
+
    
 
     [SerializeField]
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviourPun
             playerPrefabs = new Dictionary<int, PhotonPlayer>();
             NumberOfPlayers = PhotonNetwork.CountOfPlayers;
             isFirstReset = true;
+            buildingDamage = 0;
         }
         else
         {
