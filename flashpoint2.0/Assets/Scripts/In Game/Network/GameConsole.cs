@@ -9,7 +9,7 @@ public class GameConsole : MonoBehaviour
 
     public Text FeedbackText;
 
-    public void Awake()
+    private void Awake()
     {
         if (instance == null)
         {
@@ -20,7 +20,7 @@ public class GameConsole : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        FeedbackText.text = "";
     }
 
     void UpdateFeedback(string messageToPlayers)

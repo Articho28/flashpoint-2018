@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviourPun
     GameObject GameUIPanel;
 
     [SerializeField]
-    GameObject GameConsole;
+    GameObject GameConsoleObject;
 
     [SerializeField]
     public static Dictionary<int, PhotonPlayer> playerPrefabs;
@@ -104,6 +104,11 @@ public class GameManager : MonoBehaviourPun
     {
         string playerName = PhotonNetwork.PlayerList[Turn - 1].NickName;
         GameUI.instance.UpdatePlayerTurnName(playerName);
+    }
+
+    public void DisplayToConsole(string message)
+    {
+        GameConsole.instance.FeedbackText.text = message;
     }
 
 
