@@ -137,6 +137,8 @@ public class Fireman : GameUnit
             return;
         }
 
+
+
         SpaceStatus sp = destination.getSpaceStatus();
 
         if (reachable)
@@ -163,6 +165,8 @@ public class Fireman : GameUnit
                 {
                     this.setCurrentSpace(destination);
                     this.decrementAP(1);
+                    FiremanUI.instance.SetAP(this.AP);
+                    GameConsole.instance.UpdateFeedback("You have successfully moved");
                 }
                 else //if the fireman is carrying a victim
                 {
