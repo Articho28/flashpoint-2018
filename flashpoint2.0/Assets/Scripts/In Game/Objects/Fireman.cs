@@ -1,10 +1,11 @@
 ﻿
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
+using System;
 
 public class Fireman : GameUnit
 {
@@ -37,10 +38,6 @@ public class Fireman : GameUnit
         return AP;
     }
 
-    public void setSavedAP(int newSavedAP)
-    {
-        if (newSavedAP <= 4) AP = newSavedAP;
-    }
 
     public void decrementAP(int amount)
     {
@@ -271,58 +268,93 @@ public class Fireman : GameUnit
 
     void Update()
     {
-        //MOVE: ARROWS WITH DIRECTION
-        //OPEN/CLOSE DOOR: "D"
-        //
+       
 
-        //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+       FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
         {
-            this.move(0);
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            this.move(2);
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            this.move(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            this.move(3);
-        }
-        else if (Input.GetKeyDown(KeyCode.D)) //open/close door
-        {
-            int doorDir = 4;//forbidden value
-            Door[] doors = this.getCurrentSpace().getDoors();
-            Debug.Log(this.getCurrentSpace().worldPosition);
-            for (int i = 0; i < 4; i++)
-            {
-                Debug.Log(doors[i]);
-                if (doors[i] != null)
-                {
-                    doorDir = i;
-                }
-            }
-            if (doorDir >= 0 && doorDir <= 3)
-            {
-                if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
-                {
-                    this.closeDoor();
-                }
-                else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
-                {
-                    this.openDoor();
-                }
-            }
-            else
-            {
-                Debug.Log("there are no doors near the space you're on!");
-            }
 
+            //MOVE: ARROWS WITH DIRECTION
+            //OPEN/CLOSE DOOR: "D"
+            //CHOP WALL "C"
+            //END TURN Q
+
+            //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                this.move(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                this.move(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                this.move(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                this.move(3);
+            }
+            else if (Input.GetKeyDown(KeyCode.D)) //open/close door
+            {
+                int doorDir = 4;//forbidden value
+                Door[] doors = this.getCurrentSpace().getDoors();
+                Debug.Log(this.getCurrentSpace().worldPosition);
+                for (int i = 0; i < 4; i++)
+                {
+                    Debug.Log(doors[i]);
+                    if (doors[i] != null)
+                    {
+                        doorDir = i;
+                    }
+                }
+                if (doorDir >= 0 && doorDir <= 3)
+                {
+                    if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
+                    {
+                        this.closeDoor();
+                    }
+                    else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
+                    {
+                        this.openDoor();
+                    }
+                }
+                else
+                {
+                    Debug.Log("there are no doors near the space you're on!");
+                }
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                endTurn();
+            }
         }
     }
+
+    public void endTurn()
+    {
+        restoreAP();
+        advanceFire();
+        GameManager.IncrementTurn();
+    }
+
+
+    private void restoreAP()
+    {
+        int currentNumAP = this.getAP();
+        if (this.savedAP < 4 && currentNumAP > 0)
+        {
+            do
+            {
+                this.savedAP++;
+                currentNumAP--;
+            } while (currentNumAP > 0 && this.savedAP < 4);
+        }
+        this.setAP(4);
+    }
+
 
     //  =============== NETWORK SYNCRONIZATION SECTION ===============
     public void OnEnable()

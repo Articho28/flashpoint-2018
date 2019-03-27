@@ -30,6 +30,7 @@ public class FirefighterMovement : MonoBehaviourPun
                 GameManager.IncrementTurn();
             }
         }
+        
     }
 
 
