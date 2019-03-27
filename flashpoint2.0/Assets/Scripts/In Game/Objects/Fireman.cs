@@ -96,6 +96,7 @@ public class Fireman : GameUnit
             }
 
         }
+         
 
         //Check if sufficient AP.
         if (numAP < 1)
@@ -105,15 +106,42 @@ public class Fireman : GameUnit
         }
         else
         {
-            //Check if there are more than one space status that is not safe. 
-            bool hasMoreThanOneUnsafeSpaces = checkMoreThanOneUnsafeNeighbor(neighborsStatuses, currentSpaceStatus);
+            //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
+            ArrayList extinguishOptions = getUnsafeSpacesIndicies(currentSpaceStatus, neighborsStatuses);
 
-            /*
-            if (hasMoreThanOneUnsafeSpaces)
-            {
-                int[] extinguishOptions
+            //Build string to show.
+            String optionsToUser = "";
+
+            foreach (int index in extinguishOptions) {
+
+               
+                if (index == 0)
+                {
+                    optionsToUser += "Press 0 for Tile on Top ";
+                }
+                else if (index == 1)
+                {
+                    optionsToUser += " Press 1 for Tile to Your Right";
+                }
+                else if (index == 2)
+                {
+                    optionsToUser += " Press 2 for the Tile to the Bottom";
+                }
+                else if (index == 3)
+                {
+                    optionsToUser += " Press 3 for the Tile to Your Left";
+
+                }
+                else
+                {
+                    optionsToUser += " Press 4 for the current Tile";
+
+                }
             }
 
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+
+            /*
             if (curentSpaceStatus != SpaceStatus.Safe)
 
             if (a == Action.FlipFire)
@@ -135,33 +163,33 @@ public class Fireman : GameUnit
             {
                 Debug.Log("Nothing to extinguish here!"); //Used to show the player why he can’t perform an action in case of failure
             }
-            */
+                */
+
         }
     }
 
-    //Private method to check if there are more than one unsafe spaces at player's tile or around.
-    private bool checkMoreThanOneUnsafeNeighbor(SpaceStatus[] neighborStatuses, SpaceStatus currentSpaceStatus)
+    private ArrayList getUnsafeSpacesIndicies(SpaceStatus currentSpaceStatus, SpaceStatus[] neighborsStatuses)
     {
-        int unsafeSpacesCounter = 0; 
+        ArrayList indices = new ArrayList();
 
+        //Collect directions in which there is a smoke or fire marker.
+        for (int i = 0; i < neighborsStatuses.Length; i++)
+        {
+            if (neighborsStatuses[i] != SpaceStatus.Safe)
+            {
+                indices.Add(i);
+            }
+        }
+
+        //Check for current space. Current Space index will be 4.
         if (currentSpaceStatus != SpaceStatus.Safe)
         {
-            unsafeSpacesCounter++;
+            indices.Add(4);
         }
 
-        foreach (SpaceStatus spaceStatus in neighborStatuses)
-        {
-            if (spaceStatus != SpaceStatus.Safe)
-            {
-                unsafeSpacesCounter++;
-            }
-            if (unsafeSpacesCounter > 1)
-            {
-                return true;
-            }
-        }
-        return false;
+        return indices;
     }
+
 
     public void chopWall(Wall wall)
     {
