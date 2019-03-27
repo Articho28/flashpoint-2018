@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 181}
-  - component: {fileID: 243}
+  - component: {fileID: 183}
+  - component: {fileID: 249}
   m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
@@ -17,7 +17,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &181
+--- !u!4 &183
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -28,10 +28,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 180}
+  m_Father: {fileID: 182}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &243
+--- !u!212 &249
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,12 +87,12 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 180}
-  - component: {fileID: 318}
-  - component: {fileID: 317}
-  - component: {fileID: 241}
-  - component: {fileID: 316}
-  - component: {fileID: 8272904411377216615}
+  - component: {fileID: 182}
+  - component: {fileID: 328}
+  - component: {fileID: 327}
+  - component: {fileID: 243}
+  - component: {fileID: 326}
+  - component: {fileID: 410}
   m_Layer: 11
   m_Name: Firefighter1
   m_TagString: Untagged
@@ -100,7 +100,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &180
+--- !u!4 &182
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,11 +111,11 @@ Transform:
   m_LocalPosition: {x: -5.48, y: -1.505, z: -2}
   m_LocalScale: {x: 0.223, y: 0.191, z: 1}
   m_Children:
-  - {fileID: 181}
+  - {fileID: 183}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &318
+--- !u!114 &328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,11 +133,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 317}
+  - {fileID: 327}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &317
+--- !u!114 &327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 0
   m_SynchronizeScale: 1
---- !u!143 &241
+--- !u!143 &243
 CharacterController:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,7 +170,7 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &316
+--- !u!114 &326
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f121c46ad8efe4582a675092423072b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8272904411377216615
+--- !u!114 &410
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

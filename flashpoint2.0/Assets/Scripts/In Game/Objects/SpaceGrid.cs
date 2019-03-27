@@ -179,13 +179,11 @@ public class SpaceGrid : MonoBehaviourPun {
             return;
         }
 
-        string path;
         int col;
         int row;
 
         do
         {   
-            path = Path.Combine("PhotonPrefabs", "Prefabs", "POIs", "POI");
             //randomize between 1 and 6
             col = Random.Range(1, 8);
             //randomize between 1 and 8
@@ -212,7 +210,7 @@ public class SpaceGrid : MonoBehaviourPun {
          * 2) position. e.g.grid[1,2].worldPosition
          * FORMAT OF DATA: PATH, POSITION,PATH,POSITION,ETC.        
          */
-        object[] data = new object[] {path,row,col};
+        object[] data = new object[] {row,col};
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
@@ -246,18 +244,18 @@ public class SpaceGrid : MonoBehaviourPun {
         {
             object[] datas = eventData.CustomData as object[];
 
-            string path = (string) datas[0];
-            int row = (int) datas[1];
-            int col = (int) datas[2];
+            int row = (int) datas[0];
+            int col = (int) datas[1];
 
 
             Space space = grid[col, row];
 
             Vector3 position = space.worldPosition;
 
-            GameObject POI = PhotonNetwork.Instantiate(path,
-               position,
-               Quaternion.identity, 0);
+            GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            POI.GetComponent<Transform>().position = newPosition;
 
             POI poi = POI.GetComponent<POI>();
 
@@ -267,17 +265,16 @@ public class SpaceGrid : MonoBehaviourPun {
         {
             object[] datas = eventData.CustomData as object[];
 
-            string path = Path.Combine("PhotonPrefabs", "Prefabs", "FireMarker");
             int[] rows = (int[])datas[0];
             int[] cols = (int[])datas[1];
 
             for(int i = 0; i < rows.Length; i++)
             {
                 Vector3 position = grid[cols[i], rows[i]].worldPosition;
+                GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker")) as GameObject;
+                Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-                GameObject POI = PhotonNetwork.Instantiate(path,
-               position,
-               Quaternion.identity, 0);
+                newFireMarker.GetComponent<Transform>().position = newPosition;
 
                 grid[cols[i], rows[i]].setSpaceStatus(SpaceStatus.Fire);
             }
