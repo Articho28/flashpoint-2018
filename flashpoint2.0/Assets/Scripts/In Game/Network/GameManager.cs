@@ -215,7 +215,7 @@ public class GameManager : MonoBehaviourPun
             Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
 
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
-            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker")) as GameObject;
+            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
             Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, 0);
             newFireMarker.GetComponent<Transform>().position = newPosition;
             Debug.Log("It was placed at " + newPosition);
@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviourPun
 
 
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
-            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker")) as GameObject;
+            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
             Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
             newFireMarker.GetComponent<Transform>().position = newPosition;
             Debug.Log("It was placed at " + newPosition);

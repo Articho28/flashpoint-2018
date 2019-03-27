@@ -320,7 +320,7 @@ public class SpaceGrid : MonoBehaviourPun {
             {
                 Space currentSpace = grid[cols[i], rows[i]];
                 Vector3 position = grid[cols[i], rows[i]].worldPosition;
-                GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker")) as GameObject;
+                GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
                 Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
                 newFireMarker.GetComponent<Transform>().position = newPosition;
