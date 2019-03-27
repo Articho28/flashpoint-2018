@@ -64,10 +64,21 @@ public class Space {
         return this.doors;
     }
 
-    public Wall[] getWalls()
+    public void setDoors(Door[] newDoors)
+    {
+        this.doors = newDoors;
+    }
+
+    public void setWalls(Wall[] newWalls)
+    {
+        this.walls = newWalls;
+    }
+
+    public Wall[] getWalls()
     {
         return this.walls;
     }
+
 
     public void addOccupant(GameUnit u)
     {
