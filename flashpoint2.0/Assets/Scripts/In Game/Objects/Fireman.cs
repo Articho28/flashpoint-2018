@@ -74,16 +74,48 @@ public class Fireman : GameUnit
         this.carriedVictim = null;
     }
 
-    public void extinguishFire(Space destination, Action a)
+    public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
 
-        if (numAP < 1)
+        //Get current space and spacestatus. 
+
+        Space current = this.getCurrentSpace();
+        SpaceStatus currentSpaceStatus = current.getSpaceStatus();
+
+
+        //Get neighbors and their spacestatus. 
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
+        SpaceStatus[] neighborsStatuses = new SpaceStatus[4];
+
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            if (neighbors[i] != null)
+            {
+                neighborsStatuses[i] = neighbors[i].getSpaceStatus();
+            }
+
+        }
+
+        //Check if sufficient AP.
+        if (numAP < 1)
         {
             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
         }
         else
         {
+            //Check if there are more than one space status that is not safe. 
+            bool hasMoreThanOneUnsafeSpaces = checkMoreThanOneUnsafeNeighbor(neighborsStatuses, currentSpaceStatus);
+
+            /*
+            if (hasMoreThanOneUnsafeSpaces)
+            {
+                int[] extinguishOptions
+            }
+
+            if (curentSpaceStatus != SpaceStatus.Safe)
+
             if (a == Action.FlipFire)
             {     //if the player chooses to "Flip Fire"
                 destination.setSpaceStatus(SpaceStatus.Smoke);          //sets the SpaceStatus to Smoke
@@ -103,7 +135,32 @@ public class Fireman : GameUnit
             {
                 Debug.Log("Nothing to extinguish here!"); //Used to show the player why he can’t perform an action in case of failure
             }
+            */
         }
+    }
+
+    //Private method to check if there are more than one unsafe spaces at player's tile or around.
+    private bool checkMoreThanOneUnsafeNeighbor(SpaceStatus[] neighborStatuses, SpaceStatus currentSpaceStatus)
+    {
+        int unsafeSpacesCounter = 0; 
+
+        if (currentSpaceStatus != SpaceStatus.Safe)
+        {
+            unsafeSpacesCounter++;
+        }
+
+        foreach (SpaceStatus spaceStatus in neighborStatuses)
+        {
+            if (spaceStatus != SpaceStatus.Safe)
+            {
+                unsafeSpacesCounter++;
+            }
+            if (unsafeSpacesCounter > 1)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void chopWall(Wall wall)
@@ -325,6 +382,11 @@ public class Fireman : GameUnit
                     Debug.Log("there are no doors near the space you're on!");
                 }
 
+            }
+
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                extinguishFire();
             }
             else if (Input.GetKeyDown(KeyCode.Q))
             {
