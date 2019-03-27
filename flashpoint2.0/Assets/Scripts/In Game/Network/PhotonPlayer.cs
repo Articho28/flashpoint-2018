@@ -18,7 +18,7 @@ public class PhotonPlayer : MonoBehaviour
         if (PV.IsMine)
         {
             int myPlayerNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-            myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Prefabs,",
+            myAvatar = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Prefabs",
                "Fireman",
                    "Firefighter" + myPlayerNumber),
                    GamePlayersNetworkSetup.GS.initialPositions[myPlayerNumber - 1],
