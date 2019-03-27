@@ -35,7 +35,9 @@ public class UserInputManager : MonoBehaviour
                 {                     Debug.Log("a door was clicked");                 }                 else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
                 {                     Debug.Log("a wall was clicked");                 }                 else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
                 {                     Debug.Log("a tile was clicked");
-                    lastSpaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(lastObjectClicked.transform.position);                 }
+                    lastSpaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(lastObjectClicked.transform.position);
+
+                    Debug.Log("space clicked x: " + lastSpaceClicked.indexX + "space clicked y: " + lastSpaceClicked.indexY);                 }
 
             }         }
     }

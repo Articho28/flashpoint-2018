@@ -169,7 +169,8 @@ public class Fireman : GameUnit
                     this.decrementAP(1);
                     FiremanUI.instance.SetAP(this.AP);
                     GameConsole.instance.UpdateFeedback("You have successfully moved");
-                    this.GetComponent<Transform>().position = destination.worldPosition;
+                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                    this.GetComponent<Transform>().position = newPosition;
 
                 }
                 else if (v != null && ap >=2)//if the fireman is carrying a victim

@@ -63,7 +63,6 @@ public class SpaceGrid : MonoBehaviourPun {
         // |_x|_c|_x| 
         // |__|_x|__| 
         //search neighbour tiles x of c
-        int index = 0;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
 
@@ -77,28 +76,19 @@ public class SpaceGrid : MonoBehaviourPun {
 
                 //check if neighbouring node is valid
                 if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) { //within boundaries
-                    //Setup flag
-                    bool isValid = false;
 
-                    if (y == 1 && isValidNeighbour(checkX, checkY, 0)) {
-                        isValid = true;
+                    if (y == -1 && isValidNeighbour(checkX, checkY, 0)) {
+                        neighbours[0] = grid[checkX, checkY];
                     }
                     else if (x == 1 && isValidNeighbour(checkX, checkY, 1)) {
-                        isValid = true;
+                        neighbours[1] = grid[checkX, checkY];
                     }
-                    else if (y == -1 && isValidNeighbour(checkX, checkY, 2)) {
-                        isValid = true;
+                    else if (y == 1 && isValidNeighbour(checkX, checkY, 2)) {
+                        neighbours[2] = grid[checkX, checkY];
                     }
                     else if(x == -1 && isValidNeighbour(checkX, checkY, 3)) {
-                        isValid = true;
+                        neighbours[3] = grid[checkX, checkY];
                     }
-
-                    if (isValid)
-                    {
-                        neighbours[index] = grid[checkX, checkY];
-
-                    }
-                    index++;
                 }
             }
         }
@@ -114,7 +104,7 @@ public class SpaceGrid : MonoBehaviourPun {
 
     public Space WorldPointToSpace(Vector3 worldPosition) {
         float posX = ((worldPosition.x - transform.position.x) + gridWorldSize.x * 0.5f) / spaceDiameter;
-        float posY = ((worldPosition.y - transform.position.y) + gridWorldSize.y * 0.5f) / spaceDiameter;
+        float posY = ((transform.position.y - worldPosition.y) + gridWorldSize.y * 0.5f) / spaceDiameter;
         posX = Mathf.Clamp(posX, 0, gridSizeX);
         posY = Mathf.Clamp(posY, 0, gridSizeY);
 
