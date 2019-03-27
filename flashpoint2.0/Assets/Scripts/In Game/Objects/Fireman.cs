@@ -353,6 +353,7 @@ public class Fireman : GameUnit
             } while (currentNumAP > 0 && this.savedAP < 4);
         }
         this.setAP(4);
+        FiremanUI.instance.SetAP(4);
     }
 
 
