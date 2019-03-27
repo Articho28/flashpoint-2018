@@ -14,6 +14,8 @@ public class Fireman : GameUnit
     FMStatus status;
     Victim carriedVictim;
     private PhotonView PV;
+    private bool isWaitingForInput;
+    ArrayList validInputOptions;
 
     void Start()
     {
@@ -21,6 +23,8 @@ public class Fireman : GameUnit
         savedAP = 0;
         carriedVictim = null;
         PV = GetComponent<PhotonView>();
+        isWaitingForInput = false;
+        validInputOptions = new ArrayList();
     }
 
     public int getAP()
@@ -107,7 +111,8 @@ public class Fireman : GameUnit
         else
         {
             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
-            ArrayList extinguishOptions = getUnsafeSpacesIndicies(currentSpaceStatus, neighborsStatuses);
+            ArrayList extinguishOptions = getUnsafeSpacesIndecies(currentSpaceStatus, neighborsStatuses);
+            validInputOptions = extinguishOptions;
 
             //Build string to show.
             String optionsToUser = "";
@@ -141,6 +146,8 @@ public class Fireman : GameUnit
 
             GameConsole.instance.UpdateFeedback(optionsToUser);
 
+            isWaitingForInput = true;
+
             /*
             if (curentSpaceStatus != SpaceStatus.Safe)
 
@@ -168,7 +175,7 @@ public class Fireman : GameUnit
         }
     }
 
-    private ArrayList getUnsafeSpacesIndicies(SpaceStatus currentSpaceStatus, SpaceStatus[] neighborsStatuses)
+    private ArrayList getUnsafeSpacesIndecies(SpaceStatus currentSpaceStatus, SpaceStatus[] neighborsStatuses)
     {
         ArrayList indices = new ArrayList();
 
@@ -362,7 +369,8 @@ public class Fireman : GameUnit
             //MOVE: ARROWS WITH DIRECTION
             //OPEN/CLOSE DOOR: "D"
             //CHOP WALL "C"
-            //END TURN Q
+            //END TURN "Q"
+            //EXTINGUISH FIRE/SMOKE "E" + Number.
 
             //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -414,8 +422,52 @@ public class Fireman : GameUnit
 
             else if (Input.GetKeyDown(KeyCode.E))
             {
+                Debug.Log("Extinguish Fire Detected");
                 extinguishFire();
             }
+            else if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                if(isWaitingForInput)
+                {
+                    Debug.Log("Input 0 Received");
+                    isWaitingForInput = false;
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 3 Received");
+                    isWaitingForInput = false;
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 4 Received");
+                    isWaitingForInput = false;
+                }
+            }
+
+
             else if (Input.GetKeyDown(KeyCode.Q))
             {
                 endTurn();
