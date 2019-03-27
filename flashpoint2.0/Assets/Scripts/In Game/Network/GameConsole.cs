@@ -25,7 +25,7 @@ public class GameConsole : MonoBehaviour
 
     public void UpdateFeedback(string messageToPlayers)
     {
-        FeedbackText.text = "Feedback: " + messageToPlayers;
+        FeedbackText.text = messageToPlayers;
     }
 
 }

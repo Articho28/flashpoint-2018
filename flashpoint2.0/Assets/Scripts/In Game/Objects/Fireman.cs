@@ -1,10 +1,11 @@
 ﻿
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
+using System;
 
 public class Fireman : GameUnit
 {
@@ -37,10 +38,6 @@ public class Fireman : GameUnit
         return AP;
     }
 
-    public void setSavedAP(int newSavedAP)
-    {
-        if (newSavedAP <= 4) AP = newSavedAP;
-    }
 
     public void decrementAP(int amount)
     {
@@ -121,6 +118,7 @@ public class Fireman : GameUnit
         Victim v = this.getVictim();
         bool reachable = true; //destination.isReachable(); //TODO
         Space curr = this.getCurrentSpace();
+        Debug.Log("Index X is " + curr.indexX + " and Index Y is " + curr.indexY);
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
         //foreach (Space s in neighbors)
         //{
@@ -156,24 +154,31 @@ public class Fireman : GameUnit
                 }
                 else
                 {
-                    //displayActionResult("ERROR"); // TODO say what the error is with if stattements
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                    return;
                 }
             }
             else
             {
-                if (v == null)
+                if (v == null && ap >=1)
                 {
                     this.setCurrentSpace(destination);
                     this.decrementAP(1);
                     FiremanUI.instance.SetAP(this.AP);
                     GameConsole.instance.UpdateFeedback("You have successfully moved");
-                    this.GetComponent<Transform>().position = destination.worldPosition;
+                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                    this.GetComponent<Transform>().position = newPosition;
 
                 }
-                else //if the fireman is carrying a victim
+                else if (v != null && ap >=2)//if the fireman is carrying a victim
                 {
                     this.setCurrentSpace(destination);
                     this.decrementAP(2);
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                    return;
                 }
             }
         }
@@ -263,58 +268,94 @@ public class Fireman : GameUnit
 
     void Update()
     {
-        //MOVE: ARROWS WITH DIRECTION
-        //OPEN/CLOSE DOOR: "D"
-        //
+       
 
-        //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+       FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
         {
-            this.move(0);
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            this.move(2);
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            this.move(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            this.move(3);
-        }
-        else if (Input.GetKeyDown(KeyCode.D)) //open/close door
-        {
-            int doorDir = 4;//forbidden value
-            Door[] doors = this.getCurrentSpace().getDoors();
-            Debug.Log(this.getCurrentSpace().worldPosition);
-            for (int i = 0; i < 4; i++)
-            {
-                Debug.Log(doors[i]);
-                if (doors[i] != null)
-                {
-                    doorDir = i;
-                }
-            }
-            if (doorDir >= 0 && doorDir <= 3)
-            {
-                if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
-                {
-                    this.closeDoor();
-                }
-                else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
-                {
-                    this.openDoor();
-                }
-            }
-            else
-            {
-                Debug.Log("there are no doors near the space you're on!");
-            }
 
+            //MOVE: ARROWS WITH DIRECTION
+            //OPEN/CLOSE DOOR: "D"
+            //CHOP WALL "C"
+            //END TURN Q
+
+            //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                this.move(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                this.move(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                this.move(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                this.move(3);
+            }
+            else if (Input.GetKeyDown(KeyCode.D)) //open/close door
+            {
+                int doorDir = 4;//forbidden value
+                Door[] doors = this.getCurrentSpace().getDoors();
+                Debug.Log(this.getCurrentSpace().worldPosition);
+                for (int i = 0; i < 4; i++)
+                {
+                    Debug.Log(doors[i]);
+                    if (doors[i] != null)
+                    {
+                        doorDir = i;
+                    }
+                }
+                if (doorDir >= 0 && doorDir <= 3)
+                {
+                    if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
+                    {
+                        this.closeDoor();
+                    }
+                    else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
+                    {
+                        this.openDoor();
+                    }
+                }
+                else
+                {
+                    Debug.Log("there are no doors near the space you're on!");
+                }
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                endTurn();
+            }
         }
     }
+
+    public void endTurn()
+    {
+        restoreAP();
+        GameManager.advanceFire();
+        GameManager.IncrementTurn();
+    }
+
+
+    private void restoreAP()
+    {
+        int currentNumAP = this.getAP();
+        if (this.savedAP < 4 && currentNumAP > 0)
+        {
+            do
+            {
+                this.savedAP++;
+                currentNumAP--;
+            } while (currentNumAP > 0 && this.savedAP < 4);
+        }
+        this.setAP(4);
+        FiremanUI.instance.SetAP(4);
+    }
+
 
     //  =============== NETWORK SYNCRONIZATION SECTION ===============
     public void OnEnable()
