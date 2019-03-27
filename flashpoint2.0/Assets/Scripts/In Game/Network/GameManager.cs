@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
+using System.IO;
 
 public class GameManager : MonoBehaviourPun
 {
@@ -18,8 +19,18 @@ public class GameManager : MonoBehaviourPun
 
     //Game relevant variables
     public int buildingDamage;
+    static int blackDice;
+    static int redDice;
 
-  
+    //Network Options
+
+    static Photon.Realtime.RaiseEventOptions  sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
+    {
+        CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+        Receivers = Photon.Realtime.ReceiverGroup.All
+    };
+
+
 
     public void Awake()
     {
@@ -99,6 +110,47 @@ public class GameManager : MonoBehaviourPun
         GameConsole.instance.FeedbackText.text = message;
     }
 
+    public static void advanceFire()
+    {
+        rollDice();
+        Space targetSpace = StateManager.instance.spaceGrid.getGrid()[blackDice, redDice];
+        Debug.Log("Found target space is : " + targetSpace.indexX + " and " + targetSpace.indexY);
+
+        SpaceStatus sp = targetSpace.getSpaceStatus();
+
+        object[] data = new object[] { targetSpace.worldPosition, targetSpace.indexX, targetSpace.indexY };
+
+        if (sp == SpaceStatus.Fire)
+        {
+            Debug.Log("It's an explosion");
+
+        }
+        else if(sp == SpaceStatus.Smoke)
+        {
+            Debug.Log("It's turned to Fire.");
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceFireMarker, data, sendToAllOptions, SendOptions.SendUnreliable);
+        }
+        else
+        {
+            Debug.Log("It's turned to Smoke");
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceSmokeMarker, data, sendToAllOptions, SendOptions.SendUnreliable);
+
+        }
+
+
+    }
+
+    static void rollDice()
+    {
+        //TODO reset proper randomization
+        //System.Random r = new System.Random();
+        //blackDice = r.Next(1, 9);
+        //redDice = r.Next(1, 7);
+        blackDice = 1;
+        redDice = 6;
+
+    }
+
 
     //    ================ NETWORK SYNCHRONIZATION SECTION =================
     public void OnEnable()
@@ -153,6 +205,42 @@ public class GameManager : MonoBehaviourPun
             GameUI.instance.AddGameState(GameStatus);
 
         }
+        else if (evCode == (byte) PhotonEventCodes.AdvanceFireMarker)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            Vector3 receivedPosition = (Vector3) dataReceived[0];
+            int indexX = (int)dataReceived[1];
+            int indexY = (int)dataReceived[2];
+
+            Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
+
+            targetSpace.setSpaceStatus(SpaceStatus.Fire);
+            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker")) as GameObject;
+            Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, 0);
+            newFireMarker.GetComponent<Transform>().position = newPosition;
+            Debug.Log("It was placed at " + newPosition);
+        }
+
+        else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)
+        {
+
+
+            object[] dataReceived = eventData.CustomData as object[];
+            Vector3 receivedPosition = (Vector3)dataReceived[0];
+            int indexX = (int)dataReceived[1];
+            int indexY = (int)dataReceived[2];
+
+            Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
+
+
+            targetSpace.setSpaceStatus(SpaceStatus.Fire);
+            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker")) as GameObject;
+            Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
+            newFireMarker.GetComponent<Transform>().position = newPosition;
+            Debug.Log("It was placed at " + newPosition);
+        }
 
     }
+
+
 }

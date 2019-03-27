@@ -50,11 +50,6 @@ public class Player : GameUnit
         this.f.setCurrentSpace(newSpace);
     }
 
-    public void endTurn()
-    {
-        //TODO
-    }
-
     /*public WHAT selectKnockDownPlacement()
     {
     TODO   

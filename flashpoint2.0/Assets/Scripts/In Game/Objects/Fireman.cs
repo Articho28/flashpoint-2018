@@ -336,7 +336,7 @@ public class Fireman : GameUnit
     public void endTurn()
     {
         restoreAP();
-        advanceFire();
+        GameManager.advanceFire();
         GameManager.IncrementTurn();
     }
 
