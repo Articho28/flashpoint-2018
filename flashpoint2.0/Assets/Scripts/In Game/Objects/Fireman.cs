@@ -14,6 +14,8 @@ public class Fireman : GameUnit
     FMStatus status;
     Victim carriedVictim;
     private PhotonView PV;
+    private bool isWaitingForInput;
+    ArrayList validInputOptions;
 
     void Start()
     {
@@ -21,6 +23,8 @@ public class Fireman : GameUnit
         savedAP = 0;
         carriedVictim = null;
         PV = GetComponent<PhotonView>();
+        isWaitingForInput = false;
+        validInputOptions = new ArrayList();
     }
 
     public int getAP()
@@ -74,16 +78,79 @@ public class Fireman : GameUnit
         this.carriedVictim = null;
     }
 
-    public void extinguishFire(Space destination, Action a)
+    public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
 
-        if (numAP < 1)
+        //Get current space and spacestatus. 
+
+        Space current = this.getCurrentSpace();
+        SpaceStatus currentSpaceStatus = current.getSpaceStatus();
+
+
+        //Get neighbors and their spacestatus. 
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
+        SpaceStatus[] neighborsStatuses = new SpaceStatus[4];
+
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            if (neighbors[i] != null)
+            {
+                neighborsStatuses[i] = neighbors[i].getSpaceStatus();
+            }
+
+        }
+         
+
+        //Check if sufficient AP.
+        if (numAP < 1)
         {
             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
         }
         else
         {
+            //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
+            ArrayList extinguishOptions = getUnsafeSpacesIndecies(currentSpaceStatus, neighborsStatuses);
+            validInputOptions = extinguishOptions;
+
+            //Build string to show.
+            String optionsToUser = "";
+
+            foreach (int index in extinguishOptions) {
+
+               
+                if (index == 0)
+                {
+                    optionsToUser += "Press 0 for Tile on Top ";
+                }
+                else if (index == 1)
+                {
+                    optionsToUser += " Press 1 for Tile to Your Right";
+                }
+                else if (index == 2)
+                {
+                    optionsToUser += " Press 2 for the Tile to the Bottom";
+                }
+                else if (index == 3)
+                {
+                    optionsToUser += " Press 3 for the Tile to Your Left";
+
+                }
+                else
+                {
+                    optionsToUser += " Press 4 for the current Tile";
+
+                }
+            }
+
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+
+            isWaitingForInput = true;
+
+            /*
+            if (curentSpaceStatus != SpaceStatus.Safe)
+
             if (a == Action.FlipFire)
             {     //if the player chooses to "Flip Fire"
                 destination.setSpaceStatus(SpaceStatus.Smoke);          //sets the SpaceStatus to Smoke
@@ -103,8 +170,33 @@ public class Fireman : GameUnit
             {
                 Debug.Log("Nothing to extinguish here!"); //Used to show the player why he can’t perform an action in case of failure
             }
+                */
+
         }
     }
+
+    private ArrayList getUnsafeSpacesIndecies(SpaceStatus currentSpaceStatus, SpaceStatus[] neighborsStatuses)
+    {
+        ArrayList indices = new ArrayList();
+
+        //Collect directions in which there is a smoke or fire marker.
+        for (int i = 0; i < neighborsStatuses.Length; i++)
+        {
+            if (neighborsStatuses[i] != SpaceStatus.Safe)
+            {
+                indices.Add(i);
+            }
+        }
+
+        //Check for current space. Current Space index will be 4.
+        if (currentSpaceStatus != SpaceStatus.Safe)
+        {
+            indices.Add(4);
+        }
+
+        return indices;
+    }
+
 
     public void chopWall(Wall wall)
     {
@@ -277,7 +369,8 @@ public class Fireman : GameUnit
             //MOVE: ARROWS WITH DIRECTION
             //OPEN/CLOSE DOOR: "D"
             //CHOP WALL "C"
-            //END TURN Q
+            //END TURN "Q"
+            //EXTINGUISH FIRE/SMOKE "E" + Number.
 
             //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
             if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -326,6 +419,118 @@ public class Fireman : GameUnit
                 }
 
             }
+
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("Extinguish Fire Detected");
+                extinguishFire();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                if(isWaitingForInput)
+                {
+                    Debug.Log("Input 0 Received");
+                    isWaitingForInput = false;
+                    if (validInputOptions.Contains(0))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    if (validInputOptions.Contains(1))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                    }
+
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                    if (validInputOptions.Contains(2))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 3 Received");
+                    isWaitingForInput = false;
+                    if (validInputOptions.Contains(3))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                if (isWaitingForInput)
+                {
+                    Debug.Log("Input 4 Received");
+                    isWaitingForInput = false;
+                    if (validInputOptions.Contains(4))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+
+                    }
+                }
+            }
+
+
             else if (Input.GetKeyDown(KeyCode.Q))
             {
                 endTurn();
