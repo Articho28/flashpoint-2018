@@ -431,6 +431,18 @@ public class Fireman : GameUnit
                 {
                     Debug.Log("Input 0 Received");
                     isWaitingForInput = false;
+                    if (validInputOptions.Contains(0))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                    }
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -439,6 +451,19 @@ public class Fireman : GameUnit
                 {
                     Debug.Log("Input 1 Received");
                     isWaitingForInput = false;
+                    if (validInputOptions.Contains(1))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                    }
+
                 }
             }
 
@@ -448,6 +473,18 @@ public class Fireman : GameUnit
                 {
                     Debug.Log("Input 2 Received");
                     isWaitingForInput = false;
+                    if (validInputOptions.Contains(2))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                    }
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -456,6 +493,19 @@ public class Fireman : GameUnit
                 {
                     Debug.Log("Input 3 Received");
                     isWaitingForInput = false;
+                    if (validInputOptions.Contains(3))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+
+                    }
                 }
             }
             else if (Input.GetKeyDown(KeyCode.Alpha4))
@@ -464,6 +514,19 @@ public class Fireman : GameUnit
                 {
                     Debug.Log("Input 4 Received");
                     isWaitingForInput = false;
+                    if (validInputOptions.Contains(4))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+
+                    }
                 }
             }
 
