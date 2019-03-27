@@ -112,6 +112,44 @@ public class SpaceGrid : MonoBehaviourPun {
           //                  grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed;
     }
 
+    public Space getNeighborInDirection(Space currentLocation, int direction)
+    {
+        int currentX = currentLocation.indexX;
+        int currentY = currentLocation.indexY;
+
+        if (direction == 0)
+        {
+            if (grid[currentX, currentY + 1] != null)
+            {
+                return grid[currentX, currentY + 1];
+            }
+           
+        }
+        else if (direction == 1)
+        {
+            if (grid[currentX + 1, currentY] != null)
+            {
+                return grid[currentX + 1, currentY];
+            }
+        }
+        else if (direction == 2)
+        {
+            if (grid[currentX, currentY - 1] != null)
+            {
+                return grid[currentX, currentY - 1];
+            }
+        }
+        else
+        {
+            if(grid[currentX-1, currentY] != null)
+            {
+                return grid[currentX - 1, currentY];
+            }
+        }
+
+        return null;
+    }
+
     public Space WorldPointToSpace(Vector3 worldPosition) {
         float posX = ((worldPosition.x - transform.position.x) + gridWorldSize.x * 0.5f) / spaceDiameter;
         float posY = ((transform.position.y - worldPosition.y) + gridWorldSize.y * 0.5f) / spaceDiameter;
@@ -280,13 +318,15 @@ public class SpaceGrid : MonoBehaviourPun {
 
             for(int i = 0; i < rows.Length; i++)
             {
+                Space currentSpace = grid[cols[i], rows[i]];
                 Vector3 position = grid[cols[i], rows[i]].worldPosition;
                 GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker")) as GameObject;
                 Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
                 newFireMarker.GetComponent<Transform>().position = newPosition;
+                newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
 
-                grid[cols[i], rows[i]].setSpaceStatus(SpaceStatus.Fire);
+                currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
         }
 
