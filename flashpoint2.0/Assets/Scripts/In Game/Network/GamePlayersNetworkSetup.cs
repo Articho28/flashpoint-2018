@@ -52,7 +52,6 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
         IsSpawningPrefabs = true;
         if (PhotonNetwork.IsConnected)
         {
-            Debug.Log("This is Player " + PhotonNetwork.LocalPlayer.NickName);
             GameObject entry = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs",
                "PhotonPlayers",
                    "PhotonPlayer"),
@@ -87,7 +86,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.Log("Could not check status");
+
                 return false;
             }
 
@@ -101,7 +100,6 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
         {
             if (CheckPlayersReadyToBePlaced())
             {
-                Debug.Log("All Players are ready to be placed!");
                 IsSpawningPrefabs = false;
 
                 GameManager.GM.OnAllPrefabsSpawned();

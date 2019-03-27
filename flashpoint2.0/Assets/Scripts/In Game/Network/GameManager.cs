@@ -19,10 +19,7 @@ public class GameManager : MonoBehaviourPun
     //Game relevant variables
     public int buildingDamage;
 
-   
-
-    [SerializeField]
-    public static Dictionary<int, PhotonPlayer> playerPrefabs;
+  
 
     public void Awake()
     {
@@ -30,7 +27,6 @@ public class GameManager : MonoBehaviourPun
         {
             GM = this;
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
-            playerPrefabs = new Dictionary<int, PhotonPlayer>();
             NumberOfPlayers = PhotonNetwork.CountOfPlayers;
             isFirstReset = true;
             buildingDamage = 0;
@@ -43,8 +39,6 @@ public class GameManager : MonoBehaviourPun
                 GM = this;
             }
         }
-        Debug.Log("The GameManager was created.");
-        Debug.Log("The GameStatus is at first:  " + GameStatus);
     }
 
     // Update is called once per frame
@@ -56,26 +50,6 @@ public class GameManager : MonoBehaviourPun
     public void OnAllPrefabsSpawned()
     {   
            
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonPlayer[] photonPlayers = FindObjectsOfType<PhotonPlayer>();
-            if (photonPlayers[0] != null)
-            {
-
-                for (int i = 0; i < photonPlayers.Length; i++)
-                {
-                    Debug.Log(photonPlayers[i].PlayerName + " Added to Dictionary ");
-                    Debug.Log(photonPlayers[i]);
-
-                    playerPrefabs.Add(photonPlayers[i].Id, photonPlayers[i]);
-
-                }
-            }
-            else
-            {
-                Debug.Log("did not find the photonPlayers");
-            }
-        }
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
@@ -151,7 +125,6 @@ public class GameManager : MonoBehaviourPun
                 if (isFirstReset)
                 {
                     //change the status to play game
-                    Debug.Log("All firefighters have been placed!");
                     GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
                     FiremanUI.instance.SetAP(4);
                     GameUI.instance.AddGameState(GameStatus);
