@@ -480,28 +480,8 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
 
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 2);
-                        int targetX = targetSpace.indexX;
-                        int targetY = targetSpace.indexY;
-                        //object[] data = new object[] { targetSpace.worldPosition, targetSpace.indexX, targetSpace.indexY };
 
-
-                        List<GameUnit> spaceOccupants  = targetSpace.getOccupants();
-                        GameUnit targetMarker = null;
-                        foreach (GameUnit gm in spaceOccupants)
-                        {
-                            if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
-                            {
-                                Debug.Log("Found a firemarker");
-                                targetMarker = gm;
-                            }
-                        }
-                        if (targetMarker != null)
-                        {
-                            Debug.Log("Removing targetMarker");
-                            spaceOccupants.Remove(targetMarker);
-                            Destroy(targetMarker.physicalObject);
-                            Destroy(targetMarker);
-                        }
+                        sendFireMarkerExtinguishEvent(targetSpace);
 
                     }
                     else
@@ -561,6 +541,16 @@ public class Fireman : GameUnit
                 endTurn();
             }
         }
+    }
+
+    private void sendFireMarkerExtinguishEvent(Space targetSpace)
+    {
+        int targetX = targetSpace.indexX;
+        int targetY = targetSpace.indexY;
+
+        object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
     }
 
     public void endTurn()

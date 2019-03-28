@@ -12,6 +12,7 @@ public enum PhotonEventCodes
     Move = 5,
     Door= 6,
     AdvanceFireMarker = 7,
-    AdvanceSmokeMarker = 8
+    AdvanceSmokeMarker = 8,
+    RemoveFireMarker = 9
 
 }
