@@ -179,7 +179,7 @@ public class SpaceGrid : MonoBehaviourPun {
 
     public bool containsFiremarker(int row, int col)
     {
-        if( grid[col,row].getSpaceStatus() == SpaceStatus.Fire)
+        if( grid[row,col].getSpaceStatus() == SpaceStatus.Fire)
         {
             return true;
         }
@@ -326,7 +326,7 @@ public class SpaceGrid : MonoBehaviourPun {
 
                 newFireMarker.GetComponent<Transform>().position = newPosition;
                 newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-                newFireMarker.GetComponent<GameUnit>().setType("FireMarker");
+                newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
                 newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
                 currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
 
