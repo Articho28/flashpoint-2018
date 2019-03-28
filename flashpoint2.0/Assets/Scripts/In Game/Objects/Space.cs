@@ -12,7 +12,7 @@ public class Space {
 
     Wall[] walls;
     Door[] doors;
-    List<GameUnit> occupants = new List<GameUnit>();
+    public List<GameUnit> occupants = new List<GameUnit>();
 
 
 
@@ -90,8 +90,18 @@ public class Space {
         return this.occupants;
     }
 
-    public void remove(GameUnit u)
+    public bool removeOccupant(GameUnit u)
     {
-        occupants.Remove(u);
+        int index = 0; 
+        foreach (GameUnit current in occupants)
+        {
+            if (current == u)
+            {
+                occupants.RemoveAt(index);
+                return true;
+            }
+            index++;
+        }
+        return false;
     }
 } 

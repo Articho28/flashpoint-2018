@@ -480,25 +480,29 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
 
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 2);
-                        Debug.Log("Found this X " + targetSpace.indexX + " and this Y " + targetSpace.indexY);
-                        List<GameUnit> gameUnits  = targetSpace.getOccupants();
-                        foreach (GameUnit gm in gameUnits)
+                        int targetX = targetSpace.indexX;
+                        int targetY = targetSpace.indexY;
+                        //object[] data = new object[] { targetSpace.worldPosition, targetSpace.indexX, targetSpace.indexY };
+
+
+                        List<GameUnit> spaceOccupants  = targetSpace.getOccupants();
+                        GameUnit targetMarker = null;
+                        foreach (GameUnit gm in spaceOccupants)
                         {
                             if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
                             {
                                 Debug.Log("Found a firemarker");
-                                Destroy(gm.getPhysicalObject());
-                                targetSpace.remove(gm);            
+                                targetMarker = gm;
                             }
                         }
-                        List<GameUnit> gameUnits2 = targetSpace.getOccupants();
-                        foreach (GameUnit secondGm in gameUnits)
+                        if (targetMarker != null)
                         {
-                            if (secondGm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
-                            {
-                                Debug.Log("GOTEM");
-                            }
+                            Debug.Log("Removing targetMarker");
+                            spaceOccupants.Remove(targetMarker);
+                            Destroy(targetMarker.physicalObject);
+                            Destroy(targetMarker);
                         }
+
                     }
                     else
                     {
