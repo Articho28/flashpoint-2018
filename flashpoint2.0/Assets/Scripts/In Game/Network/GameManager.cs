@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviourPun
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
         string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
-        string message = "It's " + playerName + "'s turn to place their FireFighter";
+        string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
 
@@ -269,6 +269,7 @@ public class GameManager : MonoBehaviourPun
                 spaceOccupants.Remove(targetMarker);
                 Destroy(targetMarker.physicalObject);
                 Destroy(targetMarker);
+                targetSpace.setSpaceStatus(SpaceStatus.Safe);
             }
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveSmokeMarker)
@@ -291,12 +292,14 @@ public class GameManager : MonoBehaviourPun
             }
             if (targetMarker != null)
             {
-                Debug.Log("Removing targetMarker");
+                Debug.Log("Removing Smoke Marker");
                 string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
                 GameConsole.instance.UpdateFeedback(message);
                 spaceOccupants.Remove(targetMarker);
                 Destroy(targetMarker.physicalObject);
                 Destroy(targetMarker);
+                targetSpace.setSpaceStatus(SpaceStatus.Safe);
+
             }
         }
 

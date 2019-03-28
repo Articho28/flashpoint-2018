@@ -370,7 +370,7 @@ public class SpaceGrid : MonoBehaviourPun {
             randomizePOI();
 
         }
-        else if (evCode == (byte)PhotonEventCodes.PlaceFireMarker)
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarker)
         {
 
             placeFireMarker();
