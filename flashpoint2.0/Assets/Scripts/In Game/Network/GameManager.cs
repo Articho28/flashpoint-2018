@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviourPun
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
         string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
-        string message = "It's " + playerName + "'s turn to place their FireFighter";
+        string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
 
@@ -233,11 +233,15 @@ public class GameManager : MonoBehaviourPun
             Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
 
 
-            targetSpace.setSpaceStatus(SpaceStatus.Fire);
-            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
+            targetSpace.setSpaceStatus(SpaceStatus.Smoke);
+            GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
             Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
-            newFireMarker.GetComponent<Transform>().position = newPosition;
-            Debug.Log("It was placed at " + newPosition);
+            newSmokeMarker.GetComponent<Transform>().position = newPosition;
+            newSmokeMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
+            newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
+            newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
+            targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>()); 
+            Debug.Log("Smokemarker was placed at " + newPosition);
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveFireMarker)
         {
@@ -265,6 +269,37 @@ public class GameManager : MonoBehaviourPun
                 spaceOccupants.Remove(targetMarker);
                 Destroy(targetMarker.physicalObject);
                 Destroy(targetMarker);
+                targetSpace.setSpaceStatus(SpaceStatus.Safe);
+            }
+        }
+        else if (evCode == (byte)PhotonEventCodes.RemoveSmokeMarker)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+            GameUnit targetMarker = null;
+            foreach (GameUnit gm in spaceOccupants)
+            {
+                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
+                {
+                    Debug.Log("Found a smoke marker");
+                    targetMarker = gm;
+                }
+            }
+            if (targetMarker != null)
+            {
+                Debug.Log("Removing Smoke Marker");
+                string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
+                GameConsole.instance.UpdateFeedback(message);
+                spaceOccupants.Remove(targetMarker);
+                Destroy(targetMarker.physicalObject);
+                Destroy(targetMarker);
+                targetSpace.setSpaceStatus(SpaceStatus.Safe);
+
             }
         }
 

@@ -30,6 +30,7 @@ public class SpaceGrid : MonoBehaviourPun {
         gridSizeX = 10;
         gridSizeY = 8;
         CreateGrid();
+
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.BoardSetup, null, options, SendOptions.SendUnreliable);
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, null, options, SendOptions.SendReliable);
     }
@@ -370,8 +371,9 @@ public class SpaceGrid : MonoBehaviourPun {
             randomizePOI();
 
         }
-        else if (evCode == (byte)PhotonEventCodes.PlaceFireMarker)
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarker)
         {
+
             placeFireMarker();
                 
         }
