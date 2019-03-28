@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviourPun
 
     //Network Options
 
-    static Photon.Realtime.RaiseEventOptions  sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
+    public static Photon.Realtime.RaiseEventOptions  sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
         CachingOption = Photon.Realtime.EventCaching.DoNotCache,
         Receivers = Photon.Realtime.ReceiverGroup.All
@@ -238,6 +238,34 @@ public class GameManager : MonoBehaviourPun
             Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
             newFireMarker.GetComponent<Transform>().position = newPosition;
             Debug.Log("It was placed at " + newPosition);
+        }
+        else if (evCode == (byte)PhotonEventCodes.RemoveFireMarker)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+            GameUnit targetMarker = null;
+            foreach (GameUnit gm in spaceOccupants)
+            {
+                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
+                {
+                    Debug.Log("Found a firemarker");
+                    targetMarker = gm;
+                }
+            }
+            if (targetMarker != null)
+            {
+                Debug.Log("Removing targetMarker");
+                string message = "Removing Fire at (" + indexX + "," + indexY + ")";
+                GameConsole.instance.UpdateFeedback(message);
+                spaceOccupants.Remove(targetMarker);
+                Destroy(targetMarker.physicalObject);
+                Destroy(targetMarker);
+            }
         }
 
     }

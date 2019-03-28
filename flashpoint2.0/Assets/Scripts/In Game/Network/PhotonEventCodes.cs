@@ -13,6 +13,8 @@ public enum PhotonEventCodes
     Door= 6,
     AdvanceFireMarker = 7,
     AdvanceSmokeMarker = 8,
-    BoardSetup = 9
+    BoardSetup = 9,
+    RemoveFireMarker = 10
+
 
 }
