@@ -30,7 +30,7 @@ public class SpaceGrid : MonoBehaviourPun {
         gridSizeX = 10;
         gridSizeY = 8;
         CreateGrid();
-        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.BoardSetup, null, options, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.BoardSetup, null, options, SendOptions.SendUnreliable);
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, null, options, SendOptions.SendReliable);
     }
 
@@ -373,15 +373,7 @@ public class SpaceGrid : MonoBehaviourPun {
         else if (evCode == (byte)PhotonEventCodes.PlaceFireMarker)
         {
             placeFireMarker();
-                newFireMarker.GetComponent<Transform>().position = newPosition;
-                newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-                newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
-                newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
-                currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
-
-
-                currentSpace.setSpaceStatus(SpaceStatus.Fire);
-            }
+                
         }
         else if (evCode == (byte)PhotonEventCodes.BoardSetup)
         {
