@@ -441,7 +441,6 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Removing fire.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 0);
-
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         sendFireMarkerExtinguishEvent(targetSpace);
@@ -469,7 +468,8 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
 
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 1);
-
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
                         sendFireMarkerExtinguishEvent(targetSpace);
                     }
                     else
@@ -497,7 +497,8 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
 
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 2);
-
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
                         sendFireMarkerExtinguishEvent(targetSpace);
 
                     }
@@ -523,7 +524,8 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Removing fire.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 3);
-
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
                         sendFireMarkerExtinguishEvent(targetSpace);
                     }
                     else
@@ -549,7 +551,8 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Removing fire.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 4);
-
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
                         sendFireMarkerExtinguishEvent(targetSpace);
 
                     }
