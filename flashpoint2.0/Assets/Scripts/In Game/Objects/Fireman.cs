@@ -442,6 +442,8 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 0);
 
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
                         sendFireMarkerExtinguishEvent(targetSpace);
                     }
                     else
