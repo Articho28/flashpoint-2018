@@ -16,6 +16,7 @@ public class Fireman : GameUnit
     private PhotonView PV;
     private bool isWaitingForInput;
     private bool isExtinguishingFire;
+    private bool isChoppingWall;
     ArrayList validInputOptions;
 
     void Start()
@@ -201,10 +202,8 @@ public class Fireman : GameUnit
     }
 
 
-    public void chopWall(Wall wall)
-    {
-        if (wall.addDamage() && AP >= 2) AP -= 2;
-    }
+    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             String optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
+            isChoppingWall = true;           }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
 
     public void move(int direction)
     {
@@ -399,7 +398,6 @@ public class Fireman : GameUnit
                 Debug.Log(this.getCurrentSpace().worldPosition);
                 for (int i = 0; i < 4; i++)
                 {
-                    Debug.Log(doors[i]);
                     if (doors[i] != null)
                     {
                         doorDir = i;
@@ -409,16 +407,40 @@ public class Fireman : GameUnit
                 {
                     if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
                     {
-                        this.closeDoor();
+                        Door door = doors[doorDir];
+                        if (this.getAP() >= 1)
+                        {
+                            decrementAP(1);
+                            door.setDoorStatus(DoorStatus.Closed);
+                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
+                            GameConsole.instance.UpdateFeedback("Door closed successfully!");
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            return;
+                        }
                     }
                     else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
                     {
-                        this.openDoor();
+                        Door door = doors[doorDir];
+                        if (this.getAP() >= 1)
+                        {
+                            decrementAP(1);
+                            door.setDoorStatus(DoorStatus.Open);
+                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
+                            GameConsole.instance.UpdateFeedback("Door opened successfully!");
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            return;
+                        }
                     }
                 }
                 else
                 {
-                    Debug.Log("there are no doors near the space you're on!");
+                    GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
                 }
 
             }
@@ -430,7 +452,7 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                if(isWaitingForInput && isExtinguishingFire)
+                if (isWaitingForInput && isExtinguishingFire)
                 {
                     Debug.Log("Input 0 Received");
                     isWaitingForInput = false;
@@ -465,6 +487,29 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
                         isWaitingForInput = true;
                         isExtinguishingFire = true;
+                    }
+                }
+                else if (isWaitingForInput && isChoppingWall)
+                {
+                    Debug.Log("Input 0 Received");
+                    isWaitingForInput = false;
+                    isChoppingWall = false;
+                    if (validInputOptions.Contains(0))
+                    {
+                        Debug.Log("This is a valid chop wall option.");
+                        GameConsole.instance.UpdateFeedback("Chopping wall.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = this.getCurrentSpace();
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        sendChopWallEvent(targetSpace, 0);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChoppingWall = true;
                     }
                 }
             }
@@ -506,6 +551,10 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isExtinguishingFire = true;
                     }
+                }
+                else if (isWaitingForInput && isChoppingWall)
+                {
+
                 }
             }
 
@@ -654,8 +703,18 @@ public class Fireman : GameUnit
         int targetY = targetSpace.indexY;
 
         object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
+    
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSmokeMarker, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+        
+    }    
+    private void sendChopWallEvent(Space targetSpace, int direction)
+    {
+        int indexX = targetSpace.indexX;
+        int indexY = targetSpace.indexY;
+
+        object[] data = new object[] { indexX, indexY, direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
     }
 
     public void endTurn()
