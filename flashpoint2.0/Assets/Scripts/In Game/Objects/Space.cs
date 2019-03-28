@@ -89,4 +89,9 @@ public class Space {
     {
         return this.occupants;
     }
+
+    public void remove(GameUnit u)
+    {
+        occupants.Remove(u);
+    }
 } 

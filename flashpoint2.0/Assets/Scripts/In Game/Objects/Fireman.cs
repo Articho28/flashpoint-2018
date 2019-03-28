@@ -488,15 +488,15 @@ public class Fireman : GameUnit
                             {
                                 Debug.Log("Found a firemarker");
                                 Destroy(gm.getPhysicalObject());
-                                Destroy(gm);
-
+                                targetSpace.remove(gm);            
                             }
                         }
-                        foreach (GameUnit secondGM in gameUnits)
+                        List<GameUnit> gameUnits2 = targetSpace.getOccupants();
+                        foreach (GameUnit secondGm in gameUnits)
                         {
-                            if(secondGM.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
+                            if (secondGm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
                             {
-                                Debug.Log("Found another Firemarker after destroy");
+                                Debug.Log("GOTEM");
                             }
                         }
                     }
