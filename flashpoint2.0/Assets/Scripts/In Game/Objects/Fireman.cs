@@ -478,6 +478,19 @@ public class Fireman : GameUnit
                         Debug.Log("This is a valid extinguish option.");
                         GameConsole.instance.UpdateFeedback("Removing fire.");
                         validInputOptions = new ArrayList();
+
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 2);
+                        Debug.Log("Found this X " + targetSpace.indexX + " and this Y " + targetSpace.indexY);
+                        List<GameUnit> gameUnits  = targetSpace.getOccupants();
+                        foreach (GameUnit gm in gameUnits)
+                        {
+                            if (gm.getType() == "FireMarker")
+                            {
+                                Debug.Log("Found a firemarker");
+                                Destroy(gm.getPhysicalObject());
+
+                            }
+                        }
                     }
                     else
                     {
