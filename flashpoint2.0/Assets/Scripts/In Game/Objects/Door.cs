@@ -5,6 +5,7 @@ using UnityEngine;
 public class Door : EdgeObstacleObject
 {
     public DoorStatus status;
+    GameObject physicalObject;
 
     //constructor
     public Door(DoorStatus status)
@@ -22,5 +23,10 @@ public class Door : EdgeObstacleObject
     public void setDoorStatus(DoorStatus status)
     {
         this.status = status;
+    }
+
+    public void setPhysicalObject(GameObject avatar)
+    {
+        this.physicalObject = avatar;
     }
 }
