@@ -399,7 +399,6 @@ public class Fireman : GameUnit
                 Debug.Log(this.getCurrentSpace().worldPosition);
                 for (int i = 0; i < 4; i++)
                 {
-                    Debug.Log(doors[i]);
                     if (doors[i] != null)
                     {
                         doorDir = i;
@@ -409,16 +408,40 @@ public class Fireman : GameUnit
                 {
                     if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
                     {
-                        this.closeDoor();
+                        Door door = doors[doorDir];
+                        if (this.getAP() >= 1)
+                        {
+                            decrementAP(1);
+                            door.setDoorStatus(DoorStatus.Closed);
+                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
+                            GameConsole.instance.UpdateFeedback("Door closed successfully!");
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            return;
+                        }
                     }
                     else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
                     {
-                        this.openDoor();
+                        Door door = doors[doorDir];
+                        if (this.getAP() >= 1)
+                        {
+                            decrementAP(1);
+                            door.setDoorStatus(DoorStatus.Open);
+                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
+                            GameConsole.instance.UpdateFeedback("Door opened successfully!");
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            return;
+                        }
                     }
                 }
                 else
                 {
-                    Debug.Log("there are no doors near the space you're on!");
+                    GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
                 }
 
             }
