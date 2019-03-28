@@ -112,6 +112,7 @@ public class SpaceGrid : MonoBehaviourPun {
           //                  grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed;
     }
 
+    //TODO Don't use
     public Space getNeighborInDirection(Space currentLocation, int direction)
     {
         int currentX = currentLocation.indexX;
@@ -119,9 +120,9 @@ public class SpaceGrid : MonoBehaviourPun {
 
         if (direction == 0)
         {
-            if (grid[currentX, currentY + 1] != null)
+            if (grid[currentX, currentY - 1] != null)
             {
-                return grid[currentX, currentY + 1];
+                return grid[currentX, currentY - 1];
             }
            
         }
@@ -134,9 +135,9 @@ public class SpaceGrid : MonoBehaviourPun {
         }
         else if (direction == 2)
         {
-            if (grid[currentX, currentY - 1] != null)
+            if (grid[currentX, currentY + 1] != null)
             {
-                return grid[currentX, currentY - 1];
+                return grid[currentX, currentY + 1];
             }
         }
         else
@@ -325,6 +326,10 @@ public class SpaceGrid : MonoBehaviourPun {
 
                 newFireMarker.GetComponent<Transform>().position = newPosition;
                 newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+                newFireMarker.GetComponent<GameUnit>().setType("FireMarker");
+                newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
+                currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
+
 
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }

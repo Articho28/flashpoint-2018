@@ -6,7 +6,7 @@ using UnityEditor;
 public class Wall : MonoBehaviour
 {
     public WallStatus status;
-    GameObject wall;
+    GameObject physicalObject;
 
     [SerializeField] Material intact;
     [SerializeField] Material broken;
@@ -55,6 +55,11 @@ public class Wall : MonoBehaviour
         else if(status == WallStatus.Destroyed) {
             Destroy(this);
         }
+    }
+
+    public void setPhysicalObject(GameObject avatar)
+    {
+        this.physicalObject = avatar;
     }
 
 } 
