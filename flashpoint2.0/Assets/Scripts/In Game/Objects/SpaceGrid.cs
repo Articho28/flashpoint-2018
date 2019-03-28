@@ -370,7 +370,7 @@ public class SpaceGrid : MonoBehaviourPun {
         }
         else if (evCode == (byte)PhotonEventCodes.PlaceFireMarker)
         {
-            placeFireMarker();
+                placeFireMarker();
                 newFireMarker.GetComponent<Transform>().position = newPosition;
                 newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
                 newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
