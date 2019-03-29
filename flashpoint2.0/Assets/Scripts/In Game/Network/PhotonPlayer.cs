@@ -23,6 +23,7 @@ public class PhotonPlayer : MonoBehaviour
                    "Firefighter" + myPlayerNumber),
                    GamePlayersNetworkSetup.GS.initialPositions[myPlayerNumber - 1],
                Quaternion.identity, 0);
+            myAvatar.GetComponent<GameUnit>().setPhysicalObject(myAvatar);
 
             Hashtable props = new Hashtable
             {

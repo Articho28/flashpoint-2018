@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GameUnit : MonoBehaviour {
     protected Space currentSpace;
+    public String type;
+    public GameObject physicalObject;
 
     void Start()
     {
@@ -24,6 +26,25 @@ public class GameUnit : MonoBehaviour {
     public void setCurrentSpace(Space space)
     {
         this.currentSpace = space;
+    }
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
+    public String getType()
+    {
+        return this.type;
+    }
+
+    public void setPhysicalObject(GameObject avatar)
+    {
+        this.physicalObject = avatar;
+    }
+
+    public GameObject getPhysicalObject()
+    {
+        return physicalObject;
     }
 
 }

@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviourPun
 
     //Network Options
 
-    static Photon.Realtime.RaiseEventOptions  sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
+    public static Photon.Realtime.RaiseEventOptions  sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
         CachingOption = Photon.Realtime.EventCaching.DoNotCache,
         Receivers = Photon.Realtime.ReceiverGroup.All
@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviourPun
             NumberOfPlayers = PhotonNetwork.CountOfPlayers;
             isFirstReset = true;
             buildingDamage = 0;
+            Turn = 1;
         }
         else
         {
@@ -106,7 +107,7 @@ public class GameManager : MonoBehaviourPun
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
         string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
-        string message = "It's " + playerName + "'s turn to place their FireFighter";
+        string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
 
@@ -233,11 +234,113 @@ public class GameManager : MonoBehaviourPun
             Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
 
 
-            targetSpace.setSpaceStatus(SpaceStatus.Fire);
-            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
+            targetSpace.setSpaceStatus(SpaceStatus.Smoke);
+            GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
             Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
-            newFireMarker.GetComponent<Transform>().position = newPosition;
-            Debug.Log("It was placed at " + newPosition);
+            newSmokeMarker.GetComponent<Transform>().position = newPosition;
+            newSmokeMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
+            newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
+            newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
+            targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>()); 
+            Debug.Log("Smokemarker was placed at " + newPosition);
+        }
+        else if (evCode == (byte)PhotonEventCodes.RemoveFireMarker)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+            GameUnit targetMarker = null;
+            foreach (GameUnit gm in spaceOccupants)
+            {
+                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
+                {
+                    Debug.Log("Found a firemarker");
+                    targetMarker = gm;
+                }
+            }
+            if (targetMarker != null)
+            {
+                Debug.Log("Removing targetMarker");
+                string message = "Removing Fire at (" + indexX + "," + indexY + ")";
+                GameConsole.instance.UpdateFeedback(message);
+                spaceOccupants.Remove(targetMarker);
+                Destroy(targetMarker.physicalObject);
+                Destroy(targetMarker);
+                targetSpace.setSpaceStatus(SpaceStatus.Safe);
+            }
+        }
+        else if (evCode == (byte)PhotonEventCodes.RemoveSmokeMarker)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+            GameUnit targetMarker = null;
+            foreach (GameUnit gm in spaceOccupants)
+            {
+                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
+                {
+                    Debug.Log("Found a smoke marker");
+                    targetMarker = gm;
+                }
+            }
+            if (targetMarker != null)
+            {
+                Debug.Log("Removing Smoke Marker");
+                string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
+                GameConsole.instance.UpdateFeedback(message);
+                spaceOccupants.Remove(targetMarker);
+                Destroy(targetMarker.physicalObject);
+                Destroy(targetMarker);
+                targetSpace.setSpaceStatus(SpaceStatus.Safe);
+
+            }
+        }
+        else if (evCode == (byte)PhotonEventCodes.ChopWall)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int direction = (int)dataReceived[2];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Wall targetWall = targetSpace.getWalls()[direction];
+            /*if(targetWall != null)
+            {*/
+            Debug.Log("before chop, wall status: " + targetWall.getWallStatus());
+            Debug.Log("before chop, damage counter: " + GameManager.GM.buildingDamage);
+
+            targetWall.addDamage();
+
+            Debug.Log("after chop, wall status: " + targetWall.getWallStatus());
+            Debug.Log("after chop, damage counter: " + GameManager.GM.buildingDamage);
+            /*
+            if (targetWall.getWallStatus() == WallStatus.Damaged)
+            {
+                //place damage marker
+                GameObject newDamageMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/DamageMarker/damageMarker")) as GameObject;
+                Vector3 wallPosition = targetWall.GetComponent<Transform>().position;
+                Vector3 newPosition = new Vector3(wallPosition.x, wallPosition.y, -5);
+                newDamageMarker.GetComponent<Transform>().position = newPosition;
+                Debug.Log("It was placed at " + newPosition);
+
+            }
+            else if (targetWall.getWallStatus() == WallStatus.Destroyed)
+            {
+                //destroy wall
+                Debug.Log("destroy wall");
+
+            }
+            //}
+            */           
+
         }
 
     }

@@ -13,4 +13,8 @@ public static class FlashPointGameConstants
 
     public const string FEEDBACK_PLACE_FIREFIGHTER = "Please place your firefighter";
 
+    public const string GAMEUNIT_TYPE_FIREMARKER = "FireMarker";
+    public const string GAMEUNIT_TYPE_SMOKEMARKER = "SmokeMarker";
+    public const string GAMEUNIT_TYPE_POI = "POI";
+
 }

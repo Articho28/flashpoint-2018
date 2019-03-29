@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8837551546335624359}
   - component: {fileID: 3260834596545303374}
   - component: {fileID: 3378883957177129407}
+  - component: {fileID: 3737425803924189385}
   m_Layer: 0
   m_Name: smoke
   m_TagString: Untagged
@@ -102,3 +103,17 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &3737425803924189385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7495071188175307166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6958fbcbd974ceea4a73f413f5adf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  physicalObject: {fileID: 0}
