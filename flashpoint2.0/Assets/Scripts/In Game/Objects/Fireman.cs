@@ -391,6 +391,7 @@ public class Fireman : GameUnit
                     isWaitingForInput = false;
                     isSelectingExtinguishOption = false;
                     this.setAP(this.getAP() - 2);
+                    FiremanUI.instance.SetAP(this.getAP());
                 }
             }
             else if (Input.GetKeyDown(KeyCode.N))
@@ -402,6 +403,7 @@ public class Fireman : GameUnit
                     isWaitingForInput = false;
                     isSelectingExtinguishOption = false;
                     this.setAP(this.getAP() - 1);
+                    FiremanUI.instance.SetAP(this.getAP());
                 }
             }
         }
@@ -739,12 +741,10 @@ public class Fireman : GameUnit
 
     private void sendTurnFireMarkerToSmokeEvent(Space targetSpace)
     {
-        int targetX = targetSpace.indexX;
-        int targetY = targetSpace.indexY;
-
-        object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.TurnFireToSmoke, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
-
+        object[] dataRemoveFireMarker = new object[] { targetSpace.indexX, targetSpace.indexY };
+        object[] dataAdvanceSmokeMarker = new object[] { targetSpace.worldPosition, targetSpace.indexX, targetSpace.indexY };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, dataRemoveFireMarker, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceSmokeMarker, dataAdvanceSmokeMarker, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
     }
 
 

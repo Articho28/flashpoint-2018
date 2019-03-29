@@ -10,12 +10,11 @@ public enum PhotonEventCodes
     PlacePOI = 3,
     PlaceInitialFireMarker = 4,
     Move = 5,
-    Door= 6,
+    Door = 6,
     AdvanceFireMarker = 7,
     AdvanceSmokeMarker = 8,
     BoardSetup = 9,
     RemoveFireMarker = 10,
     RemoveSmokeMarker = 11,
-    ChopWall = 12,
-    TurnFireToSmoke = 13
+    ChopWall = 12
 }
