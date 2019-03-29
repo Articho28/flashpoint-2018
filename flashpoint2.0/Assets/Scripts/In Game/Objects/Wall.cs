@@ -30,6 +30,7 @@ public class Wall : MonoBehaviour
         if (status == WallStatus.Intact) {
             status = WallStatus.Damaged;
             GameManager.GM.buildingDamage++;
+            GameUI.instance.AddDamage(1);
 
             updateMaterial();
             return true;
@@ -37,12 +38,19 @@ public class Wall : MonoBehaviour
         else if (status == WallStatus.Damaged) {
             status = WallStatus.Destroyed;
             GameManager.GM.buildingDamage++;
+            GameUI.instance.AddDamage(1);
 
             updateMaterial();
             return true;
         }
 
-        return false;
+        if (GameManager.GM.buildingDamage >= 24) //this means the building collapses
+        {
+            //GAME LOST
+            Debug.Log("Game Lost");
+        }
+
+        return false;
     }
 
     private void updateMaterial() { 

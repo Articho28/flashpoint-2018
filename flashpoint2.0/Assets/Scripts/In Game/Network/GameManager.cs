@@ -303,6 +303,33 @@ public class GameManager : MonoBehaviourPun
 
             }
         }
+        else if (evCode == (byte)PhotonEventCodes.ChopWall)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int direction = (int)dataReceived[2];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Wall targetWall = targetSpace.getWalls()[direction];
+            if(targetWall != null)
+            {
+                Debug.Log("before chop, wall status: "+ targetWall.getWallStatus());
+                Debug.Log("before chop, damage counter: " + GameManager.GM.buildingDamage);
+
+                targetWall.addDamage();
+
+                Debug.Log("after chop, wall status: " + targetWall.getWallStatus());
+                Debug.Log("after chop, damage counter: " + GameManager.GM.buildingDamage);
+
+                GameObject newDamageMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/DamageMarker/damageMarker")) as GameObject;
+                Vector3 wallPosition = targetWall.GetComponent<Transform>().position;
+                Vector3 newPosition = new Vector3(wallPosition.x, wallPosition.y, -5);
+                newDamageMarker.GetComponent<Transform>().position = newPosition;
+                Debug.Log("It was placed at " + newPosition);
+            }
+
+        }
 
     }
 
