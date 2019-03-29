@@ -124,6 +124,11 @@ public class Fireman : GameUnit
                 Debug.Log("Extinguish Fire Detected");
                 extinguishFire();
             }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                Debug.Log("Chop Wall Detected");
+                chopWall();
+            }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 if (isWaitingForInput && isExtinguishingFire)
@@ -244,7 +249,26 @@ public class Fireman : GameUnit
                 }
                 else if (isWaitingForInput && isChoppingWall)
                 {
-
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isChoppingWall = false;
+                    if (validInputOptions.Contains(1))
+                    {
+                        Debug.Log("This is a valid chop wall option.");
+                        GameConsole.instance.UpdateFeedback("Chopping wall.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = this.getCurrentSpace();
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        sendChopWallEvent(targetSpace, 1);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChoppingWall = true;
+                    }
                 }
             }
 
@@ -295,6 +319,29 @@ public class Fireman : GameUnit
                         isExtinguishingFire = true;
                     }
                 }
+                else if (isWaitingForInput && isChoppingWall)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                    isChoppingWall = false;
+                    if (validInputOptions.Contains(2))
+                    {
+                        Debug.Log("This is a valid chop wall option.");
+                        GameConsole.instance.UpdateFeedback("Chopping wall.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = this.getCurrentSpace();
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        sendChopWallEvent(targetSpace, 2);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChoppingWall = true;
+                    }
+                }
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
             {
@@ -341,6 +388,29 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
                         isWaitingForInput = true;
                         isExtinguishingFire = true;
+                    }
+                }
+                else if (isWaitingForInput && isChoppingWall)
+                {
+                    Debug.Log("Input 3 Received");
+                    isWaitingForInput = false;
+                    isChoppingWall = false;
+                    if (validInputOptions.Contains(3))
+                    {
+                        Debug.Log("This is a valid chop wall option.");
+                        GameConsole.instance.UpdateFeedback("Chopping wall.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = this.getCurrentSpace();
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        sendChopWallEvent(targetSpace, 3);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChoppingWall = true;
                     }
                 }
             }
@@ -421,6 +491,9 @@ public class Fireman : GameUnit
                     this.setAP(this.getAP() - 1);
                     FiremanUI.instance.SetAP(this.getAP());
                 }
+            else if (Input.GetKeyDown(KeyCode.V))
+            {
+                carryVictim();
             }
         }
     }
@@ -572,12 +645,47 @@ public class Fireman : GameUnit
         return indices;
     }
 
-
     public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             String optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
-            isChoppingWall = true;           }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
+            isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
+
+    public void carryVictim()
+    {
+        //get current space
+        Space current = this.getCurrentSpace();
+
+        if (this.getVictim() != null)
+        {
+            GameConsole.instance.UpdateFeedback("You are already carrying a victim!");
+            return;
+        }
+        else
+        {
+
+            List<GameUnit> gameUnits = current.getOccupants();
+
+            foreach (GameUnit gu in gameUnits)
+            {
+                //if has POI marker
+                if (gu.GetType() == typeof(POI))
+                {
+                    Victim v = gu.GetComponent<Victim>();
+                    this.setVictim(v);
+                    GameConsole.instance.UpdateFeedback("Carried victim successfully!");
+                    return;
+                }
+            }
+            GameConsole.instance.UpdateFeedback("There is no victim to be carried!");
+        }
+
+    }
+
 
     public void move(int direction)
     {
+        /*revealVictim(); TODO
+         * make an if statement to make sure if the fireman moves into a space with POI marker
+         */
+
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
@@ -601,7 +709,6 @@ public class Fireman : GameUnit
         }
 
 
-
         SpaceStatus sp = destination.getSpaceStatus();
 
         if (reachable)
@@ -614,8 +721,9 @@ public class Fireman : GameUnit
                     Debug.Log(this.transform.position);
                     this.setCurrentSpace(destination);
                     this.decrementAP(2);
-                    Debug.Log(ap);
-                    Debug.Log(this.transform.position);
+                    FiremanUI.instance.SetAP(this.AP);
+                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                    this.GetComponent<Transform>().position = newPosition;
                 }
                 else
                 {
@@ -625,7 +733,7 @@ public class Fireman : GameUnit
             }
             else
             {
-                if (v == null && ap >=1)
+                if (v == null && ap >= 1)
                 {
                     this.setCurrentSpace(destination);
                     this.decrementAP(1);
@@ -635,22 +743,70 @@ public class Fireman : GameUnit
                     this.GetComponent<Transform>().position = newPosition;
 
                 }
-                else if (v != null && ap >=2)//if the fireman is carrying a victim
+                else if (v != null && ap >= 2)//if the fireman is carrying a victim
                 {
-                    this.setCurrentSpace(destination);
-                    this.decrementAP(2);
-                }
-                else
-                {
-                    GameConsole.instance.UpdateFeedback("Insufficient AP");
-                    return;
+                    SpaceStatus destinationSpaceStatus = destination.getSpaceStatus();
+
+                    SpaceKind destinationSpaceKind = destination.getSpaceKind();
+
+
+                    if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke)
+                    {
+                        //carry victim
+                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+
+                        this.setCurrentSpace(destination);
+                        v.setCurrentSpace(destination);
+                        this.decrementAP(2);
+                        FiremanUI.instance.SetAP(this.AP);
+                        this.GetComponent<Transform>().position = newPosition;
+                        v.GetComponent<Transform>().position = newPosition;
+
+
+                        GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
+                        //if has POI marker
+                        List<GameUnit> gameUnits = destination.getOccupants();
+                        foreach (GameUnit gu in gameUnits)
+                        {
+                            if (gu.GetType() == typeof(POI))
+                            {
+                                //flipPOI(); TODO
+                            }
+                        }
+                    }
+                    else if (destinationSpaceKind == SpaceKind.Outdoor)
+                    {
+                        //carry victim outside the building
+                        this.setCurrentSpace(destination);
+                        this.decrementAP(2);
+                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                        this.GetComponent<Transform>().position = newPosition;
+
+                        //change victim status to rescued
+                        v.setVictimStatus(VictimStatus.Rescued);
+                        //TODO: remove POI from the board.
+                        GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
+
+                    }
+                    else //Fire
+                    {
+                        //can not carry victim
+                        GameConsole.instance.UpdateFeedback("Cannot carry a victim onto fire!");
+                        return;
+                    }
+                    
                 }
             }
         }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("Insufficient AP");
+            return;
+        }
 
-        //after the move TODO??
+                //after the move TODO??
 
-        List<GameUnit> occ = destination.getOccupants();
+                List<GameUnit> occ = destination.getOccupants();
         foreach (GameUnit gu in occ)
         {
             if (gu is POI)
@@ -662,10 +818,12 @@ public class Fireman : GameUnit
                 }
             }
         }
-
+        
         if (v != null && destination.getSpaceKind() == SpaceKind.Outdoor)
         {
             v.setVictimStatus(VictimStatus.Rescued);
+            //place victim marker on the rescued space 
+
             Game.incrementNumSavedVictims();
             GameUI.instance.AddSavedVictim();
             this.deassociateVictim();
@@ -676,8 +834,6 @@ public class Fireman : GameUnit
                 GameUI.instance.AddGameState("Completed");
             }
         }
-
-
     }
 
 
@@ -730,8 +886,6 @@ public class Fireman : GameUnit
             GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/closed door");
         }
     }
-
-   
 
     private void sendFireMarkerExtinguishEvent(Space targetSpace)
     {
