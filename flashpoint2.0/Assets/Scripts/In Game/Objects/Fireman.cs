@@ -30,6 +30,333 @@ public class Fireman : GameUnit
         validInputOptions = new ArrayList();
     }
 
+    void Update()
+    {
+       
+
+        if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+       FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
+        {
+
+            //MOVE: ARROWS WITH DIRECTION
+            //OPEN/CLOSE DOOR: "D"
+            //CHOP WALL "C"
+            //END TURN "Q"
+            //EXTINGUISH FIRE/SMOKE "E" + Number.
+
+            //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                this.move(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                this.move(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                this.move(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                this.move(3);
+            }
+            else if (Input.GetKeyDown(KeyCode.D)) //open/close door
+            {
+                int doorDir = 4;//forbidden value
+                Door[] doors = this.getCurrentSpace().getDoors();
+                Debug.Log(this.getCurrentSpace().worldPosition);
+                for (int i = 0; i < 4; i++)
+                {
+                    if (doors[i] != null)
+                    {
+                        doorDir = i;
+                    }
+                }
+                if (doorDir >= 0 && doorDir <= 3)
+                {
+                    if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
+                    {
+                        Door door = doors[doorDir];
+                        if (this.getAP() >= 1)
+                        {
+                            decrementAP(1);
+                            door.setDoorStatus(DoorStatus.Closed);
+                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
+                            GameConsole.instance.UpdateFeedback("Door closed successfully!");
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            return;
+                        }
+                    }
+                    else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
+                    {
+                        Door door = doors[doorDir];
+                        if (this.getAP() >= 1)
+                        {
+                            decrementAP(1);
+                            door.setDoorStatus(DoorStatus.Open);
+                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
+                            GameConsole.instance.UpdateFeedback("Door opened successfully!");
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
+                }
+
+            }
+
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("Extinguish Fire Detected");
+                extinguishFire();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                if (isWaitingForInput && isExtinguishingFire)
+                {
+                    Debug.Log("Input 0 Received");
+                    isWaitingForInput = false;
+                    isExtinguishingFire = false;
+                    if (validInputOptions.Contains(0))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        //GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 0);
+                        if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
+                        {
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendSmokeMarkerExtinguishEvent(targetSpace);
+                        }
+                        else if (this.getAP() < 2)
+                        {
+                            GameConsole.instance.UpdateFeedback("Not enough AP to extinguish fire. ");
+                        }
+                        else
+                        {
+                            this.setAP(this.getAP() - 2);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendFireMarkerExtinguishEvent(targetSpace);
+                        }
+
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isExtinguishingFire = true;
+                    }
+                }
+                else if (isWaitingForInput && isChoppingWall)
+                {
+                    Debug.Log("Input 0 Received");
+                    isWaitingForInput = false;
+                    isChoppingWall = false;
+                    if (validInputOptions.Contains(0))
+                    {
+                        Debug.Log("This is a valid chop wall option.");
+                        GameConsole.instance.UpdateFeedback("Chopping wall.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = this.getCurrentSpace();
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        sendChopWallEvent(targetSpace, 0);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChoppingWall = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                if (isWaitingForInput && isExtinguishingFire)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isExtinguishingFire = false;
+                    if (validInputOptions.Contains(1))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        //GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 1);
+                        if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
+                        {
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendSmokeMarkerExtinguishEvent(targetSpace);
+                        }
+                        else if (this.getAP() < 2)
+                        {
+                            GameConsole.instance.UpdateFeedback("Not enough AP to extinguish fire. ");
+                        }
+                        else
+                        {
+                            this.setAP(this.getAP() - 2);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendFireMarkerExtinguishEvent(targetSpace);
+                        }
+
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isExtinguishingFire = true;
+                    }
+                }
+                else if (isWaitingForInput && isChoppingWall)
+                {
+
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                if (isWaitingForInput && isExtinguishingFire)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                    isExtinguishingFire = false;
+                    if (validInputOptions.Contains(2))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        //GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 2);
+                        if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
+                        {
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendSmokeMarkerExtinguishEvent(targetSpace);
+                        }
+                        else if (this.getAP() < 2)
+                        {
+                            GameConsole.instance.UpdateFeedback("Not enough AP to extinguish fire. ");
+                        }
+                        else
+                        {
+                            this.setAP(this.getAP() - 2);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendFireMarkerExtinguishEvent(targetSpace);
+                        }
+
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isExtinguishingFire = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                if (isWaitingForInput && isExtinguishingFire)
+                {
+                    Debug.Log("Input 3 Received");
+                    isWaitingForInput = false;
+                    isExtinguishingFire = false;
+                    if (validInputOptions.Contains(3))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        //GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 3);
+                        if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
+                        {
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendSmokeMarkerExtinguishEvent(targetSpace);
+                        }
+                        else if (this.getAP() < 2)
+                        {
+                            GameConsole.instance.UpdateFeedback("Not enough AP to extinguish fire. ");
+                        }
+                        else
+                        {
+                            this.setAP(this.getAP() - 2);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendFireMarkerExtinguishEvent(targetSpace);
+                        }
+
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isExtinguishingFire = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                if (isWaitingForInput && isExtinguishingFire)
+                {
+                    Debug.Log("Input 0 Received");
+                    isWaitingForInput = false;
+                    isExtinguishingFire = false;
+                    if (validInputOptions.Contains(4))
+                    {
+                        Debug.Log("This is a valid extinguish option.");
+                        //GameConsole.instance.UpdateFeedback("Removing fire.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 4);
+                        if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
+                        {
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendSmokeMarkerExtinguishEvent(targetSpace);
+                        }
+                        else if (this.getAP() < 2)
+                        {
+                            GameConsole.instance.UpdateFeedback("Not enough AP to extinguish fire. ");
+                        }
+                        else
+                        {
+                            this.setAP(this.getAP() - 2);
+                            FiremanUI.instance.SetAP(this.getAP());
+                            sendFireMarkerExtinguishEvent(targetSpace);
+                        }
+
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isExtinguishingFire = true;
+                    }
+                }
+            }
+
+
+            else if (Input.GetKeyDown(KeyCode.Q))
+            {
+                endTurn();
+            }
+        }
+    }
+
     public int getAP()
     {
         return AP;
@@ -152,30 +479,6 @@ public class Fireman : GameUnit
             isWaitingForInput = true;
             isExtinguishingFire = true;
 
-            /*
-            if (curentSpaceStatus != SpaceStatus.Safe)
-
-            if (a == Action.FlipFire)
-            {     //if the player chooses to "Flip Fire"
-                destination.setSpaceStatus(SpaceStatus.Smoke);          //sets the SpaceStatus to Smoke
-                decrementAP(1);                 //sets the number of action points of the calling firefighter
-            }
-            else if (a == Action.RemoveFire)
-            {          //if the player chooses "Remove Fire"
-                destination.setSpaceStatus(SpaceStatus.Safe);                       //sets the SpaceStatus to Smoke
-                decrementAP(2);                             //sets the number of action points of the calling firefighter
-            }
-            else if (a == Action.RemoveSmoke)
-            {     //if the player chooses to "Remove Smoke"
-                destination.setSpaceStatus(SpaceStatus.Safe);                   //sets the SpaceStatus to Safe
-                decrementAP(1);                         //sets the number of action points of the calling firefighter
-            }
-            else
-            {
-                Debug.Log("Nothing to extinguish here!"); //Used to show the player why he can’t perform an action in case of failure
-            }
-                */
-
         }
     }
 
@@ -230,12 +533,26 @@ public class Fireman : GameUnit
         }
 
 
+            else if (Input.GetKeyDown(KeyCode.E))
+            {
+                Debug.Log("Extinguish Fire Detected");
+                extinguishFire();
+            }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                Debug.Log("Chop Wall Detected");
+                chopWall();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha0))
+
+
 
         SpaceStatus sp = destination.getSpaceStatus();
 
         if (reachable)
         {
             if (sp == SpaceStatus.Fire)
+
             {
                 if (ap >= 2 && v == null) //&&f has enough to move
                 {
@@ -360,275 +677,7 @@ public class Fireman : GameUnit
         }
     }
 
-    void Update()
-    {
-       
-
-        if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
-       FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
-        {
-
-            //MOVE: ARROWS WITH DIRECTION
-            //OPEN/CLOSE DOOR: "D"
-            //CHOP WALL "C"
-            //END TURN "Q"
-            //EXTINGUISH FIRE/SMOKE "E" + Number.
-
-            //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                this.move(0);
-            }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                this.move(2);
-            }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                this.move(1);
-            }
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                this.move(3);
-            }
-            else if (Input.GetKeyDown(KeyCode.D)) //open/close door
-            {
-                int doorDir = 4;//forbidden value
-                Door[] doors = this.getCurrentSpace().getDoors();
-                Debug.Log(this.getCurrentSpace().worldPosition);
-                for (int i = 0; i < 4; i++)
-                {
-                    if (doors[i] != null)
-                    {
-                        doorDir = i;
-                    }
-                }
-                if (doorDir >= 0 && doorDir <= 3)
-                {
-                    if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
-                    {
-                        Door door = doors[doorDir];
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Closed);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
-                            GameConsole.instance.UpdateFeedback("Door closed successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
-                            return;
-                        }
-                    }
-                    else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
-                    {
-                        Door door = doors[doorDir];
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Open);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
-                            GameConsole.instance.UpdateFeedback("Door opened successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
-                }
-
-            }
-
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("Extinguish Fire Detected");
-                extinguishFire();
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                Debug.Log("Chop Wall Detected");
-                chopWall();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                if (isWaitingForInput && isExtinguishingFire)
-                {
-                    Debug.Log("Input 0 Received");
-                    isWaitingForInput = false;
-                    isExtinguishingFire = false;
-                    if (validInputOptions.Contains(0))
-                    {
-                        Debug.Log("This is a valid extinguish option.");
-                        GameConsole.instance.UpdateFeedback("Removing fire.");
-                        validInputOptions = new ArrayList();
-                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 0);
-                        this.setAP(this.getAP() - 2);
-                        FiremanUI.instance.SetAP(this.getAP());
-                        sendFireMarkerExtinguishEvent(targetSpace);
-                    }
-                    else
-                    {
-                        string oldMessage = GameConsole.instance.FeedbackText.text;
-                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
-                        isWaitingForInput = true;
-                        isExtinguishingFire = true;
-                    }
-                }
-                else if (isWaitingForInput && isChoppingWall)
-                {
-                    Debug.Log("Input 0 Received");
-                    isWaitingForInput = false;
-                    isChoppingWall = false;
-                    if (validInputOptions.Contains(0))
-                    {
-                        Debug.Log("This is a valid chop wall option.");
-                        GameConsole.instance.UpdateFeedback("Chopping wall.");
-                        validInputOptions = new ArrayList();
-                        Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
-                        FiremanUI.instance.SetAP(this.getAP());
-                        sendChopWallEvent(targetSpace, 0);
-                    }
-                    else
-                    {
-                        string oldMessage = GameConsole.instance.FeedbackText.text;
-                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
-                        isWaitingForInput = true;
-                        isChoppingWall = true;
-                    }
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                if (isWaitingForInput && isExtinguishingFire)
-                {
-                    Debug.Log("Input 1 Received");
-                    isWaitingForInput = false;
-                    isExtinguishingFire = false;
-                    if (validInputOptions.Contains(1))
-                    {
-                        Debug.Log("This is a valid extinguish option.");
-                        GameConsole.instance.UpdateFeedback("Removing fire.");
-                        validInputOptions = new ArrayList();
-
-                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 1);
-                        this.setAP(this.getAP() - 2);
-                        FiremanUI.instance.SetAP(this.getAP());
-                        sendFireMarkerExtinguishEvent(targetSpace);
-                    }
-                    else
-                    {
-                        string oldMessage = GameConsole.instance.FeedbackText.text;
-                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
-                        isWaitingForInput = true;
-                        isExtinguishingFire = true;
-                    }
-
-                }
-                else if (isWaitingForInput && isChoppingWall)
-                {
-
-                }
-            }
-
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                if (isWaitingForInput && isExtinguishingFire)
-                {
-                    Debug.Log("Input 2 Received");
-                    isWaitingForInput = false;
-                    isExtinguishingFire = false;
-                    if (validInputOptions.Contains(2))
-                    {
-                        Debug.Log("This is a valid extinguish option.");
-                        GameConsole.instance.UpdateFeedback("Removing fire.");
-                        validInputOptions = new ArrayList();
-
-                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 2);
-                        this.setAP(this.getAP() - 2);
-                        FiremanUI.instance.SetAP(this.getAP());
-                        sendFireMarkerExtinguishEvent(targetSpace);
-
-                    }
-                    else
-                    {
-                        string oldMessage = GameConsole.instance.FeedbackText.text;
-                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
-                        isWaitingForInput = true;
-                        isExtinguishingFire = true;
-                    }
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                if (isWaitingForInput && isExtinguishingFire)
-                {
-                    Debug.Log("Input 3 Received");
-                    isWaitingForInput = false;
-                    isExtinguishingFire = false;
-                    if (validInputOptions.Contains(3))
-                    {
-                        Debug.Log("This is a valid extinguish option.");
-                        GameConsole.instance.UpdateFeedback("Removing fire.");
-                        validInputOptions = new ArrayList();
-                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 3);
-                        this.setAP(this.getAP() - 2);
-                        FiremanUI.instance.SetAP(this.getAP());
-                        sendFireMarkerExtinguishEvent(targetSpace);
-                    }
-                    else
-                    {
-                        string oldMessage = GameConsole.instance.FeedbackText.text;
-                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
-                        isWaitingForInput = true;
-                        isExtinguishingFire = true;
-
-                    }
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                if (isWaitingForInput && isExtinguishingFire)
-                {
-                    Debug.Log("Input 4 Received");
-                    isWaitingForInput = false;
-                    isExtinguishingFire = false;
-                    if (validInputOptions.Contains(4))
-                    {
-                        Debug.Log("This is a valid extinguish option.");
-                        GameConsole.instance.UpdateFeedback("Removing fire.");
-                        validInputOptions = new ArrayList();
-                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 4);
-                        this.setAP(this.getAP() - 2);
-                        FiremanUI.instance.SetAP(this.getAP());
-                        sendFireMarkerExtinguishEvent(targetSpace);
-
-                    }
-                    else
-                    {
-                        string oldMessage = GameConsole.instance.FeedbackText.text;
-                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
-                        isWaitingForInput = true;
-                        isExtinguishingFire = true;
-
-
-                    }
-                }
-            }
-
-
-            else if (Input.GetKeyDown(KeyCode.Q))
-            {
-                endTurn();
-            }
-        }
-    }
+   
 
     private void sendFireMarkerExtinguishEvent(Space targetSpace)
     {
@@ -640,6 +689,17 @@ public class Fireman : GameUnit
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
     }
 
+    private void sendSmokeMarkerExtinguishEvent(Space targetSpace)
+    {
+        int targetX = targetSpace.indexX;
+        int targetY = targetSpace.indexY;
+
+        object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
+    
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSmokeMarker, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+        
+    }    
     private void sendChopWallEvent(Space targetSpace, int direction)
     {
         int indexX = targetSpace.indexX;
