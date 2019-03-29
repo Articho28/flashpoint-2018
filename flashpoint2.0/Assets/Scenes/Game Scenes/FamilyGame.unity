@@ -26626,8 +26626,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000091791, y: -5}
-  m_SizeDelta: {x: 202.6, y: 260.23}
+  m_AnchoredPosition: {x: 5.78, y: -10.8}
+  m_SizeDelta: {x: 214.17, y: 296.72}
   m_Pivot: {x: 0.50000006, y: 0.50000006}
 --- !u!114 &1157500833
 MonoBehaviour:
@@ -26665,13 +26665,13 @@ MonoBehaviour:
   m_Text: 'KEYBOARD GUIDE
 
 
-    Move: arrows
+    Move: direction arrows
 
 
     Chop Wall: C
 
 
-    Door: D
+    Open/Close Door: D
 
 
     Extinguish Fire: E
@@ -26681,6 +26681,9 @@ MonoBehaviour:
 
 
     Carry Victim: C
+
+
+    End Turn: Q
 
 '
 --- !u!222 &1157500834
