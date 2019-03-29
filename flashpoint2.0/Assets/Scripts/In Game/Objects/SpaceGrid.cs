@@ -381,7 +381,7 @@ public class SpaceGrid : MonoBehaviourPun {
 
         POI.GetComponent<Transform>().position = newPosition;
         POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        POI.GetComponent<GameUnit>().setType("POI");
+        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
         POI.GetComponent<GameUnit>().setPhysicalObject(POI);
         currentSpace.addOccupant(POI.GetComponent<POI>());
         numOfActivePOI++;
