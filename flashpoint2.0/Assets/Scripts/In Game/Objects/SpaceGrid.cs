@@ -305,9 +305,9 @@ public class SpaceGrid : MonoBehaviourPun {
         }
     }
 
-    public bool containsFiremarker(int col, int row)
+    public bool containsFireORSmoke(int col, int row)
     {
-        if( grid[row,col].getSpaceStatus() == SpaceStatus.Fire)
+        if( grid[row,col].getSpaceStatus() == SpaceStatus.Fire || grid[row,col].getSpaceStatus() == SpaceStatus.Safe)
         {
             return true;
         }
@@ -362,7 +362,7 @@ public class SpaceGrid : MonoBehaviourPun {
         //randomize between 1 and 8
         int row = Random.Range(1, 6);
 
-        if (containsFiremarker(col, row))
+        if (containsFireORSmoke(col, row))
         {
             return;
         }
