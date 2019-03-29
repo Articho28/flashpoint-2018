@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviourPun
             NumberOfPlayers = PhotonNetwork.CountOfPlayers;
             isFirstReset = true;
             buildingDamage = 0;
+            Turn = 1;
         }
         else
         {
