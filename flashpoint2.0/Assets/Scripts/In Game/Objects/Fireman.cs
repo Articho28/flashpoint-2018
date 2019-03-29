@@ -783,6 +783,7 @@ public class Fireman : GameUnit
 
     private void restoreAP()
     {
+        /*
         int currentNumAP = this.getAP();
         if (this.savedAP < 4 && currentNumAP > 0)
         {
@@ -791,7 +792,11 @@ public class Fireman : GameUnit
                 this.savedAP++;
                 currentNumAP--;
             } while (currentNumAP > 0 && this.savedAP < 4);
-        }
+        }*/
+        /*
+        int currentNumAP = this.getAP();
+        int savedAP = Math.Min(currentNumAP + this.getSavedAP(), */
+
         this.setAP(4);
         FiremanUI.instance.SetAP(4);
     }
