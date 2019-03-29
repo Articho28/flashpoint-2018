@@ -450,6 +450,11 @@ public class Fireman : GameUnit
                 Debug.Log("Extinguish Fire Detected");
                 extinguishFire();
             }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                Debug.Log("Chop Wall Detected");
+                chopWall();
+            }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 if (isWaitingForInput && isExtinguishingFire)
