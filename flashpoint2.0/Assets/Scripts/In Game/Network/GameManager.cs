@@ -303,6 +303,19 @@ public class GameManager : MonoBehaviourPun
             }
         }
 
+        else if (evCode == (byte) PhotonEventCodes.TurnFireToSmoke)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            //TODO change that
+            GameConsole.instance.UpdateFeedback("Turning Fire to smoke...");
+
+        }
+
     }
 
 

@@ -17,7 +17,9 @@ public class Fireman : GameUnit
     private bool isWaitingForInput;
     private bool isExtinguishingFire;
     private bool isChoppingWall;
+    private bool isSelectingExtinguishOption;
     ArrayList validInputOptions;
+    Space locationArgument;
 
     void Start()
     {
@@ -28,6 +30,8 @@ public class Fireman : GameUnit
         isWaitingForInput = false;
         isExtinguishingFire = false;
         validInputOptions = new ArrayList();
+        isChoppingWall = false;
+        isSelectingExtinguishOption = false;
     }
 
     void Update()
@@ -130,7 +134,6 @@ public class Fireman : GameUnit
                     if (validInputOptions.Contains(0))
                     {
                         Debug.Log("This is a valid extinguish option.");
-                        //GameConsole.instance.UpdateFeedback("Removing fire.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 0);
                         int numAP = this.getAP();
@@ -144,14 +147,23 @@ public class Fireman : GameUnit
                         {
                             if (numAP < 2)
                             {
-                                GameConsole.instance.UpdateFeedback("Turning Fire To Smoke");
-                                //TODO
+                                GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
+                                this.setAP(numAP - 1);
+                                sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
                             else
                             {
-                                this.setAP(numAP - 2);
+                                //TODO Give player option to turn fire to smoke 
+                                GameConsole.instance.UpdateFeedback("Press Y to extinguish the Fire altogether or N to turn the Fire to smoke");
+
+                                isWaitingForInput = true;
+                                isSelectingExtinguishOption = true;
+                                locationArgument = targetSpace;
+
+                                /*this.setAP(numAP - 2);
                                 FiremanUI.instance.SetAP(this.getAP());
-                                sendFireMarkerExtinguishEvent(targetSpace);
+                                GameConsole.instance.UpdateFeedback("Removing Fire...");
+                                sendFireMarkerExtinguishEvent(targetSpace);*/
                             }
                         }
                         /*
@@ -369,6 +381,28 @@ public class Fireman : GameUnit
             else if (Input.GetKeyDown(KeyCode.Q))
             {
                 endTurn();
+            }
+            else if (Input.GetKeyDown(KeyCode.Y))
+            {
+                if (isWaitingForInput && isSelectingExtinguishOption)
+                {
+                    sendFireMarkerExtinguishEvent(locationArgument);
+                    locationArgument = null;
+                    isWaitingForInput = false;
+                    isSelectingExtinguishOption = false;
+                    this.setAP(this.getAP() - 2);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.N))
+            {
+                if (isWaitingForInput && isSelectingExtinguishOption)
+                {
+                    sendTurnFireMarkerToSmokeEvent(locationArgument);
+                    locationArgument = null;
+                    isWaitingForInput = false;
+                    isSelectingExtinguishOption = false;
+                    this.setAP(this.getAP() - 1);
+                }
             }
         }
     }
@@ -701,7 +735,19 @@ public class Fireman : GameUnit
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSmokeMarker, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
         
-    }    
+    }
+
+    private void sendTurnFireMarkerToSmokeEvent(Space targetSpace)
+    {
+        int targetX = targetSpace.indexX;
+        int targetY = targetSpace.indexY;
+
+        object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.TurnFireToSmoke, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+
+    }
+
+
     private void sendChopWallEvent(Space targetSpace, int direction)
     {
         int indexX = targetSpace.indexX;
