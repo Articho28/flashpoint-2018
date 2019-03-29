@@ -321,7 +321,7 @@ public class GameManager : MonoBehaviourPun
 
             Debug.Log("after chop, wall status: " + targetWall.getWallStatus());
             Debug.Log("after chop, damage counter: " + GameManager.GM.buildingDamage);
-
+            /*
             if (targetWall.getWallStatus() == WallStatus.Damaged)
             {
                 //place damage marker
@@ -339,6 +339,7 @@ public class GameManager : MonoBehaviourPun
 
             }
             //}
+            */           
 
         }
 

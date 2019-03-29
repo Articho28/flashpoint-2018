@@ -54,6 +54,7 @@ public class Wall : MonoBehaviour
         }
         else if(status == WallStatus.Destroyed) {
             Destroy(this);
+            Destroy(this.physicalObject);
         }
     }
 
