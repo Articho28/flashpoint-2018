@@ -133,12 +133,28 @@ public class Fireman : GameUnit
                         //GameConsole.instance.UpdateFeedback("Removing fire.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 0);
+                        int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(this.getAP() - 1);
+                            this.setAP(numAP - 1);
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
+                        else
+                        {
+                            if (numAP < 2)
+                            {
+                                GameConsole.instance.UpdateFeedback("Turning Fire To Smoke");
+                                //TODO
+                            }
+                            else
+                            {
+                                this.setAP(numAP - 2);
+                                FiremanUI.instance.SetAP(this.getAP());
+                                sendFireMarkerExtinguishEvent(targetSpace);
+                            }
+                        }
+                        /*
                         else if (this.getAP() < 2)
                         {
                             GameConsole.instance.UpdateFeedback("Not enough AP to extinguish fire. ");
@@ -148,7 +164,7 @@ public class Fireman : GameUnit
                             this.setAP(this.getAP() - 2);
                             FiremanUI.instance.SetAP(this.getAP());
                             sendFireMarkerExtinguishEvent(targetSpace);
-                        }
+                        }*/
 
                     }
                     else
