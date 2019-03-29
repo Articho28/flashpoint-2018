@@ -15,7 +15,6 @@ public enum PhotonEventCodes
     AdvanceSmokeMarker = 8,
     BoardSetup = 9,
     RemoveFireMarker = 10,
-    RemoveSmokeMarker = 11
-
-
+    RemoveSmokeMarker = 11,
+    ChopWall = 12
 }
