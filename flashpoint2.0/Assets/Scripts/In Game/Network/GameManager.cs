@@ -343,6 +343,49 @@ public class GameManager : MonoBehaviourPun
 
         }
 
+        /*
+        else if (evCode == (byte) PhotonEventCodes.TurnFireToSmoke)
+        {
+            /*
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            //TODO change that
+            GameConsole.instance.UpdateFeedback("Turning Fire to smoke...");
+
+            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+            GameUnit targetMarker = null;
+            foreach (GameUnit gm in spaceOccupants)
+            {
+                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
+                {
+                    Debug.Log("Found a smoke marker");
+                    targetMarker = gm;
+                }
+            }
+            if (targetMarker != null)
+            {
+                Debug.Log("Removing Smoke Marker");
+                string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
+                GameConsole.instance.UpdateFeedback(message);
+                spaceOccupants.Remove(targetMarker);
+                Destroy(targetMarker.physicalObject);
+                Destroy(targetMarker);
+                targetSpace.setSpaceStatus(SpaceStatus.Smoke);
+
+            }
+
+            //PLACING SMOKEMARKER
+
+            Vector3 position = targetSpace.worldPosition;
+            GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
+
+            */
+
+
     }
 
 
