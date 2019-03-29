@@ -30,336 +30,6 @@ public class Fireman : GameUnit
         validInputOptions = new ArrayList();
     }
 
-    public int getAP()
-    {
-        return AP;
-    }
-
-    public void setAP(int newAP)
-    {
-        AP = newAP;
-    }
-
-    public int getSavedAP()
-    {
-        return AP;
-    }
-
-
-    public void decrementAP(int amount)
-    {
-        this.AP -= amount;
-    }
-
-    public void setAPStartTurn()
-    {
-        AP = getSavedAP() + 4;
-    }
-
-    public FMStatus getStatus()
-    {
-        return this.status;
-    }
-
-    public void setStatus(FMStatus newStatus)
-    {
-        this.status = newStatus;
-    }
-
-    public Victim getVictim()
-    {
-        return this.carriedVictim;
-    }
-
-    public void setVictim(Victim v)
-    {
-        this.carriedVictim = v;
-    }
-
-    public void deassociateVictim()
-    {
-        this.carriedVictim = null;
-    }
-
-    public void extinguishFire()
-    {
-        int numAP = getAP(); //returns the number of action points
-
-        //Get current space and spacestatus. 
-
-        Space current = this.getCurrentSpace();
-        SpaceStatus currentSpaceStatus = current.getSpaceStatus();
-
-
-        //Get neighbors and their spacestatus. 
-        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
-        SpaceStatus[] neighborsStatuses = new SpaceStatus[4];
-
-        for (int i = 0; i < neighbors.Length; i++)
-        {
-            if (neighbors[i] != null)
-            {
-                neighborsStatuses[i] = neighbors[i].getSpaceStatus();
-            }
-
-        }
-         
-
-        //Check if sufficient AP.
-        if (numAP < 1)
-        {
-            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
-            GameConsole.instance.UpdateFeedback("Not enough AP!");
-        }
-        else
-        {
-            //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
-            ArrayList extinguishOptions = getUnsafeSpacesIndecies(currentSpaceStatus, neighborsStatuses);
-            validInputOptions = extinguishOptions;
-
-            //Build string to show.
-            String optionsToUser = "";
-
-            foreach (int index in extinguishOptions) {
-
-               
-                if (index == 0)
-                {
-                    optionsToUser += "Press 0 for Tile on Top ";
-                }
-                else if (index == 1)
-                {
-                    optionsToUser += " Press 1 for Tile to Your Right";
-                }
-                else if (index == 2)
-                {
-                    optionsToUser += " Press 2 for the Tile to the Bottom";
-                }
-                else if (index == 3)
-                {
-                    optionsToUser += " Press 3 for the Tile to Your Left";
-
-                }
-                else
-                {
-                    optionsToUser += " Press 4 for the current Tile";
-
-                }
-            }
-
-            GameConsole.instance.UpdateFeedback(optionsToUser);
-
-            isWaitingForInput = true;
-            isExtinguishingFire = true;
-
-            /*
-            if (curentSpaceStatus != SpaceStatus.Safe)
-
-            if (a == Action.FlipFire)
-            {     //if the player chooses to "Flip Fire"
-                destination.setSpaceStatus(SpaceStatus.Smoke);          //sets the SpaceStatus to Smoke
-                decrementAP(1);                 //sets the number of action points of the calling firefighter
-            }
-            else if (a == Action.RemoveFire)
-            {          //if the player chooses "Remove Fire"
-                destination.setSpaceStatus(SpaceStatus.Safe);                       //sets the SpaceStatus to Smoke
-                decrementAP(2);                             //sets the number of action points of the calling firefighter
-            }
-            else if (a == Action.RemoveSmoke)
-            {     //if the player chooses to "Remove Smoke"
-                destination.setSpaceStatus(SpaceStatus.Safe);                   //sets the SpaceStatus to Safe
-                decrementAP(1);                         //sets the number of action points of the calling firefighter
-            }
-            else
-            {
-                Debug.Log("Nothing to extinguish here!"); //Used to show the player why he can’t perform an action in case of failure
-            }
-                */
-
-        }
-    }
-
-    private ArrayList getUnsafeSpacesIndecies(SpaceStatus currentSpaceStatus, SpaceStatus[] neighborsStatuses)
-    {
-        ArrayList indices = new ArrayList();
-
-        //Collect directions in which there is a smoke or fire marker.
-        for (int i = 0; i < neighborsStatuses.Length; i++)
-        {
-            if (neighborsStatuses[i] != SpaceStatus.Safe)
-            {
-                indices.Add(i);
-            }
-        }
-
-        //Check for current space. Current Space index will be 4.
-        if (currentSpaceStatus != SpaceStatus.Safe)
-        {
-            indices.Add(4);
-        }
-
-        return indices;
-    }
-
-
-    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             String optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
-            isChoppingWall = true;           }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
-
-    public void move(int direction)
-    {
-        //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
-        int ap = this.getAP();
-        Victim v = this.getVictim();
-        bool reachable = true; //destination.isReachable(); //TODO
-        Space curr = this.getCurrentSpace();
-        Debug.Log("Index X is " + curr.indexX + " and Index Y is " + curr.indexY);
-        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-        //foreach (Space s in neighbors)
-        //{
-        //    if (s != null)
-        //    {
-        //        Debug.Log("not null yeayeay");
-        //    }
-        //}
-        Space destination = neighbors[direction];
-
-        if (destination == null)
-        {
-            GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
-            return;
-        }
-
-
-
-        SpaceStatus sp = destination.getSpaceStatus();
-
-        if (reachable)
-        {
-            if (sp == SpaceStatus.Fire)
-            {
-                if (ap >= 2 && v == null) //&&f has enough to move
-                {
-                    Debug.Log(ap);
-                    Debug.Log(this.transform.position);
-                    this.setCurrentSpace(destination);
-                    this.decrementAP(2);
-                    Debug.Log(ap);
-                    Debug.Log(this.transform.position);
-                }
-                else
-                {
-                    GameConsole.instance.UpdateFeedback("Insufficient AP");
-                    return;
-                }
-            }
-            else
-            {
-                if (v == null && ap >=1)
-                {
-                    this.setCurrentSpace(destination);
-                    this.decrementAP(1);
-                    FiremanUI.instance.SetAP(this.AP);
-                    GameConsole.instance.UpdateFeedback("You have successfully moved");
-                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
-                    this.GetComponent<Transform>().position = newPosition;
-
-                }
-                else if (v != null && ap >=2)//if the fireman is carrying a victim
-                {
-                    this.setCurrentSpace(destination);
-                    this.decrementAP(2);
-                }
-                else
-                {
-                    GameConsole.instance.UpdateFeedback("Insufficient AP");
-                    return;
-                }
-            }
-        }
-
-        //after the move TODO??
-
-        List<GameUnit> occ = destination.getOccupants();
-        foreach (GameUnit gu in occ)
-        {
-            if (gu is POI)
-            {
-                POIKind gukind = ((POI)gu).getPOIKind();
-                if (gukind == POIKind.FalseAlarm)
-                {
-                    //TODO remove false alarm
-                }
-            }
-        }
-
-        if (v != null && destination.getSpaceKind() == SpaceKind.Outdoor)
-        {
-            v.setVictimStatus(VictimStatus.Rescued);
-            Game.incrementNumSavedVictims();
-            GameUI.instance.AddSavedVictim();
-            this.deassociateVictim();
-            if (Game.getNumSavedVictims() >= 7)
-            {
-                Game.setGameWon(true);
-                Game.setGameState(GameState.Completed);
-                GameUI.instance.AddGameState("Completed");
-            }
-        }
-
-
-    }
-
-
-    public void KnockedDown()
-    {
-        //A Firefighter is Knocked Down when Fire advances into their space; this could be from an explosion or being in a Smoke
-        //filled space that ignites
-
-        //if: KnockedDown
-        //take the Firefighter from its space
-        //place it on the closest (as the crow flies) Ambulance Parking Spot outside the building
-        //if: two Parking Spots are equally distant, choose one
-
-
-        //Leave the Fire marker in the space
-
-        //if: the KnockedDown Firefighter was carrying a Victim
-        //Victim is Lost --> Place the Victim marker on the Lost space at the edge of the board
-        //make a function call to VictimLoss
-    }
-
-    public void openDoor()
-    {
-        Debug.Log("open door");
-        if (getAP() >= 1)
-        {
-            decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Open);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/open door");
-        }
-    }
-
-    public void closeDoor()
-    {
-        Debug.Log("close door");
-        if (getAP() >= 1)
-        {
-            decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Closed);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/closed door");
-        }
-    }
-
     void Update()
     {
        
@@ -686,6 +356,314 @@ public class Fireman : GameUnit
             }
         }
     }
+
+    public int getAP()
+    {
+        return AP;
+    }
+
+    public void setAP(int newAP)
+    {
+        AP = newAP;
+    }
+
+    public int getSavedAP()
+    {
+        return AP;
+    }
+
+
+    public void decrementAP(int amount)
+    {
+        this.AP -= amount;
+    }
+
+    public void setAPStartTurn()
+    {
+        AP = getSavedAP() + 4;
+    }
+
+    public FMStatus getStatus()
+    {
+        return this.status;
+    }
+
+    public void setStatus(FMStatus newStatus)
+    {
+        this.status = newStatus;
+    }
+
+    public Victim getVictim()
+    {
+        return this.carriedVictim;
+    }
+
+    public void setVictim(Victim v)
+    {
+        this.carriedVictim = v;
+    }
+
+    public void deassociateVictim()
+    {
+        this.carriedVictim = null;
+    }
+
+    public void extinguishFire()
+    {
+        int numAP = getAP(); //returns the number of action points
+
+        //Get current space and spacestatus. 
+
+        Space current = this.getCurrentSpace();
+        SpaceStatus currentSpaceStatus = current.getSpaceStatus();
+
+
+        //Get neighbors and their spacestatus. 
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
+        SpaceStatus[] neighborsStatuses = new SpaceStatus[4];
+
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            if (neighbors[i] != null)
+            {
+                neighborsStatuses[i] = neighbors[i].getSpaceStatus();
+            }
+
+        }
+         
+
+        //Check if sufficient AP.
+        if (numAP < 1)
+        {
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
+        }
+        else
+        {
+            //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
+            ArrayList extinguishOptions = getUnsafeSpacesIndecies(currentSpaceStatus, neighborsStatuses);
+            validInputOptions = extinguishOptions;
+
+            //Build string to show.
+            String optionsToUser = "";
+
+            foreach (int index in extinguishOptions) {
+
+               
+                if (index == 0)
+                {
+                    optionsToUser += "Press 0 for Tile on Top ";
+                }
+                else if (index == 1)
+                {
+                    optionsToUser += " Press 1 for Tile to Your Right";
+                }
+                else if (index == 2)
+                {
+                    optionsToUser += " Press 2 for the Tile to the Bottom";
+                }
+                else if (index == 3)
+                {
+                    optionsToUser += " Press 3 for the Tile to Your Left";
+
+                }
+                else
+                {
+                    optionsToUser += " Press 4 for the current Tile";
+
+                }
+            }
+
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+
+            isWaitingForInput = true;
+            isExtinguishingFire = true;
+
+        }
+    }
+
+    private ArrayList getUnsafeSpacesIndecies(SpaceStatus currentSpaceStatus, SpaceStatus[] neighborsStatuses)
+    {
+        ArrayList indices = new ArrayList();
+
+        //Collect directions in which there is a smoke or fire marker.
+        for (int i = 0; i < neighborsStatuses.Length; i++)
+        {
+            if (neighborsStatuses[i] != SpaceStatus.Safe)
+            {
+                indices.Add(i);
+            }
+        }
+
+        //Check for current space. Current Space index will be 4.
+        if (currentSpaceStatus != SpaceStatus.Safe)
+        {
+            indices.Add(4);
+        }
+
+        return indices;
+    }
+
+
+    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             String optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
+            isChoppingWall = true;           }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
+
+    public void move(int direction)
+    {
+        //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
+        int ap = this.getAP();
+        Victim v = this.getVictim();
+        bool reachable = true; //destination.isReachable(); //TODO
+        Space curr = this.getCurrentSpace();
+        Debug.Log("Index X is " + curr.indexX + " and Index Y is " + curr.indexY);
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
+        //foreach (Space s in neighbors)
+        //{
+        //    if (s != null)
+        //    {
+        //        Debug.Log("not null yeayeay");
+        //    }
+        //}
+        Space destination = neighbors[direction];
+
+        if (destination == null)
+        {
+            GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
+            return;
+        }
+
+
+
+        SpaceStatus sp = destination.getSpaceStatus();
+
+        if (reachable)
+        {
+            if (sp == SpaceStatus.Fire)
+            {
+                if (ap >= 2 && v == null) //&&f has enough to move
+                {
+                    Debug.Log(ap);
+                    Debug.Log(this.transform.position);
+                    this.setCurrentSpace(destination);
+                    this.decrementAP(2);
+                    Debug.Log(ap);
+                    Debug.Log(this.transform.position);
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                    return;
+                }
+            }
+            else
+            {
+                if (v == null && ap >=1)
+                {
+                    this.setCurrentSpace(destination);
+                    this.decrementAP(1);
+                    FiremanUI.instance.SetAP(this.AP);
+                    GameConsole.instance.UpdateFeedback("You have successfully moved");
+                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                    this.GetComponent<Transform>().position = newPosition;
+
+                }
+                else if (v != null && ap >=2)//if the fireman is carrying a victim
+                {
+                    this.setCurrentSpace(destination);
+                    this.decrementAP(2);
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                    return;
+                }
+            }
+        }
+
+        //after the move TODO??
+
+        List<GameUnit> occ = destination.getOccupants();
+        foreach (GameUnit gu in occ)
+        {
+            if (gu is POI)
+            {
+                POIKind gukind = ((POI)gu).getPOIKind();
+                if (gukind == POIKind.FalseAlarm)
+                {
+                    //TODO remove false alarm
+                }
+            }
+        }
+
+        if (v != null && destination.getSpaceKind() == SpaceKind.Outdoor)
+        {
+            v.setVictimStatus(VictimStatus.Rescued);
+            Game.incrementNumSavedVictims();
+            GameUI.instance.AddSavedVictim();
+            this.deassociateVictim();
+            if (Game.getNumSavedVictims() >= 7)
+            {
+                Game.setGameWon(true);
+                Game.setGameState(GameState.Completed);
+                GameUI.instance.AddGameState("Completed");
+            }
+        }
+
+
+    }
+
+
+    public void KnockedDown()
+    {
+        //A Firefighter is Knocked Down when Fire advances into their space; this could be from an explosion or being in a Smoke
+        //filled space that ignites
+
+        //if: KnockedDown
+        //take the Firefighter from its space
+        //place it on the closest (as the crow flies) Ambulance Parking Spot outside the building
+        //if: two Parking Spots are equally distant, choose one
+
+
+        //Leave the Fire marker in the space
+
+        //if: the KnockedDown Firefighter was carrying a Victim
+        //Victim is Lost --> Place the Victim marker on the Lost space at the edge of the board
+        //make a function call to VictimLoss
+    }
+
+    public void openDoor()
+    {
+        Debug.Log("open door");
+        if (getAP() >= 1)
+        {
+            decrementAP(1);
+            Door[] doors = this.getCurrentSpace().getDoors();
+            foreach (Door d in doors)
+            {
+                d.setDoorStatus(DoorStatus.Open);
+            }
+            string doorObjectPath = "Board/doorCol45";
+            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/open door");
+        }
+    }
+
+    public void closeDoor()
+    {
+        Debug.Log("close door");
+        if (getAP() >= 1)
+        {
+            decrementAP(1);
+            Door[] doors = this.getCurrentSpace().getDoors();
+            foreach (Door d in doors)
+            {
+                d.setDoorStatus(DoorStatus.Closed);
+            }
+            string doorObjectPath = "Board/doorCol45";
+            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/closed door");
+        }
+    }
+
+   
 
     private void sendFireMarkerExtinguishEvent(Space targetSpace)
     {
