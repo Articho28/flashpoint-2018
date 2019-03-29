@@ -424,6 +424,10 @@ public class Fireman : GameUnit
             {
                 endTurn();
             }
+            else if (Input.GetKeyDown(KeyCode.V))
+            {
+                carryVictim();
+            }
         }
     }
 
