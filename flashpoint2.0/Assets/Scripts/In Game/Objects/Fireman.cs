@@ -533,26 +533,12 @@ public class Fireman : GameUnit
         }
 
 
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                Debug.Log("Extinguish Fire Detected");
-                extinguishFire();
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                Debug.Log("Chop Wall Detected");
-                chopWall();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha0))
-
-
 
         SpaceStatus sp = destination.getSpaceStatus();
 
         if (reachable)
         {
             if (sp == SpaceStatus.Fire)
-
             {
                 if (ap >= 2 && v == null) //&&f has enough to move
                 {
