@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using System.IO;
+using System;
 
 public class GameManager : MonoBehaviourPun
 {
@@ -153,18 +154,48 @@ public class GameManager : MonoBehaviourPun
 
         }
 
+        sendResolveFlashOverEvent();
 
+    }
+
+    private static void sendResolveFlashOverEvent()
+    {
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveFlashOvers, null, sendToAllOptions, SendOptions.SendUnreliable);
     }
 
     static void rollDice()
     {
         //TODO reset proper randomization
+
         //System.Random r = new System.Random();
         //blackDice = r.Next(1, 9);
         //redDice = r.Next(1, 7);
         blackDice = 1;
         redDice = 6;
 
+    }
+
+    void resolveFlashOvers()
+    {
+        foreach (Space space in StateManager.instance.spaceGrid.grid)
+        {
+            SpaceStatus status = space.getSpaceStatus();
+
+            if (status == SpaceStatus.Smoke)
+            {
+                Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(space);
+                foreach (Space neighbor in neighbors)
+                {
+                    SpaceStatus neighborStatus = neighbor.getSpaceStatus();
+                    if (neighborStatus == SpaceStatus.Fire)
+                    {
+                        space.setSpaceStatus(SpaceStatus.Fire);
+                        removeSmokeMarker(space);
+                        placeFireMarker(space);
+                    }
+                }
+            }
+        }
     }
 
     public bool containsFireORSmoke(int col, int row)
@@ -222,9 +253,9 @@ public class GameManager : MonoBehaviourPun
         while(true) 
         { 
             //randomize between 1 and 6
-            col = Random.Range(1, 8);
+            col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
-            row = Random.Range(1, 6);
+            row = UnityEngine.Random.Range(1, 6);
 
             if (containsFireORSmoke(col, row))
             {
@@ -540,48 +571,10 @@ public class GameManager : MonoBehaviourPun
             placeInitialFireMarker();
 
         }
-
-        /*
-        else if (evCode == (byte) PhotonEventCodes.TurnFireToSmoke)
+        else if (evCode == (byte)PhotonEventCodes.ResolveFlashOvers)
         {
-            /*
-            object[] dataReceived = eventData.CustomData as object[];
-            int indexX = (int)dataReceived[0];
-            int indexY = (int)dataReceived[1];
-
-            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
-
-            //TODO change that
-            GameConsole.instance.UpdateFeedback("Turning Fire to smoke...");
-
-            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
-            GameUnit targetMarker = null;
-            foreach (GameUnit gm in spaceOccupants)
-            {
-                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
-                {
-                    Debug.Log("Found a smoke marker");
-                    targetMarker = gm;
-                }
-            }
-            if (targetMarker != null)
-            {
-                Debug.Log("Removing Smoke Marker");
-                string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
-                GameConsole.instance.UpdateFeedback(message);
-                spaceOccupants.Remove(targetMarker);
-                Destroy(targetMarker.physicalObject);
-                Destroy(targetMarker);
-                targetSpace.setSpaceStatus(SpaceStatus.Smoke);
-
-            }
-
-            //PLACING SMOKEMARKER
-
-            Vector3 position = targetSpace.worldPosition;
-            GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
-
-            */
+            resolveFlashOvers();
+        }
 
 
     }
