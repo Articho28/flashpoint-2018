@@ -38,7 +38,7 @@ public class Fireman : GameUnit
 
     void Update()
     {
-       
+
 
         if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
@@ -167,7 +167,7 @@ public class Fireman : GameUnit
                                 isSelectingExtinguishOption = true;
                                 locationArgument = targetSpace;
                             }
-                        } 
+                        }
 
                     }
                     else
@@ -493,6 +493,8 @@ public class Fireman : GameUnit
                     this.setAP(this.getAP() - 1);
                     FiremanUI.instance.SetAP(this.getAP());
                 }
+
+            }
             else if (Input.GetKeyDown(KeyCode.V))
             {
                 carryVictim();
@@ -647,7 +649,7 @@ public class Fireman : GameUnit
         return indices;
     }
 
-    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             String optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
+    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
             isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
 
     public void carryVictim()
@@ -743,6 +745,15 @@ public class Fireman : GameUnit
                     GameConsole.instance.UpdateFeedback("You have successfully moved");
                     Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
                     this.GetComponent<Transform>().position = newPosition;
+                    List<GameUnit> gameUnits = destination.getOccupants();
+                    foreach (GameUnit gu in gameUnits)
+                    {
+                        if (gu.GetType() == typeof(POI))
+                        {
+                            FlipPOI();
+                            break;
+                        }
+                    }
 
                 }
                 else if (v != null && ap >= 2)//if the fireman is carrying a victim
@@ -772,7 +783,8 @@ public class Fireman : GameUnit
                         {
                             if (gu.GetType() == typeof(POI))
                             {
-                                //flipPOI(); TODO
+                                FlipPOI();
+                                break;
                             }
                         }
                     }
@@ -953,48 +965,63 @@ public class Fireman : GameUnit
     }
     //Flip POI
     public void FlipPOI () {
-        print ("Flip");
+        Debug.Log("Flip");
         string[] mylist = new string[] {
             "man POI", "woman POI", "false alarm", "dog POI"
         };
-        Space currentSpace = this.getCurrentSpace();
-        List<GameUnit> gameUnits = currentSpace.getOccupants();
-        POI questionMark;
+        Space curr = this.getCurrentSpace();
+        List<GameUnit> gameUnits = curr.getOccupants();
+        POI questionMark = null;
         foreach (GameUnit gu in gameUnits)
         {
             if(gu.GetType() == typeof(POI)){
-                questionMark = gu;
+                questionMark = (POI) gu;
                 break;
             }
         }
-        Vector3 position = questionMark.GetComponent<Transform>().position;
+        Vector3 position = curr.worldPosition;
+        int r;
 
-        int r = Random.Range (0, mylist.Length-1);
-        //Instiate Object
-        GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + mylist[r] ) as GameObject);
+        do
+        {   
+            r = Random.Range(0, mylist.Length - 1);
+            if(string.Compare(mylist[r],"false alarm") == 0 && NumFA <= 0)
+                continue;
+            else
+            {
+                if (numVictim <= 0)
+                    continue;
+            }
 
-        if(string.Compare(mylist[r],"false alarm")){
-            poi.GetComponent<GameUnit>().setPOIKind(POIKind.FalseAlarm);
+        } while (false);
+
+        string POIname = mylist[r];
+        if(string.Compare(POIname,"false alarm") == 0)
+        {
+            NumFA--;
+            Destroy(questionMark.physicalObject);
+            Destroy(questionMark);
+            GameConsole.instance.UpdateFeedback("It was a false alarm!");
+            return;
         }
         else
         {
-            poi.GetComponent<GameUnit>().setPOIKind(POIKind.Victim);
+            GameConsole.instance.UpdateFeedback("It was a Victim!");
+            numVictim--;
         }
+        //Instiate Object
+        GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + POIname ) as GameObject);
+
+        poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
         poi.GetComponent<Transform>().position = position;
-        poi.GetComponent<GameUnit>().setCurrentSpace = currentSpace;
-        poi.GetComponent<GameUnit>().setType = FlashPointGameConstants.GAMEUNIT_TYPE_POI;
+        poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
         poi.GetComponent<GameUnit>().setPhysicalObject(poi);
         gameUnits.Remove(questionMark);
         currentSpace.addOccupant(poi.GetComponent<GameUnit>());
 
         Destroy(questionMark.physicalObject);
         Destroy(questionMark);
-
-        //Remove element
-        //
-        //update position
-        //
-        //Get random element
         
     }
 
@@ -1034,4 +1061,5 @@ public class Fireman : GameUnit
 
         }
     }
-} 
+}
+
