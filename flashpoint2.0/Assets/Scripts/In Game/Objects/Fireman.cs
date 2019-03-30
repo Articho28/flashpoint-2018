@@ -676,7 +676,10 @@ public class Fireman : GameUnit
 
         if(GameManager.GM.buildingDamage >= 24)
         {
-            Debug.Log("u just lost YIKESSS"); 
+            //Building colapses
+            Debug.Log("u just lost YIKESSS");
+            GameManager.GameLost();
+
         }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
 
 
@@ -866,26 +869,23 @@ public class Fireman : GameUnit
                         Destroy(victim.physicalObject);
                         Destroy(victim);
                         deassociateVictim();
-                        Debug.Log("Is Fireman Carrying a victim?" + this.carriedVictim);
-
-                        //List<GameUnit> gameUnits = curr.getOccupants();
-                        //GameUnit victim = null;
-                        //foreach (GameUnit gu in gameUnits)
-                        //{
-                        //    if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                        //    {
-                        //        victim = gu;
-                        //        break;
-                        //    }
-                        //}
-                        //Destroy(victim.physicalObject);
-                        //Destroy(victim);
-                        //gameUnits.Remove(victim);
-                        //deassociateVictim();
-                        //Debug.Log("Is Fireman Carrying a victim?" + this.carriedVictim);
-
-
+                        GameManager.numOfActivePOI--;
                         GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
+
+                        //check if we won the game.
+                        if (GameManager.savedVictims >= 7)
+                        {
+                            //check for a perfect game
+                            if(GameManager.savedVictims == 10)
+                            {
+                                GameManager.GameWon();
+                                System.Environment.Exit(0);
+                            }
+                            GameManager.GameWon();
+                        }
+                        return;
+
+
 
                     }
                     else //Fire
@@ -1027,10 +1027,39 @@ public class Fireman : GameUnit
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
+    public void replenishPOI()
+    {
+        if (GameManager.totalPOIs == 0)
+        {
+            return;
+        }
+        switch (GameManager.numOfActivePOI)
+        {
+            case 0:
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                GameManager.totalPOIs -= 3;
+                break;
+            case 1:
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                GameManager.totalPOIs -= 2;
+                break;
+            case 2:
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                GameManager.totalPOIs -= 1;
+                break;
+            default:
+                break;
+        }
+    }
+
     public void endTurn()
     {
         restoreAP();
         GameManager.advanceFire();
+        replenishPOI();
         GameManager.IncrementTurn();
     }
 
@@ -1045,7 +1074,7 @@ public class Fireman : GameUnit
         this.setAP(newAP);
         FiremanUI.instance.SetAP(newAP);
     }
-    //Flip POI
+
     public void FlipPOI () {
         Debug.Log("Flip");
         string[] mylist = new string[] {
@@ -1087,6 +1116,7 @@ public class Fireman : GameUnit
             Destroy(questionMark);
             GameConsole.instance.UpdateFeedback("It was a false alarm!");
             Debug.Log("After revealing FalseAlarm, numFa is: " + NumFA);
+            GameManager.numOfActivePOI--;
             return;
         }
         else
