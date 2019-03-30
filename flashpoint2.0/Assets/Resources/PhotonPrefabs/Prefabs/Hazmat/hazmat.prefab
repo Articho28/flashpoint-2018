@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 421722620483982653}
   - component: {fileID: 945278941675543342}
   - component: {fileID: 4326246039227881662}
+  - component: {fileID: 1688441679747086607}
   m_Layer: 0
   m_Name: hazmat
   m_TagString: Untagged
@@ -102,3 +103,17 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1688441679747086607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833257539404444140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 956d3960675e54f54a41fed9cd284f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  physicalObject: {fileID: 0}
