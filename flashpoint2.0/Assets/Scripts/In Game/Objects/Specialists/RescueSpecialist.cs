@@ -16,5 +16,7 @@ public class RescueSpecialist : Fireman
         
     }
 
-
+    //4 AP plus 3 free Movement AP per turn Chop: 1 AP
+    //The Rescue Specialist pays double AP costs to Extinguish Fire and/or Smoke.
+    //Free Movement AP cannot be saved.
 }

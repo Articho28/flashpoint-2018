@@ -15,4 +15,8 @@ public class HazmatTechnician : Fireman
     {
         
     }
+
+    //4 AP per turn.
+    //Dispose: Remove a Hazmat from the Firefighter’s space and place in the Rescued spot: 2 AP
+
 }
