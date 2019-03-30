@@ -22,7 +22,6 @@ public class SpaceGrid : MonoBehaviourPun {
     float spaceRadius;
     float spaceDiameter;
     static int gridSizeX, gridSizeY;
-    static int numOfActivePOI;
 
     private void Start() {
         gridWorldSize = new Vector2(10, 8);
@@ -31,21 +30,12 @@ public class SpaceGrid : MonoBehaviourPun {
         gridSizeY = 8;
         CreateGrid();
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.BoardSetup, null, options, SendOptions.SendUnreliable);
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarker, null, options, SendOptions.SendReliable);
-    }
-
-    void Awake()
-    {
-        numOfActivePOI = 0;
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.BoardSetup, null, options, SendOptions.SendReliable);
     }
 
     void Update()
     {
-        if(numOfActivePOI < 3)
-        {
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, options, SendOptions.SendUnreliable);
-        }
+
     }
 
     public Space[,] getGrid() {
@@ -305,89 +295,6 @@ public class SpaceGrid : MonoBehaviourPun {
         }
     }
 
-    public bool containsFireORSmoke(int col, int row)
-    {
-        if( grid[row,col].getSpaceStatus() == SpaceStatus.Fire || grid[row,col].getSpaceStatus() == SpaceStatus.Safe)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public bool alreadyPlaced(int row, int col)
-    {
-        List<GameUnit> occupants = grid[col, row].getOccupants();
-        foreach(GameUnit gu in occupants)
-        {
-            if (gu.GetType() == typeof(POI))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void placeFireMarker()
-    {
-
-        int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
-        int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
-
-        for (int i = 0; i < rows.Length; i++)
-        {
-            Space currentSpace = grid[cols[i], rows[i]];
-            Vector3 position = currentSpace.worldPosition;
-            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
-            Vector3 newPosition = new Vector3(position.x, position.y, -5);
-
-            newFireMarker.GetComponent<Transform>().position = newPosition;
-            newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-            newFireMarker.GetComponent<GameUnit>().setType("FireMarker");
-            newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
-            currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
-            currentSpace.setSpaceStatus(SpaceStatus.Fire);
-
-
-        }
-
-
-    }
-
-    public void randomizePOI()
-    {
-
-          
-        //randomize between 1 and 6
-        int col = Random.Range(1, 8);
-        //randomize between 1 and 8
-        int row = Random.Range(1, 6);
-
-        if (containsFireORSmoke(col, row))
-        {
-            return;
-        }
-
-        if (alreadyPlaced(col, row))
-        {
-            return;
-        }
-
-        
-
-        Space currentSpace = grid[col, row];
-        Vector3 position = currentSpace.worldPosition;
-        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
-        Vector3 newPosition = new Vector3(position.x, position.y, -5);
-
-        POI.GetComponent<Transform>().position = newPosition;
-        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        POI.GetComponent<GameUnit>().setType("POI");
-        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
-        currentSpace.addOccupant(POI.GetComponent<POI>());
-        numOfActivePOI++;
-
-    }
-
 
 
     //    ================ NETWORK SYNCHRONIZATION SECTION =================
@@ -406,19 +313,7 @@ public class SpaceGrid : MonoBehaviourPun {
         byte evCode = eventData.Code;
 
         //0: placing a firefighter
-        if (evCode == (byte)PhotonEventCodes.PlacePOI)
-        {
-
-            randomizePOI();
-
-        }
-        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarker)
-        {
-
-            placeFireMarker();
-                
-        }
-        else if (evCode == (byte)PhotonEventCodes.BoardSetup)
+        if (evCode == (byte)PhotonEventCodes.BoardSetup)
         {
             BoardSetup();
         }
