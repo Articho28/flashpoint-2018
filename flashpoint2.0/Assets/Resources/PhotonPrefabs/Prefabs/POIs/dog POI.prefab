@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4473525755583171400}
   - component: {fileID: 6841428332647576559}
   - component: {fileID: 8149785120731447007}
+  - component: {fileID: 1566013810228957881}
   m_Layer: 0
   m_Name: dog POI
   m_TagString: Untagged
@@ -115,3 +116,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c133885afd6954c8da189fa34c5d3c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  physicalObject: {fileID: 0}
+--- !u!114 &1566013810228957881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8149393134275480568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537e7077e5b254f8981d7cdb3214f6fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  physicalObject: {fileID: 0}

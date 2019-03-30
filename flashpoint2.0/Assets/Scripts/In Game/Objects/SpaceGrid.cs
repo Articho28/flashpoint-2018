@@ -296,7 +296,6 @@ public class SpaceGrid : MonoBehaviourPun {
     }
 
 
-
     //    ================ NETWORK SYNCHRONIZATION SECTION =================
     public void OnEnable()
     {

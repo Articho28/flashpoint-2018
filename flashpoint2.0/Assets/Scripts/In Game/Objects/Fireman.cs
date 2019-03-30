@@ -670,7 +670,7 @@ public class Fireman : GameUnit
             foreach (GameUnit gu in gameUnits)
             {
                 //if has POI marker
-                if (gu.GetType() == typeof(POI))
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
                 {
                     Victim v = gu.GetComponent<Victim>();
                     this.setVictim(v);
@@ -798,7 +798,12 @@ public class Fireman : GameUnit
 
                         //change victim status to rescued
                         v.setVictimStatus(VictimStatus.Rescued);
+                        //TODO Increment POI saved
+
                         //TODO: remove POI from the board.
+                        Debug.Log("Removing POI Marker");
+                       
+
                         GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
 
                     }
