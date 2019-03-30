@@ -17,5 +17,6 @@ public enum PhotonEventCodes
     RemoveFireMarker = 10,
     RemoveSmokeMarker = 11,
     ChopWall = 12,
-    ResolveFlashOvers = 13
+    ResolveFlashOvers = 13, 
+    ResolveExplosion = 14
 }

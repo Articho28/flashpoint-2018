@@ -140,6 +140,7 @@ public class GameManager : MonoBehaviourPun
         if (sp == SpaceStatus.Fire)
         {
             Debug.Log("It's an explosion");
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data, sendToAllOptions, SendOptions.SendReliable);
 
         }
         else if(sp == SpaceStatus.Smoke)
@@ -174,6 +175,7 @@ public class GameManager : MonoBehaviourPun
         redDice = 6;
 
     }
+
 
     void resolveFlashOvers()
     {
@@ -373,6 +375,12 @@ public class GameManager : MonoBehaviourPun
         Debug.Log("Smokemarker was placed at " + newPosition);
     }
 
+    void resolveExplosion(Space targetSpace)
+    {
+        Debug.Log("resolving explosion at " + targetSpace.indexX + " and " + targetSpace.indexY);
+    }
+
+
 
     //    ================ NETWORK SYNCHRONIZATION SECTION =================
     public void OnEnable()
@@ -427,10 +435,10 @@ public class GameManager : MonoBehaviourPun
             GameUI.instance.AddGameState(GameStatus);
 
         }
-        else if (evCode == (byte) PhotonEventCodes.AdvanceFireMarker)
+        else if (evCode == (byte)PhotonEventCodes.AdvanceFireMarker)
         {
             object[] dataReceived = eventData.CustomData as object[];
-            Vector3 receivedPosition = (Vector3) dataReceived[0];
+            Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
             int indexY = (int)dataReceived[2];
 
@@ -548,28 +556,8 @@ public class GameManager : MonoBehaviourPun
                         break;
                 }
             }
-
-            /*
-            if (targetWall.getWallStatus() == WallStatus.Damaged)
-            {
-                //place damage marker
-                GameObject newDamageMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/DamageMarker/damageMarker")) as GameObject;
-                Vector3 wallPosition = targetWall.GetComponent<Transform>().position;
-                Vector3 newPosition = new Vector3(wallPosition.x, wallPosition.y, -5);
-                newDamageMarker.GetComponent<Transform>().position = newPosition;
-                Debug.Log("It was placed at " + newPosition);
-
-            }
-            else if (targetWall.getWallStatus() == WallStatus.Destroyed)
-            {
-                //destroy wall
-                Debug.Log("destroy wall");
-
-            }
-            //}
-            */
-
         }
+
         else if (evCode == (byte)PhotonEventCodes.PlacePOI)
         {
             randomizePOI();
@@ -583,6 +571,18 @@ public class GameManager : MonoBehaviourPun
         else if (evCode == (byte)PhotonEventCodes.ResolveFlashOvers)
         {
             resolveFlashOvers();
+        }
+        else if (evCode == (byte)PhotonEventCodes.ResolveExplosion)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            Vector3 receivedPosition = (Vector3)dataReceived[0];
+            int indexX = (int)dataReceived[1];
+            int indexY = (int)dataReceived[2];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            resolveExplosion(targetSpace);
+
         }
 
 
