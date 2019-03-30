@@ -85,24 +85,9 @@ public enum Direction
     South
 }
 
-public enum Action
+public enum Difficulty
 {
-    PlaceFire,
-    FlipSmoke,
-    FlipFire,
-    RemoveSmoke,
-    RemoveFire,
-    RemoveFalseAlarm,
-    Move,
-    OpenDoor,
-    CloseDoor,
-    ChopWall,
-    ExtinguishFire,
-    CarryVictim,
-    PassTurn,
-    SaveAPs,
-    DriveVehicle,
-    FireDeckGun,
-    ChangeCrew
-
+    Recruit,
+    Veteran,
+    Heroic
 } 
