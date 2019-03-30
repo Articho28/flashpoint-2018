@@ -69,7 +69,10 @@ public class GameManager : MonoBehaviourPun
 
         if (!isFamilyGame) 
         {
-            if(difficulty == Difficulty.Recruit) //3 hazmats
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced, null, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialHotSpot, null, sendToAllOptions, SendOptions.SendReliable);
+
+            if (difficulty == Difficulty.Recruit) //3 hazmats
             {
                 PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
                 PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
@@ -208,7 +211,7 @@ public class GameManager : MonoBehaviourPun
         List<GameUnit> occupants = StateManager.instance.spaceGrid.getGrid()[col, row].getOccupants();
         foreach (GameUnit gu in occupants)
         {
-            if (gu.GetType() == typeof(POI) || gu.GetType() == typeof(Hazmat))
+            if (gu.GetType() == typeof(POI) || gu.GetType() == typeof(Hazmat) || gu.GetType() == typeof(HotSpot))
             {
                 return true;
             }
@@ -237,11 +240,50 @@ public class GameManager : MonoBehaviourPun
             newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
             currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
             currentSpace.setSpaceStatus(SpaceStatus.Fire);
-
-
         }
+    }
 
+    public void placeInitialHotSpot()
+    {
 
+        int[] rows = new int[] { 3, 3, 3, 3, 4, 4, 4, 4 };
+        int[] cols = new int[] { 3, 4, 5, 6, 6, 5, 4, 3 };
+
+        for (int i = 0; i < rows.Length; i++)
+        {
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
+            Vector3 position = currentSpace.worldPosition;
+            GameObject newHotSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/HotSpot/hotspot")) as GameObject;
+            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            newHotSpot.GetComponent<Transform>().position = newPosition;
+            newHotSpot.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            newHotSpot.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
+            newHotSpot.GetComponent<GameUnit>().setPhysicalObject(newHotSpot);
+            currentSpace.addOccupant(newHotSpot.GetComponent<GameUnit>());
+            currentSpace.setSpaceStatus(SpaceStatus.Fire);
+        }
+    }
+    public void placeInitialFireMarkerExperienced()
+    {
+
+        int[] rows = new int[] { 3, 3, 3, 3, 4, 4, 4, 4 };
+        int[] cols = new int[] { 3, 4, 5, 6, 6, 5, 4, 3 };
+
+        for (int i = 0; i < rows.Length; i++)
+        {
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
+            Vector3 position = currentSpace.worldPosition;
+            GameObject newFireMarker2 = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
+            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            newFireMarker2.GetComponent<Transform>().position = newPosition;
+            newFireMarker2.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            newFireMarker2.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
+            newFireMarker2.GetComponent<GameUnit>().setPhysicalObject(newFireMarker2);
+            currentSpace.addOccupant(newFireMarker2.GetComponent<GameUnit>());
+            currentSpace.setSpaceStatus(SpaceStatus.Fire);
+        }
     }
 
     public void randomizePOI()
@@ -572,6 +614,14 @@ public class GameManager : MonoBehaviourPun
         else if (evCode == (byte)PhotonEventCodes.PlaceHazmats)
         {
             placeHazmat();
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialHotSpot)
+        {
+            placeInitialHotSpot();
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced)
+        {
+            placeInitialFireMarkerExperienced();
         }
 
         /*
