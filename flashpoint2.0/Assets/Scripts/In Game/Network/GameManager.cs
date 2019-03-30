@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviourPun
 
     //Variables for game status and turn.
     public static string GameStatus;
-    public int Turn;
+    public int Turn = 1;
 
     //Local store of NumberOfPlayers.
     public static int NumberOfPlayers;
