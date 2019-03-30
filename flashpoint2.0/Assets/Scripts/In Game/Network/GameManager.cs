@@ -10,9 +10,10 @@ public class GameManager : MonoBehaviourPun
     //Initialize Singleton.
     public static GameManager GM;
 
-    //Variables for game statsu and turn.
+    //Variables for game status and turn.
     public static string GameStatus;
     public int Turn;
+
     //Local store of NumberOfPlayers.
     public static int NumberOfPlayers;
     public bool isFirstReset;
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviourPun
     static int blackDice;
     static int redDice;
     static int numOfActivePOI;
+    public static int savedVictims;
 
     //Network Options
 
@@ -44,6 +46,7 @@ public class GameManager : MonoBehaviourPun
             buildingDamage = 0;
             Turn = 1;
             numOfActivePOI = 0;
+            savedVictims = 0;
         }
         else
         {
