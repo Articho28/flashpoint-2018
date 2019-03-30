@@ -748,7 +748,7 @@ public class Fireman : GameUnit
                     List<GameUnit> gameUnits = destination.getOccupants();
                     foreach (GameUnit gu in gameUnits)
                     {
-                        if (gu.GetType() == typeof(POI))
+                        if ((gu.GetType() == typeof(POI)) && (gu.GetComponent<POI>().getIsFlipped() == false))
                         {
                             FlipPOI();
                             break;
@@ -781,7 +781,7 @@ public class Fireman : GameUnit
                         List<GameUnit> gameUnits = destination.getOccupants();
                         foreach (GameUnit gu in gameUnits)
                         {
-                            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            if (gu.GetType() == typeof(POI) && (gu.GetComponent<POI>().getIsFlipped() == false))
                             {
                                 FlipPOI();
                                 break;
@@ -1022,6 +1022,7 @@ public class Fireman : GameUnit
         GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + POIname ) as GameObject);
 
         poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
+        poi.GetComponent<POI>().setIsFlipped(true);
         poi.GetComponent<Transform>().position = position;
         poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
         poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);

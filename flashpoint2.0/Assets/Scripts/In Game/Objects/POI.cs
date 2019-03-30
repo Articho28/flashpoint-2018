@@ -5,6 +5,7 @@ using UnityEngine;
 public class POI : GameUnit
 {
     POIKind kind;
+    bool flipped = false;
     void Start()
     {
         setPOIKind(POIKind.Victim);
@@ -24,5 +25,12 @@ public class POI : GameUnit
     {
         return this;
     }
-
+    public void setIsFlipped (bool flip)
+    {
+        this.flipped = flip;
+    }
+    public bool getIsFlipped()
+    {
+        return this.flipped;
+    }
 }
