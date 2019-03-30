@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviourPun
 
     //Variables for game status and turn.
     public static string GameStatus;
-    public int Turn;
+    public int Turn = 1;
 
     //Local store of NumberOfPlayers.
     public static int NumberOfPlayers;
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviourPun
             Receivers = Photon.Realtime.ReceiverGroup.All
         };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, options, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, options, SendOptions.SendUnreliable);
 
     }
 
@@ -183,15 +183,24 @@ public class GameManager : MonoBehaviourPun
 
             if (status == SpaceStatus.Smoke)
             {
+                Debug.Log("Found a Smoke marker at " + space.indexX + " and " + space.indexY);
+
                 Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(space);
                 foreach (Space neighbor in neighbors)
                 {
-                    SpaceStatus neighborStatus = neighbor.getSpaceStatus();
-                    if (neighborStatus == SpaceStatus.Fire)
+                    if (neighbor != null)
                     {
-                        space.setSpaceStatus(SpaceStatus.Fire);
-                        removeSmokeMarker(space);
-                        placeFireMarker(space);
+                        if (neighbor.getSpaceKind() != SpaceKind.Outdoor)
+                        {
+                            SpaceStatus neighborStatus = neighbor.getSpaceStatus();
+
+                            if (neighborStatus == SpaceStatus.Fire)
+                            {
+                                space.setSpaceStatus(SpaceStatus.Fire);
+                                removeSmokeMarker(space);
+                                placeFireMarker(space);
+                            }
+                        }
                     }
                 }
             }
