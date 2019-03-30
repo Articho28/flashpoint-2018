@@ -15,4 +15,7 @@ public class Generalist : Fireman
     {
         
     }
+
+    //5 AP per turn
+   // No special abilities or actions.
 }
