@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+            string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
