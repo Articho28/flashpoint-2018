@@ -67,6 +67,31 @@ public class GameManager : MonoBehaviourPun
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
 
+        if (!isFamilyGame) 
+        {
+            if(difficulty == Difficulty.Recruit) //3 hazmats
+            {
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+            }
+            else if (difficulty == Difficulty.Veteran) //4 hazmats
+            {
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+            }
+            else if (difficulty == Difficulty.Heroic) //5 hazmats
+            {
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
+            }
+        }
+
 
     }
 
@@ -285,16 +310,14 @@ public class GameManager : MonoBehaviourPun
 
         Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
         Vector3 position = currentSpace.worldPosition;
-        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+        GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
         Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-        POI.GetComponent<Transform>().position = newPosition;
-        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
-        currentSpace.addOccupant(POI.GetComponent<POI>());
-        numOfActivePOI++;
-
+        Hazmat.GetComponent<Transform>().position = newPosition;
+        Hazmat.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
+        Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
+        currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
     }
 
 
@@ -548,7 +571,7 @@ public class GameManager : MonoBehaviourPun
         }
         else if (evCode == (byte)PhotonEventCodes.PlaceHazmats)
         {
-            //placeHazmats();
+            placeHazmat();
         }
 
         /*
