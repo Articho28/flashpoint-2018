@@ -756,10 +756,13 @@ public class Fireman : GameUnit
                     List<GameUnit> gameUnits = destination.getOccupants();
                     foreach (GameUnit gu in gameUnits)
                     {
-                        if ((gu.GetType() == typeof(POI)) && (gu.GetComponent<POI>().getIsFlipped() == false))
+                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
                         {
-                            FlipPOI();
-                            break;
+                            if (gu.GetComponent<POI>().getIsFlipped() == false)
+                            {
+                                FlipPOI();
+                                break;
+                            }
                         }
                     }
 
@@ -783,16 +786,33 @@ public class Fireman : GameUnit
                         this.GetComponent<Transform>().position = newPosition;
                         v.GetComponent<Transform>().position = newPosition;
 
+                        //removing the victim from the current space.
+                        List<GameUnit> currentGameUnits = curr.getOccupants();
+                        GameUnit victim = null;
+                        foreach (GameUnit gu in currentGameUnits)
+                        {
+                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                victim = gu;
+                                break;
+                            }
+                        }
+                        currentGameUnits.Remove(victim);
+                        destination.addOccupant(victim);
+                        
 
                         GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
                         //if has POI marker
-                        List<GameUnit> gameUnits = destination.getOccupants();
-                        foreach (GameUnit gu in gameUnits)
+                        List<GameUnit> destinationGameUnits = destination.getOccupants();
+                        foreach (GameUnit gu in destinationGameUnits)
                         {
-                            if (gu.GetType() == typeof(POI) && (gu.GetComponent<POI>().getIsFlipped() == false))
+                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
                             {
-                                FlipPOI();
-                                break;
+                                if (gu.GetComponent<POI>().getIsFlipped() == false)
+                                {
+                                    FlipPOI();
+                                    break;
+                                }
                             }
                         }
                     }
@@ -805,12 +825,45 @@ public class Fireman : GameUnit
                         this.GetComponent<Transform>().position = newPosition;
 
                         //change victim status to rescued
+                        Debug.Log("YOU ARE OUTDOOR");
                         v.setVictimStatus(VictimStatus.Rescued);
-                        //TODO Increment POI saved
+                        Debug.Log("victim status after rescuing:" + v.getVictimStatus());
+                        GameManager.savedVictims++;
+                        GameUI.instance.AddSavedVictim();
 
-                        //TODO: remove POI from the board.
                         Debug.Log("Removing POI Marker");
-                       
+                        List<GameUnit> gameUnits = curr.getOccupants();
+                        GameUnit victim = null;
+                        foreach (GameUnit gu in gameUnits)
+                        {
+                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                victim = gu;
+                                break;
+                            }
+                        }
+                        gameUnits.Remove(victim);
+                        Destroy(victim.physicalObject);
+                        Destroy(victim);
+                        deassociateVictim();
+                        Debug.Log("Is Fireman Carrying a victim?" + this.carriedVictim);
+
+                        //List<GameUnit> gameUnits = curr.getOccupants();
+                        //GameUnit victim = null;
+                        //foreach (GameUnit gu in gameUnits)
+                        //{
+                        //    if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                        //    {
+                        //        victim = gu;
+                        //        break;
+                        //    }
+                        //}
+                        //Destroy(victim.physicalObject);
+                        //Destroy(victim);
+                        //gameUnits.Remove(victim);
+                        //deassociateVictim();
+                        //Debug.Log("Is Fireman Carrying a victim?" + this.carriedVictim);
+
 
                         GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
 
@@ -833,34 +886,34 @@ public class Fireman : GameUnit
 
                 //after the move TODO??
 
-                List<GameUnit> occ = destination.getOccupants();
-        foreach (GameUnit gu in occ)
-        {
-            if (gu is POI)
-            {
-                POIKind gukind = ((POI)gu).getPOIKind();
-                if (gukind == POIKind.FalseAlarm)
-                {
-                    //TODO remove false alarm
-                }
-            }
-        }
+        //        List<GameUnit> occ = destination.getOccupants();
+        //foreach (GameUnit gu in occ)
+        //{
+        //    if (gu is POI)
+        //    {
+        //        POIKind gukind = ((POI)gu).getPOIKind();
+        //        if (gukind == POIKind.FalseAlarm)
+        //        {
+        //            //TODO remove false alarm
+        //        }
+        //    }
+        //}
         
-        if (v != null && destination.getSpaceKind() == SpaceKind.Outdoor)
-        {
-            v.setVictimStatus(VictimStatus.Rescued);
-            //place victim marker on the rescued space 
+        //if (v != null && destination.getSpaceKind() == SpaceKind.Outdoor)
+        //{
+        //    v.setVictimStatus(VictimStatus.Rescued);
+        //    //place victim marker on the rescued space 
 
-            Game.incrementNumSavedVictims();
-            GameUI.instance.AddSavedVictim();
-            this.deassociateVictim();
-            if (Game.getNumSavedVictims() >= 7)
-            {
-                Game.setGameWon(true);
-                Game.setGameState(GameState.Completed);
-                GameUI.instance.AddGameState("Completed");
-            }
-        }
+        //    Game.incrementNumSavedVictims();
+        //    GameUI.instance.AddSavedVictim();
+        //    this.deassociateVictim();
+        //    if (Game.getNumSavedVictims() >= 7)
+        //    {
+        //        Game.setGameWon(true);
+        //        Game.setGameState(GameState.Completed);
+        //        GameUI.instance.AddGameState("Completed");
+        //    }
+        //}
     }
 
 
@@ -981,11 +1034,11 @@ public class Fireman : GameUnit
         Debug.Log("Length of array is :" + mylist.Length);
         Space curr = this.getCurrentSpace();
         List<GameUnit> gameUnits = curr.getOccupants();
-        POI questionMark = null;
+        GameUnit questionMark = null;
         foreach (GameUnit gu in gameUnits)
         {
-            if(gu.GetType() == typeof(POI)){
-                questionMark = (POI) gu;
+            if(gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI){
+                questionMark = gu;
                 break;
             }
         }
@@ -1009,9 +1062,9 @@ public class Fireman : GameUnit
         if(string.Compare(POIname,"false alarm") == 0)
         {
             NumFA--;
+            gameUnits.Remove(questionMark);
             Destroy(questionMark.physicalObject);
             Destroy(questionMark);
-            gameUnits.Remove(questionMark);
             GameConsole.instance.UpdateFeedback("It was a false alarm!");
             Debug.Log("After revealing FalseAlarm, numFa is: " + NumFA);
             return;
@@ -1028,11 +1081,13 @@ public class Fireman : GameUnit
         poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
         poi.GetComponent<POI>().setIsFlipped(true);
         poi.GetComponent<Transform>().position = position;
-        poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        poi.GetComponent<GameUnit>().setCurrentSpace(curr);
         poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
         poi.GetComponent<GameUnit>().setPhysicalObject(poi);
-        currentSpace.addOccupant(poi.GetComponent<GameUnit>());
+
+        //NOT DONE : poi.GetComponent<Victim>().setPhysicalObject(poi)
         gameUnits.Remove(questionMark);
+        curr.addOccupant(poi.GetComponent<GameUnit>());
         Destroy(questionMark.physicalObject);
         Destroy(questionMark);
         
