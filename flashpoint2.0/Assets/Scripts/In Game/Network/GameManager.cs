@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviourPun
     static int blackDice;
     static int redDice;
     public static int numOfActivePOI;
-    static bool isFamilyGame; //true if family game, false if experienced
-    static Difficulty difficulty; //Recruit, Veteran, Heroic
+    public bool isFamilyGame; //true if family game, false if experienced
+    public static Difficulty difficulty; //Recruit, Veteran, Heroic
     public static int savedVictims;
     public static int lostVictims;
     public static int totalPOIs = 10;
@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+            string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
