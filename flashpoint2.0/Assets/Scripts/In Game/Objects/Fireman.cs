@@ -43,6 +43,26 @@ public class Fireman : GameUnit
         if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
         {
+            //ADDITIONAL KEYS IN EXPERIENCED GAME
+            //Fire the Deck Gun "G"
+            //Drive vehicle "H"
+            //Crew Change "W"
+            if (!GameManager.GM.isFamilyGame)
+            {
+                if (Input.GetKeyDown(KeyCode.G))
+                {
+                    //deckGun(); TODO 
+                }
+                else if (Input.GetKeyDown(KeyCode.H))
+                {
+                    //driveVehicle(); TODO
+                }
+                else if (Input.GetKeyDown(KeyCode.W))
+                {
+                    //crewChange(); TODO
+                }
+            }
+
 
             //MOVE: ARROWS WITH DIRECTION
             //OPEN/CLOSE DOOR: "D"
