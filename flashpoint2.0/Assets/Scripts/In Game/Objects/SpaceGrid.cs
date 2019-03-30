@@ -158,6 +158,8 @@ public class SpaceGrid : MonoBehaviourPun {
     //list index: 0 top, 1 right, 2 bottom, 3 left
     public Space[] GetNeighbours(Space space) {
         Space[] neighbours = new Space[4];
+        int currentX = space.indexX;
+        int currentY = space.indexY;
        
         //  _________
         // |__|_x|__|
@@ -178,16 +180,16 @@ public class SpaceGrid : MonoBehaviourPun {
                 //check if neighbouring node is valid
                 if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) { //within boundaries
 
-                    if (y == -1 && isValidNeighbour(checkX, checkY, 0)) {
+                    if (y == -1 && isValidNeighbour(currentX, currentY, 0)) {
                         neighbours[0] = grid[checkX, checkY];
                     }
-                    else if (x == 1 && isValidNeighbour(checkX, checkY, 1)) {
+                    else if (x == 1 && isValidNeighbour(currentX, currentY, 1)) {
                         neighbours[1] = grid[checkX, checkY];
                     }
-                    else if (y == 1 && isValidNeighbour(checkX, checkY, 2)) {
+                    else if (y == 1 && isValidNeighbour(currentX, currentY, 2)) {
                         neighbours[2] = grid[checkX, checkY];
                     }
-                    else if(x == -1 && isValidNeighbour(checkX, checkY, 3)) {
+                    else if(x == -1 && isValidNeighbour(currentX, currentY, 3)) {
                         neighbours[3] = grid[checkX, checkY];
                     }
                 }
@@ -205,16 +207,27 @@ public class SpaceGrid : MonoBehaviourPun {
 
 
         Space curr = grid[checkX, checkY];
-        Debug.Log("My location is " + checkX + " and " + checkY);
+        Debug.Log("Checking location " + checkX + " and " + checkY + " at location " + wallIndex);
         Wall dirWall = curr.getWalls()[wallIndex];
         Door dirDoor = curr.getDoors()[wallIndex];
 
-        Debug.Log("dirWall is " + dirWall);
-        Debug.Log("dirDoor is " + dirDoor);
+        if (dirWall == null)
+        {
+            Debug.Log(checkX + " " + checkY + " in "  + wallIndex + " has dirWall empty");
+        }
+        else
+        {
+            Debug.Log("dirWall is in direction" + wallIndex + " is "  + dirWall);
+        }
 
-        //if(dirWall != null)
-
-        //return true;
+        if (dirDoor == null)
+        {
+            Debug.Log(checkX + " " + checkY + " in " + wallIndex + " has dirDoor empty");
+        }
+        else
+        {
+            Debug.Log("dirDoor is in direction" + wallIndex + " is " + dirDoor);
+        }
 
 
         bool IsOpenSpace = (dirWall == null && dirDoor == null);
@@ -224,10 +237,19 @@ public class SpaceGrid : MonoBehaviourPun {
         }
         else //if there's a wall or a door
         {
-            bool openDoor = (dirDoor.getDoorStatus() == DoorStatus.Open);
-            if (openDoor)
+            bool IsOpenDoor;
+            if (dirDoor != null)
             {
-                return true;
+                IsOpenDoor = (dirDoor.getDoorStatus() == DoorStatus.Open);
+                if (IsOpenDoor)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
             else
             {
