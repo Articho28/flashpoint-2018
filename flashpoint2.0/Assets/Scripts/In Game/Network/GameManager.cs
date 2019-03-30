@@ -309,7 +309,7 @@ public class GameManager : MonoBehaviourPun
     void placeFireMarker(Space targetSpace)
     {
         GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
-        Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, 0);
+        Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
         newFireMarker.GetComponent<Transform>().position = newPosition;
         newFireMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
         newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
