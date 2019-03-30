@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Board
+    uniqueID: 3027716261
+    locked: 0
+  - name: Small red dice
+    uniqueID: 2864740261
+    locked: 0
