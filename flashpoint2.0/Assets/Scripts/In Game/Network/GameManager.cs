@@ -416,6 +416,7 @@ public class GameManager : MonoBehaviourPun
             Debug.Log("before chop, damage counter: " + GameManager.GM.buildingDamage);
 
             targetWall.addDamage();
+            GameUI.instance.AddDamage(1);
 
             Debug.Log("after chop, wall status: " + targetWall.getWallStatus());
             Debug.Log("after chop, damage counter: " + GameManager.GM.buildingDamage);
