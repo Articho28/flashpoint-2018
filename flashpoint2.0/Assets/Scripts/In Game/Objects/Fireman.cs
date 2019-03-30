@@ -908,7 +908,7 @@ public class Fireman : GameUnit
 
         object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
     private void sendSmokeMarkerExtinguishEvent(Space targetSpace)
@@ -919,7 +919,7 @@ public class Fireman : GameUnit
         object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
     
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSmokeMarker, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSmokeMarker, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
         
     }
 
@@ -927,8 +927,8 @@ public class Fireman : GameUnit
     {
         object[] dataRemoveFireMarker = new object[] { targetSpace.indexX, targetSpace.indexY };
         object[] dataAdvanceSmokeMarker = new object[] { targetSpace.worldPosition, targetSpace.indexX, targetSpace.indexY };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, dataRemoveFireMarker, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceSmokeMarker, dataAdvanceSmokeMarker, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, dataRemoveFireMarker, GameManager.sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceSmokeMarker, dataAdvanceSmokeMarker, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
 
@@ -938,7 +938,7 @@ public class Fireman : GameUnit
         int indexY = targetSpace.indexY;
 
         object[] data = new object[] { indexX, indexY, direction };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
     public void endTurn()
@@ -969,6 +969,7 @@ public class Fireman : GameUnit
         string[] mylist = new string[] {
             "man POI", "woman POI", "false alarm", "dog POI"
         };
+        Debug.Log("Length of array is :" + mylist.Length);
         Space curr = this.getCurrentSpace();
         List<GameUnit> gameUnits = curr.getOccupants();
         POI questionMark = null;
@@ -979,10 +980,10 @@ public class Fireman : GameUnit
                 break;
             }
         }
-        Vector3 position = curr.worldPosition;
+        Vector3 position = new Vector3(curr.worldPosition.x,curr.worldPosition.y,-5);
         int r;
 
-        do
+        while(true)
         {   
             r = Random.Range(0, mylist.Length - 1);
             if(string.Compare(mylist[r],"false alarm") == 0 && NumFA <= 0)
@@ -992,8 +993,8 @@ public class Fireman : GameUnit
                 if (numVictim <= 0)
                     continue;
             }
-
-        } while (false);
+            break;
+        }
 
         string POIname = mylist[r];
         if(string.Compare(POIname,"false alarm") == 0)
@@ -1001,13 +1002,16 @@ public class Fireman : GameUnit
             NumFA--;
             Destroy(questionMark.physicalObject);
             Destroy(questionMark);
+            gameUnits.Remove(questionMark);
             GameConsole.instance.UpdateFeedback("It was a false alarm!");
+            Debug.Log("After revealing FalseAlarm, numFa is: " + NumFA);
             return;
         }
         else
         {
             GameConsole.instance.UpdateFeedback("It was a Victim!");
             numVictim--;
+            Debug.Log("After revealing Victim, numVictim is: " + numVictim);
         }
         //Instiate Object
         GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + POIname ) as GameObject);
@@ -1017,9 +1021,8 @@ public class Fireman : GameUnit
         poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
         poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
         poi.GetComponent<GameUnit>().setPhysicalObject(poi);
-        gameUnits.Remove(questionMark);
         currentSpace.addOccupant(poi.GetComponent<GameUnit>());
-
+        gameUnits.Remove(questionMark);
         Destroy(questionMark.physicalObject);
         Destroy(questionMark);
         
