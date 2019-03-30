@@ -51,7 +51,7 @@ public class FirefighterMovement : MonoBehaviourPun
             Receivers = Photon.Realtime.ReceiverGroup.All
         };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.placeFireFighter, datas, options, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.placeFireFighter, datas, options, SendOptions.SendReliable);
     }
 
 
