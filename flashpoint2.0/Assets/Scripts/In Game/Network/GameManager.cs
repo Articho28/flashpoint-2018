@@ -22,8 +22,10 @@ public class GameManager : MonoBehaviourPun
     public int buildingDamage;
     static int blackDice;
     static int redDice;
-    static int numOfActivePOI;
+    public static int numOfActivePOI;
     public static int savedVictims;
+    public static int lostVictims;
+    public static int totalPOIs = 10;
 
     //Network Options
 
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviourPun
             Turn = 1;
             numOfActivePOI = 0;
             savedVictims = 0;
+            lostVictims = 0;
         }
         else
         {
@@ -64,7 +67,7 @@ public class GameManager : MonoBehaviourPun
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
-
+        totalPOIs-=3;
 
     }
 
@@ -251,6 +254,15 @@ public class GameManager : MonoBehaviourPun
         POI.GetComponent<GameUnit>().setPhysicalObject(POI);
         currentSpace.addOccupant(POI.GetComponent<POI>());
         numOfActivePOI++;
+    }
+
+    public static void GameWon()
+    {
+        GameConsole.instance.UpdateFeedback("YOU WOOOOONNNNNN GANG GANG GANG");
+    }
+    public static void GameLost ()
+    {
+        GameConsole.instance.UpdateFeedback("YOU LOST YOU BEAUTIFUL!");
     }
 
 
