@@ -208,11 +208,50 @@ public class GameManager : MonoBehaviourPun
             newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
             currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
             currentSpace.setSpaceStatus(SpaceStatus.Fire);
-
-
         }
+    }
 
+    public void placeInitialHotSpot()
+    {
 
+        int[] rows = new int[] { 3, 3, 3, 3, 4, 4, 4, 4 };
+        int[] cols = new int[] { 3, 4, 5, 6, 6, 5, 4, 3 };
+
+        for (int i = 0; i < rows.Length; i++)
+        {
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
+            Vector3 position = currentSpace.worldPosition;
+            GameObject newHotSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/HotSpot/hotspot")) as GameObject;
+            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            newHotSpot.GetComponent<Transform>().position = newPosition;
+            newHotSpot.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            newHotSpot.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
+            newHotSpot.GetComponent<GameUnit>().setPhysicalObject(newHotSpot);
+            currentSpace.addOccupant(newHotSpot.GetComponent<GameUnit>());
+            currentSpace.setSpaceStatus(SpaceStatus.Fire);
+        }
+    }
+    public void placeInitialFireMarkerExperienced()
+    {
+
+        int[] rows = new int[] { 3, 3, 3, 3, 4, 4, 4, 4 };
+        int[] cols = new int[] { 3, 4, 5, 6, 6, 5, 4, 3 };
+
+        for (int i = 0; i < rows.Length; i++)
+        {
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
+            Vector3 position = currentSpace.worldPosition;
+            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
+            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            newFireMarker.GetComponent<Transform>().position = newPosition;
+            newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
+            newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
+            currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
+            currentSpace.setSpaceStatus(SpaceStatus.Fire);
+        }
     }
 
     public void randomizePOI()
