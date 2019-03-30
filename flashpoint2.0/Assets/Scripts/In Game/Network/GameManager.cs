@@ -321,6 +321,54 @@ public class GameManager : MonoBehaviourPun
 
             Debug.Log("after chop, wall status: " + targetWall.getWallStatus());
             Debug.Log("after chop, damage counter: " + GameManager.GM.buildingDamage);
+
+            if (targetWall.getWallStatus() == WallStatus.Destroyed)
+            {
+                switch (direction)
+                {
+                    case 0:
+                        targetSpace.addWall(null, direction);
+                        int northX = indexX;
+                        int northY = indexY - 1;
+                        if (northX <= 10 && northY <= 8)
+                        {
+                            Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                            northSpace.addWall(null, 2);
+                        }
+                        break;
+                    case 1:
+                        targetSpace.addWall(null, direction);
+                        int rightX = indexX + 1;
+                        int rightY = indexY;
+                        if (rightX <= 10 && rightY <= 8)
+                        {
+                            Space rightSpace = StateManager.instance.spaceGrid.grid[rightX, rightY];
+                            rightSpace.addWall(null, 3);
+                        }
+                        break;
+                    case 2:
+                        targetSpace.addWall(null, direction);
+                        int southX = indexX;
+                        int southY = indexY + 1;
+                        if (southX <= 10 && southY <= 8)
+                        {
+                            Space southSpace = StateManager.instance.spaceGrid.grid[southX, southY];
+                            southSpace.addWall(null, 0);
+                        }
+                        break;
+                    case 3:
+                        targetSpace.addWall(null, direction);
+                        int leftX = indexX - 1;
+                        int leftY = indexY;
+                        if (leftX <= 10 && leftY <= 8)
+                        {
+                            Space leftSpace = StateManager.instance.spaceGrid.grid[leftX, leftY];
+                            leftSpace.addWall(null, 1);
+                        }
+                        break;
+                }
+            }
+
             /*
             if (targetWall.getWallStatus() == WallStatus.Damaged)
             {
@@ -339,7 +387,7 @@ public class GameManager : MonoBehaviourPun
 
             }
             //}
-            */           
+            */
 
         }
 
