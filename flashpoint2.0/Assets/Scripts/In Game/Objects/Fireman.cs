@@ -964,22 +964,13 @@ public class Fireman : GameUnit
 
     private void restoreAP()
     {
-        /*
+       
         int currentNumAP = this.getAP();
-        if (this.savedAP < 4 && currentNumAP > 0)
-        {
-            do
-            {
-                this.savedAP++;
-                currentNumAP--;
-            } while (currentNumAP > 0 && this.savedAP < 4);
-        }*/
-        /*
-        int currentNumAP = this.getAP();
-        int savedAP = Math.Min(currentNumAP + this.getSavedAP(), */
+        int newAP = Mathf.Min(currentNumAP + 4, 8);
 
-        this.setAP(4);
-        FiremanUI.instance.SetAP(4);
+
+        this.setAP(newAP);
+        FiremanUI.instance.SetAP(newAP);
     }
     //Flip POI
     public void FlipPOI () {
