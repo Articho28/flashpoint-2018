@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviourPun
     public int buildingDamage;
     static int blackDice;
     static int redDice;
+    static int numOfActivePOI;
 
     //Network Options
 
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviourPun
             isFirstReset = true;
             buildingDamage = 0;
             Turn = 1;
+            numOfActivePOI = 0;
         }
         else
         {
@@ -51,6 +53,16 @@ public class GameManager : MonoBehaviourPun
                 GM = this;
             }
         }
+    }
+
+    void Start()
+    {
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarker, null, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
+
+
     }
 
     // Update is called once per frame
@@ -69,7 +81,7 @@ public class GameManager : MonoBehaviourPun
             Receivers = Photon.Realtime.ReceiverGroup.All
         };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, options, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, options, SendOptions.SendReliable);
 
     }
 
@@ -83,7 +95,7 @@ public class GameManager : MonoBehaviourPun
             Receivers = Photon.Realtime.ReceiverGroup.All
         };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.IncrementTurn, null, options, SendOptions.SendUnreliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.IncrementTurn, null, options, SendOptions.SendReliable);
     }
 
     public void DisplayPlayerTurn()
@@ -129,12 +141,12 @@ public class GameManager : MonoBehaviourPun
         else if(sp == SpaceStatus.Smoke)
         {
             Debug.Log("It's turned to Fire.");
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceFireMarker, data, sendToAllOptions, SendOptions.SendUnreliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
             Debug.Log("It's turned to Smoke");
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceSmokeMarker, data, sendToAllOptions, SendOptions.SendUnreliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceSmokeMarker, data, sendToAllOptions, SendOptions.SendReliable);
 
         }
 
@@ -150,6 +162,92 @@ public class GameManager : MonoBehaviourPun
         blackDice = 1;
         redDice = 6;
 
+    }
+
+    public bool containsFireORSmoke(int col, int row)
+    {
+        if (StateManager.instance.spaceGrid.getGrid()[col, row].getSpaceStatus() == SpaceStatus.Fire || StateManager.instance.spaceGrid.getGrid()[col, row].getSpaceStatus() == SpaceStatus.Smoke)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool alreadyPlaced(int col, int row)
+    {
+        List<GameUnit> occupants = StateManager.instance.spaceGrid.getGrid()[col, row].getOccupants();
+        foreach (GameUnit gu in occupants)
+        {
+            if (gu.GetType() == typeof(POI))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void placeInitialFireMarker()
+    {
+
+        int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
+        int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
+
+        for (int i = 0; i < rows.Length; i++)
+        {
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
+            Vector3 position = currentSpace.worldPosition;
+            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
+            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            newFireMarker.GetComponent<Transform>().position = newPosition;
+            newFireMarker.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
+            newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
+            currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
+            currentSpace.setSpaceStatus(SpaceStatus.Fire);
+
+
+        }
+
+
+    }
+
+    public void randomizePOI()
+    {
+        int col;
+        int row;
+        while(true) 
+        { 
+            //randomize between 1 and 6
+            col = Random.Range(1, 8);
+            //randomize between 1 and 8
+            row = Random.Range(1, 6);
+
+            if (containsFireORSmoke(col, row))
+            {
+                continue;
+            }
+
+            if (alreadyPlaced(col, row))
+            {
+                continue;
+            }
+            break;
+        }
+
+
+
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
+        Vector3 position = currentSpace.worldPosition;
+        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+        POI.GetComponent<Transform>().position = newPosition;
+        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+        currentSpace.addOccupant(POI.GetComponent<POI>());
+        numOfActivePOI++;
     }
 
 
@@ -302,6 +400,104 @@ public class GameManager : MonoBehaviourPun
                 targetSpace.setSpaceStatus(SpaceStatus.Safe);
 
             }
+        }
+        else if (evCode == (byte)PhotonEventCodes.ChopWall)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int direction = (int)dataReceived[2];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Wall targetWall = targetSpace.getWalls()[direction];
+            /*if(targetWall != null)
+            {*/
+            Debug.Log("before chop, wall status: " + targetWall.getWallStatus());
+            Debug.Log("before chop, damage counter: " + GameManager.GM.buildingDamage);
+
+            targetWall.addDamage();
+            GameUI.instance.AddDamage(1);
+
+            Debug.Log("after chop, wall status: " + targetWall.getWallStatus());
+            Debug.Log("after chop, damage counter: " + GameManager.GM.buildingDamage);
+
+            if (targetWall.getWallStatus() == WallStatus.Destroyed)
+            {
+                switch (direction)
+                {
+                    case 0:
+                        targetSpace.addWall(null, direction);
+                        int northX = indexX;
+                        int northY = indexY - 1;
+                        if (northX <= 10 && northY <= 8)
+                        {
+                            Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                            northSpace.addWall(null, 2);
+                        }
+                        break;
+                    case 1:
+                        targetSpace.addWall(null, direction);
+                        int rightX = indexX + 1;
+                        int rightY = indexY;
+                        if (rightX <= 10 && rightY <= 8)
+                        {
+                            Space rightSpace = StateManager.instance.spaceGrid.grid[rightX, rightY];
+                            rightSpace.addWall(null, 3);
+                        }
+                        break;
+                    case 2:
+                        targetSpace.addWall(null, direction);
+                        int southX = indexX;
+                        int southY = indexY + 1;
+                        if (southX <= 10 && southY <= 8)
+                        {
+                            Space southSpace = StateManager.instance.spaceGrid.grid[southX, southY];
+                            southSpace.addWall(null, 0);
+                        }
+                        break;
+                    case 3:
+                        targetSpace.addWall(null, direction);
+                        int leftX = indexX - 1;
+                        int leftY = indexY;
+                        if (leftX <= 10 && leftY <= 8)
+                        {
+                            Space leftSpace = StateManager.instance.spaceGrid.grid[leftX, leftY];
+                            leftSpace.addWall(null, 1);
+                        }
+                        break;
+                }
+            }
+
+            /*
+            if (targetWall.getWallStatus() == WallStatus.Damaged)
+            {
+                //place damage marker
+                GameObject newDamageMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/DamageMarker/damageMarker")) as GameObject;
+                Vector3 wallPosition = targetWall.GetComponent<Transform>().position;
+                Vector3 newPosition = new Vector3(wallPosition.x, wallPosition.y, -5);
+                newDamageMarker.GetComponent<Transform>().position = newPosition;
+                Debug.Log("It was placed at " + newPosition);
+
+            }
+            else if (targetWall.getWallStatus() == WallStatus.Destroyed)
+            {
+                //destroy wall
+                Debug.Log("destroy wall");
+
+            }
+            //}
+            */
+
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlacePOI)
+        {
+            randomizePOI();
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarker)
+        {
+
+            placeInitialFireMarker();
+
         }
 
         /*

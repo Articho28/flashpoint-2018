@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3399924721907488244}
   - component: {fileID: 8316940059669195861}
   - component: {fileID: 2386410596437882195}
+  - component: {fileID: 6703615259420375823}
   m_Layer: 0
   m_Name: woman POI
   m_TagString: Untagged
@@ -115,3 +116,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c133885afd6954c8da189fa34c5d3c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 
+  physicalObject: {fileID: 0}
+--- !u!114 &6703615259420375823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4048657260555333901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537e7077e5b254f8981d7cdb3214f6fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  physicalObject: {fileID: 0}
