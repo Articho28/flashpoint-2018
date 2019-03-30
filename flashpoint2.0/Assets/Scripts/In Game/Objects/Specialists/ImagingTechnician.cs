@@ -15,4 +15,7 @@ public class ImagingTechnician : Fireman
     {
         
     }
+
+    //4 AP per turn.
+    //Identify: Flip a POI marker anywhere on the board: 1 AP
 }

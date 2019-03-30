@@ -15,4 +15,7 @@ public class CAFSFirefighter : Fireman
     {
         
     }
+
+    //3 AP plus 3 free Extinguish AP per turn
+    //Free Extinguish AP cannot be saved.
 }
