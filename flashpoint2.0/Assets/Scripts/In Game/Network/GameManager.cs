@@ -72,8 +72,8 @@ public class GameManager : MonoBehaviourPun
     }
 
     public void OnAllPrefabsSpawned()
-    {   
-           
+    {
+        Turn = 1; 
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {

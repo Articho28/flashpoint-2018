@@ -205,33 +205,35 @@ public class SpaceGrid : MonoBehaviourPun {
 
 
         Space curr = grid[checkX, checkY];
+        Debug.Log("My location is " + checkX + " and " + checkY);
         Wall dirWall = curr.getWalls()[wallIndex];
         Door dirDoor = curr.getDoors()[wallIndex];
 
+        Debug.Log("dirWall is " + dirWall);
+        Debug.Log("dirDoor is " + dirDoor);
+
         //if(dirWall != null)
 
-        return true;
+        //return true;
 
 
-        //bool openSpace = (grid[checkX, checkY].getWalls()[wallIndex] == null);
-        //if (openSpace) {
-        //    return true;
-        //}
-        //else //if there's a wall
-        //{
-        //    bool openDoor = (grid[checkX, checkY].getDoors()[wallIndex] == null);
-        //    bool destroyedWall = (grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed);
-        //    if(openDoor || destroyedWall)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-
-        //}
-
+        bool IsOpenSpace = (dirWall == null && dirDoor == null);
+        if (IsOpenSpace)
+        {
+            return true;
+        }
+        else //if there's a wall or a door
+        {
+            bool openDoor = (dirDoor.getDoorStatus() == DoorStatus.Open);
+            if (openDoor)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     //TODO Don't use
