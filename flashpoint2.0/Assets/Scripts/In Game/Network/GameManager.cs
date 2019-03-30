@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviourPun
     static int blackDice;
     static int redDice;
     static int numOfActivePOI;
+    static bool isFamilyGame; //true if family game, false if experienced
+    static Difficulty difficulty; //Recruit, Veteran, Heroic
 
     //Network Options
 
@@ -178,13 +180,15 @@ public class GameManager : MonoBehaviourPun
         List<GameUnit> occupants = StateManager.instance.spaceGrid.getGrid()[col, row].getOccupants();
         foreach (GameUnit gu in occupants)
         {
-            if (gu.GetType() == typeof(POI))
+            if (gu.GetType() == typeof(POI) || gu.GetType() == typeof(Hazmat))
             {
                 return true;
             }
         }
         return false;
     }
+
+
 
     public void placeInitialFireMarker()
     {
@@ -248,6 +252,46 @@ public class GameManager : MonoBehaviourPun
         POI.GetComponent<GameUnit>().setPhysicalObject(POI);
         currentSpace.addOccupant(POI.GetComponent<POI>());
         numOfActivePOI++;
+    }
+
+    public void placeHazmat()
+    {
+
+        int col;
+        int row;
+        while (true)
+        {
+            //randomize between 1 and 6
+            col = Random.Range(1, 8);
+            //randomize between 1 and 8
+            row = Random.Range(1, 6);
+
+            if (containsFireORSmoke(col, row))
+            {
+                continue;
+            }
+
+            if (alreadyPlaced(col, row))
+            {
+                continue;
+            }
+            break;
+        }
+
+
+
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
+        Vector3 position = currentSpace.worldPosition;
+        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+        POI.GetComponent<Transform>().position = newPosition;
+        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+        currentSpace.addOccupant(POI.GetComponent<POI>());
+        numOfActivePOI++;
+
     }
 
 
@@ -498,6 +542,10 @@ public class GameManager : MonoBehaviourPun
 
             placeInitialFireMarker();
 
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceHazmats)
+        {
+            placeHazmats();
         }
 
         /*
