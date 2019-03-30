@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using ExitGames.Client.Photon;
-using System;
 
 public class Fireman : GameUnit
 {
@@ -20,6 +19,9 @@ public class Fireman : GameUnit
     private bool isSelectingExtinguishOption;
     ArrayList validInputOptions;
     Space locationArgument;
+
+    static int NumFA = 3;
+    static int numVictim = 7;
 
     void Start()
     {
@@ -586,7 +588,7 @@ public class Fireman : GameUnit
             validInputOptions = extinguishOptions;
 
             //Build string to show.
-            String optionsToUser = "";
+            string optionsToUser = "";
 
             foreach (int index in extinguishOptions) {
 
@@ -948,6 +950,52 @@ public class Fireman : GameUnit
         }
         this.setAP(4);
         FiremanUI.instance.SetAP(4);
+    }
+    //Flip POI
+    public void FlipPOI () {
+        print ("Flip");
+        string[] mylist = new string[] {
+            "man POI", "woman POI", "false alarm", "dog POI"
+        };
+        Space currentSpace = this.getCurrentSpace();
+        List<GameUnit> gameUnits = currentSpace.getOccupants();
+        POI questionMark;
+        foreach (GameUnit gu in gameUnits)
+        {
+            if(gu.GetType() == typeof(POI)){
+                questionMark = gu;
+                break;
+            }
+        }
+        Vector3 position = questionMark.GetComponent<Transform>().position;
+
+        int r = Random.Range (0, mylist.Length-1);
+        //Instiate Object
+        GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + mylist[r] ) as GameObject);
+
+        if(string.Compare(mylist[r],"false alarm")){
+            poi.GetComponent<GameUnit>().setPOIKind(POIKind.FalseAlarm);
+        }
+        else
+        {
+            poi.GetComponent<GameUnit>().setPOIKind(POIKind.Victim);
+        }
+        poi.GetComponent<Transform>().position = position;
+        poi.GetComponent<GameUnit>().setCurrentSpace = currentSpace;
+        poi.GetComponent<GameUnit>().setType = FlashPointGameConstants.GAMEUNIT_TYPE_POI;
+        poi.GetComponent<GameUnit>().setPhysicalObject(poi);
+        gameUnits.Remove(questionMark);
+        currentSpace.addOccupant(poi.GetComponent<GameUnit>());
+
+        Destroy(questionMark.physicalObject);
+        Destroy(questionMark);
+
+        //Remove element
+        //
+        //update position
+        //
+        //Get random element
+        
     }
 
 
