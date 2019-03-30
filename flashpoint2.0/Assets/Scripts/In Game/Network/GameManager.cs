@@ -250,6 +250,86 @@ public class GameManager : MonoBehaviourPun
         numOfActivePOI++;
     }
 
+    void removeSmokeMarker(Space targetSpace)
+    {
+        int indexX = targetSpace.indexX;
+        int indexY = targetSpace.indexY;
+        List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+        GameUnit targetMarker = null;
+        foreach (GameUnit gm in spaceOccupants)
+        {
+            if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
+            {
+                Debug.Log("Found a smoke marker");
+                targetMarker = gm;
+            }
+        }
+        if (targetMarker != null)
+        {
+            Debug.Log("Removing Smoke Marker");
+            string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
+            GameConsole.instance.UpdateFeedback(message);
+            spaceOccupants.Remove(targetMarker);
+            Destroy(targetMarker.physicalObject);
+            Destroy(targetMarker);
+            targetSpace.setSpaceStatus(SpaceStatus.Safe);
+
+        }
+    }
+
+    void removeFireMarker(Space targetSpace)
+    {
+        int indexX = targetSpace.indexX;
+        int indexY = targetSpace.indexY;
+        List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+        GameUnit targetMarker = null;
+        foreach (GameUnit gm in spaceOccupants)
+        {
+            if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
+            {
+                Debug.Log("Found a firemarker");
+                targetMarker = gm;
+            }
+        }
+        if (targetMarker != null)
+        {
+            Debug.Log("Removing targetMarker");
+            string message = "Removing Fire at (" + indexX + "," + indexY + ")";
+            GameConsole.instance.UpdateFeedback(message);
+            spaceOccupants.Remove(targetMarker);
+            Destroy(targetMarker.physicalObject);
+            Destroy(targetMarker);
+            targetSpace.setSpaceStatus(SpaceStatus.Safe);
+        }
+    }
+
+    void placeFireMarker(Space targetSpace)
+    {
+        GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
+        Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, 0);
+        newFireMarker.GetComponent<Transform>().position = newPosition;
+        newFireMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
+        newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
+        newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
+        targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
+        Debug.Log("Smokemarker was placed at " + newPosition);
+
+        Debug.Log("It was placed at " + newPosition);
+
+    }
+
+    void placeSmokeMarker(Space targetSpace)
+    {
+        GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
+        Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
+        newSmokeMarker.GetComponent<Transform>().position = newPosition;
+        newSmokeMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
+        newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
+        newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
+        targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>());
+        Debug.Log("Smokemarker was placed at " + newPosition);
+    }
+
 
     //    ================ NETWORK SYNCHRONIZATION SECTION =================
     public void OnEnable()
@@ -313,11 +393,10 @@ public class GameManager : MonoBehaviourPun
 
             Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
 
+            removeSmokeMarker(targetSpace);
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
-            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
-            Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, 0);
-            newFireMarker.GetComponent<Transform>().position = newPosition;
-            Debug.Log("It was placed at " + newPosition);
+            placeFireMarker(targetSpace);
+
         }
 
         else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)
@@ -333,14 +412,10 @@ public class GameManager : MonoBehaviourPun
 
 
             targetSpace.setSpaceStatus(SpaceStatus.Smoke);
-            GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
-            Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
-            newSmokeMarker.GetComponent<Transform>().position = newPosition;
-            newSmokeMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
-            newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
-            newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
-            targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>()); 
-            Debug.Log("Smokemarker was placed at " + newPosition);
+
+            placeSmokeMarker(targetSpace);
+
+
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveFireMarker)
         {
@@ -350,26 +425,8 @@ public class GameManager : MonoBehaviourPun
 
             Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
 
-            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
-            GameUnit targetMarker = null;
-            foreach (GameUnit gm in spaceOccupants)
-            {
-                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
-                {
-                    Debug.Log("Found a firemarker");
-                    targetMarker = gm;
-                }
-            }
-            if (targetMarker != null)
-            {
-                Debug.Log("Removing targetMarker");
-                string message = "Removing Fire at (" + indexX + "," + indexY + ")";
-                GameConsole.instance.UpdateFeedback(message);
-                spaceOccupants.Remove(targetMarker);
-                Destroy(targetMarker.physicalObject);
-                Destroy(targetMarker);
-                targetSpace.setSpaceStatus(SpaceStatus.Safe);
-            }
+            removeFireMarker(targetSpace);
+
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveSmokeMarker)
         {
@@ -379,27 +436,8 @@ public class GameManager : MonoBehaviourPun
 
             Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
 
-            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
-            GameUnit targetMarker = null;
-            foreach (GameUnit gm in spaceOccupants)
-            {
-                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
-                {
-                    Debug.Log("Found a smoke marker");
-                    targetMarker = gm;
-                }
-            }
-            if (targetMarker != null)
-            {
-                Debug.Log("Removing Smoke Marker");
-                string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
-                GameConsole.instance.UpdateFeedback(message);
-                spaceOccupants.Remove(targetMarker);
-                Destroy(targetMarker.physicalObject);
-                Destroy(targetMarker);
-                targetSpace.setSpaceStatus(SpaceStatus.Safe);
+            removeSmokeMarker(targetSpace);
 
-            }
         }
         else if (evCode == (byte)PhotonEventCodes.ChopWall)
         {
