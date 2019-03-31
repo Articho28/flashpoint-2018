@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using System.IO;
@@ -9,6 +10,8 @@ public class GameManager : MonoBehaviourPun
 {
     //Initialize Singleton.
     public static GameManager GM;
+    public GameObject GameLostUIPrefab;
+    public GameObject GameWonUIPrefab;
 
     //Variables for game status and turn.
     public static string GameStatus;
@@ -330,10 +333,12 @@ public class GameManager : MonoBehaviourPun
     public static void GameWon()
     {
         GameConsole.instance.UpdateFeedback("YOU WOOOOONNNNNN GANG GANG GANG");
+        GameManager.GM.setActivePrefabs("won", true);
     }
     public static void GameLost()
     {
         GameConsole.instance.UpdateFeedback("YOU LOST YOU BEAUTIFUL!");
+        GameManager.GM.setActivePrefabs("lost", true);
     }
 
     public void placeHazmat()
@@ -457,6 +462,18 @@ public class GameManager : MonoBehaviourPun
         else
         {
             return new int[] { 0, 0}; //failed function
+        }
+    }
+
+    public void setActivePrefabs(string name, bool boolean)
+    {
+        if (string.Compare(name, "won") == 0)
+        {
+            GameWonUIPrefab.SetActive(boolean);
+        }
+        else
+        {
+            GameLostUIPrefab.SetActive(boolean);
         }
     }
 
