@@ -361,8 +361,6 @@ public class GameManager : MonoBehaviourPun
             break;
         }
 
-
-
         Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
         Vector3 position = currentSpace.worldPosition;
         GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
@@ -373,6 +371,94 @@ public class GameManager : MonoBehaviourPun
         Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
         Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
         currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
+
+    }
+
+
+    //TODO add that in experienced game
+    //add event in the network
+    public void replenishPOI() //experienced game
+    {
+        //randomize between 1 and 6
+        int col = Random.Range(1, 8);
+        //randomize between 1 and 8
+        int row = Random.Range(1, 6);
+
+        while (true)
+        {
+
+            if (containsFireORSmoke(col, row) || alreadyPlaced(col, row))
+            {
+                int[] altSpace = replenishPOIAltSpace(col, row);
+                col = altSpace[0];
+                row = altSpace[1];
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
+        Vector3 position = currentSpace.worldPosition;
+        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+        POI.GetComponent<Transform>().position = newPosition;
+        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+        currentSpace.addOccupant(POI.GetComponent<POI>());
+        numOfActivePOI++;
+
+    }
+
+    public int[] replenishPOIAltSpace (int col, int row)
+    {
+        //down arrow
+        if((row == 1 && col>=2 && col <= 7) || (row == 2 && (col == 4 || col == 5)) || (row == 3 && col == 3) || (row == 4 && (col == 2 || col == 7)))
+        {
+            return new int[] { col, row + 1 };
+        }
+        //up arrow
+        else if ((row == 3 && (col == 2 || col == 7)) || (row == 4 && col == 6) || (row == 5 && (col == 4 || col == 5)) || (row == 6 && col >= 2 && col <= 7))
+        {
+            return new int[] { col, row - 1 };
+        }
+        //right arrow
+        else if ((col == 1 && row >=2 && row <=5) || (col == 6 && (row == 2 || row == 5)) || (row == 4 && col >= 3 && col <= 5))
+        {
+            return new int[] { col + 1, row };
+        }
+        //left arrow
+        else if ((col == 8 && row >= 2 && row <= 5) || (col == 3 && (row == 2 || row ==5)) || (row == 3 && col >= 4 && col <= 6))
+        {
+            return new int[] { col - 1, row };
+        }
+        //right-down arrow
+        else if ((col == 1 && row == 1)||(col == 2 && row == 2))
+        {
+            return new int[] { col + 1, row + 1 };
+        }
+        //left-down arrow
+        else if ((col == 8 && row == 1) || (col == 7 && row == 2))
+        {
+            return new int[] { col - 1, row + 1 };
+        }
+        //right-up arrow
+        else if ((col == 1 && row == 6) || (col == 2 && row == 5))
+        {
+            return new int[] { col + 1, row - 1 };
+        }
+        //left-up arrow
+        else if ((col == 8 && row == 6) || (col == 7 && row == 5))
+        {
+            return new int[] { col - 1, row - 1 };
+        }
+        else
+        {
+            return new int[] { 0, 0}; //failed function
+        }
     }
 
 
