@@ -334,7 +334,6 @@ public class GameManager : MonoBehaviourPun
     public static void GameLost()
     {
         GameConsole.instance.UpdateFeedback("YOU LOST YOU BEAUTIFUL!");
-        System.Environment.Exit(0);
     }
 
     public void placeHazmat()
@@ -677,6 +676,14 @@ public class GameManager : MonoBehaviourPun
                         }
                         break;
                 }
+            }
+
+            if (buildingDamage >= 24)
+            {
+                //Building colapses
+                Debug.Log("u just lost YIKESSS");
+                GameLost();
+
             }
 
             /*
