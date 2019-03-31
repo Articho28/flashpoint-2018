@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum PhotonEventCodes
 {
-    placeFireFighter = 0,
+    fireFighterPlaced = 0,
     IncrementTurn = 1,
     PlaceInitialFireFighter = 2,
     PlacePOI = 3,
