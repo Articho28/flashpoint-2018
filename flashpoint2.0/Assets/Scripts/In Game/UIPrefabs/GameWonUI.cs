@@ -12,6 +12,8 @@ public class GameWonUI : MonoBehaviour
 
     [Header("Continue Playing")]
     public Button continuePlayingButton;
+
+    public static bool isCalled = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,9 +28,12 @@ public class GameWonUI : MonoBehaviour
         
     }
 
-    public void contiuePlaying()
+    public void continuePlaying()
     {
+
         GameManager.GM.setActivePrefabs("won", false);
+        isCalled = true;
+        
     }
 
     public void returnToLobby()

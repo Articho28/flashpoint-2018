@@ -20,9 +20,6 @@ public class Fireman : GameUnit
     ArrayList validInputOptions;
     Space locationArgument;
 
-    static int NumFA = 3;
-    static int numVictim = 7;
-
     void Start()
     {
         AP = 4;
@@ -871,9 +868,12 @@ public class Fireman : GameUnit
                             if(GameManager.savedVictims == 10)
                             {
                                 GameManager.GameWon();
-                                System.Environment.Exit(0);
+                                GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
                             }
-                            GameManager.GameWon();
+                            if (!GameWonUI.isCalled)
+                            {
+                                GameManager.GameWon();
+                            }
                         }
                         return;
 
@@ -1089,11 +1089,11 @@ public class Fireman : GameUnit
         while(true)
         {   
             r = Random.Range(0, mylist.Length - 1);
-            if(string.Compare(mylist[r],"false alarm") == 0 && NumFA <= 0)
+            if(string.Compare(mylist[r],"false alarm") == 0 && GameManager.NumFA <= 0)
                 continue;
             else
             {
-                if (numVictim <= 0)
+                if (GameManager.numVictim <= 0)
                     continue;
             }
             break;
@@ -1102,20 +1102,20 @@ public class Fireman : GameUnit
         string POIname = mylist[r];
         if(string.Compare(POIname,"false alarm") == 0)
         {
-            NumFA--;
+            GameManager.NumFA--;
             gameUnits.Remove(questionMark);
             Destroy(questionMark.physicalObject);
             Destroy(questionMark);
             GameConsole.instance.UpdateFeedback("It was a false alarm!");
-            Debug.Log("After revealing FalseAlarm, numFa is: " + NumFA);
+            Debug.Log("After revealing FalseAlarm, numFa is: " + GameManager.NumFA);
             GameManager.numOfActivePOI--;
             return;
         }
         else
         {
             GameConsole.instance.UpdateFeedback("It was a Victim!");
-            numVictim--;
-            Debug.Log("After revealing Victim, numVictim is: " + numVictim);
+            GameManager.numVictim--;
+            Debug.Log("After revealing Victim, numVictim is: " + GameManager.numVictim);
         }
         //Instiate Object
         GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + POIname ) as GameObject);
