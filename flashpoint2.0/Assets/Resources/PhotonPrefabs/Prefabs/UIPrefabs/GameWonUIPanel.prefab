@@ -157,8 +157,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Congratulations! You won the game. You can go back to the lobby or continue
-    saving the remaining POIs
+  m_Text: Congratulations! You won the game.
 --- !u!1 &8375738607635483800
 GameObject:
   m_ObjectHideFlags: 0

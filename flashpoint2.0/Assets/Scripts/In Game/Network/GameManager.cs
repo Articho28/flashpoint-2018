@@ -30,7 +30,9 @@ public class GameManager : MonoBehaviourPun
     public static Difficulty difficulty; //Recruit, Veteran, Heroic
     public static int savedVictims;
     public static int lostVictims;
-    public static int totalPOIs = 10;
+    public static int totalPOIs = 15;
+    public static int NumFA = 5;
+    public static int numVictim = 10;
 
     //Network Options
 

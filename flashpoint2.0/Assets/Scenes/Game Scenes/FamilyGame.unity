@@ -51248,11 +51248,21 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8375738607858537466, guid: fdfa0ef79e1ad4376a034a3818efa1a4,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: continuePlaying
+      objectReference: {fileID: 0}
     - target: {fileID: 1661923738779589038, guid: fdfa0ef79e1ad4376a034a3818efa1a4,
         type: 3}
       propertyPath: GameWonUIPrefab
       value: 
       objectReference: {fileID: 8375738607730319442}
+    - target: {fileID: 8375738607858537464, guid: fdfa0ef79e1ad4376a034a3818efa1a4,
+        type: 3}
+      propertyPath: m_Name
+      value: ContinuePlayingButton
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fdfa0ef79e1ad4376a034a3818efa1a4, type: 3}
 --- !u!1 &8375738607730319442 stripped
