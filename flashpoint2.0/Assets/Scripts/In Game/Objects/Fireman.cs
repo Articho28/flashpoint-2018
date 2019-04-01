@@ -19,6 +19,7 @@ public class Fireman : GameUnit
     private bool isSelectingExtinguishOption;
     ArrayList validInputOptions;
     Space locationArgument;
+    Specialist spec;
 
     void Start()
     {
