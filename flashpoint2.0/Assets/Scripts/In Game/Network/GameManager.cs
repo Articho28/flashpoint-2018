@@ -71,10 +71,6 @@ public class GameManager : MonoBehaviourPun
     void Start()
     {
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarker, null, sendToAllOptions, SendOptions.SendReliable);
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
-        totalPOIs-=3;
 
         if (!isFamilyGame) 
         {
@@ -103,7 +99,12 @@ public class GameManager : MonoBehaviourPun
                 PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, null, sendToAllOptions, SendOptions.SendReliable);
             }
         }
-        
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, sendToAllOptions, SendOptions.SendReliable);
+        totalPOIs -= 3;
+
     }
 
     // Update is called once per frame
