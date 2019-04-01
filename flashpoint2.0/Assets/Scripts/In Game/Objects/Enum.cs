@@ -91,3 +91,16 @@ public enum Difficulty
     Veteran,
     Heroic
 } 
+
+public enum Specialist
+{
+    FamilyGame,
+    Paramedic,
+    FireCaptain,
+    ImagingTechnician,
+    CAFSFirefighter,
+    HazmatTechinician,
+    Generalist,
+    RescueSpecialist,
+    DriverOperator
+}
