@@ -1068,7 +1068,6 @@ public class Fireman : GameUnit
         int currentNumAP = this.getAP();
         int newAP = Mathf.Min(currentNumAP + 4, 8);
 
-
         this.setAP(newAP);
         FiremanUI.instance.SetAP(newAP);
     }
