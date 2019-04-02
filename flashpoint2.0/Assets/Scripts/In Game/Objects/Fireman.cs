@@ -101,35 +101,11 @@ public class Fireman : GameUnit
                 {
                     if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
                     {
-                        Door door = doors[doorDir];
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Closed);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
-                            GameConsole.instance.UpdateFeedback("Door closed successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
-                            return;
-                        }
+                        this.openDoor(doors[doorDir]);
                     }
                     else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
                     {
-                        Door door = doors[doorDir];
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Open);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
-                            GameConsole.instance.UpdateFeedback("Door opened successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
-                            return;
-                        }
+                        this.closeDoor(doors[doorDir]);
                     }
                 }
                 else
@@ -580,6 +556,15 @@ public class Fireman : GameUnit
         Space current = this.getCurrentSpace();
         SpaceStatus currentSpaceStatus = current.getSpaceStatus();
 
+        if (numAP == 1 && currentSpaceStatus == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+            this.setAP(numAP - 1);
+            FiremanUI.instance.SetAP(this.getAP());
+            sendTurnFireMarkerToSmokeEvent(current);
+            return;
+        }
+
 
         //Get neighbors and their spacestatus. 
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
@@ -707,24 +692,14 @@ public class Fireman : GameUnit
 
     public void move(int direction)
     {
-        /*revealVictim(); TODO
-         * make an if statement to make sure if the fireman moves into a space with POI marker
-         */
+
 
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
         bool reachable = true; //destination.isReachable(); //TODO
         Space curr = this.getCurrentSpace();
-        Debug.Log("Index X is " + curr.indexX + " and Index Y is " + curr.indexY);
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-        //foreach (Space s in neighbors)
-        //{
-        //    if (s != null)
-        //    {
-        //        Debug.Log("not null yeayeay");
-        //    }
-        //}
         Space destination = neighbors[direction];
 
         if (destination == null)
@@ -740,7 +715,7 @@ public class Fireman : GameUnit
         {
             if (sp == SpaceStatus.Fire)
             {
-                if (ap >= 2 && v == null) //&&f has enough to move
+                if (ap >= 3 && v == null) //&&f has enough to move
                 {
                     Debug.Log(ap);
                     Debug.Log(this.transform.position);
@@ -948,35 +923,33 @@ public class Fireman : GameUnit
         //make a function call to VictimLoss
     }
 
-    public void openDoor()
+    public void openDoor(Door door)
     {
-        Debug.Log("open door");
-        if (getAP() >= 1)
-        {
+        if (this.getAP() >= 1) {
             decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Open);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/open door");
+            FiremanUI.instance.SetAP(this.getAP());
+            door.setDoorStatus(DoorStatus.Closed);
+            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
+            GameConsole.instance.UpdateFeedback("Door closed successfully!");
+        }
+        else {
+            GameConsole.instance.UpdateFeedback("Insufficient AP");
+            return;
         }
     }
 
-    public void closeDoor()
+    public void closeDoor(Door door)
     {
-        Debug.Log("close door");
-        if (getAP() >= 1)
-        {
+        if (this.getAP() >= 1) {
             decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Closed);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/closed door");
+            FiremanUI.instance.SetAP(this.getAP());
+            door.setDoorStatus(DoorStatus.Open);
+            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
+            GameConsole.instance.UpdateFeedback("Door opened successfully!");
+        }
+        else {
+            GameConsole.instance.UpdateFeedback("Insufficient AP");
+            return;
         }
     }
 
@@ -1050,6 +1023,12 @@ public class Fireman : GameUnit
 
     public void endTurn()
     {
+        SpaceStatus currentSpaceStatus = currentSpace.getSpaceStatus();
+        if(currentSpaceStatus == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("You cannot end your turn on a Fire Location");
+            return;
+        }
         restoreAP();
         GameManager.advanceFire();
         replenishPOI();

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using System.IO;
+using System;
 
 public class GameManager : MonoBehaviourPun
 {
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviourPun
     public bool isFirstReset;
 
     //Game relevant variables
+    public List<Specialist> availableSpecialists = new List<Specialist>();
     public int buildingDamage;
     static int blackDice;
     static int redDice;
@@ -57,6 +59,19 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
+
+            //intialize the full specialist list
+            if (!isFamilyGame)
+            {
+                availableSpecialists.Add(Specialist.Paramedic);
+                availableSpecialists.Add(Specialist.FireCaptain);
+                availableSpecialists.Add(Specialist.ImagingTechnician);
+                availableSpecialists.Add(Specialist.CAFSFirefighter);
+                availableSpecialists.Add(Specialist.HazmatTechinician);
+                availableSpecialists.Add(Specialist.Generalist);
+                availableSpecialists.Add(Specialist.RescueSpecialist);
+                availableSpecialists.Add(Specialist.DriverOperator);
+            }
         }
         else
         {
@@ -116,15 +131,14 @@ public class GameManager : MonoBehaviourPun
 
     public void OnAllPrefabsSpawned()
     {
-
-
+        Turn = 1; 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
             CachingOption = Photon.Realtime.EventCaching.DoNotCache,
             Receivers = Photon.Realtime.ReceiverGroup.All
         };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, options, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, options, SendOptions.SendUnreliable);
 
     }
 
@@ -179,6 +193,7 @@ public class GameManager : MonoBehaviourPun
         if (sp == SpaceStatus.Fire)
         {
             Debug.Log("It's an explosion");
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data, sendToAllOptions, SendOptions.SendReliable);
 
         }
         else if (sp == SpaceStatus.Smoke)
@@ -193,18 +208,58 @@ public class GameManager : MonoBehaviourPun
 
         }
 
+        sendResolveFlashOverEvent();
 
+    }
+
+    private static void sendResolveFlashOverEvent()
+    {
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveFlashOvers, null, sendToAllOptions, SendOptions.SendUnreliable);
     }
 
     static void rollDice()
     {
         //TODO reset proper randomization
+
         //System.Random r = new System.Random();
         //blackDice = r.Next(1, 9);
         //redDice = r.Next(1, 7);
-        blackDice = 1;
-        redDice = 6;
+        blackDice = 6;
+        redDice = 1;
 
+    }
+
+
+    void resolveFlashOvers()
+    {
+        foreach (Space space in StateManager.instance.spaceGrid.grid)
+        {
+            SpaceStatus status = space.getSpaceStatus();
+
+            if (status == SpaceStatus.Smoke)
+            {
+                Debug.Log("Found a Smoke marker at " + space.indexX + " and " + space.indexY);
+
+                Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(space);
+                foreach (Space neighbor in neighbors)
+                {
+                    if (neighbor != null)
+                    {
+                        if (neighbor.getSpaceKind() != SpaceKind.Outdoor)
+                        {
+                            SpaceStatus neighborStatus = neighbor.getSpaceStatus();
+
+                            if (neighborStatus == SpaceStatus.Fire)
+                            {
+                                space.setSpaceStatus(SpaceStatus.Fire);
+                                removeSmokeMarker(space);
+                                placeFireMarker(space);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public bool containsFireORSmoke(int col, int row)
@@ -303,9 +358,9 @@ public class GameManager : MonoBehaviourPun
         while (true)
         {
             //randomize between 1 and 6
-            col = Random.Range(1, 8);
+            col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
-            row = Random.Range(1, 6);
+            row = UnityEngine.Random.Range(1, 6);
 
             if (containsFireORSmoke(col, row))
             {
@@ -334,6 +389,300 @@ public class GameManager : MonoBehaviourPun
         numOfActivePOI++;
     }
 
+    void removeSmokeMarker(Space targetSpace)
+    {
+        int indexX = targetSpace.indexX;
+        int indexY = targetSpace.indexY;
+        List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+        GameUnit targetMarker = null;
+        foreach (GameUnit gm in spaceOccupants)
+        {
+            if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
+            {
+                Debug.Log("Found a smoke marker");
+                targetMarker = gm;
+            }
+        }
+        if (targetMarker != null)
+        {
+            Debug.Log("Removing Smoke Marker");
+            string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
+            GameConsole.instance.UpdateFeedback(message);
+            spaceOccupants.Remove(targetMarker);
+            Destroy(targetMarker.physicalObject);
+            Destroy(targetMarker);
+            targetSpace.setSpaceStatus(SpaceStatus.Safe);
+
+        }
+    }
+
+    void removeFireMarker(Space targetSpace)
+    {
+        int indexX = targetSpace.indexX;
+        int indexY = targetSpace.indexY;
+        List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+        GameUnit targetMarker = null;
+        foreach (GameUnit gm in spaceOccupants)
+        {
+            if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
+            {
+                Debug.Log("Found a firemarker");
+                targetMarker = gm;
+            }
+        }
+        if (targetMarker != null)
+        {
+            Debug.Log("Removing targetMarker");
+            string message = "Removing Fire at (" + indexX + "," + indexY + ")";
+            GameConsole.instance.UpdateFeedback(message);
+            spaceOccupants.Remove(targetMarker);
+            Destroy(targetMarker.physicalObject);
+            Destroy(targetMarker);
+            targetSpace.setSpaceStatus(SpaceStatus.Safe);
+        }
+    }
+
+    void placeFireMarker(Space targetSpace)
+    {
+        GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
+        Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
+        newFireMarker.GetComponent<Transform>().position = newPosition;
+        newFireMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
+        newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
+        newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
+        targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
+        Debug.Log("Smokemarker was placed at " + newPosition);
+
+        Debug.Log("It was placed at " + newPosition);
+
+    }
+
+    void placeSmokeMarker(Space targetSpace)
+    {
+        GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
+        Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
+        newSmokeMarker.GetComponent<Transform>().position = newPosition;
+        newSmokeMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
+        newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
+        newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
+        targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>());
+        Debug.Log("Smokemarker was placed at " + newPosition);
+    }
+
+    void resolveExplosion(Space targetSpace)
+    {
+        Debug.Log("Resolving explosion at " + targetSpace.indexX + " and " + targetSpace.indexY);
+
+
+
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (neighbors[i] != null && neighbors[i].getSpaceKind() != SpaceKind.Outdoor)
+            {
+                resolveExplosionInDirection(neighbors[i], i);
+            }
+        }
+
+        //Place necessary damage markers on walls and doors surrounding explosion space.
+        Wall[] walls = targetSpace.getWalls();
+        Door[] doors = targetSpace.getDoors();
+        int indexX = targetSpace.indexX;
+        int indexY = targetSpace.indexY;
+        if (walls != null)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                int direction = i;
+                Wall w = walls[i];
+                if (w != null)
+                {
+                    WallStatus wStatus = w.getWallStatus();
+
+                    Debug.Log("Wall status before addDamage is " + wStatus);
+                    w.addDamage();
+                    GameUI.instance.AddDamage(1);
+                    Debug.Log("Adding damage to " + w);
+                    Debug.Log("Wall status after addDamage is " + w.getWallStatus());
+
+
+                    //Handle wall deletion in relevant spaces
+                    if (w.getWallStatus() == WallStatus.Destroyed)
+                    {
+                        switch (direction)
+                        {
+                            case 0:
+                                targetSpace.addWall(null, direction);
+                                int northX = indexX;
+                                int northY = indexY - 1;
+                                if (northX <= 10 && northY <= 8)
+                                {
+                                    Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                                    northSpace.addWall(null, 2);
+                                }
+                                break;
+                            case 1:
+                                targetSpace.addWall(null, direction);
+                                int rightX = indexX + 1;
+                                int rightY = indexY;
+                                if (rightX <= 10 && rightY <= 8)
+                                {
+                                    Space rightSpace = StateManager.instance.spaceGrid.grid[rightX, rightY];
+                                    rightSpace.addWall(null, 3);
+                                }
+                                break;
+                            case 2:
+                                targetSpace.addWall(null, direction);
+                                int southX = indexX;
+                                int southY = indexY + 1;
+                                if (southX <= 10 && southY <= 8)
+                                {
+                                    Space southSpace = StateManager.instance.spaceGrid.grid[southX, southY];
+                                    southSpace.addWall(null, 0);
+                                }
+                                break;
+                            case 3:
+                                targetSpace.addWall(null, direction);
+                                int leftX = indexX - 1;
+                                int leftY = indexY;
+                                if (leftX <= 10 && leftY <= 8)
+                                {
+                                    Space leftSpace = StateManager.instance.spaceGrid.grid[leftX, leftY];
+                                    leftSpace.addWall(null, 1);
+                                }
+                                break;
+                        }
+                    }
+                }
+            }       
+        }
+
+        if (doors != null)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (doors[i] != null)
+                {
+
+                    destroyDoor(doors[i]);
+                    Debug.Log("Door " + doors[i] + " was destroyed in explosion");
+
+                }
+            }
+        }
+
+    }
+
+    private void resolveExplosionInDirection(Space targetSpace, int direction)
+    {
+        //TODO Find and knockdown firefighter
+        //TODO destroy POI affected
+        //Both of the above can be implemented in place FireMarker.
+
+        if (targetSpace.getSpaceKind() == SpaceKind.Outdoor)
+        {
+            Debug.Log("Target Space " + targetSpace + " in direction " + direction + "is outdoor");
+            return;
+        }
+
+        SpaceStatus spaceStatus = targetSpace.getSpaceStatus();
+
+        //If the space is smoke or safe, turn it to fire
+        if (spaceStatus == SpaceStatus.Safe)
+        {
+            targetSpace.setSpaceStatus(SpaceStatus.Fire);
+            placeFireMarker(targetSpace);
+
+        }
+        else if (spaceStatus == SpaceStatus.Smoke)
+        {
+            removeSmokeMarker(targetSpace);
+            targetSpace.setSpaceStatus(SpaceStatus.Fire);
+            placeFireMarker(targetSpace);
+
+        }
+        else
+        {
+            //If there's a wall or door, damage it in relevant direction.
+            Wall wallInExplosionDirection = targetSpace.getWalls()[direction];
+            Door doorInExplosionDirection = targetSpace.getDoors()[direction];
+            if (wallInExplosionDirection != null)
+            {
+                wallInExplosionDirection.addDamage();
+                GameUI.instance.AddDamage(1);
+                WallStatus wallInExplosionDirectionStatus = wallInExplosionDirection.getWallStatus();
+
+                //TODO Refactor wall deletion
+                //Handle wall deletion in relevant spaces
+                if (wallInExplosionDirectionStatus == WallStatus.Destroyed)
+                {
+                    switch (direction)
+                    {
+                        case 0:
+                            targetSpace.addWall(null, direction);
+                            int northX = targetSpace.indexX;
+                            int northY = targetSpace.indexY - 1;
+                            if (northX <= 10 && northY <= 8)
+                            {
+                                Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                                northSpace.addWall(null, 2);
+                            }
+                            break;
+                        case 1:
+                            targetSpace.addWall(null, direction);
+                            int rightX = targetSpace.indexX + 1;
+                            int rightY = targetSpace.indexY;
+                            if (rightX <= 10 && rightY <= 8)
+                            {
+                                Space rightSpace = StateManager.instance.spaceGrid.grid[rightX, rightY];
+                                rightSpace.addWall(null, 3);
+                            }
+                            break;
+                        case 2:
+                            targetSpace.addWall(null, direction);
+                            int southX = targetSpace.indexX;
+                            int southY = targetSpace.indexY + 1;
+                            if (southX <= 10 && southY <= 8)
+                            {
+                                Space southSpace = StateManager.instance.spaceGrid.grid[southX, southY];
+                                southSpace.addWall(null, 0);
+                            }
+                            break;
+                        case 3:
+                            targetSpace.addWall(null, direction);
+                            int leftX = targetSpace.indexX - 1;
+                            int leftY = targetSpace.indexY;
+                            if (leftX <= 10 && leftY <= 8)
+                            {
+                                Space leftSpace = StateManager.instance.spaceGrid.grid[leftX, leftY];
+                                leftSpace.addWall(null, 1);
+                            }
+                            break;
+                    }
+                }
+            }
+            //Handle door in that direction.
+            else if (doorInExplosionDirection != null)
+            {
+                destroyDoor(doorInExplosionDirection);
+            }
+            else //Transmit explosion to next space otherwise
+            {
+                Space nextSpace = StateManager.instance.spaceGrid.getNeighborInDirection(targetSpace, direction);
+                resolveExplosionInDirection(nextSpace, direction);
+            }
+        }
+    }
+
+    private void destroyDoor(Door door)
+    {
+        door.setDoorStatus(DoorStatus.Destroyed);
+        string doorObjectPath = "Board/doorCol45";
+        //TODO Change sprite of door.
+        //GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/DamageMarker");
+
+    }
     public static void GameWon()
     {
         GameConsole.instance.UpdateFeedback("YOU WOOOOONNNNNN GANG GANG GANG");
@@ -381,9 +730,9 @@ public class GameManager : MonoBehaviourPun
         while (true)
         {
             //randomize between 1 and 6
-            col = Random.Range(1, 8);
+            col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
-            row = Random.Range(1, 6);
+            row = UnityEngine.Random.Range(1, 6);
 
             if (containsFireORSmoke(col, row))
             {
@@ -416,9 +765,9 @@ public class GameManager : MonoBehaviourPun
     public void replenishPOI() //experienced game
     {
         //randomize between 1 and 6
-        int col = Random.Range(1, 8);
+        int col = UnityEngine.Random.Range(1, 8);
         //randomize between 1 and 8
-        int row = Random.Range(1, 6);
+        int row = UnityEngine.Random.Range(1, 6);
 
         while (true)
         {
@@ -572,11 +921,10 @@ public class GameManager : MonoBehaviourPun
 
             Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
 
+            removeSmokeMarker(targetSpace);
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
-            GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
-            Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, 0);
-            newFireMarker.GetComponent<Transform>().position = newPosition;
-            Debug.Log("It was placed at " + newPosition);
+            placeFireMarker(targetSpace);
+
         }
 
         else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)
@@ -589,17 +937,8 @@ public class GameManager : MonoBehaviourPun
             int indexY = (int)dataReceived[2];
 
             Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
-
-
             targetSpace.setSpaceStatus(SpaceStatus.Smoke);
-            GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
-            Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
-            newSmokeMarker.GetComponent<Transform>().position = newPosition;
-            newSmokeMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
-            newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
-            newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
-            targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>());
-            Debug.Log("Smokemarker was placed at " + newPosition);
+            placeSmokeMarker(targetSpace);
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveFireMarker)
         {
@@ -609,26 +948,8 @@ public class GameManager : MonoBehaviourPun
 
             Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
 
-            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
-            GameUnit targetMarker = null;
-            foreach (GameUnit gm in spaceOccupants)
-            {
-                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
-                {
-                    Debug.Log("Found a firemarker");
-                    targetMarker = gm;
-                }
-            }
-            if (targetMarker != null)
-            {
-                Debug.Log("Removing targetMarker");
-                string message = "Removing Fire at (" + indexX + "," + indexY + ")";
-                GameConsole.instance.UpdateFeedback(message);
-                spaceOccupants.Remove(targetMarker);
-                Destroy(targetMarker.physicalObject);
-                Destroy(targetMarker);
-                targetSpace.setSpaceStatus(SpaceStatus.Safe);
-            }
+            removeFireMarker(targetSpace);
+
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveSmokeMarker)
         {
@@ -638,27 +959,8 @@ public class GameManager : MonoBehaviourPun
 
             Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
 
-            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
-            GameUnit targetMarker = null;
-            foreach (GameUnit gm in spaceOccupants)
-            {
-                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
-                {
-                    Debug.Log("Found a smoke marker");
-                    targetMarker = gm;
-                }
-            }
-            if (targetMarker != null)
-            {
-                Debug.Log("Removing Smoke Marker");
-                string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
-                GameConsole.instance.UpdateFeedback(message);
-                spaceOccupants.Remove(targetMarker);
-                Destroy(targetMarker.physicalObject);
-                Destroy(targetMarker);
-                targetSpace.setSpaceStatus(SpaceStatus.Safe);
+            removeSmokeMarker(targetSpace);
 
-            }
         }
         else if (evCode == (byte)PhotonEventCodes.ChopWall)
         {
@@ -756,6 +1058,7 @@ public class GameManager : MonoBehaviourPun
             */
 
         }
+
         else if (evCode == (byte)PhotonEventCodes.PlacePOI)
         {
             randomizePOI();
@@ -766,6 +1069,22 @@ public class GameManager : MonoBehaviourPun
             placeInitialFireMarker();
 
         }
+        else if (evCode == (byte)PhotonEventCodes.ResolveFlashOvers)
+        {
+            resolveFlashOvers();
+        }
+        else if (evCode == (byte)PhotonEventCodes.ResolveExplosion)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            Vector3 receivedPosition = (Vector3)dataReceived[0];
+            int indexX = (int)dataReceived[1];
+            int indexY = (int)dataReceived[2];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            resolveExplosion(targetSpace);
+
+        } 
         else if (evCode == (byte)PhotonEventCodes.PlaceHazmats)
         {
             placeHazmat();
@@ -778,46 +1097,6 @@ public class GameManager : MonoBehaviourPun
         {
             placeInitialFireMarkerExperienced();
         }
-        /*
-        else if (evCode == (byte) PhotonEventCodes.TurnFireToSmoke)
-        {
-            /*
-            object[] dataReceived = eventData.CustomData as object[];
-            int indexX = (int)dataReceived[0];
-            int indexY = (int)dataReceived[1];
 
-            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
-
-            //TODO change that
-            GameConsole.instance.UpdateFeedback("Turning Fire to smoke...");
-
-            List<GameUnit> spaceOccupants = targetSpace.getOccupants();
-            GameUnit targetMarker = null;
-            foreach (GameUnit gm in spaceOccupants)
-            {
-                if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
-                {
-                    Debug.Log("Found a smoke marker");
-                    targetMarker = gm;
-                }
-            }
-            if (targetMarker != null)
-            {
-                Debug.Log("Removing Smoke Marker");
-                string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
-                GameConsole.instance.UpdateFeedback(message);
-                spaceOccupants.Remove(targetMarker);
-                Destroy(targetMarker.physicalObject);
-                Destroy(targetMarker);
-                targetSpace.setSpaceStatus(SpaceStatus.Smoke);
-
-            }
-
-            //PLACING SMOKEMARKER
-
-            Vector3 position = targetSpace.worldPosition;
-            GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
-
-            */
     }
 }

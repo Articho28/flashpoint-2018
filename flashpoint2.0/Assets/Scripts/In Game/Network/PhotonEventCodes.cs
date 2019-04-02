@@ -17,8 +17,10 @@ public enum PhotonEventCodes
     RemoveFireMarker = 10,
     RemoveSmokeMarker = 11,
     ChopWall = 12,
-    PlaceHazmats = 13,
-    PlaceInitialFireMarkerExperienced = 14,
-    PlaceInitialHotSpot = 15,
-    PlaceVehicles = 2
+    ResolveFlashOvers = 13, 
+    ResolveExplosion = 14,
+    PlaceHazmats = 15,
+    PlaceInitialFireMarkerExperienced = 16,
+    PlaceInitialHotSpot = 17,
+    PlaceVehicles = 18
 }

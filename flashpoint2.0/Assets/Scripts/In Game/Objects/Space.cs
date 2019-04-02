@@ -10,6 +10,7 @@ public class Space {
     public SpaceStatus status;
     public SpaceKind kind;
 
+    [SerializeField]
     Wall[] walls;
     Door[] doors;
     public List<GameUnit> occupants = new List<GameUnit>();
