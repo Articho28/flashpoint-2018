@@ -201,34 +201,11 @@ public class SpaceGrid : MonoBehaviourPun {
 
     private bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
 
-        //return grid[checkX, checkY].getWalls()[wallIndex] != default(Wall) &&
-        //                  grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed
-
-
-
+    
         Space curr = grid[checkX, checkY];
         Debug.Log("Checking location " + checkX + " and " + checkY + " at location " + wallIndex);
         Wall dirWall = curr.getWalls()[wallIndex];
         Door dirDoor = curr.getDoors()[wallIndex];
-
-        if (dirWall == null)
-        {
-            Debug.Log(checkX + " " + checkY + " in "  + wallIndex + " has dirWall empty");
-        }
-        else
-        {
-            Debug.Log("dirWall is in direction" + wallIndex + " is "  + dirWall);
-        }
-
-        if (dirDoor == null)
-        {
-            Debug.Log(checkX + " " + checkY + " in " + wallIndex + " has dirDoor empty");
-        }
-        else
-        {
-            Debug.Log("dirDoor is in direction" + wallIndex + " is " + dirDoor);
-        }
-
 
         bool IsOpenSpace = (dirWall == null && dirDoor == null);
         if (IsOpenSpace)

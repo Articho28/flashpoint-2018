@@ -354,7 +354,7 @@ public class GameManager : MonoBehaviourPun
         Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
         newFireMarker.GetComponent<Transform>().position = newPosition;
         newFireMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
-        newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
+        newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
         newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
         Debug.Log("Smokemarker was placed at " + newPosition);
@@ -377,7 +377,94 @@ public class GameManager : MonoBehaviourPun
 
     void resolveExplosion(Space targetSpace)
     {
-        Debug.Log("resolving explosion at " + targetSpace.indexX + " and " + targetSpace.indexY);
+        Debug.Log("Resolving explosion at " + targetSpace.indexX + " and " + targetSpace.indexY);
+        Wall[] walls = targetSpace.getWalls();
+        Door[] doors = targetSpace.getDoors();
+        int indexX = targetSpace.indexX;
+        int indexY = targetSpace.indexY;
+        if (walls != null)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                int direction = i;
+                Wall w = walls[i];
+                if (w != null)
+                {
+                    WallStatus wStatus = w.getWallStatus();
+
+                    Debug.Log("Wall status before addDamage is " + wStatus);
+                    w.addDamage();
+                    GameUI.instance.AddDamage(1);
+                    Debug.Log("Adding damage to " + w);
+                    Debug.Log("Wall status after addDamage is " + w.getWallStatus());
+
+
+                    //Handle wall deletion in relevant spaces
+                    if (w.getWallStatus() == WallStatus.Destroyed)
+                    {
+                        switch (direction)
+                        {
+                            case 0:
+                                targetSpace.addWall(null, direction);
+                                int northX = indexX;
+                                int northY = indexY - 1;
+                                if (northX <= 10 && northY <= 8)
+                                {
+                                    Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                                    northSpace.addWall(null, 2);
+                                }
+                                break;
+                            case 1:
+                                targetSpace.addWall(null, direction);
+                                int rightX = indexX + 1;
+                                int rightY = indexY;
+                                if (rightX <= 10 && rightY <= 8)
+                                {
+                                    Space rightSpace = StateManager.instance.spaceGrid.grid[rightX, rightY];
+                                    rightSpace.addWall(null, 3);
+                                }
+                                break;
+                            case 2:
+                                targetSpace.addWall(null, direction);
+                                int southX = indexX;
+                                int southY = indexY + 1;
+                                if (southX <= 10 && southY <= 8)
+                                {
+                                    Space southSpace = StateManager.instance.spaceGrid.grid[southX, southY];
+                                    southSpace.addWall(null, 0);
+                                }
+                                break;
+                            case 3:
+                                targetSpace.addWall(null, direction);
+                                int leftX = indexX - 1;
+                                int leftY = indexY;
+                                if (leftX <= 10 && leftY <= 8)
+                                {
+                                    Space leftSpace = StateManager.instance.spaceGrid.grid[leftX, leftY];
+                                    leftSpace.addWall(null, 1);
+                                }
+                                break;
+                        }
+
+
+                    }
+                }
+            }       
+        }
+
+        /*
+        if (doors != null)
+        {
+            foreach (Door d in doors)
+            {
+                d.setDoorStatus(DoorStatus.Destroyed);
+            }
+        }*/
+
+       
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
+
+
     }
 
 
