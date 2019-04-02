@@ -485,21 +485,61 @@ public class GameManager : MonoBehaviourPun
 
         GameUnit targetVictim = null;
         GameUnit targetPOI = null;
+        bool foundUnflippedPOI = false;
 
         foreach (GameUnit unit in occupants)
         {
-            if (unit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && unit.GetType() == typeof(Victim))
+            if (unit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
             {
-                targetVictim = unit;
-                Debug.Log("Found a Victim here");
+                if (unit.GetComponent<POI>().getIsFlipped())
+                {
+                    targetVictim = unit;
+                    Debug.Log("Found a Victim here");
+                }
+                else
+                {
+                    Fireman.FlipPOI(targetSpace);
+                    Debug.Log("there shoudl be a flipped poi or a false alarm has alraedy disappeared ");
+                    foundUnflippedPOI = true;
+
+                }
             }
         }
+
 
         if (targetVictim != null)
         {
             //TODO destroy targetVictim
+            Debug.Log("Killing victim");
+            occupants.Remove(targetVictim);
+            Destroy(targetVictim.physicalObject);
+            Destroy(targetVictim);
             GameManager.lostVictims++;
         }
+        else if (foundUnflippedPOI)
+        {
+            foreach (GameUnit u in occupants) 
+            { 
+                if (u.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && u.GetComponent<POI>().getIsFlipped())
+                {
+                    Debug.Log("Found the flipped POI");
+                    targetPOI = u;
+                }
+            }
+
+            if (targetPOI != null)
+            {
+                Debug.Log("Deleting POI");
+                occupants.Remove(targetPOI);
+                Destroy(targetPOI.physicalObject);
+                Destroy(targetPOI);
+            }
+
+
+        }
+
+
+       
 
 
 
