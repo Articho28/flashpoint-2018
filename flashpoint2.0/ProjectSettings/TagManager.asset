@@ -44,6 +44,9 @@ TagManager:
   - name: Board
     uniqueID: 3027716261
     locked: 0
+  - name: parkingSpot
+    uniqueID: 141392631
+    locked: 0
   - name: Small red dice
     uniqueID: 2864740261
     locked: 0
@@ -55,4 +58,7 @@ TagManager:
     locked: 0
   - name: HotSpot
     uniqueID: 1404519087
+    locked: 0
+  - name: vehicle
+    uniqueID: 2381171265
     locked: 0
