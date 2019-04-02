@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 8049503502875387526}
   - component: {fileID: 8049503502875387527}
   - component: {fileID: 8991334646996968412}
+  - component: {fileID: 8335899801265114499}
   m_Layer: 10
-  m_Name: Ambulance top
+  m_Name: ambulance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,3 +103,17 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &8335899801265114499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8049503502875387525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6958fbcbd974ceea4a73f413f5adf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 
+  physicalObject: {fileID: 0}

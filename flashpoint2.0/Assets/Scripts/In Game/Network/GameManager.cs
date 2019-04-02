@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviourPun
         {
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced, null, sendToAllOptions, SendOptions.SendReliable);
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialHotSpot, null, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceVehicles, null, sendToAllOptions, SendOptions.SendReliable);
 
             if (difficulty == Difficulty.Recruit) //3 hazmats
             {
@@ -344,24 +345,24 @@ public class GameManager : MonoBehaviourPun
         GameManager.GM.setActivePrefabs("lost", true);
     }
 
-    public void placeVehicle()
+    public void placeVehicles()
     {
         //place ambulance
-        Space currentSpaceAmbulance = StateManager.instance.spaceGrid.getGrid()[5, 0];
-        Vector3 position = currentSpaceAmbulance.worldPosition;
-        GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicle/ambulance")) as GameObject;
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+        Vector3 position = currentSpace.worldPosition;
+        GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
         Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
 
         Ambulance.GetComponent<Transform>().position = ambulancePosition;
-        Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpaceAmbulance);
+        Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
         Ambulance.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
         Ambulance.GetComponent<GameUnit>().setPhysicalObject(Ambulance);
-        currentSpaceAmbulance.addOccupant(Ambulance.GetComponent<GameUnit>());
+        currentSpace.addOccupant(Ambulance.GetComponent<GameUnit>());
 
         //place engine
         Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 3];
         Vector3 position2 = currentSpaceEngine.worldPosition;
-        GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicle/engine")) as GameObject;
+        GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
         Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);
 
         Engine.GetComponent<Transform>().position = enginePosition;
