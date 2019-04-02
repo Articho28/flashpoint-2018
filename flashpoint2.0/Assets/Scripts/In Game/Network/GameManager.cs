@@ -378,6 +378,20 @@ public class GameManager : MonoBehaviourPun
     void resolveExplosion(Space targetSpace)
     {
         Debug.Log("Resolving explosion at " + targetSpace.indexX + " and " + targetSpace.indexY);
+
+
+
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (neighbors[i] != null && neighbors[i].getSpaceKind() != SpaceKind.Outdoor)
+            {
+                resolveExplosionInDirection(neighbors[i], i);
+            }
+        }
+
+        //Place necessary damage markers on walls and doors surrounding explosion space.
         Wall[] walls = targetSpace.getWalls();
         Door[] doors = targetSpace.getDoors();
         int indexX = targetSpace.indexX;
@@ -463,9 +477,93 @@ public class GameManager : MonoBehaviourPun
             }
         }
 
-        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
+    }
 
+    private void resolveExplosionInDirection(Space targetSpace, int direction)
+    {
+        //TODO Find and knockdown firefighter
+        //TODO destroy POI affected
+        //Both of the above can be implemented in place FireMarker.
 
+        SpaceStatus spaceStatus = targetSpace.getSpaceStatus();
+
+        //If the space is smoke or safe, turn it to fire
+        if (spaceStatus == SpaceStatus.Safe || spaceStatus == SpaceStatus.Smoke)
+        {
+            targetSpace.setSpaceStatus(SpaceStatus.Fire);
+            placeFireMarker(targetSpace);
+
+        }
+        else
+        {
+            //If there's a wall or door, damage it in relevant direction.
+            Wall wallInExplosionDirection = targetSpace.getWalls()[direction];
+            Door doorInExplosionDirection = targetSpace.getDoors()[direction];
+            if (wallInExplosionDirection != null)
+            {
+                wallInExplosionDirection.addDamage();
+                WallStatus wallInExplosionDirectionStatus = wallInExplosionDirection.getWallStatus();
+
+                //TODO Refactor wall deletion
+                //Handle wall deletion in relevant spaces
+                if (wallInExplosionDirectionStatus == WallStatus.Destroyed)
+                {
+                    switch (direction)
+                    {
+                        case 0:
+                            targetSpace.addWall(null, direction);
+                            int northX = targetSpace.indexX;
+                            int northY = targetSpace.indexY - 1;
+                            if (northX <= 10 && northY <= 8)
+                            {
+                                Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                                northSpace.addWall(null, 2);
+                            }
+                            break;
+                        case 1:
+                            targetSpace.addWall(null, direction);
+                            int rightX = targetSpace.indexX + 1;
+                            int rightY = targetSpace.indexY;
+                            if (rightX <= 10 && rightY <= 8)
+                            {
+                                Space rightSpace = StateManager.instance.spaceGrid.grid[rightX, rightY];
+                                rightSpace.addWall(null, 3);
+                            }
+                            break;
+                        case 2:
+                            targetSpace.addWall(null, direction);
+                            int southX = targetSpace.indexX;
+                            int southY = targetSpace.indexY + 1;
+                            if (southX <= 10 && southY <= 8)
+                            {
+                                Space southSpace = StateManager.instance.spaceGrid.grid[southX, southY];
+                                southSpace.addWall(null, 0);
+                            }
+                            break;
+                        case 3:
+                            targetSpace.addWall(null, direction);
+                            int leftX = targetSpace.indexX - 1;
+                            int leftY = targetSpace.indexY;
+                            if (leftX <= 10 && leftY <= 8)
+                            {
+                                Space leftSpace = StateManager.instance.spaceGrid.grid[leftX, leftY];
+                                leftSpace.addWall(null, 1);
+                            }
+                            break;
+                    }
+                }
+            }
+            //Handle door in that direction.
+            else if (doorInExplosionDirection != null)
+            {
+                destroyDoor(doorInExplosionDirection);
+            }
+            else //Transmit explosion to next space otherwise
+            {
+                Space nextSpace = StateManager.instance.spaceGrid.getNeighborInDirection(targetSpace, direction);
+                resolveExplosionInDirection(nextSpace, direction);
+            }
+        }
     }
 
     private void destroyDoor(Door door)
