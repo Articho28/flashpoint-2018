@@ -101,35 +101,11 @@ public class Fireman : GameUnit
                 {
                     if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
                     {
-                        Door door = doors[doorDir];
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Closed);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
-                            GameConsole.instance.UpdateFeedback("Door closed successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
-                            return;
-                        }
+                        this.openDoor(doors[doorDir]);
                     }
                     else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
                     {
-                        Door door = doors[doorDir];
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Open);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
-                            GameConsole.instance.UpdateFeedback("Door opened successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
-                            return;
-                        }
+                        this.closeDoor(doors[doorDir]);
                     }
                 }
                 else
@@ -947,35 +923,33 @@ public class Fireman : GameUnit
         //make a function call to VictimLoss
     }
 
-    public void openDoor()
+    public void openDoor(Door door)
     {
-        Debug.Log("open door");
-        if (getAP() >= 1)
-        {
+        if (this.getAP() >= 1) {
             decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Open);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/open door");
+            FiremanUI.instance.SetAP(this.getAP());
+            door.setDoorStatus(DoorStatus.Closed);
+            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
+            GameConsole.instance.UpdateFeedback("Door closed successfully!");
+        }
+        else {
+            GameConsole.instance.UpdateFeedback("Insufficient AP");
+            return;
         }
     }
 
-    public void closeDoor()
+    public void closeDoor(Door door)
     {
-        Debug.Log("close door");
-        if (getAP() >= 1)
-        {
+        if (this.getAP() >= 1) {
             decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Closed);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/closed door");
+            FiremanUI.instance.SetAP(this.getAP());
+            door.setDoorStatus(DoorStatus.Open);
+            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
+            GameConsole.instance.UpdateFeedback("Door opened successfully!");
+        }
+        else {
+            GameConsole.instance.UpdateFeedback("Insufficient AP");
+            return;
         }
     }
 
