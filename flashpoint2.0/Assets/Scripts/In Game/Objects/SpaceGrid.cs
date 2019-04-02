@@ -156,7 +156,7 @@ public class SpaceGrid : MonoBehaviourPun {
 
 
         //TODO Remove this 
-        GameManager.GM.testFunction(StateManager.instance.spaceGrid.getGrid()[1,1]);     } 
+        //GameManager.GM.testFunction(StateManager.instance.spaceGrid.getGrid()[1,1]);     } 
 
 
 
