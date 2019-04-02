@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviourPun
 
     //Network Options
 
-    public static Photon.Realtime.RaiseEventOptions  sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
+    public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
         CachingOption = Photon.Realtime.EventCaching.DoNotCache,
         Receivers = Photon.Realtime.ReceiverGroup.All
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviourPun
     {
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarker, null, sendToAllOptions, SendOptions.SendReliable);
 
-        if (!isFamilyGame) 
+        if (!isFamilyGame)
         {
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced, null, sendToAllOptions, SendOptions.SendReliable);
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialHotSpot, null, sendToAllOptions, SendOptions.SendReliable);
@@ -114,8 +114,8 @@ public class GameManager : MonoBehaviourPun
     }
 
     public void OnAllPrefabsSpawned()
-    {   
-           
+    {
+
 
         Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
         {
@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviourPun
 
     }
 
-    
+
     public static void IncrementTurn()
     {
 
@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-            string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviourPun
             Debug.Log("It's an explosion");
 
         }
-        else if(sp == SpaceStatus.Smoke)
+        else if (sp == SpaceStatus.Smoke)
         {
             Debug.Log("It's turned to Fire.");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
@@ -299,8 +299,8 @@ public class GameManager : MonoBehaviourPun
     {
         int col;
         int row;
-        while(true) 
-        { 
+        while (true)
+        {
             //randomize between 1 and 6
             col = Random.Range(1, 8);
             //randomize between 1 and 8
@@ -342,6 +342,34 @@ public class GameManager : MonoBehaviourPun
     {
         GameConsole.instance.UpdateFeedback("YOU LOST YOU BEAUTIFUL!");
         GameManager.GM.setActivePrefabs("lost", true);
+    }
+
+    public void placeVehicle()
+    {
+        //place ambulance
+        Space currentSpaceAmbulance = StateManager.instance.spaceGrid.getGrid()[5, 0];
+        Vector3 position = currentSpaceAmbulance.worldPosition;
+        GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicle/ambulance")) as GameObject;
+        Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
+
+        Ambulance.GetComponent<Transform>().position = ambulancePosition;
+        Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpaceAmbulance);
+        Ambulance.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
+        Ambulance.GetComponent<GameUnit>().setPhysicalObject(Ambulance);
+        currentSpaceAmbulance.addOccupant(Ambulance.GetComponent<GameUnit>());
+
+        //place engine
+        Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 3];
+        Vector3 position2 = currentSpaceEngine.worldPosition;
+        GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicle/engine")) as GameObject;
+        Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);
+
+        Engine.GetComponent<Transform>().position = enginePosition;
+        Engine.GetComponent<GameUnit>().setCurrentSpace(currentSpaceEngine);
+        Engine.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
+        Engine.GetComponent<GameUnit>().setPhysicalObject(Engine);
+        currentSpaceEngine.addOccupant(Engine.GetComponent<GameUnit>());
+
     }
 
     public void placeHazmat()
@@ -420,10 +448,10 @@ public class GameManager : MonoBehaviourPun
 
     }
 
-    public int[] replenishPOIAltSpace (int col, int row)
+    public int[] replenishPOIAltSpace(int col, int row)
     {
         //down arrow
-        if((row == 1 && col>=2 && col <= 7) || (row == 2 && (col == 4 || col == 5)) || (row == 3 && col == 3) || (row == 4 && (col == 2 || col == 7)))
+        if ((row == 1 && col >= 2 && col <= 7) || (row == 2 && (col == 4 || col == 5)) || (row == 3 && col == 3) || (row == 4 && (col == 2 || col == 7)))
         {
             return new int[] { col, row + 1 };
         }
@@ -433,17 +461,17 @@ public class GameManager : MonoBehaviourPun
             return new int[] { col, row - 1 };
         }
         //right arrow
-        else if ((col == 1 && row >=2 && row <=5) || (col == 6 && (row == 2 || row == 5)) || (row == 4 && col >= 3 && col <= 5))
+        else if ((col == 1 && row >= 2 && row <= 5) || (col == 6 && (row == 2 || row == 5)) || (row == 4 && col >= 3 && col <= 5))
         {
             return new int[] { col + 1, row };
         }
         //left arrow
-        else if ((col == 8 && row >= 2 && row <= 5) || (col == 3 && (row == 2 || row ==5)) || (row == 3 && col >= 4 && col <= 6))
+        else if ((col == 8 && row >= 2 && row <= 5) || (col == 3 && (row == 2 || row == 5)) || (row == 3 && col >= 4 && col <= 6))
         {
             return new int[] { col - 1, row };
         }
         //right-down arrow
-        else if ((col == 1 && row == 1)||(col == 2 && row == 2))
+        else if ((col == 1 && row == 1) || (col == 2 && row == 2))
         {
             return new int[] { col + 1, row + 1 };
         }
@@ -464,7 +492,7 @@ public class GameManager : MonoBehaviourPun
         }
         else
         {
-            return new int[] { 0, 0}; //failed function
+            return new int[] { 0, 0 }; //failed function
         }
     }
 
@@ -534,10 +562,10 @@ public class GameManager : MonoBehaviourPun
             GameUI.instance.AddGameState(GameStatus);
 
         }
-        else if (evCode == (byte) PhotonEventCodes.AdvanceFireMarker)
+        else if (evCode == (byte)PhotonEventCodes.AdvanceFireMarker)
         {
             object[] dataReceived = eventData.CustomData as object[];
-            Vector3 receivedPosition = (Vector3) dataReceived[0];
+            Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
             int indexY = (int)dataReceived[2];
 
@@ -569,7 +597,7 @@ public class GameManager : MonoBehaviourPun
             newSmokeMarker.GetComponent<GameUnit>().setCurrentSpace(targetSpace);
             newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
             newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
-            targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>()); 
+            targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>());
             Debug.Log("Smokemarker was placed at " + newPosition);
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveFireMarker)
@@ -749,7 +777,6 @@ public class GameManager : MonoBehaviourPun
         {
             placeInitialFireMarkerExperienced();
         }
-
         /*
         else if (evCode == (byte) PhotonEventCodes.TurnFireToSmoke)
         {
@@ -791,9 +818,5 @@ public class GameManager : MonoBehaviourPun
             GameObject newSmokeMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Smoke/smoke")) as GameObject;
 
             */
-
-
     }
-
-
 }

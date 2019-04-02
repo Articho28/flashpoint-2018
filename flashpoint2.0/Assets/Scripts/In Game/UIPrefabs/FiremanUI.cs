@@ -11,6 +11,8 @@ public class FiremanUI : MonoBehaviour
 
     public Text playerNameText;
     public Text APText;
+    public Text SpecialistAPText;
+    private int SpecialistAP;
     private int AP;
 
 
@@ -29,11 +31,14 @@ public class FiremanUI : MonoBehaviour
         UpdateAP();
     }
 
-
-
     private void UpdateAP()
     {
         APText.text = "AP: \n" + AP;
+
+        if (!GameManager.GM.isFamilyGame)
+        {
+            SpecialistAPText.text = "Specialist AP: \n" + SpecialistAP;
+        }
     }
 
     public void SetAP(int newAP)
