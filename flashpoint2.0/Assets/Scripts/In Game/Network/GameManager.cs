@@ -501,6 +501,7 @@ public class GameManager : MonoBehaviourPun
                     Fireman.FlipPOI(targetSpace);
                     Debug.Log("there shoudl be a flipped poi or a false alarm has alraedy disappeared ");
                     foundUnflippedPOI = true;
+                    break;
 
                 }
             }
@@ -533,6 +534,8 @@ public class GameManager : MonoBehaviourPun
                 occupants.Remove(targetPOI);
                 Destroy(targetPOI.physicalObject);
                 Destroy(targetPOI);
+                GameManager.lostVictims++;
+                GameUI.instance.AddLostVictim();
             }
 
 
