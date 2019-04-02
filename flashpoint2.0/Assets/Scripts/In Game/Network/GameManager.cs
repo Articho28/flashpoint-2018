@@ -702,9 +702,9 @@ public class GameManager : MonoBehaviourPun
         while (true)
         {
             //randomize between 1 and 6
-            col = Random.Range(1, 8);
+            col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
-            row = Random.Range(1, 6);
+            row = UnityEngine.Random.Range(1, 6);
 
             if (containsFireORSmoke(col, row))
             {
@@ -737,9 +737,9 @@ public class GameManager : MonoBehaviourPun
     public void replenishPOI() //experienced game
     {
         //randomize between 1 and 6
-        int col = Random.Range(1, 8);
+        int col = UnityEngine.Random.Range(1, 8);
         //randomize between 1 and 8
-        int row = Random.Range(1, 6);
+        int row = UnityEngine.Random.Range(1, 6);
 
         while (true)
         {
