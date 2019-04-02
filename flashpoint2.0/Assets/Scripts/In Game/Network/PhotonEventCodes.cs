@@ -19,5 +19,7 @@ public enum PhotonEventCodes
     ChopWall = 12,
     PlaceHazmats = 13,
     PlaceInitialFireMarkerExperienced = 14,
-    PlaceInitialHotSpot = 15
+    PlaceInitialHotSpot = 15,
+    ReplenishPOI = 16,
+    FlipPOI = 17
 }

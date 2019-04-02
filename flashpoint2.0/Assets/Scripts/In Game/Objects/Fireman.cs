@@ -21,6 +21,12 @@ public class Fireman : GameUnit
     Space locationArgument;
     Specialist spec;
 
+    public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
+    {
+        CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+        Receivers = Photon.Realtime.ReceiverGroup.All
+    };
+
     void Start()
     {
         AP = 4;
@@ -87,9 +93,16 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.D)) //open/close door
             {
+
+
+
+                int currentSpaceX = this.getCurrentSpace().indexX;
+                int currentSpaceY = this.getCurrentSpace().indexY;
+                object[] data = { currentSpaceX, currentSpaceY };
+
                 int doorDir = 4;//forbidden value
                 Door[] doors = this.getCurrentSpace().getDoors();
-                Debug.Log(this.getCurrentSpace().worldPosition);
+
                 for (int i = 0; i < 4; i++)
                 {
                     if (doors[i] != null)
@@ -99,14 +112,15 @@ public class Fireman : GameUnit
                 }
                 if (doorDir >= 0 && doorDir <= 3)
                 {
-                    if (doors[doorDir].getDoorStatus() == DoorStatus.Open)
+                    Door door = doors[doorDir];
+
+                    if (door.getDoorStatus() == DoorStatus.Open)
                     {
-                        Door door = doors[doorDir];
                         if (this.getAP() >= 1)
                         {
                             decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Closed);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/closed door");
+                            FiremanUI.instance.SetAP(this.getAP());
+                            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
                             GameConsole.instance.UpdateFeedback("Door closed successfully!");
                         }
                         else
@@ -115,14 +129,13 @@ public class Fireman : GameUnit
                             return;
                         }
                     }
-                    else if (doors[doorDir].getDoorStatus() == DoorStatus.Closed)
+                    else if (door.getDoorStatus() == DoorStatus.Closed)
                     {
-                        Door door = doors[doorDir];
                         if (this.getAP() >= 1)
                         {
                             decrementAP(1);
-                            door.setDoorStatus(DoorStatus.Open);
-                            door.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Images/open door");
+                            FiremanUI.instance.SetAP(this.getAP());
+                            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
                             GameConsole.instance.UpdateFeedback("Door opened successfully!");
                         }
                         else
@@ -669,7 +682,7 @@ public class Fireman : GameUnit
 
 
 
-    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
+    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                  if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
             isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
 
 
@@ -773,7 +786,7 @@ public class Fireman : GameUnit
                         {
                             if (gu.GetComponent<POI>().getIsFlipped() == false)
                             {
-                                FlipPOI();
+                                GameManager.FlipPOI(curr);
                                 break;
                             }
                         }
@@ -823,7 +836,7 @@ public class Fireman : GameUnit
                             {
                                 if (gu.GetComponent<POI>().getIsFlipped() == false)
                                 {
-                                    FlipPOI();
+                                    GameManager.FlipPOI(curr);
                                     break;
                                 }
                             }
@@ -948,38 +961,6 @@ public class Fireman : GameUnit
         //make a function call to VictimLoss
     }
 
-    public void openDoor()
-    {
-        Debug.Log("open door");
-        if (getAP() >= 1)
-        {
-            decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Open);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/open door");
-        }
-    }
-
-    public void closeDoor()
-    {
-        Debug.Log("close door");
-        if (getAP() >= 1)
-        {
-            decrementAP(1);
-            Door[] doors = this.getCurrentSpace().getDoors();
-            foreach (Door d in doors)
-            {
-                d.setDoorStatus(DoorStatus.Closed);
-            }
-            string doorObjectPath = "Board/doorCol45";
-            GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/closed door");
-        }
-    }
-
     private void sendFireMarkerExtinguishEvent(Space targetSpace)
     {
         int targetX = targetSpace.indexX;
@@ -1020,39 +1001,11 @@ public class Fireman : GameUnit
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
-    public void replenishPOI()
-    {
-        if (GameManager.totalPOIs == 0)
-        {
-            return;
-        }
-        switch (GameManager.numOfActivePOI)
-        {
-            case 0:
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
-                GameManager.totalPOIs -= 3;
-                break;
-            case 1:
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
-                GameManager.totalPOIs -= 2;
-                break;
-            case 2:
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
-                GameManager.totalPOIs -= 1;
-                break;
-            default:
-                break;
-        }
-    }
-
     public void endTurn()
     {
         restoreAP();
         GameManager.advanceFire();
-        replenishPOI();
+        GameManager.replenishPOI();
         GameManager.IncrementTurn();
     }
 
@@ -1066,74 +1019,6 @@ public class Fireman : GameUnit
 
         this.setAP(newAP);
         FiremanUI.instance.SetAP(newAP);
-    }
-
-    public void FlipPOI () {
-        Debug.Log("Flip");
-        string[] mylist = new string[] {
-            "man POI", "woman POI", "false alarm", "dog POI"
-        };
-        Debug.Log("Length of array is :" + mylist.Length);
-        Space curr = this.getCurrentSpace();
-        List<GameUnit> gameUnits = curr.getOccupants();
-        GameUnit questionMark = null;
-        foreach (GameUnit gu in gameUnits)
-        {
-            if(gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI){
-                questionMark = gu;
-                break;
-            }
-        }
-        Vector3 position = new Vector3(curr.worldPosition.x,curr.worldPosition.y,-5);
-        int r;
-
-        while(true)
-        {   
-            r = Random.Range(0, mylist.Length - 1);
-            if(string.Compare(mylist[r],"false alarm") == 0 && GameManager.NumFA <= 0)
-                continue;
-            else
-            {
-                if (GameManager.numVictim <= 0)
-                    continue;
-            }
-            break;
-        }
-
-        string POIname = mylist[r];
-        if(string.Compare(POIname,"false alarm") == 0)
-        {
-            GameManager.NumFA--;
-            gameUnits.Remove(questionMark);
-            Destroy(questionMark.physicalObject);
-            Destroy(questionMark);
-            GameConsole.instance.UpdateFeedback("It was a false alarm!");
-            Debug.Log("After revealing FalseAlarm, numFa is: " + GameManager.NumFA);
-            GameManager.numOfActivePOI--;
-            return;
-        }
-        else
-        {
-            GameConsole.instance.UpdateFeedback("It was a Victim!");
-            GameManager.numVictim--;
-            Debug.Log("After revealing Victim, numVictim is: " + GameManager.numVictim);
-        }
-        //Instiate Object
-        GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + POIname ) as GameObject);
-
-        poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
-        poi.GetComponent<POI>().setIsFlipped(true);
-        poi.GetComponent<Transform>().position = position;
-        poi.GetComponent<GameUnit>().setCurrentSpace(curr);
-        poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        poi.GetComponent<GameUnit>().setPhysicalObject(poi);
-
-        //NOT DONE : poi.GetComponent<Victim>().setPhysicalObject(poi)
-        gameUnits.Remove(questionMark);
-        curr.addOccupant(poi.GetComponent<GameUnit>());
-        Destroy(questionMark.physicalObject);
-        Destroy(questionMark);
-        
     }
 
 
@@ -1166,11 +1051,6 @@ public class Fireman : GameUnit
             }
         }
         //Door = 6
-        if (evCode == (byte)PhotonEventCodes.Door)
-        {
-            object[] data = eventData.CustomData as object[];
-
-        }
     }
 }
 
