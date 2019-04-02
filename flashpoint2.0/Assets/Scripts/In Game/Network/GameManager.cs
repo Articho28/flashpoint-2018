@@ -171,8 +171,8 @@ public class GameManager : MonoBehaviourPun
         //System.Random r = new System.Random();
         //blackDice = r.Next(1, 9);
         //redDice = r.Next(1, 7);
-        blackDice = 1;
-        redDice = 6;
+        blackDice = 6;
+        redDice = 1;
 
     }
 
@@ -456,18 +456,26 @@ public class GameManager : MonoBehaviourPun
             {
                 if (doors[i] != null)
                 {
-                    doors[i].setDoorStatus(DoorStatus.Destroyed);
+
+                    destroyDoor(doors[i]);
+
                 }
             }
         }
 
-       
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
 
 
     }
 
+    private void destroyDoor(Door door)
+    {
+        door.setDoorStatus(DoorStatus.Destroyed);
+        string doorObjectPath = "Board/doorCol45";
+        //TODO Change sprite of door.
+        //GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/DamageMarker");
 
+    }
 
     //    ================ NETWORK SYNCHRONIZATION SECTION =================
     public void OnEnable()

@@ -216,7 +216,7 @@ public class SpaceGrid : MonoBehaviourPun {
             bool IsOpenDoor;
             if (dirDoor != null)
             {
-                IsOpenDoor = (dirDoor.getDoorStatus() == DoorStatus.Open);
+                IsOpenDoor = (dirDoor.getDoorStatus() == DoorStatus.Open || dirDoor.getDoorStatus() == DoorStatus.Destroyed);
                 if (IsOpenDoor)
                 {
                     return true;
