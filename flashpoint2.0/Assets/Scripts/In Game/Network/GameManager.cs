@@ -541,11 +541,6 @@ public class GameManager : MonoBehaviourPun
 
         }
 
-
-       
-
-
-
     }
 
     void placeSmokeMarker(Space targetSpace)
