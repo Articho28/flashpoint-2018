@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-            string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
@@ -184,7 +184,6 @@ public class GameManager : MonoBehaviourPun
     {
         rollDice();
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[blackDice, redDice];
-        Debug.Log("Found target space is : " + targetSpace.indexX + " and " + targetSpace.indexY);
 
         SpaceStatus sp = targetSpace.getSpaceStatus();
 
@@ -451,7 +450,11 @@ public class GameManager : MonoBehaviourPun
         newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
         newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
-        Debug.Log("Smokemarker was placed at " + newPosition);
+
+        //TODO Find POIs and destroy them
+        //TODO Find firefighters and select knockdown placement.
+
+        Debug.Log("Firemarker was placed at " + newPosition);
 
         Debug.Log("It was placed at " + newPosition);
 
@@ -471,9 +474,6 @@ public class GameManager : MonoBehaviourPun
 
     void resolveExplosion(Space targetSpace)
     {
-        Debug.Log("Resolving explosion at " + targetSpace.indexX + " and " + targetSpace.indexY);
-
-
 
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
 
@@ -702,9 +702,9 @@ public class GameManager : MonoBehaviourPun
         while (true)
         {
             //randomize between 1 and 6
-            col = Random.Range(1, 8);
+            col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
-            row = Random.Range(1, 6);
+            row = UnityEngine.Random.Range(1, 6);
 
             if (containsFireORSmoke(col, row))
             {
@@ -737,9 +737,9 @@ public class GameManager : MonoBehaviourPun
     public void replenishPOI() //experienced game
     {
         //randomize between 1 and 6
-        int col = Random.Range(1, 8);
+        int col = UnityEngine.Random.Range(1, 8);
         //randomize between 1 and 8
-        int row = Random.Range(1, 6);
+        int row = UnityEngine.Random.Range(1, 6);
 
         while (true)
         {
