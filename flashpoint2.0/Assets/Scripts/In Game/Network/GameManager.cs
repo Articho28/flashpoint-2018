@@ -223,7 +223,7 @@ public class GameManager : MonoBehaviourPun
         //System.Random r = new System.Random();
         //blackDice = r.Next(1, 9);
         //redDice = r.Next(1, 7);
-        blackDice = 6;
+        blackDice = 1;
         redDice = 1;
 
     }
@@ -388,6 +388,22 @@ public class GameManager : MonoBehaviourPun
         numOfActivePOI++;
     }
 
+    //TODO remove this function. Used to test POI deletion.
+    public void testFunction(Space targetSpace)
+    {
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
+        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+        POI.GetComponent<Transform>().position = newPosition;
+        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+        currentSpace.addOccupant(POI.GetComponent<POI>());
+        numOfActivePOI++;
+    }
+
     void removeSmokeMarker(Space targetSpace)
     {
         int indexX = targetSpace.indexX;
@@ -452,11 +468,40 @@ public class GameManager : MonoBehaviourPun
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
 
         //TODO Find POIs and destroy them
+
+        removePOIFromSpace(targetSpace);
+
         //TODO Find firefighters and select knockdown placement.
 
         Debug.Log("Firemarker was placed at " + newPosition);
 
         Debug.Log("It was placed at " + newPosition);
+
+    }
+
+    private void removePOIFromSpace(Space targetSpace)
+    {
+        List<GameUnit> occupants = targetSpace.getOccupants();
+
+        GameUnit targetVictim = null;
+        GameUnit targetPOI = null;
+
+        foreach (GameUnit unit in occupants)
+        {
+            if (unit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && unit.GetType() == typeof(Victim))
+            {
+                targetVictim = unit;
+                Debug.Log("Found a Victim here");
+            }
+        }
+
+        if (targetVictim != null)
+        {
+            //TODO destroy targetVictim
+            GameManager.lostVictims++;
+        }
+
+
 
     }
 
@@ -862,15 +907,15 @@ public class GameManager : MonoBehaviourPun
                     isFirstReset = false;
                 }
                 Turn = 1;
-                DisplayPlayerTurn();
-                DisplayToConsolePlayGame(Turn);
+                //DisplayPlayerTurn();
+                //DisplayToConsolePlayGame(Turn);
             }
             else
             {
                 if (isFirstReset)
                 {
-                    DisplayToConsolePlaceFirefighter(Turn);
-                    DisplayPlayerTurn();
+                    //DisplayToConsolePlaceFirefighter(Turn);
+                    //DisplayPlayerTurn();
                 }
             }
         }
@@ -879,8 +924,8 @@ public class GameManager : MonoBehaviourPun
         {
             Turn = 1;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-            DisplayPlayerTurn();
-            DisplayToConsolePlaceFirefighter(Turn);
+            //DisplayPlayerTurn();
+            //DisplayToConsolePlaceFirefighter(Turn);
             GameUI.instance.AddGameState(GameStatus);
 
         }

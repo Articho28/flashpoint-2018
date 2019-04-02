@@ -772,7 +772,7 @@ public class Fireman : GameUnit
                         {
                             if (gu.GetComponent<POI>().getIsFlipped() == false)
                             {
-                                FlipPOI();
+                                FlipPOI(this.getCurrentSpace());
                                 break;
                             }
                         }
@@ -1073,13 +1073,13 @@ public class Fireman : GameUnit
         FiremanUI.instance.SetAP(newAP);
     }
 
-    public void FlipPOI () {
+    public void FlipPOI (Space targetSpace) {
         Debug.Log("Flip");
         string[] mylist = new string[] {
             "man POI", "woman POI", "false alarm", "dog POI"
         };
         Debug.Log("Length of array is :" + mylist.Length);
-        Space curr = this.getCurrentSpace();
+        Space curr = targetSpace;
         List<GameUnit> gameUnits = curr.getOccupants();
         GameUnit questionMark = null;
         foreach (GameUnit gu in gameUnits)
