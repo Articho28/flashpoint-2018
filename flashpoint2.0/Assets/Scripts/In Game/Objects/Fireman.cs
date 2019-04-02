@@ -19,9 +19,7 @@ public class Fireman : GameUnit
     private bool isSelectingExtinguishOption;
     ArrayList validInputOptions;
     Space locationArgument;
-
-    static int NumFA = 3;
-    static int numVictim = 7;
+    Specialist spec;
 
     void Start()
     {
@@ -43,6 +41,26 @@ public class Fireman : GameUnit
         if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
         {
+            //ADDITIONAL KEYS IN EXPERIENCED GAME
+            //Fire the Deck Gun "G"
+            //Drive vehicle "H"
+            //Crew Change "W"
+            if (!GameManager.GM.isFamilyGame)
+            {
+                if (Input.GetKeyDown(KeyCode.G))
+                {
+                    //deckGun(); TODO 
+                }
+                else if (Input.GetKeyDown(KeyCode.H))
+                {
+                    //driveVehicle(); TODO
+                }
+                else if (Input.GetKeyDown(KeyCode.W))
+                {
+                    //crewChange(); TODO
+                }
+            }
+
 
             //MOVE: ARROWS WITH DIRECTION
             //OPEN/CLOSE DOOR: "D"
@@ -661,12 +679,7 @@ public class Fireman : GameUnit
 
 
     public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                   if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
-            isChoppingWall = true;          }
-
-        if(GameManager.GM.buildingDamage >= 24)
-        {
-            Debug.Log("u just lost YIKESSS"); 
-        }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
+            isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
 
 
     public void carryVictim()
@@ -845,26 +858,26 @@ public class Fireman : GameUnit
                         Destroy(victim.physicalObject);
                         Destroy(victim);
                         deassociateVictim();
-                        Debug.Log("Is Fireman Carrying a victim?" + this.carriedVictim);
-
-                        //List<GameUnit> gameUnits = curr.getOccupants();
-                        //GameUnit victim = null;
-                        //foreach (GameUnit gu in gameUnits)
-                        //{
-                        //    if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                        //    {
-                        //        victim = gu;
-                        //        break;
-                        //    }
-                        //}
-                        //Destroy(victim.physicalObject);
-                        //Destroy(victim);
-                        //gameUnits.Remove(victim);
-                        //deassociateVictim();
-                        //Debug.Log("Is Fireman Carrying a victim?" + this.carriedVictim);
-
-
+                        GameManager.numOfActivePOI--;
                         GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
+
+                        //check if we won the game.
+                        if (GameManager.savedVictims >= 7)
+                        {
+                            //check for a perfect game
+                            if(GameManager.savedVictims == 10)
+                            {
+                                GameManager.GameWon();
+                                GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
+                            }
+                            if (!GameWonUI.isCalled)
+                            {
+                                GameManager.GameWon();
+                            }
+                        }
+                        return;
+
+
 
                     }
                     else //Fire
@@ -1006,6 +1019,34 @@ public class Fireman : GameUnit
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
+    public void replenishPOI()
+    {
+        if (GameManager.totalPOIs == 0)
+        {
+            return;
+        }
+        switch (GameManager.numOfActivePOI)
+        {
+            case 0:
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                GameManager.totalPOIs -= 3;
+                break;
+            case 1:
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                GameManager.totalPOIs -= 2;
+                break;
+            case 2:
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, null, GameManager.sendToAllOptions, SendOptions.SendReliable);
+                GameManager.totalPOIs -= 1;
+                break;
+            default:
+                break;
+        }
+    }
+
     public void endTurn()
     {
         SpaceStatus currentSpaceStatus = currentSpace.getSpaceStatus();
@@ -1016,6 +1057,7 @@ public class Fireman : GameUnit
         }
         restoreAP();
         GameManager.advanceFire();
+        replenishPOI();
         GameManager.IncrementTurn();
     }
 
@@ -1030,7 +1072,7 @@ public class Fireman : GameUnit
         this.setAP(newAP);
         FiremanUI.instance.SetAP(newAP);
     }
-    //Flip POI
+
     public void FlipPOI () {
         Debug.Log("Flip");
         string[] mylist = new string[] {
@@ -1053,11 +1095,11 @@ public class Fireman : GameUnit
         while(true)
         {   
             r = Random.Range(0, mylist.Length - 1);
-            if(string.Compare(mylist[r],"false alarm") == 0 && NumFA <= 0)
+            if(string.Compare(mylist[r],"false alarm") == 0 && GameManager.NumFA <= 0)
                 continue;
             else
             {
-                if (numVictim <= 0)
+                if (GameManager.numVictim <= 0)
                     continue;
             }
             break;
@@ -1066,19 +1108,20 @@ public class Fireman : GameUnit
         string POIname = mylist[r];
         if(string.Compare(POIname,"false alarm") == 0)
         {
-            NumFA--;
+            GameManager.NumFA--;
             gameUnits.Remove(questionMark);
             Destroy(questionMark.physicalObject);
             Destroy(questionMark);
             GameConsole.instance.UpdateFeedback("It was a false alarm!");
-            Debug.Log("After revealing FalseAlarm, numFa is: " + NumFA);
+            Debug.Log("After revealing FalseAlarm, numFa is: " + GameManager.NumFA);
+            GameManager.numOfActivePOI--;
             return;
         }
         else
         {
             GameConsole.instance.UpdateFeedback("It was a Victim!");
-            numVictim--;
-            Debug.Log("After revealing Victim, numVictim is: " + numVictim);
+            GameManager.numVictim--;
+            Debug.Log("After revealing Victim, numVictim is: " + GameManager.numVictim);
         }
         //Instiate Object
         GameObject poi = Instantiate (Resources.Load ("PhotonPrefabs/Prefabs/POIs/" + POIname ) as GameObject);

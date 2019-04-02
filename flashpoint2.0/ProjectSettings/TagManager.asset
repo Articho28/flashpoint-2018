@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Board
+    uniqueID: 3027716261
+    locked: 0
+  - name: Small red dice
+    uniqueID: 2864740261
+    locked: 0
+  - name: POI
+    uniqueID: 1492731481
+    locked: 0
+  - name: Fireman
+    uniqueID: 4291518653
+    locked: 0
+  - name: HotSpot
+    uniqueID: 1404519087
+    locked: 0

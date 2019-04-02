@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum PhotonEventCodes
 {
-    placeFireFighter = 0,
+    fireFighterPlaced = 0,
     IncrementTurn = 1,
     PlaceInitialFireFighter = 2,
     PlacePOI = 3,
@@ -18,5 +18,8 @@ public enum PhotonEventCodes
     RemoveSmokeMarker = 11,
     ChopWall = 12,
     ResolveFlashOvers = 13, 
-    ResolveExplosion = 14
+    ResolveExplosion = 14,
+    PlaceHazmats = 15,
+    PlaceInitialFireMarkerExperienced = 16,
+    PlaceInitialHotSpot = 17
 }

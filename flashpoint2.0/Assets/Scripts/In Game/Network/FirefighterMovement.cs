@@ -9,6 +9,12 @@ public class FirefighterMovement : MonoBehaviourPun
     private Transform initialPosition;
     private PhotonView PV;
 
+    static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
+    {
+        CachingOption = Photon.Realtime.EventCaching.DoNotCache,
+        Receivers = Photon.Realtime.ReceiverGroup.All
+    };
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,8 +32,10 @@ public class FirefighterMovement : MonoBehaviourPun
         {
             if (Input.GetMouseButtonDown(0))
             {
-                placeFireFighter();
-                GameManager.IncrementTurn();
+                if (fireFighterHasBeenPlaced())
+                {
+                    GameManager.IncrementTurn();
+                }
             }
         }
         
@@ -35,23 +43,28 @@ public class FirefighterMovement : MonoBehaviourPun
 
 
 
-    public void placeFireFighter()
+    public bool fireFighterHasBeenPlaced()
     {
         Space UserTargetInitialSpace = UserInputManager.instance.getLastSpaceClicked();
-        Vector3 position = UserTargetInitialSpace.worldPosition;
+        Vector3 position = new Vector3(UserTargetInitialSpace.worldPosition.x, UserTargetInitialSpace.worldPosition.y, -10);
         SpaceKind kind = UserTargetInitialSpace.getSpaceKind();
 
-
-        //the data that will be transferred
-        object[] datas = new object[] { PV.ViewID, kind, position };
-
-        Photon.Realtime.RaiseEventOptions options = new Photon.Realtime.RaiseEventOptions()
+        if (PV.IsMine)
         {
-            CachingOption = Photon.Realtime.EventCaching.DoNotCache,
-            Receivers = Photon.Realtime.ReceiverGroup.All
-        };
+            if (kind == SpaceKind.Outdoor)
+            {
+                initialPosition.position = position;
+                return true;
+            }
+            else
+            {
+                GameConsole.instance.UpdateFeedback("Invalid placement. It has to be outside of the house!!");
+                return false;
+            }
+        }
+        return false;
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.placeFireFighter, datas, options, SendOptions.SendReliable);
+
     }
 
 
@@ -71,22 +84,23 @@ public class FirefighterMovement : MonoBehaviourPun
         byte evCode = eventData.Code;
 
         //0: placing a firefighter
-        if (evCode == (byte) PhotonEventCodes.placeFireFighter)
+        if (evCode == (byte) PhotonEventCodes.fireFighterPlaced)
         {
-            object[] data = eventData.CustomData as object[];
+            //object[] data = eventData.CustomData as object[];
 
-            if (data.Length == 3)
-            {
-                if ((int)data[0] == PV.ViewID)
-                {
-                    SpaceKind kind = (SpaceKind)data[1];
-                    Vector3 position = (Vector3)data[2];
-                    if (kind == SpaceKind.Outdoor)
-                    {
-                        initialPosition.position = position;
-                    }
-                }
-            }
+            //if (data.Length == 3)
+            //{
+            //    if ((int)data[0] == PV.ViewID)
+            //    {
+            //        SpaceKind kind = (SpaceKind)data[1];
+            //        Vector3 position = (Vector3)data[2];
+            //        if (kind == SpaceKind.Outdoor)
+            //        {
+            //            initialPosition.position = position;
+            //        }
+            //    }
+            //}
+            fireFighterHasBeenPlaced();
         }
     }
 

@@ -26626,8 +26626,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.78, y: -10.8}
-  m_SizeDelta: {x: 214.17, y: 296.72}
+  m_AnchoredPosition: {x: 0.000015259, y: 0}
+  m_SizeDelta: {x: 224.1, y: 392.9}
   m_Pivot: {x: 0.50000006, y: 0.50000006}
 --- !u!114 &1157500833
 MonoBehaviour:
@@ -26680,7 +26680,16 @@ MonoBehaviour:
     Flip POI: F
 
 
+    Deck Gun: G
+
+
+    Drive Vehicle: H
+
+
     Carry Victim: V
+
+
+    Crew Change: W
 
 
     End Turn: Q
@@ -50190,22 +50199,22 @@ PrefabInstance:
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -805.6
+      value: -792.1
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 301.38
+      value: 226.38
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 245.6
+      value: 272.6
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 302.75
+      value: 452.76
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
