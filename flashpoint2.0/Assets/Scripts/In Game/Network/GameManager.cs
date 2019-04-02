@@ -445,21 +445,21 @@ public class GameManager : MonoBehaviourPun
                                 }
                                 break;
                         }
-
-
                     }
                 }
             }       
         }
 
-        /*
         if (doors != null)
         {
-            foreach (Door d in doors)
+            for (int i = 0; i < 4; i++)
             {
-                d.setDoorStatus(DoorStatus.Destroyed);
+                if (doors[i] != null)
+                {
+                    doors[i].setDoorStatus(DoorStatus.Destroyed);
+                }
             }
-        }*/
+        }
 
        
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);

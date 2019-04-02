@@ -710,15 +710,7 @@ public class Fireman : GameUnit
         Victim v = this.getVictim();
         bool reachable = true; //destination.isReachable(); //TODO
         Space curr = this.getCurrentSpace();
-        Debug.Log("Index X is " + curr.indexX + " and Index Y is " + curr.indexY);
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-        //foreach (Space s in neighbors)
-        //{
-        //    if (s != null)
-        //    {
-        //        Debug.Log("not null yeayeay");
-        //    }
-        //}
         Space destination = neighbors[direction];
 
         if (destination == null)

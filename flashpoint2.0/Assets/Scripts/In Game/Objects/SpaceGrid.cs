@@ -203,7 +203,6 @@ public class SpaceGrid : MonoBehaviourPun {
 
     
         Space curr = grid[checkX, checkY];
-        Debug.Log("Checking location " + checkX + " and " + checkY + " at location " + wallIndex);
         Wall dirWall = curr.getWalls()[wallIndex];
         Door dirDoor = curr.getDoors()[wallIndex];
 
