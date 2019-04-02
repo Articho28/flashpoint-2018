@@ -1008,7 +1008,8 @@ public class Fireman : GameUnit
 
     public void endTurn()
     {
-        if(currentSpace.getSpaceStatus() == SpaceStatus.Fire)
+        SpaceStatus currentSpaceStatus = currentSpace.getSpaceStatus();
+        if(currentSpaceStatus == SpaceStatus.Fire)
         {
             GameConsole.instance.UpdateFeedback("You cannot end your turn on a Fire Location");
             return;

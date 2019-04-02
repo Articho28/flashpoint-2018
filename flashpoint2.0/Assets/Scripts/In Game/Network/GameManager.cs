@@ -472,6 +472,7 @@ public class GameManager : MonoBehaviourPun
                 {
 
                     destroyDoor(doors[i]);
+                    Debug.Log("Door " + doors[i] + " was destroyed in explosion");
 
                 }
             }
@@ -485,11 +486,24 @@ public class GameManager : MonoBehaviourPun
         //TODO destroy POI affected
         //Both of the above can be implemented in place FireMarker.
 
+        if (targetSpace.getSpaceKind() == SpaceKind.Outdoor)
+        {
+            Debug.Log("Target Space " + targetSpace + " in direction " + direction + "is outdoor");
+            return;
+        }
+
         SpaceStatus spaceStatus = targetSpace.getSpaceStatus();
 
         //If the space is smoke or safe, turn it to fire
-        if (spaceStatus == SpaceStatus.Safe || spaceStatus == SpaceStatus.Smoke)
+        if (spaceStatus == SpaceStatus.Safe)
         {
+            targetSpace.setSpaceStatus(SpaceStatus.Fire);
+            placeFireMarker(targetSpace);
+
+        }
+        else if (spaceStatus == SpaceStatus.Smoke)
+        {
+            removeSmokeMarker(targetSpace);
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
@@ -502,6 +516,7 @@ public class GameManager : MonoBehaviourPun
             if (wallInExplosionDirection != null)
             {
                 wallInExplosionDirection.addDamage();
+                GameUI.instance.AddDamage(1);
                 WallStatus wallInExplosionDirectionStatus = wallInExplosionDirection.getWallStatus();
 
                 //TODO Refactor wall deletion
