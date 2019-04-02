@@ -128,6 +128,7 @@ public class Fireman : GameUnit
                             GameConsole.instance.UpdateFeedback("Insufficient AP");
                             return;
                         }
+
                     }
                     else if (door.getDoorStatus() == DoorStatus.Closed)
                     {
@@ -593,6 +594,15 @@ public class Fireman : GameUnit
         Space current = this.getCurrentSpace();
         SpaceStatus currentSpaceStatus = current.getSpaceStatus();
 
+        if (numAP == 1 && currentSpaceStatus == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+            this.setAP(numAP - 1);
+            FiremanUI.instance.SetAP(this.getAP());
+            sendTurnFireMarkerToSmokeEvent(current);
+            return;
+        }
+
 
         //Get neighbors and their spacestatus. 
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
@@ -720,24 +730,14 @@ public class Fireman : GameUnit
 
     public void move(int direction)
     {
-        /*revealVictim(); TODO
-         * make an if statement to make sure if the fireman moves into a space with POI marker
-         */
+
 
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
         bool reachable = true; //destination.isReachable(); //TODO
         Space curr = this.getCurrentSpace();
-        Debug.Log("Index X is " + curr.indexX + " and Index Y is " + curr.indexY);
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-        //foreach (Space s in neighbors)
-        //{
-        //    if (s != null)
-        //    {
-        //        Debug.Log("not null yeayeay");
-        //    }
-        //}
         Space destination = neighbors[direction];
 
         if (destination == null)
@@ -753,7 +753,7 @@ public class Fireman : GameUnit
         {
             if (sp == SpaceStatus.Fire)
             {
-                if (ap >= 2 && v == null) //&&f has enough to move
+                if (ap >= 3 && v == null) //&&f has enough to move
                 {
                     Debug.Log(ap);
                     Debug.Log(this.transform.position);
@@ -1003,6 +1003,12 @@ public class Fireman : GameUnit
 
     public void endTurn()
     {
+        SpaceStatus currentSpaceStatus = currentSpace.getSpaceStatus();
+        if(currentSpaceStatus == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("You cannot end your turn on a Fire Location");
+            return;
+        }
         restoreAP();
         GameManager.advanceFire();
         GameManager.replenishPOI();
