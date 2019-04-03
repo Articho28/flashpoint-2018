@@ -1007,6 +1007,20 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
+            List<GameUnit> occupants = targetSpace.occupants;
+            List<GameUnit> firemen = new List<GameUnit>();
+
+            foreach(GameUnit gameUnit in occupants) { 
+                if(gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                    firemen.Add(gameUnit);
+                }
+            }
+
+            foreach(GameUnit fireman in firemen) { 
+            
+            }
+
+
         }
 
         else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)

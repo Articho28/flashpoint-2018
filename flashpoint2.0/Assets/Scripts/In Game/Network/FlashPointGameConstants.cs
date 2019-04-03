@@ -20,6 +20,7 @@ public static class FlashPointGameConstants
     public const string GAMEUNIT_TYPE_HAZMAT = "hazmat";
     public const string GAMEUNIT_TYPE_AMBULANCE = "ambulance";
     public const string GAMEUNIT_TYPE_ENGINE = "engine";
+    public const string GAMEUNIT_TYPE_FIREMAN = "fireman";
 
 }
 
