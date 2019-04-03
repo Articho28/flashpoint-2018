@@ -22,7 +22,21 @@ public class GameManager : MonoBehaviourPun
     public bool isFirstReset;
 
     //Game relevant variables
-    public List<Specialist> availableSpecialists = new List<Specialist>();
+    public List<Specialist> availableSpecialists = new List<Specialist> 
+    { 
+        Specialist.Paramedic,
+        Specialist.FireCaptain,
+        Specialist.ImagingTechnician,
+        Specialist.CAFSFirefighter,
+        Specialist.HazmatTechinician,
+        Specialist.Generalist,
+        Specialist.RescueSpecialist,
+        Specialist.DriverOperator
+    };
+    public List<int> freeSpecialistIndex = new List <int> //all specilaists are free at first
+    { 
+        0,1,2,3,4,5,6,7
+    };
     public int buildingDamage;
     static int blackDice;
     static int redDice;
@@ -58,19 +72,6 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
-
-            //intialize the full specialist list
-            if (!isFamilyGame)
-            {
-                availableSpecialists.Add(Specialist.Paramedic);
-                availableSpecialists.Add(Specialist.FireCaptain);
-                availableSpecialists.Add(Specialist.ImagingTechnician);
-                availableSpecialists.Add(Specialist.CAFSFirefighter);
-                availableSpecialists.Add(Specialist.HazmatTechinician);
-                availableSpecialists.Add(Specialist.Generalist);
-                availableSpecialists.Add(Specialist.RescueSpecialist);
-                availableSpecialists.Add(Specialist.DriverOperator);
-            }
         }
         else
         {
