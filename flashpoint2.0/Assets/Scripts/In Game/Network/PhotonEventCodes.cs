@@ -21,5 +21,8 @@ public enum PhotonEventCodes
     ResolveExplosion = 14,
     PlaceHazmats = 15,
     PlaceInitialFireMarkerExperienced = 16,
-    PlaceInitialHotSpot = 17
+    PlaceInitialHotSpot = 17,
+    FlipPOI = 18,
+    ReplenishPOI = 19,
+    PlaceVehicles = 20
 }
