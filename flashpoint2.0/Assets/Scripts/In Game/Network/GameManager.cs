@@ -451,7 +451,7 @@ public class GameManager : MonoBehaviourPun
                 }
                 else
                 {
-                    Fireman.FlipPOI(targetSpace);
+                    FlipPOI(targetSpace);
                     Debug.Log("there shoudl be a flipped poi or a false alarm has alraedy disappeared ");
                     foundUnflippedPOI = true;
                     break;
