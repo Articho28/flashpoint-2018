@@ -1028,19 +1028,28 @@ public class GameManager : MonoBehaviourPun
             placeFireMarker(targetSpace);
 
             List<GameUnit> occupants = targetSpace.occupants;
-            List<GameUnit> firemen = new List<GameUnit>();
 
-            foreach(GameUnit gameUnit in occupants) { 
-                if(gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
-                    firemen.Add(gameUnit);
+            foreach(GameUnit gameUnit in occupants) {
+                if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                    object[] data = new object[] {gameUnit, targetSpace.indexX, targetSpace.indexY };
+
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
                 }
             }
 
-            foreach(GameUnit fireman in firemen) { 
-            
-            }
 
+        }
+        else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the fireman, space x, and space y for data
+            object[] dataReceived = eventData.CustomData as object[];
+            Fireman fireman = (Fireman) dataReceived[0];
+            int x = (int) dataReceived[1];
+            int y = (int) dataReceived[2];
 
+            Space space = StateManager.instance.spaceGrid.grid[x, y];
+            Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(space);
+
+            fireman.setCurrentSpace(ambulanceSpot);
+            ambulanceSpot.addOccupant(fireman);
         }
 
         else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)
