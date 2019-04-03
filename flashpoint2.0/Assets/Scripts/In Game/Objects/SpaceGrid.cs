@@ -93,7 +93,7 @@ public class SpaceGrid : MonoBehaviourPun {
         Space closestSpace = ambulanceSpaces[0];
         int closestDist = this.getDist(space, closestSpace);
         for(int i = 1; i < ambulanceSpaces.Length; i++) {
-            int dist = this.getDist(space, ambulanceSpaces[i];
+            int dist = this.getDist(space, ambulanceSpaces[i]);
             if(dist < closestDist) {
                 closestSpace = ambulanceSpaces[i];
                 closestDist = dist;

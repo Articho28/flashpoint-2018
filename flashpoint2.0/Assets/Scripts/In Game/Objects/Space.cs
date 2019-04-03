@@ -13,7 +13,7 @@ public class Space {
     [SerializeField]
     Wall[] walls;
     Door[] doors;
-    public List<GameUnit> occupants = new List<GameUnit>();
+    public List<GameUnit> occupants;
 
 
 
@@ -23,6 +23,7 @@ public class Space {
         indexY = _indexY;
         walls = new Wall[4];
         doors = new Door[4];
+        occupants = new List<GameUnit>();
         status = SpaceStatus.Safe;
         kind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
 
