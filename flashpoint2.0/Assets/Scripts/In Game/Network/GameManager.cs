@@ -106,20 +106,20 @@ public class GameManager : MonoBehaviourPun
                 placeInitialFireMarkerExperienced();
                 placeInitialHotSpot();
 
-                if (difficulty == Difficulty.Recruit) //3 hazmats
+                if (difficulty == Difficulty.Recruit) //3 hazmats + 3 initial explosions
                 {
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
                 }
-                else if (difficulty == Difficulty.Veteran) //4 hazmats
+                else if (difficulty == Difficulty.Veteran) //4 hazmats + 3 initial explosions
                 {
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
                 }
-                else if (difficulty == Difficulty.Heroic) //5 hazmats
+                else if (difficulty == Difficulty.Heroic) //5 hazmats + 4 initial explosions
                 {
                     placeHazmat();
                     placeHazmat();
