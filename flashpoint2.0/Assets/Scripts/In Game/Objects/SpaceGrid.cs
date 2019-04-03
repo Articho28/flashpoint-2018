@@ -89,6 +89,27 @@ public class SpaceGrid : MonoBehaviourPun {
         engineSpaces[7] = grid[0, 3];
     }
 
+    public Space getClosestAmbulanceSpot(Space space) {
+        Space closestSpace = ambulanceSpaces[0];
+        int closestDist = this.getDist(space, closestSpace);
+        for(int i = 1; i < ambulanceSpaces.Length; i++) {
+            int dist = this.getDist(space, ambulanceSpaces[i];
+            if(dist < closestDist) {
+                closestSpace = ambulanceSpaces[i];
+                closestDist = dist;
+            }
+        }
+
+        return closestSpace;
+    }
+
+    //distance to adjacent horizontal/vertical tile is 1
+    private int getDist(Space s1, Space s2) {
+        int distX = Mathf.Abs(s1.indexX - s2.indexX);
+        int distY = Mathf.Abs(s1.indexY - s2.indexY);
+
+        return distX + distY;
+    }
 
     private void BoardSetup()     {
         //INSTANTIATE WALLS
