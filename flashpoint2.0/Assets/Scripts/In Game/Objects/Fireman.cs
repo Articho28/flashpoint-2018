@@ -1027,7 +1027,6 @@ public class Fireman : GameUnit
         FiremanUI.instance.SetAP(newAP);
     }
 
-
     //  =============== NETWORK SYNCRONIZATION SECTION ===============
     public void OnEnable()
     {

@@ -178,7 +178,6 @@ public class GameManager : MonoBehaviourPun
     {
         rollDice();
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[blackDice, redDice];
-        Debug.Log("Found target space is : " + targetSpace.indexX + " and " + targetSpace.indexY);
 
         SpaceStatus sp = targetSpace.getSpaceStatus();
 
@@ -218,7 +217,7 @@ public class GameManager : MonoBehaviourPun
         //System.Random r = new System.Random();
         //blackDice = r.Next(1, 9);
         //redDice = r.Next(1, 7);
-        blackDice = 6;
+        blackDice = 1;
         redDice = 1;
 
     }
@@ -342,6 +341,22 @@ public class GameManager : MonoBehaviourPun
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
+    //TODO remove this function. Used to test POI deletion.
+    public void testFunction(Space targetSpace)
+    {
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
+        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+        POI.GetComponent<Transform>().position = newPosition;
+        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+        currentSpace.addOccupant(POI.GetComponent<POI>());
+        numOfActivePOI++;
+    }
+
     void removeSmokeMarker(Space targetSpace)
     {
         int indexX = targetSpace.indexX;
@@ -404,9 +419,80 @@ public class GameManager : MonoBehaviourPun
         newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
         newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
-        Debug.Log("Smokemarker was placed at " + newPosition);
+
+        //TODO Find POIs and destroy them
+
+        removePOIFromSpace(targetSpace);
+
+        //TODO Find firefighters and select knockdown placement.
+
+        Debug.Log("Firemarker was placed at " + newPosition);
 
         Debug.Log("It was placed at " + newPosition);
+
+    }
+
+    private void removePOIFromSpace(Space targetSpace)
+    {
+        List<GameUnit> occupants = targetSpace.getOccupants();
+
+        GameUnit targetVictim = null;
+        GameUnit targetPOI = null;
+        bool foundUnflippedPOI = false;
+
+        foreach (GameUnit unit in occupants)
+        {
+            if (unit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+            {
+                if (unit.GetComponent<POI>().getIsFlipped())
+                {
+                    targetVictim = unit;
+                    Debug.Log("Found a Victim here");
+                }
+                else
+                {
+                    Fireman.FlipPOI(targetSpace);
+                    Debug.Log("there shoudl be a flipped poi or a false alarm has alraedy disappeared ");
+                    foundUnflippedPOI = true;
+                    break;
+
+                }
+            }
+        }
+
+
+        if (targetVictim != null)
+        {
+            //TODO destroy targetVictim
+            Debug.Log("Killing victim");
+            occupants.Remove(targetVictim);
+            Destroy(targetVictim.physicalObject);
+            Destroy(targetVictim);
+            GameManager.lostVictims++;
+        }
+        else if (foundUnflippedPOI)
+        {
+            foreach (GameUnit u in occupants) 
+            { 
+                if (u.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && u.GetComponent<POI>().getIsFlipped())
+                {
+                    Debug.Log("Found the flipped POI");
+                    targetPOI = u;
+                }
+            }
+
+            if (targetPOI != null)
+            {
+                Debug.Log("Deleting POI");
+                occupants.Remove(targetPOI);
+                Destroy(targetPOI.physicalObject);
+                Destroy(targetPOI);
+                GameManager.lostVictims++;
+                GameUI.instance.AddLostVictim();
+            }
+
+
+        }
 
     }
 
@@ -424,9 +510,6 @@ public class GameManager : MonoBehaviourPun
 
     void resolveExplosion(Space targetSpace)
     {
-        Debug.Log("Resolving explosion at " + targetSpace.indexX + " and " + targetSpace.indexY);
-
-
 
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
 
@@ -889,15 +972,15 @@ public class GameManager : MonoBehaviourPun
                     isFirstReset = false;
                 }
                 Turn = 1;
-                DisplayPlayerTurn();
-                DisplayToConsolePlayGame(Turn);
+                //DisplayPlayerTurn();
+                //DisplayToConsolePlayGame(Turn);
             }
             else
             {
                 if (isFirstReset)
                 {
-                    DisplayToConsolePlaceFirefighter(Turn);
-                    DisplayPlayerTurn();
+                    //DisplayToConsolePlaceFirefighter(Turn);
+                    //DisplayPlayerTurn();
                 }
             }
         }
@@ -906,8 +989,8 @@ public class GameManager : MonoBehaviourPun
         {
             Turn = 1;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-            DisplayPlayerTurn();
-            DisplayToConsolePlaceFirefighter(Turn);
+            //DisplayPlayerTurn();
+            //DisplayToConsolePlaceFirefighter(Turn);
             GameUI.instance.AddGameState(GameStatus);
 
         }
