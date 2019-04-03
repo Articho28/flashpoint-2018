@@ -17,6 +17,7 @@ public class Fireman : GameUnit
     private bool isExtinguishingFire;
     private bool isChoppingWall;
     private bool isSelectingExtinguishOption;
+    private bool isSelectingSpecialist;
     ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
@@ -584,7 +585,16 @@ public class Fireman : GameUnit
     {
         this.carriedVictim = null;
     }
+    public void selectSpecialist()
+    {
+        GameConsole.instance.UpdateFeedback("Choose your preferred specialist.");
+        GameConsole.instance.UpdateFeedback("Press 0 for Paramedic. Press 1 for Fire Captain." +
+            "Press 2 for Imaging Technician. Press 3 for CAFS Firefighter" + "\nPress 4 for HazmatTechinician. Press 5 for Generalist." 
+            + "Press 6 for Rescue Specialist. Press 7 for Driver Operator.");
 
+
+
+    }
     public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
