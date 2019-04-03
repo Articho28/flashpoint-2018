@@ -1402,12 +1402,10 @@ public class GameManager : MonoBehaviourPun
 
 
         }
+
         else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
         {
-            for (int i = 0; i < PhotonNetwork.CountOfPlayers; i++)
-            {
-                playersListNameCache.Add(PhotonNetwork.PlayerList[i].NickName);
-            }
+            playersListNameCache.Add((string)PhotonNetwork.LocalPlayer.NickName);
         }
 
     }
