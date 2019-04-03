@@ -1344,8 +1344,7 @@ public class GameManager : MonoBehaviourPun
                 }
             }
             Vector3 position = new Vector3(curr.worldPosition.x, curr.worldPosition.y, -5);
-
-
+            
             if (string.Compare(POIname, "false alarm") == 0)
             {
                 NumFA--;

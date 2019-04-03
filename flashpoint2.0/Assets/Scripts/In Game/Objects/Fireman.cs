@@ -786,7 +786,7 @@ public class Fireman : GameUnit
                         {
                             if (gu.GetComponent<POI>().getIsFlipped() == false)
                             {
-                                GameManager.FlipPOI(curr);
+                                GameManager.FlipPOI(destination);
                                 break;
                             }
                         }
@@ -836,7 +836,7 @@ public class Fireman : GameUnit
                             {
                                 if (gu.GetComponent<POI>().getIsFlipped() == false)
                                 {
-                                    GameManager.FlipPOI(curr);
+                                    GameManager.FlipPOI(destination);
                                     break;
                                 }
                             }
