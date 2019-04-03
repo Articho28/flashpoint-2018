@@ -341,8 +341,8 @@ public class GameManager : MonoBehaviourPun
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
-    //TODO remove this function. Used to test POI deletion.
-    public void testFunction(Space targetSpace)
+    //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
+    public void testFunctionPlacePOI(Space targetSpace)
     {
         Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
         Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
@@ -357,6 +357,8 @@ public class GameManager : MonoBehaviourPun
         numOfActivePOI++;
     }
 
+
+    //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING 
     public void testFunctionPlaceVictim(Space targetSpace)
     {
         Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
