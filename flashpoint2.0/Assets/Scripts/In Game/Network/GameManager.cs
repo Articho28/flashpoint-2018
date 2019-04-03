@@ -1016,6 +1016,7 @@ public class GameManager : MonoBehaviourPun
         }
         else if (evCode == (byte)PhotonEventCodes.AdvanceFireMarker)
         {
+            Debug.Log("HI");
             object[] dataReceived = eventData.CustomData as object[];
             Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
@@ -1028,13 +1029,14 @@ public class GameManager : MonoBehaviourPun
             placeFireMarker(targetSpace);
 
             List<GameUnit> occupants = targetSpace.occupants;
-
+            Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
             foreach(GameUnit gameUnit in occupants) {
-                if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
-                    object[] data = new object[] {gameUnit, targetSpace.indexX, targetSpace.indexY };
+                //if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                //    object[] data = new object[] {gameUnit, targetSpace.indexX, targetSpace.indexY };
 
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
-                }
+                //    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
+                //}
+                Debug.Log("GameUnit type is " + gameUnit.getType());
             }
 
 
