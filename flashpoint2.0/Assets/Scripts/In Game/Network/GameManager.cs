@@ -745,7 +745,7 @@ public class GameManager : MonoBehaviourPun
         currentSpace.addOccupant(Ambulance.GetComponent<GameUnit>());
 
         //place engine
-        Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 3];
+        Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
         Vector3 position2 = currentSpaceEngine.worldPosition;
         GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
         Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);

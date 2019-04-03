@@ -32510,6 +32510,7 @@ MonoBehaviour:
   GameWonUIPrefab: {fileID: 8375738607730319442}
   Turn: 0
   isFirstReset: 0
+  availableSpecialists: 
   buildingDamage: 0
   isFamilyGame: 0
 --- !u!114 &1428715777

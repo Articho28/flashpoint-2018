@@ -12,6 +12,7 @@ public class Fireman : GameUnit
     int savedAP;
     FMStatus status;
     Victim carriedVictim;
+    Vehicle movedVehicle;
     private PhotonView PV;
     private bool isWaitingForInput;
     private bool isExtinguishingFire;
@@ -549,7 +550,6 @@ public class Fireman : GameUnit
         return AP;
     }
 
-
     public void decrementAP(int amount)
     {
         this.AP -= amount;
@@ -568,6 +568,11 @@ public class Fireman : GameUnit
     public void setStatus(FMStatus newStatus)
     {
         this.status = newStatus;
+    }
+
+    public Vehicle getVehicle()
+    {
+        return this.movedVehicle;
     }
 
     public Victim getVictim()
@@ -727,6 +732,29 @@ public class Fireman : GameUnit
 
     }
 
+    void driveAmbulance(int direction)
+    {
+        while (!GameManager.GM.isFamilyGame) 
+        {
+            int ap = this.getAP();
+            Vehicle a = this.getVehicle();
+            Space curr = this.getCurrentSpace();
+            Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
+            Space destination = neighbors[direction];
+
+            if(destination == null)
+            {
+                GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
+                return;
+            }
+        }
+
+    }
+
+    void driveEngine()
+    {
+        //TODO
+    }
 
     public void move(int direction)
     {
@@ -735,8 +763,8 @@ public class Fireman : GameUnit
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
-        bool reachable = true; //destination.isReachable(); //TODO
         Space curr = this.getCurrentSpace();
+        bool reachable = true;
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
         Space destination = neighbors[direction];
 
