@@ -66,7 +66,11 @@ public class SpaceGrid : MonoBehaviourPun {
 
 
 
-    private void BoardSetup()     {         //INSTANTIATE WALLS         //north:0, east:1, south:2, west:3          Space currSpace;         GameObject w1 = GameObject.Find("/Board/Walls/1");
+    private void BoardSetup()     {
+        //INSTANTIATE WALLS
+        //north:0, east:1, south:2, west:3
+
+         Space currSpace;         GameObject w1 = GameObject.Find("/Board/Walls/1");
         w1.GetComponent<Wall>().setPhysicalObject(w1);         GameObject w2 = GameObject.Find("/Board/Walls/2");
         w2.GetComponent<Wall>().setPhysicalObject(w2);         GameObject w3 = GameObject.Find("/Board/Walls/3");
         w3.GetComponent<Wall>().setPhysicalObject(w3);         GameObject w4 = GameObject.Find("/Board/Walls/4");
@@ -158,6 +162,8 @@ public class SpaceGrid : MonoBehaviourPun {
     //list index: 0 top, 1 right, 2 bottom, 3 left
     public Space[] GetNeighbours(Space space) {
         Space[] neighbours = new Space[4];
+        int currentX = space.indexX;
+        int currentY = space.indexY;
        
         //  _________
         // |__|_x|__|
@@ -178,16 +184,16 @@ public class SpaceGrid : MonoBehaviourPun {
                 //check if neighbouring node is valid
                 if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) { //within boundaries
 
-                    if (y == -1 && isValidNeighbour(checkX, checkY, 0)) {
+                    if (y == -1 && isValidNeighbour(currentX, currentY, 0)) {
                         neighbours[0] = grid[checkX, checkY];
                     }
-                    else if (x == 1 && isValidNeighbour(checkX, checkY, 1)) {
+                    else if (x == 1 && isValidNeighbour(currentX, currentY, 1)) {
                         neighbours[1] = grid[checkX, checkY];
                     }
-                    else if (y == 1 && isValidNeighbour(checkX, checkY, 2)) {
+                    else if (y == 1 && isValidNeighbour(currentX, currentY, 2)) {
                         neighbours[2] = grid[checkX, checkY];
                     }
-                    else if(x == -1 && isValidNeighbour(checkX, checkY, 3)) {
+                    else if(x == -1 && isValidNeighbour(currentX, currentY, 3)) {
                         neighbours[3] = grid[checkX, checkY];
                     }
                 }
@@ -199,39 +205,37 @@ public class SpaceGrid : MonoBehaviourPun {
 
     private bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
 
-        //return grid[checkX, checkY].getWalls()[wallIndex] != default(Wall) &&
-        //                  grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed
-
-
-
+    
         Space curr = grid[checkX, checkY];
         Wall dirWall = curr.getWalls()[wallIndex];
         Door dirDoor = curr.getDoors()[wallIndex];
 
-        //if(dirWall != null)
+        bool IsOpenSpace = (dirWall == null && dirDoor == null);
+        if (IsOpenSpace)
+        {
+            return true;
+        }
+        else //if there's a wall or a door
+        {
+            bool IsOpenDoor;
+            if (dirDoor != null)
+            {
+                IsOpenDoor = (dirDoor.getDoorStatus() == DoorStatus.Open || dirDoor.getDoorStatus() == DoorStatus.Destroyed);
+                if (IsOpenDoor)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
 
-        return true;
-
-
-        //bool openSpace = (grid[checkX, checkY].getWalls()[wallIndex] == null);
-        //if (openSpace) {
-        //    return true;
-        //}
-        //else //if there's a wall
-        //{
-        //    bool openDoor = (grid[checkX, checkY].getDoors()[wallIndex] == null);
-        //    bool destroyedWall = (grid[checkX, checkY].getWalls()[wallIndex].getWallStatus() == WallStatus.Destroyed);
-        //    if(openDoor || destroyedWall)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-
-        //}
-
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     //TODO Don't use
