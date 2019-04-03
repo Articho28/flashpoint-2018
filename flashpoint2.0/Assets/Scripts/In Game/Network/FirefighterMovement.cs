@@ -49,7 +49,7 @@ public class FirefighterMovement : MonoBehaviourPun
         Vector3 position = new Vector3(UserTargetInitialSpace.worldPosition.x, UserTargetInitialSpace.worldPosition.y, -10);
         SpaceKind kind = UserTargetInitialSpace.getSpaceKind();
 
-        if (PV.IsMine)
+        if (PV.IsMine && UserTargetInitialSpace != null)
         {
             if (kind == SpaceKind.Outdoor)
             {
