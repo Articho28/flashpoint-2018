@@ -18,6 +18,9 @@ public static class FlashPointGameConstants
     public const string GAMEUNIT_TYPE_POI = "POI";
     public const string GAMEUNIT_TYPE_HOTSPOT = "hotspot";
     public const string GAMEUNIT_TYPE_HAZMAT = "hazmat";
+    public const string GAMEUNIT_TYPE_AMBULANCE = "ambulance";
+    public const string GAMEUNIT_TYPE_ENGINE = "engine";
+    public const string GAMEUNIT_TYPE_FIREMAN = "fireman";
 
 }
 
