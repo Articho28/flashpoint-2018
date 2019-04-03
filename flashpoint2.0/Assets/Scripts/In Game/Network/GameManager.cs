@@ -342,8 +342,8 @@ public class GameManager : MonoBehaviourPun
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
-    //TODO remove this function. Used to test POI deletion.
-    public void testFunction(Space targetSpace)
+    //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
+    public void testFunctionPlacePOI(Space targetSpace)
     {
         Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
         Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
@@ -356,6 +356,25 @@ public class GameManager : MonoBehaviourPun
         POI.GetComponent<GameUnit>().setPhysicalObject(POI);
         currentSpace.addOccupant(POI.GetComponent<POI>());
         numOfActivePOI++;
+    }
+
+
+    //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING 
+    public void testFunctionPlaceVictim(Space targetSpace)
+    {
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
+        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+        GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
+
+        poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
+        poi.GetComponent<POI>().setIsFlipped(true);
+        poi.GetComponent<Transform>().position = position;
+        poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+        poi.GetComponent<GameUnit>().setPhysicalObject(poi);
+        currentSpace.addOccupant(poi.GetComponent<POI>());
+
+
     }
 
     void removeSmokeMarker(Space targetSpace)
