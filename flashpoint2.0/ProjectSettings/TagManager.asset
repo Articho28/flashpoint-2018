@@ -56,9 +56,12 @@ TagManager:
   - name: Fireman
     uniqueID: 4291518653
     locked: 0
+  - name: vehicle
+    uniqueID: 2381171265
+    locked: 0
   - name: HotSpot
     uniqueID: 1404519087
     locked: 0
-  - name: vehicle
-    uniqueID: 2381171265
+  - name: hazmat
+    uniqueID: 3669229879
     locked: 0

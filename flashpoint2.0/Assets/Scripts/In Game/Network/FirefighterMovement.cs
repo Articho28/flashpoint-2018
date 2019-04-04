@@ -54,6 +54,10 @@ public class FirefighterMovement : MonoBehaviourPun
             if (PV.IsMine) {
                 if (kind == SpaceKind.Outdoor) {
                     initialPosition.position = position;
+
+                    Fireman curr = this.GetComponentInParent<Fireman>();
+                    curr.setCurrentSpace(UserTargetInitialSpace);
+                    UserTargetInitialSpace.addOccupant(curr);
                     return true;
                 }
                 else {

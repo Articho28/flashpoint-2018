@@ -15,11 +15,13 @@ public class Fireman : GameUnit
     int moveAP;
     FMStatus status;
     Victim carriedVictim;
+    Vehicle movedVehicle;
     private PhotonView PV;
     private bool isWaitingForInput;
     private bool isExtinguishingFire;
     private bool isChoppingWall;
     private bool isSelectingExtinguishOption;
+    private bool isSelectingSpecialist;
     private bool isChangingCrew;
     ArrayList validInputOptions;
     Space locationArgument;
@@ -312,7 +314,9 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChangingCrew = true;
                     }
-                }
+                } 
+
+
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -612,6 +616,29 @@ public class Fireman : GameUnit
                 carryVictim();
             }
         }
+       else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+       FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST)
+        {
+            ////if the user presses 0
+            //if (Input.GetKeyDown(KeyCode.Alpha0))
+            //{
+            //    if (isWaitingForInput && isSelectingSpecialist)
+            //    {
+            //        isWaitingForInput = false;
+            //        isSelectingSpecialist = false;
+            //        GameManager.GM.availableSpecialists[0] = null;
+
+
+
+
+            //        GameManager.IncrementTurn();
+
+            //    }
+
+               
+            //}
+
+        }
         else if (GameManager.GM.Turn != PhotonNetwork.LocalPlayer.ActorNumber)
         {
             GameConsole.instance.UpdateFeedback("It's not your turn!");
@@ -703,7 +730,6 @@ public class Fireman : GameUnit
         return AP;
     }
 
-
     public void decrementAP(int amount)
     {
         this.AP -= amount;
@@ -724,6 +750,21 @@ public class Fireman : GameUnit
         this.status = newStatus;
     }
 
+    public Vehicle getVehicle()
+    {
+        return this.movedVehicle;
+    }
+
+    public void setVehicle(Vehicle h)
+    {
+        this.movedVehicle = h;
+    }
+
+    public void deassociateVehicle()
+    {
+        this.movedVehicle = null;
+    }
+
     public Victim getVictim()
     {
         return this.carriedVictim;
@@ -738,7 +779,16 @@ public class Fireman : GameUnit
     {
         this.carriedVictim = null;
     }
+    public void selectSpecialist()
+    {
+        isWaitingForInput = true;
+        isSelectingSpecialist = true;
+        GameConsole.instance.UpdateFeedback("Choose your preferred specialist.");
+        GameConsole.instance.UpdateFeedback("Press 0 for Paramedic. Press 1 for Fire Captain." +
+            "Press 2 for Imaging Technician. Press 3 for CAFS Firefighter" + "\nPress 4 for HazmatTechinician. Press 5 for Generalist." 
+            + "Press 6 for Rescue Specialist. Press 7 for Driver Operator.");
 
+    }
     public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
@@ -881,6 +931,250 @@ public class Fireman : GameUnit
 
     }
 
+    void driveAmbulance(int direction)
+    {
+        while (!GameManager.GM.isFamilyGame) 
+        {
+            int ap = this.getAP();
+            Space current = this.getCurrentSpace();
+
+            if (this.getVehicle() != null)
+            {
+                GameConsole.instance.UpdateFeedback("You are already driving an ambulance!");
+                return;
+            }
+            else
+            {
+                Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
+                Space destination = neighbors[direction];
+
+                if (destination == null)
+                {
+                    GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
+                    return;
+                }
+
+                SpaceKind destinationSpaceKind = destination.getSpaceKind();
+                Kind destinationKind = destination.getKind();
+
+                if (destinationSpaceKind == SpaceKind.Indoor)
+                {
+                    GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
+                }
+                else if((destinationSpaceKind == SpaceKind.Outdoor) && (destinationKind == Kind.ParkingSpot))
+                {
+                    if (ap >= 2)
+                    { //ambulance on top row
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to bottom row
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+
+                        }
+                        else if(Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to bottom row
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+                        }
+                    }
+                    else if (ap >= 2)
+                    {    //ambulance on right column
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to left column
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+
+
+                        }
+                        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to left column
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+                        }
+                    }
+                    else if (ap >= 2)
+                    {    //ambulance on bottom row
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to top row
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+
+                        }
+                        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to top row
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+                        }
+                    }
+                    else if (ap >= 2)
+                    {    //ambulance on left column
+                        if (Input.GetKeyDown(KeyCode.RightArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to right column
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+                        }
+                        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                        {
+                            //move
+                            if (ap >= 4)
+                            {   //if moves to right column
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(4);
+
+                            }
+                            else
+                            {
+                                this.setCurrentSpace(destination);
+                                this.decrementAP(2);
+                                FiremanUI.instance.SetAP(this.AP);
+                                GameConsole.instance.UpdateFeedback("You have successfully drove the ambulance");
+                                Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+                                this.GetComponent<Transform>().position = newPosition;
+                            }
+                        }
+                    }
+
+                    //int[] rows = new int[] { 3, 4, 4, 4 };
+                    //int[] cols = new int[] { 6, 6, 5, 3 };
+
+                    //object[] data = { cols, rows };
+
+                }
+            }
+
+            //if riding: NOT COMPLETED
+            List<GameUnit> gameUnits = current.getOccupants();
+
+            foreach (GameUnit gu in gameUnits)
+            {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                {
+                    Vehicle h = gu.GetComponent<Vehicle>();
+                    this.setVehicle(h);
+                    GameConsole.instance.UpdateFeedback("Riding Ambulance successfully!");
+                    return;
+                }
+                //add key for exit ambulance
+                deassociateVehicle();   //after riding - fireman can choose to exit vehicle in parking spot
+            }
+            GameConsole.instance.UpdateFeedback("There is no Vehicle to be carried!");
+
+
+        }
+        //get space of current vehicle
+        //get the parking spots of ambulance
+        //get destination ambulance parking spot
+            //if spacekind==indoor - cannot move
+            //else - 
+                //if destination is right - make the correct rotation and move vehicle, spent 2AP
+                //if destination is left - same thing with ~if right
+        //if drive vehicle to the opposite side of building it is 4AP
+
+        //if ambulance carrying victim: 0AP TODO in carryVictim()
+    }
+
+    void driveEngine()
+    {
+        //fireman has to be on the same space with engine
+        //TODO
+    }
 
     public void move(int direction)
     {
@@ -889,8 +1183,8 @@ public class Fireman : GameUnit
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
-        bool reachable = true; //destination.isReachable(); //TODO
         Space curr = this.getCurrentSpace();
+        bool reachable = true;
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
         Space destination = neighbors[direction];
 
@@ -1176,7 +1470,6 @@ public class Fireman : GameUnit
         int currentNumAP = this.getAP();
         int newAP = Mathf.Min(currentNumAP + 4, 8);
 
-
         this.setAP(newAP);
         FiremanUI.instance.SetAP(newAP);
     }
@@ -1291,7 +1584,14 @@ public class Fireman : GameUnit
                 }
             }
         }
-        //Door = 6
+        else if (evCode == (byte)PhotonEventCodes.PickSpecialist)
+        {
+            GameManager.GM.Turn = 1;
+            GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
+            GameManager.GM.DisplayPlayerTurn();
+            GameUI.instance.AddGameState(GameManager.GameStatus);
+            selectSpecialist();
+        }
     }
 }
 
