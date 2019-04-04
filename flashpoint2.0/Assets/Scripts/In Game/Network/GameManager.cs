@@ -167,7 +167,9 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayPlayerTurn()
     {
-        string playerName = (string) playersListNameCache[Turn - 1];
+
+        //string playerName = (string) playersListNameCache[Turn - 1];
+        string playerName = PhotonNetwork.PlayerList[Turn - 1].NickName;
         GameUI.instance.UpdatePlayerTurnName(playerName);
     }
 
@@ -178,14 +180,17 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayToConsolePlayGame(int turn)
     {
-        string playerName = (string)playersListNameCache[Turn - 1];
+        //string playerName = (string)playersListNameCache[Turn - 1];
+        string playerName = (string)PhotonNetwork.PlayerList[turn - 1].NickName;
         string message = "It's " + playerName + "'s turn!";
         GameConsole.instance.FeedbackText.text = message;
     }
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-        string playerName = (string)playersListNameCache[Turn - 1];
+        //string playerName = (string)playersListNameCache[Turn - 1];
+        string playerName = (string)PhotonNetwork.PlayerList[turn - 1].NickName;
+
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
@@ -1414,6 +1419,7 @@ public class GameManager : MonoBehaviourPun
 
         }
 
+        /*
         else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
         {
             object[] receivedData = eventData.CustomData as object[];
@@ -1422,7 +1428,7 @@ public class GameManager : MonoBehaviourPun
             {
                 playersListNameCache.Add((string)receivedData[i]);
             }
-        }
+        }*/
 
     }
 }
