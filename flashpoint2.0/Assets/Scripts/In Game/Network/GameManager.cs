@@ -140,9 +140,20 @@ public class GameManager : MonoBehaviourPun
     public void OnAllPrefabsSpawned()
     {
         //TODO Cache the playerList.
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, null, sendToAllOptions, SendOptions.SendReliable);
+
+        Photon.Realtime.Player[] cachedPlayerList = PhotonNetwork.PlayerList;
+
+        object[] data = new object[cachedPlayerList.Length];
+
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            data[i] = cachedPlayerList[i].NickName;
+        }
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
+
 
     }
 
@@ -156,7 +167,7 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayPlayerTurn()
     {
-        string playerName = (string)playersListNameCache[Turn - 1];
+        string playerName = (string) playersListNameCache[Turn - 1];
         GameUI.instance.UpdatePlayerTurnName(playerName);
     }
 
@@ -1405,7 +1416,12 @@ public class GameManager : MonoBehaviourPun
 
         else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
         {
-            playersListNameCache.Add((string)PhotonNetwork.LocalPlayer.NickName);
+            object[] receivedData = eventData.CustomData as object[];
+
+            for (int i = 0; i < receivedData.Length; i++)
+            {
+                playersListNameCache.Add((string)receivedData[i]);
+            }
         }
 
     }
