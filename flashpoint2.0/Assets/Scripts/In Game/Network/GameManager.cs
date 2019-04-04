@@ -345,6 +345,9 @@ public class GameManager : MonoBehaviourPun
 
     public void randomizePOI()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
         int col;
         int row;
         while (true)
