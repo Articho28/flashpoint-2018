@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviourPun
         {
             GM = this;
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
-            NumberOfPlayers = PhotonNetwork.CountOfPlayers;
+            NumberOfPlayers = PhotonNetwork.PlayerList.Length;
             isFirstReset = true;
             buildingDamage = 0;
             Turn = 1;
@@ -140,8 +140,6 @@ public class GameManager : MonoBehaviourPun
     public void OnAllPrefabsSpawned()
     {
         //TODO Cache the playerList.
-
-
         object[] data = new object[PhotonNetwork.PlayerList.Length];
         int i = 0;
 
