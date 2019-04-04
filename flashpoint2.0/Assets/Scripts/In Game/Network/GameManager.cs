@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviourPun
     static int blackDice;
     static int redDice;
     public static int numOfActivePOI;
-    public bool isFamilyGame = true; //true if family game, false if experienced
+    public bool isFamilyGame; //true if family game, false if experienced
     public static Difficulty difficulty; //Recruit, Veteran, Heroic
     public static int savedVictims;
     public static int lostVictims;
@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviourPun
             savedVictims = 0;
             lostVictims = 0;
             playersListNameCache = new ArrayList();
+            isFamilyGame = true;
         }
         else
         {
@@ -379,9 +380,9 @@ public class GameManager : MonoBehaviourPun
         Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
         Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
         GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
-        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+        //Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-        POI.GetComponent<Transform>().position = newPosition;
+        POI.GetComponent<Transform>().position = position;
         POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
         POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
         POI.GetComponent<GameUnit>().setPhysicalObject(POI);
@@ -391,9 +392,9 @@ public class GameManager : MonoBehaviourPun
 
 
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING 
-    public void testFunctionPlaceVictim(Space targetSpace)
+    public void testFunctionPlaceVictim()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
         Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
         GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
 
@@ -514,12 +515,12 @@ public class GameManager : MonoBehaviourPun
 
         if (targetVictim != null)
         {
-            //TODO destroy targetVictim
             Debug.Log("Killing victim");
             occupants.Remove(targetVictim);
             Destroy(targetVictim.physicalObject);
             Destroy(targetVictim);
             GameManager.lostVictims++;
+            GameUI.instance.AddLostVictim();
         }
         else if (foundUnflippedPOI)
         {
