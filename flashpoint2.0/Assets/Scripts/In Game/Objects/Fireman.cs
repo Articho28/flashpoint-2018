@@ -21,6 +21,7 @@ public class Fireman : GameUnit
     private bool isExtinguishingFire;
     private bool isChoppingWall;
     private bool isSelectingExtinguishOption;
+    private bool isSelectingSpecialist;
     private bool isChangingCrew;
     ArrayList validInputOptions;
     Space locationArgument;
@@ -313,7 +314,9 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChangingCrew = true;
                     }
-                }
+                } 
+
+
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -613,6 +616,29 @@ public class Fireman : GameUnit
                 carryVictim();
             }
         }
+        else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+       FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST)
+        {
+            ////if the user presses 0
+            //if (Input.GetKeyDown(KeyCode.Alpha0))
+            //{
+            //    if (isWaitingForInput && isSelectingSpecialist)
+            //    {
+            //        isWaitingForInput = false;
+            //        isSelectingSpecialist = false;
+            //        GameManager.GM.availableSpecialists[0] = null;
+
+
+
+
+            //        GameManager.IncrementTurn();
+
+            //    }
+
+               
+            //}
+
+        }
     }
 
     public int getAP()
@@ -749,7 +775,16 @@ public class Fireman : GameUnit
     {
         this.carriedVictim = null;
     }
+    public void selectSpecialist()
+    {
+        isWaitingForInput = true;
+        isSelectingSpecialist = true;
+        GameConsole.instance.UpdateFeedback("Choose your preferred specialist.");
+        GameConsole.instance.UpdateFeedback("Press 0 for Paramedic. Press 1 for Fire Captain." +
+            "Press 2 for Imaging Technician. Press 3 for CAFS Firefighter" + "\nPress 4 for HazmatTechinician. Press 5 for Generalist." 
+            + "Press 6 for Rescue Specialist. Press 7 for Driver Operator.");
 
+    }
     public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
@@ -1431,7 +1466,6 @@ public class Fireman : GameUnit
         int currentNumAP = this.getAP();
         int newAP = Mathf.Min(currentNumAP + 4, 8);
 
-
         this.setAP(newAP);
         FiremanUI.instance.SetAP(newAP);
     }
@@ -1546,7 +1580,14 @@ public class Fireman : GameUnit
                 }
             }
         }
-        //Door = 6
+        else if (evCode == (byte)PhotonEventCodes.PickSpecialist)
+        {
+            GameManager.GM.Turn = 1;
+            GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
+            GameManager.GM.DisplayPlayerTurn();
+            GameUI.instance.AddGameState(GameManager.GameStatus);
+            selectSpecialist();
+        }
     }
 }
 
