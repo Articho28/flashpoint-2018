@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviourPun
     //Local store of Players.
     public static int NumberOfPlayers;
     public bool isFirstReset;
-    public bool isPickSpecialist = true;
+    public bool isPickSpecialist;
     ArrayList playersListNameCache;
 
     //Game relevant variables
@@ -76,7 +76,9 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
+            isPickSpecialist = true;
             playersListNameCache = new ArrayList();
+            isFamilyGame = true;
         }
         else
         {
@@ -134,10 +136,6 @@ public class GameManager : MonoBehaviourPun
                     placeHazmat();
                 }
             }
-
-            randomizePOI();
-            randomizePOI();
-            randomizePOI();
         }
     }
 
@@ -355,7 +353,7 @@ public class GameManager : MonoBehaviourPun
             col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
             row = UnityEngine.Random.Range(1, 6);
-
+            
             if (containsFireORSmoke(col, row))
             {
                 continue;
@@ -367,6 +365,7 @@ public class GameManager : MonoBehaviourPun
             }
             break;
         }
+
 
         object[] data = { col, row };
 
@@ -1027,6 +1026,9 @@ public class GameManager : MonoBehaviourPun
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
+                    randomizePOI();
+                    randomizePOI();
+                    randomizePOI();
                 }
                 else
                 {
