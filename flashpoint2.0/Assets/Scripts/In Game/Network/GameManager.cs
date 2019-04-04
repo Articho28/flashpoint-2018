@@ -104,6 +104,8 @@ public class GameManager : MonoBehaviourPun
             {
                 placeInitialFireMarkerExperienced();
                 placeInitialHotSpot();
+                placeInitialAmbulance();
+                placeInitialEngine();
 
                 if (difficulty == Difficulty.Recruit) //3 hazmats
                 {
@@ -730,33 +732,26 @@ public class GameManager : MonoBehaviourPun
         GameManager.GM.setActivePrefabs("lost", true);
     }
 
-    public void placeVehicles()
+    public void placeInitialAmbulance()
     {
-        //place ambulance
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
-        Vector3 position = currentSpace.worldPosition;
-        GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
-        Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
+        int[] rows = new int[] { 5 };
+        int[] cols = new int[] { 0 };
 
-        Ambulance.GetComponent<Transform>().position = ambulancePosition;
-        Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        Ambulance.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
-        Ambulance.GetComponent<GameUnit>().setPhysicalObject(Ambulance);
-        currentSpace.addOccupant(Ambulance.GetComponent<GameUnit>());
+        object[] data = { cols, rows };
 
-        //place engine
-        Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
-        Vector3 position2 = currentSpaceEngine.worldPosition;
-        GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
-        Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);
-
-        Engine.GetComponent<Transform>().position = enginePosition;
-        Engine.GetComponent<GameUnit>().setCurrentSpace(currentSpaceEngine);
-        Engine.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
-        Engine.GetComponent<GameUnit>().setPhysicalObject(Engine);
-        currentSpaceEngine.addOccupant(Engine.GetComponent<GameUnit>());
-
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
+
+    public void placeInitialEngine()
+    {
+        int[] rows = new int[] { 9 };
+        int[] cols = new int[] { 6 };
+
+        object[] data = { cols, rows };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialEngine, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+
 
     public void placeHazmat()
     {
@@ -1237,6 +1232,49 @@ public class GameManager : MonoBehaviourPun
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
         }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialAmbulance)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] cols = (int[])dataReceived[0];
+            int[] rows = (int[])dataReceived[1];
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Vector3 position = currentSpace.worldPosition;
+                GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
+                Vector3 ambulancePosition = new Vector3(position.x+0.5f, position.y, -5);
+
+                Ambulance.GetComponent<Transform>().position = ambulancePosition;
+                Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+                Ambulance.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE);
+                Ambulance.GetComponent<GameUnit>().setPhysicalObject(Ambulance);
+                currentSpace.addOccupant(Ambulance.GetComponent<GameUnit>());
+            }
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialEngine)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] cols = (int[])dataReceived[0];
+            int[] rows = (int[])dataReceived[1];
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                //rotate
+                Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
+                Vector3 position2 = currentSpaceEngine.worldPosition;
+                GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
+                Vector3 enginePosition = new Vector3(position2.x, position2.y+0.5f, -5);
+
+                Engine.GetComponent<Transform>().position = enginePosition;
+                Engine.GetComponent<GameUnit>().setCurrentSpace(currentSpaceEngine);
+                Engine.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE);
+                Engine.GetComponent<GameUnit>().setPhysicalObject(Engine);
+                currentSpaceEngine.addOccupant(Engine.GetComponent<GameUnit>());
+
+            }
+        }
+
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced)
         {
             object[] dataReceived = eventData.CustomData as object[];

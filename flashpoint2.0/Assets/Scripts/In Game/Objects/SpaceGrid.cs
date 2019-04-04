@@ -299,7 +299,7 @@ public class SpaceGrid : MonoBehaviourPun {
         if (grid != null) {
             foreach (Space t in grid) {
                 Gizmos.color = Color.red;
-                if (t.kind == SpaceKind.Outdoor) {
+                if (t.spaceKind == SpaceKind.Outdoor) {
                     Gizmos.color = Color.cyan;
                 }
                 Gizmos.DrawWireCube(t.worldPosition, new Vector3(spaceDiameter - 0.01f, spaceDiameter - 0.01f, 1));

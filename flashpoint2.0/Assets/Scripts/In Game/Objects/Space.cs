@@ -8,7 +8,8 @@ public class Space {
     public int indexX;
     public int indexY;
     public SpaceStatus status;
-    public SpaceKind kind;
+    public SpaceKind spaceKind;
+    public Kind kind;
 
     [SerializeField]
     Wall[] walls;
@@ -24,7 +25,7 @@ public class Space {
         walls = new Wall[4];
         doors = new Door[4];
         status = SpaceStatus.Safe;
-        kind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
+        spaceKind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
 
     }
 
@@ -52,15 +53,20 @@ public class Space {
 
     public SpaceKind getSpaceKind()
     {
-        return this.kind;
+        return this.spaceKind;
     }
 
     public void setSpaceKind(SpaceKind newKind)
     {
-        this.kind = newKind;
+        this.spaceKind = newKind;
     }
 
-    public Door[] getDoors()
+    public Kind getKind()
+    {
+        return this.kind;
+    }
+
+    public Door[] getDoors()
     {
         return this.doors;
     }
