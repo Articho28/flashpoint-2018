@@ -1018,8 +1018,8 @@ public class GameManager : MonoBehaviourPun
             {
                 if (isFirstReset)
                 {
-                    //DisplayToConsolePlaceFirefighter(Turn);
-                    //DisplayPlayerTurn();
+                    DisplayToConsolePlaceFirefighter(Turn);
+                    DisplayPlayerTurn();
                 }
             }
         }
@@ -1028,8 +1028,8 @@ public class GameManager : MonoBehaviourPun
         {
             Turn = 1;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-            //DisplayPlayerTurn();
-            //DisplayToConsolePlaceFirefighter(Turn);
+            DisplayPlayerTurn();
+            DisplayToConsolePlaceFirefighter(Turn);
             GameUI.instance.AddGameState(GameStatus);
 
         }
