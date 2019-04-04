@@ -17,7 +17,7 @@ public enum PhotonEventCodes
     RemoveFireMarker = 10,
     RemoveSmokeMarker = 11,
     ChopWall = 12,
-    ResolveFlashOvers = 13, 
+    ResolveFlashOvers = 13,
     ResolveExplosion = 14,
     PlaceHazmats = 15,
     PlaceInitialFireMarkerExperienced = 16,
@@ -25,6 +25,9 @@ public enum PhotonEventCodes
     FlipPOI = 18,
     ReplenishPOI = 19,
     PlaceVehicles = 20,
-    PickSpecialist = 21,
-
+    KnockdownFireman = 21,
+    CachePlayerNames = 22,
+    PlaceInitialAmbulance = 23,
+    PlaceInitialEngine = 24,
+    PickSpecialist = 25
 }

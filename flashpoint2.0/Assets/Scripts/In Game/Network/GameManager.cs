@@ -19,10 +19,11 @@ public class GameManager : MonoBehaviourPun
     public static string GameStatus;
     public int Turn = 1;
 
-    //Local store of NumberOfPlayers.
+    //Local store of Players.
     public static int NumberOfPlayers;
     public bool isFirstReset;
     public bool isPickSpecialist = true;
+    ArrayList playersListNameCache;
 
     //Game relevant variables
     public List<Specialist> availableSpecialists = new List<Specialist> 
@@ -75,6 +76,7 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
+            playersListNameCache = new ArrayList();
         }
         else
         {
@@ -107,6 +109,8 @@ public class GameManager : MonoBehaviourPun
             {
                 placeInitialFireMarkerExperienced();
                 placeInitialHotSpot();
+                placeInitialAmbulance();
+                placeInitialEngine();
 
                 if (difficulty == Difficulty.Recruit) //3 hazmats + 3 initial explosions
                 {
@@ -139,6 +143,19 @@ public class GameManager : MonoBehaviourPun
 
     public void OnAllPrefabsSpawned()
     {
+        //TODO Cache the playerList.
+
+        Photon.Realtime.Player[] cachedPlayerList = PhotonNetwork.PlayerList;
+
+        object[] data = new object[cachedPlayerList.Length];
+
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            data[i] = cachedPlayerList[i].NickName;
+        }
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
+
         if (!isFamilyGame)
         {
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
@@ -160,6 +177,8 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayPlayerTurn()
     {
+
+        //string playerName = (string) playersListNameCache[Turn - 1];
         string playerName = PhotonNetwork.PlayerList[Turn - 1].NickName;
         GameUI.instance.UpdatePlayerTurnName(playerName);
     }
@@ -171,14 +190,17 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayToConsolePlayGame(int turn)
     {
-        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        //string playerName = (string)playersListNameCache[Turn - 1];
+        string playerName = (string)PhotonNetwork.PlayerList[turn - 1].NickName;
         string message = "It's " + playerName + "'s turn!";
         GameConsole.instance.FeedbackText.text = message;
     }
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        //string playerName = (string)playersListNameCache[Turn - 1];
+        string playerName = (string)PhotonNetwork.PlayerList[turn - 1].NickName;
+
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
@@ -351,9 +373,9 @@ public class GameManager : MonoBehaviourPun
     }
 
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
-    public void testFunctionPlacePOI(Space targetSpace)
+    public void testFunctionPlacePOI()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
         Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
         GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
         Vector3 newPosition = new Vector3(position.x, position.y, -5);
@@ -506,6 +528,7 @@ public class GameManager : MonoBehaviourPun
                 {
                     Debug.Log("Found the flipped POI");
                     targetPOI = u;
+                    break;
                 }
             }
 
@@ -758,33 +781,26 @@ public class GameManager : MonoBehaviourPun
         GameManager.GM.setActivePrefabs("lost", true);
     }
 
-    public void placeVehicles()
+    public void placeInitialAmbulance()
     {
-        //place ambulance
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
-        Vector3 position = currentSpace.worldPosition;
-        GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
-        Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
+        int[] rows = new int[] { 5 };
+        int[] cols = new int[] { 0 };
 
-        Ambulance.GetComponent<Transform>().position = ambulancePosition;
-        Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        Ambulance.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
-        Ambulance.GetComponent<GameUnit>().setPhysicalObject(Ambulance);
-        currentSpace.addOccupant(Ambulance.GetComponent<GameUnit>());
+        object[] data = { cols, rows };
 
-        //place engine
-        Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 3];
-        Vector3 position2 = currentSpaceEngine.worldPosition;
-        GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
-        Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);
-
-        Engine.GetComponent<Transform>().position = enginePosition;
-        Engine.GetComponent<GameUnit>().setCurrentSpace(currentSpaceEngine);
-        Engine.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
-        Engine.GetComponent<GameUnit>().setPhysicalObject(Engine);
-        currentSpaceEngine.addOccupant(Engine.GetComponent<GameUnit>());
-
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
+
+    public void placeInitialEngine()
+    {
+        int[] rows = new int[] { 9 };
+        int[] cols = new int[] { 6 };
+
+        object[] data = { cols, rows };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialEngine, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+
 
     public void placeHazmat()
     {
@@ -1022,8 +1038,8 @@ public class GameManager : MonoBehaviourPun
             {
                 if (isFirstReset)
                 {
-                    DisplayToConsolePlaceFirefighter(Turn);
-                    DisplayPlayerTurn();
+                    //DisplayToConsolePlaceFirefighter(Turn);
+                    //DisplayPlayerTurn();
                 }
             }
         }
@@ -1033,13 +1049,14 @@ public class GameManager : MonoBehaviourPun
             Turn = 1;
             isFirstReset = true;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-            DisplayPlayerTurn();
-            DisplayToConsolePlaceFirefighter(Turn);
+            //DisplayPlayerTurn();
+            //DisplayToConsolePlaceFirefighter(Turn);
             GameUI.instance.AddGameState(GameStatus);
 
         }
         else if (evCode == (byte)PhotonEventCodes.AdvanceFireMarker)
         {
+            Debug.Log("HI");
             object[] dataReceived = eventData.CustomData as object[];
             Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
@@ -1052,19 +1069,29 @@ public class GameManager : MonoBehaviourPun
             placeFireMarker(targetSpace);
 
             List<GameUnit> occupants = targetSpace.occupants;
-            List<GameUnit> firemen = new List<GameUnit>();
+            Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
+            foreach(GameUnit gameUnit in occupants) {
+                //if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                //    object[] data = new object[] {gameUnit, targetSpace.indexX, targetSpace.indexY };
 
-            foreach(GameUnit gameUnit in occupants) { 
-                if(gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
-                    firemen.Add(gameUnit);
-                }
+                //    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
+                //}
+                Debug.Log("GameUnit type is " + gameUnit.getType());
             }
 
-            foreach(GameUnit fireman in firemen) { 
-            
-            }
 
+        }
+        else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the fireman, space x, and space y for data
+            object[] dataReceived = eventData.CustomData as object[];
+            Fireman fireman = (Fireman) dataReceived[0];
+            int x = (int) dataReceived[1];
+            int y = (int) dataReceived[2];
 
+            Space space = StateManager.instance.spaceGrid.grid[x, y];
+            Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(space);
+
+            fireman.setCurrentSpace(ambulanceSpot);
+            ambulanceSpot.addOccupant(fireman);
         }
 
         else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)
@@ -1295,6 +1322,49 @@ public class GameManager : MonoBehaviourPun
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
         }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialAmbulance)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] cols = (int[])dataReceived[0];
+            int[] rows = (int[])dataReceived[1];
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Vector3 position = currentSpace.worldPosition;
+                GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
+                Vector3 ambulancePosition = new Vector3(position.x+0.5f, position.y, -5);
+
+                Ambulance.GetComponent<Transform>().position = ambulancePosition;
+                Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+                Ambulance.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE);
+                Ambulance.GetComponent<GameUnit>().setPhysicalObject(Ambulance);
+                currentSpace.addOccupant(Ambulance.GetComponent<GameUnit>());
+            }
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceInitialEngine)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] cols = (int[])dataReceived[0];
+            int[] rows = (int[])dataReceived[1];
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                //rotate
+                Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
+                Vector3 position2 = currentSpaceEngine.worldPosition;
+                GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
+                Vector3 enginePosition = new Vector3(position2.x, position2.y+0.5f, -5);
+
+                Engine.GetComponent<Transform>().position = enginePosition;
+                Engine.GetComponent<GameUnit>().setCurrentSpace(currentSpaceEngine);
+                Engine.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE);
+                Engine.GetComponent<GameUnit>().setPhysicalObject(Engine);
+                currentSpaceEngine.addOccupant(Engine.GetComponent<GameUnit>());
+
+            }
+        }
+
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced)
         {
             object[] dataReceived = eventData.CustomData as object[];
@@ -1421,6 +1491,17 @@ public class GameManager : MonoBehaviourPun
 
 
         }
+
+        /*
+        else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+
+            for (int i = 0; i < receivedData.Length; i++)
+            {
+                playersListNameCache.Add((string)receivedData[i]);
+            }
+        }*/
 
     }
 }
