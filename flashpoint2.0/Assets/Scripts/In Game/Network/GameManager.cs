@@ -18,9 +18,10 @@ public class GameManager : MonoBehaviourPun
     public static string GameStatus;
     public int Turn = 1;
 
-    //Local store of NumberOfPlayers.
+    //Local store of Players.
     public static int NumberOfPlayers;
     public bool isFirstReset;
+    ArrayList playersListNameCache;
 
     //Game relevant variables
     public List<Specialist> availableSpecialists = new List<Specialist> 
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
+            playersListNameCache = new ArrayList();
         }
         else
         {
@@ -137,8 +139,21 @@ public class GameManager : MonoBehaviourPun
 
     public void OnAllPrefabsSpawned()
     {
+        //TODO Cache the playerList.
+
+        Photon.Realtime.Player[] cachedPlayerList = PhotonNetwork.PlayerList;
+
+        object[] data = new object[cachedPlayerList.Length];
+
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            data[i] = cachedPlayerList[i].NickName;
+        }
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
+
 
     }
 
@@ -152,7 +167,7 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayPlayerTurn()
     {
-        string playerName = PhotonNetwork.PlayerList[Turn - 1].NickName;
+        string playerName = (string) playersListNameCache[Turn - 1];
         GameUI.instance.UpdatePlayerTurnName(playerName);
     }
 
@@ -163,14 +178,14 @@ public class GameManager : MonoBehaviourPun
 
     public void DisplayToConsolePlayGame(int turn)
     {
-        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        string playerName = (string)playersListNameCache[Turn - 1];
         string message = "It's " + playerName + "'s turn!";
         GameConsole.instance.FeedbackText.text = message;
     }
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-        string playerName = PhotonNetwork.PlayerList[turn - 1].NickName;
+        string playerName = (string)playersListNameCache[Turn - 1];
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
     }
@@ -343,9 +358,9 @@ public class GameManager : MonoBehaviourPun
     }
 
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
-    public void testFunctionPlacePOI(Space targetSpace)
+    public void testFunctionPlacePOI()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
         Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
         GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
         Vector3 newPosition = new Vector3(position.x, position.y, -5);
@@ -498,6 +513,7 @@ public class GameManager : MonoBehaviourPun
                 {
                     Debug.Log("Found the flipped POI");
                     targetPOI = u;
+                    break;
                 }
             }
 
@@ -1396,6 +1412,16 @@ public class GameManager : MonoBehaviourPun
             Destroy(questionMark);
 
 
+        }
+
+        else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+
+            for (int i = 0; i < receivedData.Length; i++)
+            {
+                playersListNameCache.Add((string)receivedData[i]);
+            }
         }
 
     }
