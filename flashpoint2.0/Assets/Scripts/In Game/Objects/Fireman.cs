@@ -616,7 +616,7 @@ public class Fireman : GameUnit
                 carryVictim();
             }
         }
-        else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+       else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST)
         {
             ////if the user presses 0
@@ -638,6 +638,10 @@ public class Fireman : GameUnit
                
             //}
 
+        }
+        else if (GameManager.GM.Turn != PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            GameConsole.instance.UpdateFeedback("It's not your turn!");
         }
     }
 

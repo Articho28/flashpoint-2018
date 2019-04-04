@@ -144,14 +144,15 @@ public class GameManager : MonoBehaviourPun
     public void OnAllPrefabsSpawned()
     {
         //TODO Cache the playerList.
+        object[] data = new object[PhotonNetwork.PlayerList.Length];
+        int i = 0;
 
-        Photon.Realtime.Player[] cachedPlayerList = PhotonNetwork.PlayerList;
-
-        object[] data = new object[cachedPlayerList.Length];
-
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
         {
-            data[i] = cachedPlayerList[i].NickName;
+            Debug.Log("OnAllPrefabsSpawned sees " + p.NickName + " with ActorNumber " + p.ActorNumber);
+            playersListNameCache.Insert(p.ActorNumber - 1, p.NickName);
+            data[i] = playersListNameCache[i];
+            i++;
         }
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
@@ -1038,9 +1039,14 @@ public class GameManager : MonoBehaviourPun
             {
                 if (isFirstReset)
                 {
-                    //DisplayToConsolePlaceFirefighter(Turn);
-                    //DisplayPlayerTurn();
+                    DisplayToConsolePlaceFirefighter(Turn);
                 }
+                else
+                {
+                    DisplayToConsolePlayGame(Turn);
+                }
+                DisplayPlayerTurn();
+
             }
         }
 
@@ -1049,8 +1055,8 @@ public class GameManager : MonoBehaviourPun
             Turn = 1;
             isFirstReset = true;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-            //DisplayPlayerTurn();
-            //DisplayToConsolePlaceFirefighter(Turn);
+            DisplayPlayerTurn();
+            DisplayToConsolePlaceFirefighter(Turn);
             GameUI.instance.AddGameState(GameStatus);
 
         }
@@ -1499,7 +1505,8 @@ public class GameManager : MonoBehaviourPun
 
             for (int i = 0; i < receivedData.Length; i++)
             {
-                playersListNameCache.Add((string)receivedData[i]);
+                Debug.Log("Received at " + i + " the name " + receivedData[i]);
+                playersListNameCache.Insert(i, receivedData[i]);
             }
         }*/
 
