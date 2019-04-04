@@ -25,5 +25,6 @@ public enum PhotonEventCodes
     FlipPOI = 18,
     ReplenishPOI = 19,
     PlaceVehicles = 20,
-    KnockdownFireman
+    KnockdownFireman = 21,
+    CachePlayerNames = 22
 }
