@@ -141,16 +141,25 @@ public class GameManager : MonoBehaviourPun
     {
         //TODO Cache the playerList.
 
-        Photon.Realtime.Player[] cachedPlayerList = PhotonNetwork.PlayerList;
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
+        {
+            Debug.Log("OnAllPrefabsSpawned sees " + p.NickName + " with ActorNumber " + p.ActorNumber);
+            playersListNameCache.Insert(p.ActorNumber - 1, p.NickName);
+        }
 
+        foreach (string name in playersListNameCache)
+        {
+            Debug.Log("Cached list contains " + name);
+        }
+        /*
         object[] data = new object[cachedPlayerList.Length];
 
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             data[i] = cachedPlayerList[i].NickName;
-        }
+        }*/
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
+        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
 
