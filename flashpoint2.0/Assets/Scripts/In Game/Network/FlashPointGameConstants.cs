@@ -10,6 +10,7 @@ public static class FlashPointGameConstants
     public const string GAME_STATUS_INITIALPLACEMENT = "Initial Player Placement";
     public const string GAME_STATUS_SPAWNING_PREFABS = "SpawningPrefabs";
     public const string GAME_STATUS_PLAY_GAME = "Play Game";
+    public const string GAME_STATUS_PICK_SPECIALIST = "Pick Specialist";
 
     public const string FEEDBACK_PLACE_FIREFIGHTER = "Please place your firefighter";
 
@@ -21,6 +22,7 @@ public static class FlashPointGameConstants
     public const string GAMEUNIT_TYPE_AMBULANCE = "ambulance";
     public const string GAMEUNIT_TYPE_ENGINE = "engine";
     public const string GAMEUNIT_TYPE_FIREMAN = "fireman";
+
 
 }
 

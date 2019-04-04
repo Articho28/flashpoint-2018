@@ -20,11 +20,8 @@ public class Fireman : GameUnit
     private bool isExtinguishingFire;
     private bool isChoppingWall;
     private bool isSelectingExtinguishOption;
-<<<<<<< HEAD
     private bool isSelectingSpecialist;
-=======
     private bool isChangingCrew;
->>>>>>> 9914c1db5cb062217de4109363c4bb8c1bc1767f
     ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
@@ -316,7 +313,9 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChangingCrew = true;
                     }
-                }
+                } 
+
+
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -616,6 +615,29 @@ public class Fireman : GameUnit
                 carryVictim();
             }
         }
+        else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+       FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST)
+        {
+            ////if the user presses 0
+            //if (Input.GetKeyDown(KeyCode.Alpha0))
+            //{
+            //    if (isWaitingForInput && isSelectingSpecialist)
+            //    {
+            //        isWaitingForInput = false;
+            //        isSelectingSpecialist = false;
+            //        GameManager.GM.availableSpecialists[0] = null;
+
+
+
+
+            //        GameManager.IncrementTurn();
+
+            //    }
+
+               
+            //}
+
+        }
     }
 
     public int getAP()
@@ -740,12 +762,12 @@ public class Fireman : GameUnit
     }
     public void selectSpecialist()
     {
+        isWaitingForInput = true;
+        isSelectingSpecialist = true;
         GameConsole.instance.UpdateFeedback("Choose your preferred specialist.");
         GameConsole.instance.UpdateFeedback("Press 0 for Paramedic. Press 1 for Fire Captain." +
             "Press 2 for Imaging Technician. Press 3 for CAFS Firefighter" + "\nPress 4 for HazmatTechinician. Press 5 for Generalist." 
             + "Press 6 for Rescue Specialist. Press 7 for Driver Operator.");
-
-
 
     }
     public void extinguishFire()
@@ -1299,7 +1321,14 @@ public class Fireman : GameUnit
                 }
             }
         }
-        //Door = 6
+        else if (evCode == (byte)PhotonEventCodes.PickSpecialist)
+        {
+            GameManager.GM.Turn = 1;
+            GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
+            GameManager.GM.DisplayPlayerTurn();
+            GameUI.instance.AddGameState(GameManager.GameStatus);
+            selectSpecialist();
+        }
     }
 }
 

@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviourPun
     //Local store of NumberOfPlayers.
     public static int NumberOfPlayers;
     public bool isFirstReset;
+    public bool isPickSpecialist = true;
 
     //Game relevant variables
     public List<Specialist> availableSpecialists = new List<Specialist> 
@@ -67,8 +68,8 @@ public class GameManager : MonoBehaviourPun
         {
             GM = this;
             GameStatus = FlashPointGameConstants.GAME_STATUS_SPAWNING_PREFABS;
-            NumberOfPlayers = PhotonNetwork.CountOfPlayers;
-            isFirstReset = true;
+            NumberOfPlayers = PhotonNetwork.PlayerList.Length;
+            isFirstReset = false;
             buildingDamage = 0;
             Turn = 1;
             numOfActivePOI = 0;
@@ -138,8 +139,14 @@ public class GameManager : MonoBehaviourPun
 
     public void OnAllPrefabsSpawned()
     {
-
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
+        if (!isFamilyGame)
+        {
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
+        }
+        else
+        {
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
+        }
 
     }
 
@@ -981,20 +988,35 @@ public class GameManager : MonoBehaviourPun
         if (evCode == (byte)PhotonEventCodes.IncrementTurn)
         {
             Turn++;
-
+            Debug.Log("Turn is now " + Turn);
+            Debug.Log("number of players is " +NumberOfPlayers);
             if (Turn > NumberOfPlayers)
             {
-                if (isFirstReset)
+                Debug.Log("resetting  turn");
+
+                if (isPickSpecialist)
+                {
+                    Debug.Log("changing pick specialist to false");
+                    isPickSpecialist = false;
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
+                }
+                else if (isFirstReset)
                 {
                     //change the status to play game
                     GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
                     FiremanUI.instance.SetAP(4);
                     GameUI.instance.AddGameState(GameStatus);
                     isFirstReset = false;
+                    Turn = 1;
+                    DisplayPlayerTurn();
+                    DisplayToConsolePlayGame(Turn);
                 }
-                Turn = 1;
-                DisplayPlayerTurn();
-                DisplayToConsolePlayGame(Turn);
+                else
+                {
+                    Turn = 1;
+                    DisplayPlayerTurn();
+                    DisplayToConsolePlayGame(Turn);
+                }
             }
             else
             {
@@ -1009,6 +1031,7 @@ public class GameManager : MonoBehaviourPun
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireFighter)
         {
             Turn = 1;
+            isFirstReset = true;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
             DisplayPlayerTurn();
             DisplayToConsolePlaceFirefighter(Turn);
