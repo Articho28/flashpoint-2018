@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviourPun
     static int blackDice;
     static int redDice;
     public static int numOfActivePOI;
-    public bool isFamilyGame; //true if family game, false if experienced
+    public bool isFamilyGame = true; //true if family game, false if experienced
     public static Difficulty difficulty; //Recruit, Veteran, Heroic
     public static int savedVictims;
     public static int lostVictims;
@@ -376,7 +376,7 @@ public class GameManager : MonoBehaviourPun
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
     public void testFunctionPlacePOI()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
         Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
         GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
         Vector3 newPosition = new Vector3(position.x, position.y, -5);
