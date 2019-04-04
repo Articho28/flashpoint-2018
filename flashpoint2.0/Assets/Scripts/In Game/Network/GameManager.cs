@@ -115,6 +115,9 @@ public class GameManager : MonoBehaviourPun
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
                 }
                 else if (difficulty == Difficulty.Veteran) //4 hazmats + 3 initial explosions
                 {
@@ -122,6 +125,9 @@ public class GameManager : MonoBehaviourPun
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
                 }
                 else if (difficulty == Difficulty.Heroic) //5 hazmats + 4 initial explosions
                 {
@@ -130,6 +136,10 @@ public class GameManager : MonoBehaviourPun
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
                 }
             }
 
@@ -235,7 +245,7 @@ public class GameManager : MonoBehaviourPun
         //System.Random r = new System.Random();
         //blackDice = r.Next(1, 9);
         //redDice = r.Next(1, 7);
-        blackDice = 1;
+        blackDice = 1; 
         redDice = 1;
 
     }
