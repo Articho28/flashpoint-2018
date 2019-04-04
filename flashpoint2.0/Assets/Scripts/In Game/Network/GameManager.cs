@@ -1018,8 +1018,12 @@ public class GameManager : MonoBehaviourPun
                 {
                     DisplayToConsolePlaceFirefighter(Turn);
                 }
+                else
+                {
+                    DisplayToConsolePlayGame(Turn);
+                }
                 DisplayPlayerTurn();
-                DisplayToConsolePlayGame(Turn);
+
             }
         }
 

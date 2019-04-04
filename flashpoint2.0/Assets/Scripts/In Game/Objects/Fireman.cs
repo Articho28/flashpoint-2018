@@ -612,6 +612,10 @@ public class Fireman : GameUnit
                 carryVictim();
             }
         }
+        else if (GameManager.GM.Turn != PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            GameConsole.instance.UpdateFeedback("It's not your turn!");
+        }
     }
 
     public int getAP()
