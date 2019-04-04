@@ -141,32 +141,19 @@ public class GameManager : MonoBehaviourPun
     {
         //TODO Cache the playerList.
 
+
+        object[] data = new object[PhotonNetwork.PlayerList.Length];
+        int i = 0;
+
         foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
         {
             Debug.Log("OnAllPrefabsSpawned sees " + p.NickName + " with ActorNumber " + p.ActorNumber);
             playersListNameCache.Insert(p.ActorNumber - 1, p.NickName);
+            data[i] = playersListNameCache[i];
+            i++;
         }
 
-
-        for (int i=0; i < playersListNameCache.Count; i++)
-        {
-            Debug.Log("In for loop at index " + i + " I am seeing " + playersListNameCache[i]);
-        }
-
-        foreach (string name in playersListNameCache)
-        {
-            Debug.Log("Cached list contains " + name);
-
-        }
-        /*
-        object[] data = new object[cachedPlayerList.Length];
-
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            data[i] = cachedPlayerList[i].NickName;
-        }*/
-
-        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
 
@@ -1436,7 +1423,8 @@ public class GameManager : MonoBehaviourPun
 
             for (int i = 0; i < receivedData.Length; i++)
             {
-                playersListNameCache.Add((string)receivedData[i]);
+                Debug.Log("Received at " + i + " the name " + receivedData[i]);
+                playersListNameCache.Insert(i, receivedData[i]);
             }
         }
 
