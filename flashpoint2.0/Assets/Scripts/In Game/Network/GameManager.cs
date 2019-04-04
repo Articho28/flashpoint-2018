@@ -378,36 +378,43 @@ public class GameManager : MonoBehaviourPun
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
     public void testFunctionPlacePOI()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
-        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
-        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
-        //Vector3 newPosition = new Vector3(position.x, position.y, -5);
+        if( PhotonNetwork.IsMasterClient)
+        {
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
+            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+            GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+            //Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-        POI.GetComponent<Transform>().position = position;
-        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
-        currentSpace.addOccupant(POI.GetComponent<POI>());
-        numOfActivePOI++;
+            POI.GetComponent<Transform>().position = position;
+            POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+            POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+            currentSpace.addOccupant(POI.GetComponent<POI>());
+            numOfActivePOI++;
+        }
+       
     }
 
 
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING 
     public void testFunctionPlaceVictim()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
-        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
-        GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
 
-        poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
-        poi.GetComponent<POI>().setIsFlipped(true);
-        poi.GetComponent<Transform>().position = position;
-        poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        poi.GetComponent<GameUnit>().setPhysicalObject(poi);
-        currentSpace.addOccupant(poi.GetComponent<POI>());
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
+            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+            GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
 
+            poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
+            poi.GetComponent<POI>().setIsFlipped(true);
+            poi.GetComponent<Transform>().position = position;
+            poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+            poi.GetComponent<GameUnit>().setPhysicalObject(poi);
+            currentSpace.addOccupant(poi.GetComponent<POI>());
 
+        }
     }
 
     void removeSmokeMarker(Space targetSpace)
