@@ -1017,8 +1017,9 @@ public class GameManager : MonoBehaviourPun
                 if (isFirstReset)
                 {
                     DisplayToConsolePlaceFirefighter(Turn);
-                    DisplayPlayerTurn();
                 }
+                DisplayPlayerTurn();
+                DisplayToConsolePlayGame(Turn);
             }
         }
 
