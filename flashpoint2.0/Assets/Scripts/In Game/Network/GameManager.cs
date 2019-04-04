@@ -147,9 +147,16 @@ public class GameManager : MonoBehaviourPun
             playersListNameCache.Insert(p.ActorNumber - 1, p.NickName);
         }
 
+
+        for (int i=0; i < playersListNameCache.Count; i++)
+        {
+            Debug.Log("In for loop at index " + i + " I am seeing " + playersListNameCache[i]);
+        }
+
         foreach (string name in playersListNameCache)
         {
             Debug.Log("Cached list contains " + name);
+
         }
         /*
         object[] data = new object[cachedPlayerList.Length];
