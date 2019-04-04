@@ -24,6 +24,9 @@ public enum PhotonEventCodes
     PlaceInitialHotSpot = 17,
     FlipPOI = 18,
     ReplenishPOI = 19,
-    PlaceInitialAmbulance = 20,
-    PlaceInitialEngine = 21
+    PlaceVehicles = 20,
+    KnockdownFireman = 21,
+    CachePlayerNames = 22,
+    PlaceInitialAmbulance = 23,
+    PlaceInitialEngine = 24
 }

@@ -95,12 +95,12 @@ public enum Difficulty
 public enum Specialist
 {
     FamilyGame,
-    Paramedic,
-    FireCaptain,
-    ImagingTechnician,
-    CAFSFirefighter,
-    HazmatTechinician,
-    Generalist,
-    RescueSpecialist,
-    DriverOperator
+    Paramedic, //0
+    FireCaptain, //1
+    ImagingTechnician, //2
+    CAFSFirefighter, //3
+    HazmatTechinician, //4
+    Generalist, //5
+    RescueSpecialist, //6
+    DriverOperator //7
 }
