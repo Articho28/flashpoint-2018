@@ -378,8 +378,7 @@ public class GameManager : MonoBehaviourPun
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
     public void testFunctionPlacePOI()
     {
-        if( PhotonNetwork.IsMasterClient)
-        {
+       
             Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
             Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
             GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
@@ -391,7 +390,7 @@ public class GameManager : MonoBehaviourPun
             POI.GetComponent<GameUnit>().setPhysicalObject(POI);
             currentSpace.addOccupant(POI.GetComponent<POI>());
             numOfActivePOI++;
-        }
+
        
     }
 
@@ -400,8 +399,6 @@ public class GameManager : MonoBehaviourPun
     public void testFunctionPlaceVictim()
     {
 
-        if (PhotonNetwork.IsMasterClient)
-        {
             Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
             Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
             GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
@@ -414,7 +411,7 @@ public class GameManager : MonoBehaviourPun
             poi.GetComponent<GameUnit>().setPhysicalObject(poi);
             currentSpace.addOccupant(poi.GetComponent<POI>());
 
-        }
+
     }
 
     void removeSmokeMarker(Space targetSpace)
