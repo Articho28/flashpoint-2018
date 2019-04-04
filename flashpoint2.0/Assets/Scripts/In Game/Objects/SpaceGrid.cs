@@ -17,6 +17,8 @@ public class SpaceGrid : MonoBehaviourPun {
     Vector2 gridWorldSize;
 
     public Space[,] grid;
+    public Space[] engineSpaces;
+    public Space[] ambulanceSpaces;
 
     [SerializeField] 
     float spaceRadius;
@@ -29,6 +31,7 @@ public class SpaceGrid : MonoBehaviourPun {
         gridSizeX = 10;
         gridSizeY = 8;
         CreateGrid();
+        InitVehicleSpots();
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.BoardSetup, null, options, SendOptions.SendReliable);
     }
@@ -63,8 +66,50 @@ public class SpaceGrid : MonoBehaviourPun {
 
     }
 
+    private void InitVehicleSpots() {
+        ambulanceSpaces = new Space[8];
+        engineSpaces = new Space[8];
 
+        ambulanceSpaces[0] = grid[5, 0];
+        ambulanceSpaces[1] = grid[6, 0];
+        ambulanceSpaces[2] = grid[9, 3];
+        ambulanceSpaces[3] = grid[9, 4];
+        ambulanceSpaces[4] = grid[4, 7];
+        ambulanceSpaces[5] = grid[3, 7];
+        ambulanceSpaces[6] = grid[0, 4];
+        ambulanceSpaces[7] = grid[0, 3];
 
+        engineSpaces[0] = grid[7, 0];
+        engineSpaces[1] = grid[8, 0];
+        engineSpaces[2] = grid[9, 5];
+        engineSpaces[3] = grid[9, 6];
+        engineSpaces[4] = grid[2, 7];
+        engineSpaces[5] = grid[1, 7];
+        engineSpaces[6] = grid[0, 4];
+        engineSpaces[7] = grid[0, 3];
+    }
+
+    public Space getClosestAmbulanceSpot(Space space) {
+        Space closestSpace = ambulanceSpaces[0];
+        int closestDist = this.getDist(space, closestSpace);
+        for(int i = 1; i < ambulanceSpaces.Length; i++) {
+            int dist = this.getDist(space, ambulanceSpaces[i]);
+            if(dist < closestDist) {
+                closestSpace = ambulanceSpaces[i];
+                closestDist = dist;
+            }
+        }
+
+        return closestSpace;
+    }
+
+    //distance to adjacent horizontal/vertical tile is 1
+    private int getDist(Space s1, Space s2) {
+        int distX = Mathf.Abs(s1.indexX - s2.indexX);
+        int distY = Mathf.Abs(s1.indexY - s2.indexY);
+
+        return distX + distY;
+    }
 
     private void BoardSetup()     {
         //INSTANTIATE WALLS
@@ -297,7 +342,7 @@ public class SpaceGrid : MonoBehaviourPun {
         if (grid != null) {
             foreach (Space t in grid) {
                 Gizmos.color = Color.red;
-                if (t.kind == SpaceKind.Outdoor) {
+                if (t.spaceKind == SpaceKind.Outdoor) {
                     Gizmos.color = Color.cyan;
                 }
                 Gizmos.DrawWireCube(t.worldPosition, new Vector3(spaceDiameter - 0.01f, spaceDiameter - 0.01f, 1));
