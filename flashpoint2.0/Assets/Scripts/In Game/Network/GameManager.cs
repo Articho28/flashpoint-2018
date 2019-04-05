@@ -508,6 +508,7 @@ public class GameManager : MonoBehaviourPun
                 }
                 else
                 {
+                    Debug.Log("Flip flip flipping");
                     FlipPOI(targetSpace);
                     Debug.Log("A victim should have appeared of a false alarm at  " + targetSpace.indexX + " and " + targetSpace.indexY);
                     foundUnflippedPOI = true;
@@ -526,20 +527,30 @@ public class GameManager : MonoBehaviourPun
             GameManager.lostVictims++;
             GameUI.instance.AddLostVictim();
         }
+
         else if (foundUnflippedPOI)
         {
-            List<GameUnit> updatedOccupants = targetSpace.getOccupants();
+            Debug.Log("Made is this far bro");
 
-            foreach (GameUnit u in updatedOccupants) 
-            { 
-                if (u.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+            List<GameUnit> updatedOccupants = targetSpace.getOccupants();
+            
+            foreach (GameUnit g in updatedOccupants)
+            {
+                Debug.Log("Finding this gameunit in" + targetSpace.indexX + " and " + targetSpace.indexY + " : " + g);
+
+                string type = g.getType();
+
+                Debug.Log("It says it's this type dawg " + type);
+
+                if (type == FlashPointGameConstants.GAMEUNIT_TYPE_POI) 
                 {
-                    Debug.Log("Found the flipped POI");
-                    targetPOI = u;
-                    break;
+                    Debug.Log("It's a type POI dawg");
+                    targetPOI = g;
+
                 }
             }
 
+          
             if (targetPOI != null)
             {
                 Debug.Log("Deleting POI");
@@ -549,8 +560,6 @@ public class GameManager : MonoBehaviourPun
                 GameManager.lostVictims++;
                 GameUI.instance.AddLostVictim();
             }
-
-
         }
 
     }
@@ -1502,6 +1511,8 @@ public class GameManager : MonoBehaviourPun
 
             gameUnits.Remove(questionMark);
             curr.addOccupant(poi.GetComponent<GameUnit>());
+
+            Debug.Log("This is from flip poi. The flipped status is " + poi.GetComponent<POI>().getIsFlipped());
 
             if (questionMark != null)
             {
