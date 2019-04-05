@@ -61,11 +61,11 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.H))
                 {
-                    //driveAmbulance(); 
+                    //driveAmbulance(); TODO
                 }
                 else if (Input.GetKeyDown(KeyCode.T))
                 {
-                    //driveEngine();
+                    //driveEngine(); TODO
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
@@ -731,7 +731,7 @@ public class Fireman : GameUnit
             isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
 
 
-    public void carryVictim()       //if ambulance carrying victim: 0AP TODO
+    public void carryVictim()       //if ambulance carrying victim: 0AP && Victim is carried by ambulance in experienced game TODO
     {
         //get current space
         Space current = this.getCurrentSpace();
@@ -762,31 +762,100 @@ public class Fireman : GameUnit
 
     }
 
-    void driveAmbulance(int direction)
+    private ArrayList getNearbyParkingSpots(Space s)
+    {
+        ArrayList nearbyParkingSpots = new ArrayList();
+        ParkingSpot[] psArray = s.getParkingSpots();
+
+        //Collect directions in which there is a parking spot
+        for (int i = 0; i < psArray.Length; i++)
+        {
+            if (psArray[i] != null)
+            {
+                nearbyParkingSpots.Add(i);
+            }
+        }
+        return nearbyParkingSpots;
+    }
+
+
+    void driveAmbulance(Space targetSpace, int direction)
     {
         while (!GameManager.GM.isFamilyGame)
         {
             int ap = this.getAP();
             Space current = this.getCurrentSpace();
+            this.getAmbulance();
 
-            //get place of ambulance
+            ArrayList nearbyParkingSpots = getNearbyParkingSpots(this.getCurrentSpace());
+            validInputOptions = nearbyParkingSpots;
+
             //if fireman is in same space with ambulance
-
+           
                 //promt: right or left
-                //if prompt is right
-                    //get the curr x/y index & 4 switch statements: 
-                        //if column 0 (right-clockwise)
-                    
-                //if prompt is left
+                string optionsToUser = "";
 
-            //else if fireman is not in same space with ambulance
-                //iterate through entire grid 
-                //get the ambulance
-                //get index x - found ambulance in this space
-                //promt user: right or left
-                    //if left SAME
-                    //if right SAME
-        }
+                foreach (int index in nearbyParkingSpots)
+                {
+                    if (index == 1)
+                    {
+                        optionsToUser += "Press 1 for Driving Clockwise";
+                    }
+                    else if (index == 3)
+                    {
+                        optionsToUser += " Press 2 for Driving Counter-Clockwise";
+                    }
+                }
+
+                GameConsole.instance.UpdateFeedback(optionsToUser);
+
+                //if prompt is right
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    //get the curr x/y index & 4 switch statements: 
+                    int currentSpaceX = this.getCurrentSpace().indexX;
+                    int currentSpaceY = this.getCurrentSpace().indexY;
+                    object[] data = { currentSpaceX, currentSpaceY };
+                    ParkingSpot[] parkingSpots = targetSpace.getParkingSpots();
+                    int indexX = targetSpace.indexX;
+                    int indexY = targetSpace.indexY;
+                    if (parkingSpots != null)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            direction = i;
+                            ParkingSpot ps = parkingSpots[i];
+                            if (ps != null)
+                            {
+                                //switch (direction)
+                                //{
+                                //    case 0:
+                                //        //targetSpace.   (null, direction);
+                                //        int northX = targetSpace.indexX;
+                                //        int northY = targetSpace.indexY - 1;
+                                //        if (northX <= 10 && northY <= 8)
+                                //        {
+                                //            Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                                //        }
+                                //        break;
+                                //}
+                            }
+                        }
+                    }
+                }
+                //if prompt is left
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+
+                }
+            }
+        //else if fireman is not in same space with ambulance
+        //iterate through entire grid 
+        //get the ambulance
+        //get index x - found ambulance in this space
+        //promt user: right or left
+        //if left SAME
+        //if right SAME
     }
 
     void driveEngine()
@@ -797,7 +866,31 @@ public class Fireman : GameUnit
 
     void rideAmbulance()
     {
-        //TODO
+        //get current space
+        Space current = this.getCurrentSpace();
+
+        if (this.getAmbulance() != null)
+        {
+            GameConsole.instance.UpdateFeedback("You are already on an ambulance!");
+            return;
+        }
+        else
+        {
+
+            List<GameUnit> gameUnits = current.getOccupants();
+
+            foreach (GameUnit gu in gameUnits)
+            {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                {
+                    Ambulance h = gu.GetComponent<Ambulance>();
+                    this.setAmbulance(h);
+                    GameConsole.instance.UpdateFeedback("Riding ambulance successfully!");
+                    return;
+                }
+            }
+            GameConsole.instance.UpdateFeedback("There is no ambulance!");
+        }
     }
 
     void rideEngine()
@@ -812,6 +905,8 @@ public class Fireman : GameUnit
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
+        Ambulance h = this.getAmbulance();
+        Engine n = this.getEngine();
         Space curr = this.getCurrentSpace();
         bool reachable = true;
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
@@ -869,6 +964,39 @@ public class Fireman : GameUnit
                         }
                     }
 
+                }
+                else if(h != null && ap >= 2)//if the fireman riding the ambulance
+                {
+                    Kind destinationKind = destination.getKind();
+                    if(destinationKind == Kind.ParkingSpot)
+                    {
+                        //ride ambulance
+                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+
+                        this.setCurrentSpace(destination);
+                        v.setCurrentSpace(destination);
+                        this.decrementAP(2);
+                        FiremanUI.instance.SetAP(this.AP);
+                        this.GetComponent<Transform>().position = newPosition;
+                        v.GetComponent<Transform>().position = newPosition;
+
+                        //removing the ambulance from the current space
+                        List<GameUnit> currentGameUnits = curr.getOccupants();
+                        GameUnit ambulance = null;
+                        foreach (GameUnit gu in currentGameUnits)
+                        {
+                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                            {
+                                ambulance = gu;
+                                break;
+                            }
+                        }
+                        currentGameUnits.Remove(ambulance);
+                        destination.addOccupant(ambulance);
+
+
+                        GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
+                    }
                 }
                 else if (v != null && ap >= 2)//if the fireman is carrying a victim
                 {

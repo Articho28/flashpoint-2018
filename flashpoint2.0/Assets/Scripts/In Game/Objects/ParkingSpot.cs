@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParkingSpot
+public class ParkingSpot: MonoBehaviour
 {
 
-    void createPS()
-    {
-        //TODO
-    }
 }
