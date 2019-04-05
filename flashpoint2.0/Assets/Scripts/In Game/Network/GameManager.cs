@@ -1077,7 +1077,6 @@ public class GameManager : MonoBehaviourPun
         }
         else if (evCode == (byte)PhotonEventCodes.AdvanceFireMarker)
         {
-            Debug.Log("HI");
             object[] dataReceived = eventData.CustomData as object[];
             Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
@@ -1089,36 +1088,36 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
-            List<GameUnit> occupants = targetSpace.occupants;
-            Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
-            foreach(GameUnit gameUnit in occupants) {
-                //if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
-                //    object[] data = new object[] {gameUnit, targetSpace.indexX, targetSpace.indexY };
+            object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
 
-                //    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
-                //}
-                Debug.Log("GameUnit type is " + gameUnit.getType());
-            }
-
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
 
         }
-        else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the fireman, space x, and space y for data
+        else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the space x, and space y for data
             object[] dataReceived = eventData.CustomData as object[];
-            Fireman fireman = (Fireman) dataReceived[0];
-            int x = (int) dataReceived[1];
-            int y = (int) dataReceived[2];
+            int x = (int) dataReceived[0];
+            int y = (int) dataReceived[1];
 
             Space space = StateManager.instance.spaceGrid.grid[x, y];
             Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(space);
+            Debug.Log("ambulance spot x: " + ambulanceSpot.indexX + ", y: " + ambulanceSpot.indexY);
 
-            fireman.setCurrentSpace(ambulanceSpot);
-            ambulanceSpot.addOccupant(fireman);
+            Vector3 pos = new Vector3(ambulanceSpot.worldPosition.x, ambulanceSpot.worldPosition.y, -10);
+
+            List<GameUnit> occupants = space.occupants;
+            Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
+            foreach (GameUnit gameUnit in occupants) {
+                if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                    gameUnit.transform.position = pos;
+                    gameUnit.GetComponent<Fireman>().setCurrentSpace(ambulanceSpot);
+                    ambulanceSpot.addOccupant(gameUnit);
+                }
+                Debug.Log("GameUnit type is " + gameUnit.getType());
+            }
         }
 
         else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)
         {
-
-
             object[] dataReceived = eventData.CustomData as object[];
             Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
