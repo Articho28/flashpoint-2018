@@ -16,6 +16,7 @@ public class SpaceGrid : MonoBehaviourPun {
     public Transform firefighter;
     Vector2 gridWorldSize;
 
+    [SerializeField]
     public Space[,] grid;
     public Space[] engineSpaces;
     public Space[] ambulanceSpaces;
