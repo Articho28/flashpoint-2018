@@ -227,12 +227,13 @@ public class GameManager : MonoBehaviourPun
         {
             Debug.Log("It's an explosion");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data, sendToAllOptions, SendOptions.SendReliable);
-
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else if (sp == SpaceStatus.Smoke)
         {
             Debug.Log("It's turned to Fire.");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -1088,15 +1089,11 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
-            object[] data = new object[] { targetSpace.indexX, targetSpace.indexY };
-
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
-
         }
         else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the space x, and space y for data
             object[] dataReceived = eventData.CustomData as object[];
-            int x = (int) dataReceived[0];
-            int y = (int) dataReceived[1];
+            int x = (int) dataReceived[1];
+            int y = (int) dataReceived[2];
 
             Space space = StateManager.instance.spaceGrid.grid[x, y];
             Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(space);
