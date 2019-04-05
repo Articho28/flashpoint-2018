@@ -1199,16 +1199,16 @@ public class Fireman : GameUnit
 
         if (reachable)
         {
+            Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+            Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
+
             if (sp == SpaceStatus.Fire)
             {
                 if (ap >= 3 && v == null) //&&f has enough to move
                 {
-                    Debug.Log(ap);
-                    Debug.Log(this.transform.position);
-                    this.setCurrentSpace(destination);
+                    this.setCurrentSpace(newSpace);
                     this.decrementAP(2);
                     FiremanUI.instance.SetAP(this.AP);
-                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
                     this.GetComponent<Transform>().position = newPosition;
                 }
                 else
@@ -1221,11 +1221,10 @@ public class Fireman : GameUnit
             {
                 if (v == null && ap >= 1)
                 {
-                    this.setCurrentSpace(destination);
+                    this.setCurrentSpace(newSpace);
                     this.decrementAP(1);
                     FiremanUI.instance.SetAP(this.AP);
                     GameConsole.instance.UpdateFeedback("You have successfully moved");
-                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
                     this.GetComponent<Transform>().position = newPosition;
                     List<GameUnit> gameUnits = destination.getOccupants();
                     foreach (GameUnit gu in gameUnits)
@@ -1251,10 +1250,9 @@ public class Fireman : GameUnit
                     if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke)
                     {
                         //carry victim
-                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
 
-                        this.setCurrentSpace(destination);
-                        v.setCurrentSpace(destination);
+                        this.setCurrentSpace(newSpace);
+                        v.setCurrentSpace(newSpace);
                         this.decrementAP(2);
                         FiremanUI.instance.SetAP(this.AP);
                         this.GetComponent<Transform>().position = newPosition;
@@ -1293,9 +1291,8 @@ public class Fireman : GameUnit
                     else if (destinationSpaceKind == SpaceKind.Outdoor)
                     {
                         //carry victim outside the building
-                        this.setCurrentSpace(destination);
+                        this.setCurrentSpace(newSpace);
                         this.decrementAP(2);
-                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
                         this.GetComponent<Transform>().position = newPosition;
 
                         //change victim status to rescued
