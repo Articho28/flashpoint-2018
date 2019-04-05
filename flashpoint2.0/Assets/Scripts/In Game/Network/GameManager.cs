@@ -244,11 +244,11 @@ public class GameManager : MonoBehaviourPun
     {
         //TODO reset proper randomization
 
-        System.Random r = new System.Random();
-        blackDice = r.Next(1, 9);
-        redDice = r.Next(1, 7);
-        //blackDice = 1;
-        //redDice = 1;
+        //System.Random r = new System.Random();
+        //blackDice = r.Next(1, 9);
+        //redDice = r.Next(1, 7);
+        blackDice = 1;
+        redDice = 1;
 
     }
 
@@ -399,7 +399,7 @@ public class GameManager : MonoBehaviourPun
     public void testFunctionPlaceVictim()
     {
 
-            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[3, 1];
             Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
             GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
 
@@ -430,9 +430,8 @@ public class GameManager : MonoBehaviourPun
         }
         if (targetMarker != null)
         {
-            Debug.Log("Removing Smoke Marker");
             string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
-            GameConsole.instance.UpdateFeedback(message);
+            Debug.Log(message);
             spaceOccupants.Remove(targetMarker);
             Destroy(targetMarker.physicalObject);
             Destroy(targetMarker);
@@ -476,6 +475,7 @@ public class GameManager : MonoBehaviourPun
         newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
         newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
+        targetSpace.setSpaceStatus(SpaceStatus.Fire);
 
         //TODO Find POIs and destroy them
 
@@ -509,10 +509,9 @@ public class GameManager : MonoBehaviourPun
                 else
                 {
                     FlipPOI(targetSpace);
-                    Debug.Log("there shoudl be a flipped poi or a false alarm has alraedy disappeared ");
+                    Debug.Log("A victim should have appeared of a false alarm at  " + targetSpace.indexX + " and " + targetSpace.indexY);
                     foundUnflippedPOI = true;
                     break;
-
                 }
             }
         }
@@ -529,9 +528,11 @@ public class GameManager : MonoBehaviourPun
         }
         else if (foundUnflippedPOI)
         {
-            foreach (GameUnit u in occupants) 
+            List<GameUnit> updatedOccupants = targetSpace.getOccupants();
+
+            foreach (GameUnit u in updatedOccupants) 
             { 
-                if (u.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && u.GetComponent<POI>().getIsFlipped())
+                if (u.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
                 {
                     Debug.Log("Found the flipped POI");
                     targetPOI = u;
@@ -542,7 +543,7 @@ public class GameManager : MonoBehaviourPun
             if (targetPOI != null)
             {
                 Debug.Log("Deleting POI");
-                occupants.Remove(targetPOI);
+                updatedOccupants.Remove(targetPOI);
                 Destroy(targetPOI.physicalObject);
                 Destroy(targetPOI);
                 GameManager.lostVictims++;
@@ -1489,7 +1490,7 @@ public class GameManager : MonoBehaviourPun
                 GameConsole.instance.UpdateFeedback("It was a Victim!");
                 numVictim--;
             }
-            //Instiate Object
+            //Instantiate Object
             GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/" + POIname) as GameObject);
 
             poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
@@ -1501,8 +1502,13 @@ public class GameManager : MonoBehaviourPun
 
             gameUnits.Remove(questionMark);
             curr.addOccupant(poi.GetComponent<GameUnit>());
-            Destroy(questionMark.physicalObject);
-            Destroy(questionMark);
+
+            if (questionMark != null)
+            {
+                Destroy(questionMark.physicalObject);
+                Destroy(questionMark);
+            }
+           
 
 
         }
