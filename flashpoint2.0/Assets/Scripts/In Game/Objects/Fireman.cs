@@ -67,12 +67,21 @@ public class Fireman : GameUnit
                 {
                     //driveEngine(); TODO
                 }
+                else if (Input.GetKeyDown(KeyCode.R))
+                {
+                    //rideAmbulance(); //if getAmbulance TODO
+                    //rideEngine(); //if getEngine TODO
+                }
+                else if (Input.GetKeyDown(KeyCode.X))
+                {
+                    //deassociateAmbulance(); //if fireman riding ambulance TODO
+                   //deassociateEngine(); //if fireman riding engine TODO
+                }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
                     //crewChange(); TODO
                 }
             }
-
 
             //MOVE: ARROWS WITH DIRECTION
             //OPEN/CLOSE DOOR: "D"
@@ -99,9 +108,6 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.D)) //open/close door
             {
-
-
-
                 int currentSpaceX = this.getCurrentSpace().indexX;
                 int currentSpaceY = this.getCurrentSpace().indexY;
                 object[] data = { currentSpaceX, currentSpaceY };
@@ -812,6 +818,8 @@ public class Fireman : GameUnit
                 //if prompt is right
                 if (Input.GetKeyDown(KeyCode.Alpha1))
                 {
+                    //if opposite side: 4AP
+
                     //get the curr x/y index & 4 switch statements: 
                     int currentSpaceX = this.getCurrentSpace().indexX;
                     int currentSpaceY = this.getCurrentSpace().indexY;
@@ -863,7 +871,7 @@ public class Fireman : GameUnit
         //fireman has to be on the same space with engine
         //TODO
     }
-    void rideAmbulance() //add key in update TODO
+    void rideAmbulance() 
     {
         //get current space
         Space current = this.getCurrentSpace();
@@ -875,7 +883,6 @@ public class Fireman : GameUnit
         }
         else
         {
-
             List<GameUnit> gameUnits = current.getOccupants();
 
             foreach (GameUnit gu in gameUnits)
@@ -890,9 +897,13 @@ public class Fireman : GameUnit
             }
             GameConsole.instance.UpdateFeedback("There is no ambulance!");
         }
+
+        //fireman that are in the Vehicle Parking Spot of a Vehicle while it is being Driven can Ride the Vehicle for 0AP
+        //any number of firemen may Ride a Vehicle at one time
+        //exit
     }
 
-    void rideEngine() //add key in update TODO
+    void rideEngine()
     {
         //get current space
         Space current = this.getCurrentSpace();
@@ -1018,6 +1029,9 @@ public class Fireman : GameUnit
 
 
                         GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
+
+                        //if fireman want to exit the ambulance
+                        deassociateAmbulance();
                     }
                 }
                 else if (h != null && ap >= 2)//if the fireman riding the engine
@@ -1051,6 +1065,9 @@ public class Fireman : GameUnit
 
 
                         GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
+
+                        //if fireman want to exit the engine
+                        deassociateEngine();
                     }
                 }
                 else if (v != null && ap >= 2)//if the fireman is carrying a victim
