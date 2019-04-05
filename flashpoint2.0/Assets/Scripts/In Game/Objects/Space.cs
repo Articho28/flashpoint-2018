@@ -82,6 +82,7 @@ public class Space {
     public void setDoors(Door[] newDoors)
     {
         this.doors = newDoors;
+
     }
 
     public void setWalls(Wall[] newWalls)
@@ -94,6 +95,11 @@ public class Space {
         return this.walls;
     }
 
+
+    public void addOccupant(GameUnit u)
+    {
+        occupants.Add(u);
+    }
     public void setParkingSpots(ParkingSpot[] newParkingSpots)
     {
         this.parkingSpots = newParkingSpots;
@@ -103,11 +109,6 @@ public class Space {
     {
         return this.parkingSpots;
     }
-
-    public void addOccupant(GameUnit u)
-    {
-        occupants.Add(u);
-    }
 
     public List<GameUnit> getOccupants()
     {
