@@ -863,8 +863,7 @@ public class Fireman : GameUnit
         //fireman has to be on the same space with engine
         //TODO
     }
-
-    void rideAmbulance()
+    void rideAmbulance() //add key in update TODO
     {
         //get current space
         Space current = this.getCurrentSpace();
@@ -893,14 +892,37 @@ public class Fireman : GameUnit
         }
     }
 
-    void rideEngine()
+    void rideEngine() //add key in update TODO
     {
-        //TODO
+        //get current space
+        Space current = this.getCurrentSpace();
+
+        if (this.getEngine() != null)
+        {
+            GameConsole.instance.UpdateFeedback("You are already on an engine!");
+            return;
+        }
+        else
+        {
+
+            List<GameUnit> gameUnits = current.getOccupants();
+
+            foreach (GameUnit gu in gameUnits)
+            {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                {
+                    Engine n = gu.GetComponent<Engine>();
+                    this.setEngine(n);
+                    GameConsole.instance.UpdateFeedback("Riding engine successfully!");
+                    return;
+                }
+            }
+            GameConsole.instance.UpdateFeedback("There is no engine!");
+        }
     }
 
     public void move(int direction)
     {
-
 
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
@@ -993,6 +1015,39 @@ public class Fireman : GameUnit
                         }
                         currentGameUnits.Remove(ambulance);
                         destination.addOccupant(ambulance);
+
+
+                        GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
+                    }
+                }
+                else if (h != null && ap >= 2)//if the fireman riding the engine
+                {
+                    Kind destinationKind = destination.getKind();
+                    if (destinationKind == Kind.ParkingSpot)
+                    {
+                        //ride engine
+                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+
+                        this.setCurrentSpace(destination);
+                        v.setCurrentSpace(destination);
+                        this.decrementAP(2);
+                        FiremanUI.instance.SetAP(this.AP);
+                        this.GetComponent<Transform>().position = newPosition;
+                        v.GetComponent<Transform>().position = newPosition;
+
+                        //removing the engine from the current space
+                        List<GameUnit> currentGameUnits = curr.getOccupants();
+                        GameUnit engine = null;
+                        foreach (GameUnit gu in currentGameUnits)
+                        {
+                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                            {
+                                engine = gu;
+                                break;
+                            }
+                        }
+                        currentGameUnits.Remove(engine);
+                        destination.addOccupant(engine);
 
 
                         GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
@@ -1256,7 +1311,7 @@ public class Fireman : GameUnit
             {
                 if ((int)data[0] == PV.ViewID)
                 {
-                    //do stuff here
+                   //move();
                 }
             }
         }
