@@ -105,7 +105,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
         foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
         {
-            Debug.Log("Finding player " + p.NickName);
+            Debug.Log("Finding player " + p.NickName + " and actor number " + p.ActorNumber);
             GameObject entry = Instantiate(PlayerListEntryPrefab);
             entry.transform.SetParent(RoomPlayerListContent.transform);
             entry.transform.localScale = Vector3.one;

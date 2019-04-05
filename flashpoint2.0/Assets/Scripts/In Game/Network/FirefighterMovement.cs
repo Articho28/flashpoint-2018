@@ -46,22 +46,27 @@ public class FirefighterMovement : MonoBehaviourPun
     public bool fireFighterHasBeenPlaced()
     {
         Space UserTargetInitialSpace = UserInputManager.instance.getLastSpaceClicked();
-        Vector3 position = new Vector3(UserTargetInitialSpace.worldPosition.x, UserTargetInitialSpace.worldPosition.y, -10);
-        SpaceKind kind = UserTargetInitialSpace.getSpaceKind();
 
-        if (PV.IsMine && UserTargetInitialSpace != null)
-        {
-            if (kind == SpaceKind.Outdoor)
-            {
-                initialPosition.position = position;
-                return true;
-            }
-            else
-            {
-                GameConsole.instance.UpdateFeedback("Invalid placement. It has to be outside of the house!!");
-                return false;
+        if(UserTargetInitialSpace != null) {
+            Vector3 position = new Vector3(UserTargetInitialSpace.worldPosition.x, UserTargetInitialSpace.worldPosition.y, -10);
+            SpaceKind kind = UserTargetInitialSpace.getSpaceKind();
+
+            if (PV.IsMine) {
+                if (kind == SpaceKind.Outdoor) {
+                    initialPosition.position = position;
+
+                    Fireman curr = this.GetComponentInParent<Fireman>();
+                    curr.setCurrentSpace(UserTargetInitialSpace);
+                    UserTargetInitialSpace.addOccupant(curr);
+                    return true;
+                }
+                else {
+                    GameConsole.instance.UpdateFeedback("Invalid placement. It has to be outside of the house!!");
+                    return false;
+                }
             }
         }
+
         return false;
 
 
