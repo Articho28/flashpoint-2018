@@ -1082,7 +1082,6 @@ public class Fireman : GameUnit
                 {
                     isWaitingForInput = false;
                     isSelectingSpecialist = false;
-                    GameManager.GM.freeSpecialistIndex.RemoveAt(0);
                     this.spec = Specialist.Paramedic;
                     GameManager.IncrementTurn();
 
@@ -1094,7 +1093,6 @@ public class Fireman : GameUnit
             {
                 isWaitingForInput = false;
                 isSelectingSpecialist = false;
-                GameManager.GM.freeSpecialistIndex.RemoveAt(1);
                 this.spec = Specialist.FireCaptain;
                 GameManager.IncrementTurn();
             }
@@ -1102,7 +1100,6 @@ public class Fireman : GameUnit
             {
                 isWaitingForInput = false;
                 isSelectingSpecialist = false;
-                GameManager.GM.freeSpecialistIndex.Remove(2);
                 this.spec = Specialist.ImagingTechnician;
                 GameManager.IncrementTurn();
             }
@@ -1110,7 +1107,6 @@ public class Fireman : GameUnit
             {
                 isWaitingForInput = false;
                 isSelectingSpecialist = false;
-                GameManager.GM.freeSpecialistIndex.Remove(3);
                 this.spec = Specialist.CAFSFirefighter;
                 ;
                 GameManager.IncrementTurn();
@@ -1119,7 +1115,6 @@ public class Fireman : GameUnit
             {
                 isWaitingForInput = false;
                 isSelectingSpecialist = false;
-                GameManager.GM.freeSpecialistIndex.Remove(4);
                 this.spec = Specialist.HazmatTechinician;
                 GameManager.IncrementTurn();
             }
@@ -1127,7 +1122,6 @@ public class Fireman : GameUnit
             {
                 isWaitingForInput = false;
                 isSelectingSpecialist = false;
-                GameManager.GM.freeSpecialistIndex.Remove(5);
                 this.spec = Specialist.Generalist;
                 GameManager.IncrementTurn();
             }
@@ -1135,7 +1129,6 @@ public class Fireman : GameUnit
             {
                 isWaitingForInput = false;
                 isSelectingSpecialist = false;
-                GameManager.GM.freeSpecialistIndex.Remove(6);
                 this.spec = Specialist.RescueSpecialist;
                 GameManager.IncrementTurn();
             }
@@ -1143,7 +1136,6 @@ public class Fireman : GameUnit
             {
                 isWaitingForInput = false;
                 isSelectingSpecialist = false;
-                GameManager.GM.freeSpecialistIndex.Remove(7);
                 this.spec = Specialist.DriverOperator;
                 GameManager.IncrementTurn();
             }

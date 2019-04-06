@@ -30,26 +30,9 @@ public class GameManager : MonoBehaviourPun
     ArrayList playersListNameCache;
 
     //Game relevant variables
-<<<<<<< HEAD
-    public ArrayList availableSpecialists = new ArrayList 
-    { 
-        Specialist.Paramedic,
-        Specialist.FireCaptain,
-        Specialist.ImagingTechnician,
-        Specialist.CAFSFirefighter,
-        Specialist.HazmatTechinician,
-        Specialist.Generalist,
-        Specialist.RescueSpecialist,
-        Specialist.DriverOperator
-    };
-    public ArrayList freeSpecialistIndex = new ArrayList //all specilaists are free at first
-    { 
-        0,1,2,3,4,5,6,7
-    };
-=======
+
     public Specialist[] availableSpecialists;
     public int[] freeSpecialistIndex; //all specilaists are free at first
->>>>>>> bfcc3fae5d05b4d2b1177579ad41133ac1e82df9
     public int buildingDamage;
     static int blackDice;
     static int redDice;
