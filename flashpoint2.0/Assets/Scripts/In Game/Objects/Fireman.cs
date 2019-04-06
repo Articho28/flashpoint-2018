@@ -23,7 +23,7 @@ public class Fireman : GameUnit
     private bool isSelectingExtinguishOption;
     private bool isSelectingSpecialist;
     private bool isChangingCrew;
-    ArrayList validInputOptions;
+    public ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
 
@@ -57,21 +57,21 @@ public class Fireman : GameUnit
             //Fire the Deck Gun "G"
             //Drive vehicle "H"
             //Crew Change "W"
-            if (!GameManager.GM.isFamilyGame)
-            {
-                if (Input.GetKeyDown(KeyCode.G))
-                {
-                    //deckGun(); TODO 
-                }
-                else if (Input.GetKeyDown(KeyCode.H))
-                {
-                    //driveVehicle(); TODO
-                }
-                else if (Input.GetKeyDown(KeyCode.W))
-                {
-                    //crewChange(); TODO
-                }
-            }
+            //if (!GameManager.GM.isFamilyGame)
+            //{
+            //    if (Input.GetKeyDown(KeyCode.G))
+            //    {
+            //        //deckGun(); TODO 
+            //    }
+            //    else if (Input.GetKeyDown(KeyCode.H))
+            //    {
+            //        //driveVehicle(); TODO
+            //    }
+            //    else if (Input.GetKeyDown(KeyCode.W))
+            //    {
+            //        //crewChange(); TODO
+            //    }
+            //}
 
 
             //MOVE: ARROWS WITH DIRECTION
@@ -171,11 +171,11 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.W))
             {
-                if (!GameManager.GM.isFamilyGame)
-                {
+                //if (!GameManager.GM.isFamilyGame)
+                //{
                     Debug.Log("Crew Change Detected");
                     changeCrew();
-                }
+                //}
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
@@ -253,13 +253,12 @@ public class Fireman : GameUnit
                     string oldMessage = GameConsole.instance.FeedbackText.text;
                     isWaitingForInput = false;
                     isChangingCrew = false;
-                    if (GameManager.GM.freeSpecialistIndex.Contains(0)) //make sure that specialist is in there 
+                    if (GameManager.GM.freeSpecialistIndex[0] != 0) //make sure that specialist is in there 
                     {
                         Debug.Log("changing specialist to paramedic (0)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.Paramedic;
-                        GameManager.GM.availableSpecialists.Remove(Specialist.Paramedic);
-                        GameManager.GM.freeSpecialistIndex.Remove(0);
+                        GameManager.GM.freeSpecialistIndex[0] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
@@ -274,39 +273,34 @@ public class Fireman : GameUnit
                         }
                         else if (oldSpec == Specialist.FireCaptain)
                         {
-                            GameManager.GM.availableSpecialists.Add(Specialist.FireCaptain);
-                            GameManager.GM.freeSpecialistIndex.Add(1);
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
                         }
                         else if (oldSpec == Specialist.ImagingTechnician)
                         {
-                            GameManager.GM.availableSpecialists.Add(Specialist.ImagingTechnician);
-                            GameManager.GM.freeSpecialistIndex.Add(2);
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
                         }
                         else if (oldSpec == Specialist.CAFSFirefighter)
                         {
-                            GameManager.GM.availableSpecialists.Add(Specialist.CAFSFirefighter);
-                            GameManager.GM.freeSpecialistIndex.Add(3);
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
                         }
                         else if (oldSpec == Specialist.HazmatTechinician)
                         {
-                            GameManager.GM.availableSpecialists.Add(Specialist.HazmatTechinician);
-                            GameManager.GM.freeSpecialistIndex.Add(4);
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
                         }
                         else if (oldSpec == Specialist.Generalist)
                         {
-                            GameManager.GM.availableSpecialists.Add(Specialist.Generalist);
-                            GameManager.GM.freeSpecialistIndex.Add(5);
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
                         }
                         else if (oldSpec == Specialist.RescueSpecialist)
                         {
-                            GameManager.GM.availableSpecialists.Add(Specialist.RescueSpecialist);
-                            GameManager.GM.freeSpecialistIndex.Add(6);
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
                         }
                         else if (oldSpec == Specialist.DriverOperator)
                         {
-                            GameManager.GM.availableSpecialists.Add(Specialist.DriverOperator);
-                            GameManager.GM.freeSpecialistIndex.Add(7);
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
                         }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -388,6 +382,68 @@ public class Fireman : GameUnit
                         isChoppingWall = true;
                     }
                 }
+                else if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 1 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[1] != 0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to fire captain (1)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.FireCaptain;
+                        GameManager.GM.freeSpecialistIndex[1] = 0;
+                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Fire Captain.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a fire captain. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
             }
 
             else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -460,6 +516,69 @@ public class Fireman : GameUnit
                         isChoppingWall = true;
                     }
                 }
+                else if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 2 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[2] != 0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to imaging technician (2)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.ImagingTechnician;
+                        GameManager.GM.freeSpecialistIndex[2] = 0;
+                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Imaging Technician.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already an imaging technician. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
+
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
             {
@@ -531,6 +650,69 @@ public class Fireman : GameUnit
                         isChoppingWall = true;
                     }
                 }
+                else if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 3 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[3]!=0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to CAFS Firefighter (3)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.CAFSFirefighter;
+                        GameManager.GM.freeSpecialistIndex[3] = 0;
+                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to CAFS Firefighter.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a CAFS Firefighter. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
+
             }
             else if (Input.GetKeyDown(KeyCode.Alpha4))
             {
@@ -577,6 +759,266 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
                         isWaitingForInput = true;
                         isExtinguishingFire = true;
+                    }
+                }
+                else if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 4 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[4]!=0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to Hazmat Technician (4)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.HazmatTechinician;
+                        GameManager.GM.freeSpecialistIndex[4] = 0;
+                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Hazmat Technician.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a Hazmat Technician. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 5 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[5]!=0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to Generalist (5)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.Generalist;
+                        GameManager.GM.freeSpecialistIndex[5] = 0;
+                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Generalist.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a Hazmat Technician. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 6 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[6]!=0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to Rescue Specialist (6)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.RescueSpecialist;
+                        GameManager.GM.freeSpecialistIndex[6] = 0;
+                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Rescue Specialist.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a Rescue Specialist. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 7 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[7]!=0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to Driver/Operator (7)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.DriverOperator;
+                        GameManager.GM.freeSpecialistIndex[7] = 0;
+                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Driver/Operator.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a Driver/Operator. \n" + oldMessage);
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
                     }
                 }
             }
@@ -653,6 +1095,16 @@ public class Fireman : GameUnit
     public void setAP(int newAP)
     {
         AP = newAP;
+    }
+
+    public Specialist GetSpecialist()
+    {
+        return this.spec;
+    }
+
+    public void setSpecialist(Specialist newSpecialist)
+    {
+        this.spec = newSpecialist;
     }
 
     public void newTurnAP()
@@ -1421,6 +1873,12 @@ public class Fireman : GameUnit
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
+    private void sendChangeCrewEvent(int[] updatedIndexList)
+    {
+        object[] data = new object[] { updatedIndexList };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChangeCrew, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
+    }
+
     public void endTurn()
     {
         SpaceStatus currentSpaceStatus = currentSpace.getSpaceStatus();
@@ -1451,10 +1909,21 @@ public class Fireman : GameUnit
     {
         if (this.getAP() >= 2)
         {
-            foreach (int i in GameManager.GM.freeSpecialistIndex)
+
+            string optionsToUser = "";
+            Specialist[] test = GameManager.GM.availableSpecialists;
+
+            for (int i = 0; i< GameManager.GM.freeSpecialistIndex.Length; i++)
             {
-                GameConsole.instance.UpdateFeedback("Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ");
+                Debug.Log("iteration " + i);
+                if (GameManager.GM.freeSpecialistIndex[i] != 0)
+                {
+                    optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
+                    Debug.Log(optionsToUser);
+                }
             }
+
+            GameConsole.instance.UpdateFeedback(optionsToUser);
             isWaitingForInput = true;
             isChangingCrew = true;
         }
