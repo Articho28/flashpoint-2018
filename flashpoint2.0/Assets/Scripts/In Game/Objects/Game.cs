@@ -11,7 +11,6 @@ public class Game : MonoBehaviour
     HashSet<Space> newSpaces;
     HashSet<Wall> newWall;
     HashSet<Door> newDoors;
-    HashSet<ParkingSpot> newParkingSpots;
     HashSet<Fireman> newFiremen;
     HashSet<Victim> newVictims;
     HashSet<FalseAlarm> newFalseAlarms;

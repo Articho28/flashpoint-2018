@@ -38,7 +38,8 @@ public enum SpaceKind
 public enum Kind
 {
     Empty,
-    ParkingSpot,
+    AmbulanceParkingSpot,
+    EngineParkingSpot,
     Victim,
     FalseAlarm
 }
