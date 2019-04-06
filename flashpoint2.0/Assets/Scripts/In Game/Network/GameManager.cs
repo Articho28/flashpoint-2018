@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
-            isPickSpecialist = true;
+            isPickSpecialist = false;
             playersListNameCache = new ArrayList();
             isFamilyGame = false;
             isDestroyingVictim = false;
@@ -174,7 +174,8 @@ public class GameManager : MonoBehaviourPun
 
         if (!isFamilyGame)
         {
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
+            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -847,7 +848,7 @@ public class GameManager : MonoBehaviourPun
     public void placeInitialEngine()
     {
         int[] rows = { 9 };
-        int[] cols = { 6 };
+        int[] cols = { 5 };
 
         object[] data = { cols, rows };
 
