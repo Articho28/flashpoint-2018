@@ -25,7 +25,7 @@ public class GamePlayersNetworkSetup : MonoBehaviourPunCallbacks
         {
             GamePlayersNetworkSetup.GS = this;
             initialPositions = new Vector3[6];
-            Vector3 topPosition = new Vector3(-8.9f, 0.32f, 0);
+            Vector3 topPosition = new Vector3(-8.9f, -1.28f, 0);
             for (int i = 0; i < initialPositions.Length; i++)
             {
                 initialPositions[i] = topPosition;

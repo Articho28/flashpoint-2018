@@ -29,5 +29,7 @@ public enum PhotonEventCodes
     CachePlayerNames = 22,
     PlaceInitialAmbulance = 23,
     PlaceInitialEngine = 24,
-    PickSpecialist = 25
+    PickSpecialist = 25,
+    SpecialistIsPicked = 26
+
 }

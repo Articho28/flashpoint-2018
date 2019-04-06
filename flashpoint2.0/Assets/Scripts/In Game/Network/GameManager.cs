@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviourPun
     //Local store of Players.
     public static int NumberOfPlayers;
     public bool isFirstReset;
-    public bool isPickSpecialist = true;
+    public bool isPickSpecialist;
     ArrayList playersListNameCache;
 
     //Game relevant variables
@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviourPun
     public static int totalPOIs = 15;
     public static int NumFA = 5;
     public static int numVictim = 10;
+    public static bool isDestroyingVictim;
 
     //Network Options
 
@@ -76,7 +77,11 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
+            isPickSpecialist = true;
             playersListNameCache = new ArrayList();
+            isFamilyGame = true;
+            isDestroyingVictim = false;
+
         }
         else
         {
@@ -103,7 +108,7 @@ public class GameManager : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            placeInitialFireMarker();
+            //placeInitialFireMarker();
 
             if (!isFamilyGame)
             {
@@ -117,6 +122,9 @@ public class GameManager : MonoBehaviourPun
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
                 }
                 else if (difficulty == Difficulty.Veteran) //4 hazmats + 3 initial explosions
                 {
@@ -124,6 +132,9 @@ public class GameManager : MonoBehaviourPun
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
                 }
                 else if (difficulty == Difficulty.Heroic) //5 hazmats + 4 initial explosions
                 {
@@ -132,26 +143,27 @@ public class GameManager : MonoBehaviourPun
                     placeHazmat();
                     placeHazmat();
                     placeHazmat();
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
+                    //resolveExplosion(Space targetSpace);
                 }
             }
-
-            randomizePOI();
-            randomizePOI();
-            randomizePOI();
         }
     }
 
     public void OnAllPrefabsSpawned()
     {
         //TODO Cache the playerList.
+        object[] data = new object[PhotonNetwork.PlayerList.Length];
+        int i = 0;
 
-        Photon.Realtime.Player[] cachedPlayerList = PhotonNetwork.PlayerList;
-
-        object[] data = new object[cachedPlayerList.Length];
-
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        foreach (Photon.Realtime.Player p in PhotonNetwork.PlayerList)
         {
-            data[i] = cachedPlayerList[i].NickName;
+            Debug.Log("OnAllPrefabsSpawned sees " + p.NickName + " with ActorNumber " + p.ActorNumber);
+            playersListNameCache.Insert(p.ActorNumber - 1, p.NickName);
+            data[i] = playersListNameCache[i];
+            i++;
         }
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.CachePlayerNames, data, sendToAllOptions, SendOptions.SendReliable);
@@ -218,7 +230,6 @@ public class GameManager : MonoBehaviourPun
         {
             Debug.Log("It's an explosion");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data, sendToAllOptions, SendOptions.SendReliable);
-
         }
         else if (sp == SpaceStatus.Smoke)
         {
@@ -245,11 +256,11 @@ public class GameManager : MonoBehaviourPun
     {
         //TODO reset proper randomization
 
-        //System.Random r = new System.Random();
-        //blackDice = r.Next(1, 9);
-        //redDice = r.Next(1, 7);
-        blackDice = 1;
-        redDice = 1;
+        System.Random r = new System.Random();
+        blackDice = r.Next(1, 9);
+        redDice = r.Next(1, 7);
+        //blackDice = 1; 
+        //redDice = 1;
 
     }
 
@@ -275,7 +286,6 @@ public class GameManager : MonoBehaviourPun
 
                             if (neighborStatus == SpaceStatus.Fire)
                             {
-                                space.setSpaceStatus(SpaceStatus.Fire);
                                 removeSmokeMarker(space);
                                 placeFireMarker(space);
                             }
@@ -312,6 +322,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeInitialFireMarker()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
         int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
@@ -346,6 +358,9 @@ public class GameManager : MonoBehaviourPun
 
     public void randomizePOI()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
         int col;
         int row;
         while (true)
@@ -354,7 +369,7 @@ public class GameManager : MonoBehaviourPun
             col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
             row = UnityEngine.Random.Range(1, 6);
-
+            
             if (containsFireORSmoke(col, row))
             {
                 continue;
@@ -367,6 +382,7 @@ public class GameManager : MonoBehaviourPun
             break;
         }
 
+
         object[] data = { col, row };
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, sendToAllOptions, SendOptions.SendReliable);
@@ -375,34 +391,36 @@ public class GameManager : MonoBehaviourPun
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
     public void testFunctionPlacePOI()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
-        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
-        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
-        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+       
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
+            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+            GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+            //Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-        POI.GetComponent<Transform>().position = newPosition;
-        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
-        currentSpace.addOccupant(POI.GetComponent<POI>());
-        numOfActivePOI++;
+            POI.GetComponent<Transform>().position = position;
+            POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+            POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+            currentSpace.addOccupant(POI.GetComponent<POI>());
+            numOfActivePOI++;
     }
 
 
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING 
-    public void testFunctionPlaceVictim(Space targetSpace)
+    public void testFunctionPlaceVictim()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
-        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
-        GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
 
-        poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
-        poi.GetComponent<POI>().setIsFlipped(true);
-        poi.GetComponent<Transform>().position = position;
-        poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        poi.GetComponent<GameUnit>().setPhysicalObject(poi);
-        currentSpace.addOccupant(poi.GetComponent<POI>());
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[3, 1];
+            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+            GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
+
+            poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
+            poi.GetComponent<POI>().setIsFlipped(true);
+            poi.GetComponent<Transform>().position = position;
+            poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+            poi.GetComponent<GameUnit>().setPhysicalObject(poi);
+            currentSpace.addOccupant(poi.GetComponent<POI>());
 
 
     }
@@ -423,9 +441,8 @@ public class GameManager : MonoBehaviourPun
         }
         if (targetMarker != null)
         {
-            Debug.Log("Removing Smoke Marker");
             string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
-            GameConsole.instance.UpdateFeedback(message);
+            Debug.Log(message);
             spaceOccupants.Remove(targetMarker);
             Destroy(targetMarker.physicalObject);
             Destroy(targetMarker);
@@ -469,8 +486,7 @@ public class GameManager : MonoBehaviourPun
         newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
         newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
-
-        //TODO Find POIs and destroy them
+        targetSpace.setSpaceStatus(SpaceStatus.Fire);
 
         removePOIFromSpace(targetSpace);
 
@@ -501,11 +517,9 @@ public class GameManager : MonoBehaviourPun
                 }
                 else
                 {
-                    FlipPOI(targetSpace);
-                    Debug.Log("there shoudl be a flipped poi or a false alarm has alraedy disappeared ");
+                    targetPOI = unit;
+                    Debug.Log("Tagged a POI");
                     foundUnflippedPOI = true;
-                    break;
-
                 }
             }
         }
@@ -513,36 +527,42 @@ public class GameManager : MonoBehaviourPun
 
         if (targetVictim != null)
         {
-            //TODO destroy targetVictim
             Debug.Log("Killing victim");
             occupants.Remove(targetVictim);
             Destroy(targetVictim.physicalObject);
             Destroy(targetVictim);
             GameManager.lostVictims++;
+            GameUI.instance.AddLostVictim();
         }
+
         else if (foundUnflippedPOI)
         {
-            foreach (GameUnit u in occupants) 
-            { 
-                if (u.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && u.GetComponent<POI>().getIsFlipped())
-                {
-                    Debug.Log("Found the flipped POI");
-                    targetPOI = u;
-                    break;
-                }
-            }
+            Debug.Log("Handling the unflipped poi");
 
-            if (targetPOI != null)
+            if (isDestroyingVictim && numVictim > 0)
             {
-                Debug.Log("Deleting POI");
+                isDestroyingVictim = false;
+                Debug.Log("Selected the unflipped POI to be a victim");
                 occupants.Remove(targetPOI);
                 Destroy(targetPOI.physicalObject);
                 Destroy(targetPOI);
-                GameManager.lostVictims++;
+                lostVictims++;
+                numVictim--;
                 GameUI.instance.AddLostVictim();
+                GameConsole.instance.UpdateFeedback("A victim just perished.");
+                numOfActivePOI--;
             }
-
-
+            else
+            {
+                isDestroyingVictim = true;
+                Debug.Log("Selected the unflipped POI to be a false Alarm");
+                occupants.Remove(targetPOI);
+                Destroy(targetPOI.physicalObject);
+                Destroy(targetPOI);
+                NumFA--;
+                GameConsole.instance.UpdateFeedback("A false alarm was destroyed");
+                numOfActivePOI--;
+            }
         }
 
     }
@@ -587,11 +607,11 @@ public class GameManager : MonoBehaviourPun
                 {
                     WallStatus wStatus = w.getWallStatus();
 
-                    Debug.Log("Wall status before addDamage is " + wStatus);
+                    //Debug.Log("Wall status before addDamage is " + wStatus);
                     w.addDamage();
                     GameUI.instance.AddDamage(1);
-                    Debug.Log("Adding damage to " + w);
-                    Debug.Log("Wall status after addDamage is " + w.getWallStatus());
+                    //Debug.Log("Adding damage to " + w);
+                    //Debug.Log("Wall status after addDamage is " + w.getWallStatus());
 
 
                     //Handle wall deletion in relevant spaces
@@ -674,20 +694,21 @@ public class GameManager : MonoBehaviourPun
         }
 
         SpaceStatus spaceStatus = targetSpace.getSpaceStatus();
+        object[] knockdownData = new object[] { targetSpace.indexX, targetSpace.indexY};
 
         //If the space is smoke or safe, turn it to fire
         if (spaceStatus == SpaceStatus.Safe)
         {
-            targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, knockdownData, sendToAllOptions, SendOptions.SendReliable);
         }
         else if (spaceStatus == SpaceStatus.Smoke)
         {
             removeSmokeMarker(targetSpace);
-            targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, knockdownData, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -1026,6 +1047,10 @@ public class GameManager : MonoBehaviourPun
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
+                    placeInitialFireMarker();
+                    randomizePOI();
+                    randomizePOI();
+                    randomizePOI();
                 }
                 else
                 {
@@ -1038,9 +1063,14 @@ public class GameManager : MonoBehaviourPun
             {
                 if (isFirstReset)
                 {
-                    //DisplayToConsolePlaceFirefighter(Turn);
-                    //DisplayPlayerTurn();
+                    DisplayToConsolePlaceFirefighter(Turn);
                 }
+                else
+                {
+                    DisplayToConsolePlayGame(Turn);
+                }
+                DisplayPlayerTurn();
+
             }
         }
 
@@ -1049,14 +1079,13 @@ public class GameManager : MonoBehaviourPun
             Turn = 1;
             isFirstReset = true;
             GameStatus = FlashPointGameConstants.GAME_STATUS_INITIALPLACEMENT;
-            //DisplayPlayerTurn();
-            //DisplayToConsolePlaceFirefighter(Turn);
+            DisplayPlayerTurn();
+            DisplayToConsolePlaceFirefighter(Turn);
             GameUI.instance.AddGameState(GameStatus);
 
         }
         else if (evCode == (byte)PhotonEventCodes.AdvanceFireMarker)
         {
-            Debug.Log("HI");
             object[] dataReceived = eventData.CustomData as object[];
             Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
@@ -1068,36 +1097,34 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
-            List<GameUnit> occupants = targetSpace.occupants;
-            Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
-            foreach(GameUnit gameUnit in occupants) {
-                //if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
-                //    object[] data = new object[] {gameUnit, targetSpace.indexX, targetSpace.indexY };
-
-                //    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
-                //}
-                Debug.Log("GameUnit type is " + gameUnit.getType());
-            }
-
-
+            object[] knockdownData = new object[] {indexX, indexY};
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, knockdownData, sendToAllOptions, SendOptions.SendReliable);
         }
-        else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the fireman, space x, and space y for data
+        else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the space x, and space y for data
             object[] dataReceived = eventData.CustomData as object[];
-            Fireman fireman = (Fireman) dataReceived[0];
-            int x = (int) dataReceived[1];
-            int y = (int) dataReceived[2];
+            int x = (int) dataReceived[0];
+            int y = (int) dataReceived[1];
 
             Space space = StateManager.instance.spaceGrid.grid[x, y];
             Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(space);
+            Debug.Log("ambulance spot x: " + ambulanceSpot.indexX + ", y: " + ambulanceSpot.indexY);
 
-            fireman.setCurrentSpace(ambulanceSpot);
-            ambulanceSpot.addOccupant(fireman);
+            Vector3 pos = new Vector3(ambulanceSpot.worldPosition.x, ambulanceSpot.worldPosition.y, -10);
+
+            List<GameUnit> occupants = space.occupants;
+            Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
+            foreach (GameUnit gameUnit in occupants) {
+                if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                    gameUnit.transform.position = pos;
+                    gameUnit.GetComponent<Fireman>().setCurrentSpace(ambulanceSpot);
+                    ambulanceSpot.addOccupant(gameUnit);
+                }
+                Debug.Log("GameUnit type is " + gameUnit.getType());
+            }
         }
 
         else if (evCode == (byte)PhotonEventCodes.AdvanceSmokeMarker)
         {
-
-
             object[] dataReceived = eventData.CustomData as object[];
             Vector3 receivedPosition = (Vector3)dataReceived[0];
             int indexX = (int)dataReceived[1];
@@ -1474,7 +1501,7 @@ public class GameManager : MonoBehaviourPun
                 GameConsole.instance.UpdateFeedback("It was a Victim!");
                 numVictim--;
             }
-            //Instiate Object
+            //Instantiate Object
             GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/" + POIname) as GameObject);
 
             poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
@@ -1486,8 +1513,16 @@ public class GameManager : MonoBehaviourPun
 
             gameUnits.Remove(questionMark);
             curr.addOccupant(poi.GetComponent<GameUnit>());
-            Destroy(questionMark.physicalObject);
-            Destroy(questionMark);
+
+            Debug.Log("This is from flip poi. The flipped status is " + poi.GetComponent<POI>().getIsFlipped());
+
+
+            if (questionMark != null)
+            {
+                Destroy(questionMark.physicalObject);
+                Destroy(questionMark);
+            }
+           
 
 
         } else if (evCode == (byte)PhotonEventCodes.SpecialistIsPicked)
@@ -1502,7 +1537,8 @@ public class GameManager : MonoBehaviourPun
 
             for (int i = 0; i < receivedData.Length; i++)
             {
-                playersListNameCache.Add((string)receivedData[i]);
+                Debug.Log("Received at " + i + " the name " + receivedData[i]);
+                playersListNameCache.Insert(i, receivedData[i]);
             }
         }*/
 
