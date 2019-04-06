@@ -256,11 +256,11 @@ public class GameManager : MonoBehaviourPun
     {
         //TODO reset proper randomization
 
-        //System.Random r = new System.Random();
-        //blackDice = r.Next(1, 9);
-        //redDice = r.Next(1, 7);
-        blackDice = 1; 
-        redDice = 1;
+        System.Random r = new System.Random();
+        blackDice = r.Next(1, 9);
+        redDice = r.Next(1, 7);
+        //blackDice = 1; 
+        //redDice = 1;
 
     }
 
