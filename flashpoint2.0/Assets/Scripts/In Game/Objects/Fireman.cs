@@ -97,19 +97,23 @@ public class Fireman : GameUnit
             //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                this.move(0);
+                object[] data = { PV.ViewID, 0 };
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                this.move(2);
+                object[] data = { PV.ViewID, 2 };
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                this.move(1);
+                object[] data = { PV.ViewID , 1 };
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                this.move(3);
+                object[] data = { PV.ViewID, 3 };
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
             }
             else if (Input.GetKeyDown(KeyCode.D)) //open/close door
             {
@@ -1533,14 +1537,13 @@ public class Fireman : GameUnit
         if (evCode == (byte)PhotonEventCodes.Move)
         {
             object[] data = eventData.CustomData as object[];
+            int direction = (int)data[1];
 
-            if (data.Length == 3)
+            if ((int)data[0] == PV.ViewID)
             {
-                if ((int)data[0] == PV.ViewID)
-                {
-                   //move();
-                }
+               move(direction);
             }
+        
         }
         else if (evCode == (byte)PhotonEventCodes.PickSpecialist)
         {
