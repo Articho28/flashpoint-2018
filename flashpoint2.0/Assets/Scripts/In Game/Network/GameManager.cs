@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            placeInitialFireMarker();
+            //placeInitialFireMarker();
 
             if (!isFamilyGame)
             {
@@ -286,7 +286,6 @@ public class GameManager : MonoBehaviourPun
 
                             if (neighborStatus == SpaceStatus.Fire)
                             {
-                                space.setSpaceStatus(SpaceStatus.Fire);
                                 removeSmokeMarker(space);
                                 placeFireMarker(space);
                             }
@@ -1046,6 +1045,7 @@ public class GameManager : MonoBehaviourPun
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
+                    placeInitialFireMarker();
                     randomizePOI();
                     randomizePOI();
                     randomizePOI();
