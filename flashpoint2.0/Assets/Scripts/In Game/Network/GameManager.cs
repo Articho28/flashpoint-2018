@@ -283,7 +283,6 @@ public class GameManager : MonoBehaviourPun
 
                             if (neighborStatus == SpaceStatus.Fire)
                             {
-                                space.setSpaceStatus(SpaceStatus.Fire);
                                 removeSmokeMarker(space);
                                 placeFireMarker(space);
                             }
