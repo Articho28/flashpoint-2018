@@ -1176,187 +1176,159 @@ public class Fireman : GameUnit
         //TODO
     }
 
-    public void move(int direction)
-    {
+    public void move(int direction) {
 
 
         //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
         Space curr = this.getCurrentSpace();
-        bool reachable = true;
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
         Space destination = neighbors[direction];
 
-        if (destination == null)
-        {
+        if (destination == null) {
             GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
             return;
         }
 
-
         SpaceStatus sp = destination.getSpaceStatus();
 
-        if (reachable)
-        {
-            if (sp == SpaceStatus.Fire)
+        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+        Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
+
+        if (sp == SpaceStatus.Fire) {
+            if (ap >= 3 && v == null) //&&f has enough to move
             {
-                if (ap >= 3 && v == null) //&&f has enough to move
-                {
-                    Debug.Log(ap);
-                    Debug.Log(this.transform.position);
-                    this.setCurrentSpace(destination);
+                this.setCurrentSpace(newSpace);
+                this.decrementAP(2);
+                newSpace.addOccupant(this);
+                FiremanUI.instance.SetAP(this.AP);
+                this.GetComponent<Transform>().position = newPosition;
+            }
+            else {
+                GameConsole.instance.UpdateFeedback("Insufficient AP");
+                return;
+            }
+        }
+        else {
+            if (v == null && ap >= 1) {
+                this.setCurrentSpace(newSpace);
+                this.decrementAP(1);
+                newSpace.addOccupant(this);
+                FiremanUI.instance.SetAP(this.AP);
+                GameConsole.instance.UpdateFeedback("You have successfully moved");
+                this.GetComponent<Transform>().position = newPosition;
+                List<GameUnit> gameUnits = destination.getOccupants();
+                foreach (GameUnit gu in gameUnits) {
+                    if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                        if (gu.GetComponent<POI>().getIsFlipped() == false) {
+                            GameManager.FlipPOI(destination);
+                            break;
+                        }
+                    }
+                }
+
+            }
+            else if (v != null && ap >= 2)//if the fireman is carrying a victim
+            {
+                SpaceStatus destinationSpaceStatus = destination.getSpaceStatus();
+
+                SpaceKind destinationSpaceKind = destination.getSpaceKind();
+
+
+                if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
+                    //carry victim
+
+                    this.setCurrentSpace(newSpace);
+                    v.setCurrentSpace(newSpace);
                     this.decrementAP(2);
                     FiremanUI.instance.SetAP(this.AP);
-                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
                     this.GetComponent<Transform>().position = newPosition;
-                }
-                else
-                {
-                    GameConsole.instance.UpdateFeedback("Insufficient AP");
-                    return;
-                }
-            }
-            else
-            {
-                if (v == null && ap >= 1)
-                {
-                    this.setCurrentSpace(destination);
-                    this.decrementAP(1);
-                    FiremanUI.instance.SetAP(this.AP);
-                    GameConsole.instance.UpdateFeedback("You have successfully moved");
-                    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
-                    this.GetComponent<Transform>().position = newPosition;
-                    List<GameUnit> gameUnits = destination.getOccupants();
-                    foreach (GameUnit gu in gameUnits)
-                    {
-                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                        {
-                            if (gu.GetComponent<POI>().getIsFlipped() == false)
-                            {
+                    v.GetComponent<Transform>().position = newPosition;
+
+                    newSpace.addOccupant(this);
+
+                    //removing the victim from the current space.
+                    List<GameUnit> currentGameUnits = curr.getOccupants();
+                    GameUnit victim = null;
+                    foreach (GameUnit gu in currentGameUnits) {
+                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                            victim = gu;
+                            break;
+                        }
+                    }
+                    currentGameUnits.Remove(victim);
+                    destination.addOccupant(victim);
+
+
+                    GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
+                    //if has POI marker
+                    List<GameUnit> destinationGameUnits = destination.getOccupants();
+                    foreach (GameUnit gu in destinationGameUnits) {
+                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                            if (gu.GetComponent<POI>().getIsFlipped() == false) {
                                 GameManager.FlipPOI(destination);
                                 break;
                             }
                         }
                     }
+                }
+                else if (destinationSpaceKind == SpaceKind.Outdoor) {
+                    //carry victim outside the building
+                    this.setCurrentSpace(newSpace);
+                    newSpace.addOccupant(this);
+                    this.decrementAP(2);
+                    this.GetComponent<Transform>().position = newPosition;
+
+                    //change victim status to rescued
+                    v.setVictimStatus(VictimStatus.Rescued);
+                    GameManager.savedVictims++;
+                    GameUI.instance.AddSavedVictim();
+
+                    List<GameUnit> gameUnits = curr.getOccupants();
+                    GameUnit victim = null;
+                    foreach (GameUnit gu in gameUnits) {
+                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                            victim = gu;
+                            break;
+                        }
+                    }
+                    gameUnits.Remove(victim);
+                    Destroy(victim.physicalObject);
+                    Destroy(victim);
+                    deassociateVictim();
+                    GameManager.numOfActivePOI--;
+                    GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
+
+                    //check if we won the game.
+                    if (GameManager.savedVictims >= 7) {
+                        //check for a perfect game
+                        if (GameManager.savedVictims == 10) {
+                            GameManager.GameWon();
+                            GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
+                        }
+                        if (!GameWonUI.isCalled) {
+                            GameManager.GameWon();
+                        }
+                    }
+                    return;
+
+
 
                 }
-                else if (v != null && ap >= 2)//if the fireman is carrying a victim
+                else //Fire
                 {
-                    SpaceStatus destinationSpaceStatus = destination.getSpaceStatus();
-
-                    SpaceKind destinationSpaceKind = destination.getSpaceKind();
-
-
-                    if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke)
-                    {
-                        //carry victim
-                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
-
-                        this.setCurrentSpace(destination);
-                        v.setCurrentSpace(destination);
-                        this.decrementAP(2);
-                        FiremanUI.instance.SetAP(this.AP);
-                        this.GetComponent<Transform>().position = newPosition;
-                        v.GetComponent<Transform>().position = newPosition;
-
-                        //removing the victim from the current space.
-                        List<GameUnit> currentGameUnits = curr.getOccupants();
-                        GameUnit victim = null;
-                        foreach (GameUnit gu in currentGameUnits)
-                        {
-                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                            {
-                                victim = gu;
-                                break;
-                            }
-                        }
-                        currentGameUnits.Remove(victim);
-                        destination.addOccupant(victim);
-                        
-
-                        GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
-                        //if has POI marker
-                        List<GameUnit> destinationGameUnits = destination.getOccupants();
-                        foreach (GameUnit gu in destinationGameUnits)
-                        {
-                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                            {
-                                if (gu.GetComponent<POI>().getIsFlipped() == false)
-                                {
-                                    GameManager.FlipPOI(destination);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else if (destinationSpaceKind == SpaceKind.Outdoor)
-                    {
-                        //carry victim outside the building
-                        this.setCurrentSpace(destination);
-                        this.decrementAP(2);
-                        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
-                        this.GetComponent<Transform>().position = newPosition;
-
-                        //change victim status to rescued
-                        Debug.Log("YOU ARE OUTDOOR");
-                        v.setVictimStatus(VictimStatus.Rescued);
-                        Debug.Log("victim status after rescuing:" + v.getVictimStatus());
-                        GameManager.savedVictims++;
-                        GameUI.instance.AddSavedVictim();
-
-                        Debug.Log("Removing POI Marker");
-                        List<GameUnit> gameUnits = curr.getOccupants();
-                        GameUnit victim = null;
-                        foreach (GameUnit gu in gameUnits)
-                        {
-                            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                            {
-                                victim = gu;
-                                break;
-                            }
-                        }
-                        gameUnits.Remove(victim);
-                        Destroy(victim.physicalObject);
-                        Destroy(victim);
-                        deassociateVictim();
-                        GameManager.numOfActivePOI--;
-                        GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
-
-                        //check if we won the game.
-                        if (GameManager.savedVictims >= 7)
-                        {
-                            //check for a perfect game
-                            if(GameManager.savedVictims == 10)
-                            {
-                                GameManager.GameWon();
-                                GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
-                            }
-                            if (!GameWonUI.isCalled)
-                            {
-                                GameManager.GameWon();
-                            }
-                        }
-                        return;
-
-
-
-                    }
-                    else //Fire
-                    {
-                        //can not carry victim
-                        GameConsole.instance.UpdateFeedback("Cannot carry a victim onto fire!");
-                        return;
-                    }
-                    
+                    //can not carry victim
+                    GameConsole.instance.UpdateFeedback("Cannot carry a victim onto fire!");
+                    return;
                 }
             }
+            else {
+                GameConsole.instance.UpdateFeedback("Insufficient AP");
+                return;
+            }
         }
-        else
-        {
-            GameConsole.instance.UpdateFeedback("Insufficient AP");
-            return;
-        }
+
 
                 //after the move TODO??
 
