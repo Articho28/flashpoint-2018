@@ -62,7 +62,7 @@ public class Fireman : GameUnit
             {
                 if (Input.GetKeyDown(KeyCode.G))
                 {
-                    //deckGun(); TODO 
+                    //deckGun(); 
                 }
                 else if (Input.GetKeyDown(KeyCode.H))
                 {
@@ -144,7 +144,7 @@ public class Fireman : GameUnit
                         }
                         else
                         {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            GameConsole.instance.UpdateFeedback("Insufficient AP 1");
                             return;
                         }
 
@@ -160,7 +160,7 @@ public class Fireman : GameUnit
                         }
                         else
                         {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            GameConsole.instance.UpdateFeedback("Insufficient AP 2");
                             return;
                         }
                     }
@@ -1760,7 +1760,7 @@ public class Fireman : GameUnit
         Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
 
         if (sp == SpaceStatus.Fire) {
-            if (ap >= 3 && v == null) //&&f has enough to move
+            if (ap >= 3 && v != null) //&&f has enough to move
             {
                 this.setCurrentSpace(newSpace);
                 this.decrementAP(2);
@@ -1769,7 +1769,7 @@ public class Fireman : GameUnit
                 this.GetComponent<Transform>().position = newPosition;
             }
             else {
-                GameConsole.instance.UpdateFeedback("Insufficient AP");
+                GameConsole.instance.UpdateFeedback("Insufficient AP 3");
                 return;
             }
         }
@@ -1851,10 +1851,10 @@ public class Fireman : GameUnit
                     deassociateEngine();
                 }
             }
-            //else if (v != null && ap >= 2)//if the fireman is carrying a victim
-            //{
-            //    this.move(v, curr, destination);
-            //}
+            else if (v != null && ap >= 2)//if the fireman is carrying a victim
+            {
+                this.move(v, curr, destination);
+            }
             else if (hazmat != null) {
                 Debug.Log("INSIDE HAZMAT IF STATEMENT");
                 Debug.Log("HAZMAT POS IS " + hazmat.getCurrentSpace().indexX + ", " + hazmat.getCurrentSpace().indexY);
@@ -1862,7 +1862,7 @@ public class Fireman : GameUnit
                 this.move(hazmat, curr, destination);
             }
             else {
-                GameConsole.instance.UpdateFeedback("Insufficient AP");
+                GameConsole.instance.UpdateFeedback("Insufficient AP 4");
                 return;
             }
         }
