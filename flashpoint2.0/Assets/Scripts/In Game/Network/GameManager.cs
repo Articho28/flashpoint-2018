@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviourPun
             lostVictims = 0;
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
-            isFamilyGame = true;
+            isFamilyGame = false;
         }
         else
         {

@@ -1608,7 +1608,7 @@ public class Fireman : GameUnit
             GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
             GameManager.GM.DisplayPlayerTurn();
             GameUI.instance.AddGameState(GameManager.GameStatus);
-            selectSpecialist();
+            //selectSpecialist();
         }
     }
 }
