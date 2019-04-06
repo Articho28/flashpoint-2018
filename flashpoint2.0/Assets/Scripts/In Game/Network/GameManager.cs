@@ -590,6 +590,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             Destroy(targetVictim);
             GameManager.lostVictims++;
             GameUI.instance.AddLostVictim();
+
+            if (lostVictims > 4)
+            {
+                Debug.Log("You lost bruh");
+                GameLost();
+            }
         }
 
         else if (foundUnflippedPOI)
