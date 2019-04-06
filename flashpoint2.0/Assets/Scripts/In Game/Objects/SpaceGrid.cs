@@ -321,12 +321,16 @@ public class SpaceGrid : MonoBehaviourPun {
                 return grid[currentX, currentY + 1];
             }
         }
-        else
+        else if (direction == 3)
         {
             if(grid[currentX-1, currentY] != null)
             {
                 return grid[currentX - 1, currentY];
             }
+        }
+        else
+        {
+            return currentLocation;
         }
 
         return null;
