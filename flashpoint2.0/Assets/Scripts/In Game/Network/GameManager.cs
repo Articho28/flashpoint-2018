@@ -483,7 +483,7 @@ public class GameManager : MonoBehaviourPun
         newFireMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER);
         newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
-
+        targetSpace.setSpaceStatus(SpaceStatus.Fire);
         //TODO Find POIs and destroy them
 
         removePOIFromSpace(targetSpace);
@@ -692,14 +692,12 @@ public class GameManager : MonoBehaviourPun
         //If the space is smoke or safe, turn it to fire
         if (spaceStatus == SpaceStatus.Safe)
         {
-            targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
         }
         else if (spaceStatus == SpaceStatus.Smoke)
         {
             removeSmokeMarker(targetSpace);
-            targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
         }
