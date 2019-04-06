@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviourPun
     //Variables for game status and turn.
     public static string GameStatus;
     public int Turn = 1;
+    public static bool isFlippingPOI;
 
     //Local store of Players.
     public static int NumberOfPlayers;
@@ -79,6 +80,8 @@ public class GameManager : MonoBehaviourPun
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
             isFamilyGame = true;
+            isFlippingPOI = false;
+
         }
         else
         {
