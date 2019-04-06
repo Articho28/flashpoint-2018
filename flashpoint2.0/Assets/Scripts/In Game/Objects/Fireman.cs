@@ -1430,8 +1430,12 @@ public class Fireman : GameUnit
             return;
         }
         restoreAP();
-        GameManager.advanceFire();
-        GameManager.replenishPOI();
+
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.EndTurn, null, sendToAllOptions, SendOptions.SendReliable);
+
         GameManager.IncrementTurn();
     }
 
@@ -1563,6 +1567,11 @@ public class Fireman : GameUnit
             GameManager.GM.DisplayPlayerTurn();
             GameUI.instance.AddGameState(GameManager.GameStatus);
             selectSpecialist();
+        }
+        else if(evCode == (byte)PhotonEventCodes.EndTurn)
+        {
+            GameManager.advanceFire();
+            GameManager.replenishPOI();
         }
     }
 }
