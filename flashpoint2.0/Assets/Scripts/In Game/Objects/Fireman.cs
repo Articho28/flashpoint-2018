@@ -77,7 +77,7 @@ public class Fireman : GameUnit
                     //if getAmbulance TODO
                         rideAmbulance();
                     //if getEngine TODO
-                        rideEngine();
+                        //rideEngine();
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
@@ -1205,7 +1205,72 @@ public class Fireman : GameUnit
                         }
                     }
                 }
+            }
+            else if (!GameManager.GM.isFamilyGame && h != null && ap >= 2)//if the fireman riding the ambulance
+            {
+                Kind destinationKind = destination.getKind();
+                if (destinationKind == Kind.AmbulanceParkingSpot)
+                {
+                    //ride ambulance
+                    this.setCurrentSpace(destination);
+                    v.setCurrentSpace(destination);
+                    this.decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    this.GetComponent<Transform>().position = newPosition;
+                    v.GetComponent<Transform>().position = newPosition;
 
+                    //removing the ambulance from the current space
+                    List<GameUnit> currentGameUnits = curr.getOccupants();
+                    GameUnit ambulance = null;
+                    foreach (GameUnit gu in currentGameUnits)
+                    {
+                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                        {
+                            ambulance = gu;
+                            break;
+                        }
+                    }
+                    currentGameUnits.Remove(ambulance);
+                    destination.addOccupant(ambulance);
+
+                    GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
+
+                    //if fireman wants to exit the ambulance TODO
+                    deassociateAmbulance();
+                }
+            }
+            else if (!GameManager.GM.isFamilyGame && n != null && ap >= 2)//if the fireman riding the engine
+            {
+                Kind destinationKind = destination.getKind();
+                if (destinationKind == Kind.AmbulanceParkingSpot)
+                {
+                    //ride engine
+                    this.setCurrentSpace(destination);
+                    v.setCurrentSpace(destination);
+                    this.decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    this.GetComponent<Transform>().position = newPosition;
+                    v.GetComponent<Transform>().position = newPosition;
+
+                    //removing the engine from the current space
+                    List<GameUnit> currentGameUnits = curr.getOccupants();
+                    GameUnit engine = null;
+                    foreach (GameUnit gu in currentGameUnits)
+                    {
+                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                        {
+                            engine = gu;
+                            break;
+                        }
+                    }
+                    currentGameUnits.Remove(engine);
+                    destination.addOccupant(engine);
+
+                    GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
+
+                    //if fireman wants to exit the engine TODO
+                    deassociateEngine();
+                }
             }
             else if (v != null && ap >= 2)//if the fireman is carrying a victim
             {
@@ -1223,7 +1288,6 @@ public class Fireman : GameUnit
                     FiremanUI.instance.SetAP(this.AP);
                     this.GetComponent<Transform>().position = newPosition;
                     v.GetComponent<Transform>().position = newPosition;
-
 
                     newSpace.addOccupant(this);
                     //removing the victim from the current space.
