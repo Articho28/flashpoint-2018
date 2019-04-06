@@ -30,21 +30,8 @@ public class GameManager : MonoBehaviourPun
     ArrayList playersListNameCache;
 
     //Game relevant variables
-    public List<Specialist> availableSpecialists = new List<Specialist> 
-    { 
-        Specialist.Paramedic,
-        Specialist.FireCaptain,
-        Specialist.ImagingTechnician,
-        Specialist.CAFSFirefighter,
-        Specialist.HazmatTechinician,
-        Specialist.Generalist,
-        Specialist.RescueSpecialist,
-        Specialist.DriverOperator
-    };
-    public List<int> freeSpecialistIndex = new List <int> //all specilaists are free at first
-    { 
-        0,1,2,3,4,5,6,7
-    };
+    public Specialist[] availableSpecialists;
+    public int[] freeSpecialistIndex; //all specilaists are free at first
     public int buildingDamage;
     static int blackDice;
     static int redDice;
@@ -85,6 +72,24 @@ public class GameManager : MonoBehaviourPun
             playersListNameCache = new ArrayList();
             isFamilyGame = true;
             isDestroyingVictim = false;
+            availableSpecialists = new Specialist [8];
+            availableSpecialists[0] = Specialist.Paramedic;
+            availableSpecialists[1] = Specialist.FireCaptain;
+            availableSpecialists[2] = Specialist.ImagingTechnician;
+            availableSpecialists[3] = Specialist.CAFSFirefighter;
+            availableSpecialists[4] = Specialist.HazmatTechinician;
+            availableSpecialists[5] = Specialist.Generalist;
+            availableSpecialists[6] = Specialist.RescueSpecialist;
+            availableSpecialists[7] = Specialist.DriverOperator;
+            freeSpecialistIndex = new int[8];
+            freeSpecialistIndex[0] = 1;
+            freeSpecialistIndex[1] = 1;
+            freeSpecialistIndex[2] = 1;
+            freeSpecialistIndex[3] = 1;
+            freeSpecialistIndex[4] = 1;
+            freeSpecialistIndex[5] = 1;
+            freeSpecialistIndex[6] = 1;
+            freeSpecialistIndex[7] = 1;
 
         }
         else
@@ -1054,7 +1059,7 @@ public class GameManager : MonoBehaviourPun
         {
             Turn++;
             Debug.Log("Turn is now " + Turn);
-            Debug.Log("number of players is " +NumberOfPlayers);
+            Debug.Log("number of players is " + NumberOfPlayers);
             if (Turn > NumberOfPlayers)
             {
                 Debug.Log("resetting  turn");
@@ -1125,13 +1130,14 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
-            object[] knockdownData = new object[] {indexX, indexY};
+            object[] knockdownData = new object[] { indexX, indexY };
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, knockdownData, sendToAllOptions, SendOptions.SendReliable);
         }
-        else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the space x, and space y for data
+        else if (evCode == (byte)PhotonEventCodes.KnockdownFireman)
+        { //pass the space x, and space y for data
             object[] dataReceived = eventData.CustomData as object[];
-            int x = (int) dataReceived[0];
-            int y = (int) dataReceived[1];
+            int x = (int)dataReceived[0];
+            int y = (int)dataReceived[1];
 
             Space space = StateManager.instance.spaceGrid.grid[x, y];
             Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(space);
@@ -1141,8 +1147,10 @@ public class GameManager : MonoBehaviourPun
 
             List<GameUnit> occupants = space.occupants;
             Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
-            foreach (GameUnit gameUnit in occupants) {
-                if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+            foreach (GameUnit gameUnit in occupants)
+            {
+                if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                {
                     gameUnit.transform.position = pos;
                     gameUnit.GetComponent<Fireman>().setCurrentSpace(ambulanceSpot);
                     ambulanceSpot.addOccupant(gameUnit);
@@ -1338,7 +1346,7 @@ public class GameManager : MonoBehaviourPun
 
             resolveExplosion(targetSpace);
 
-        } 
+        }
         else if (evCode == (byte)PhotonEventCodes.PlaceHazmats)
         {
             object[] dataReceived = eventData.CustomData as object[];
@@ -1428,7 +1436,9 @@ public class GameManager : MonoBehaviourPun
                 Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
                 Vector3 position = currentSpace.worldPosition;
                 GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
+
                 Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
+
 
                 Ambulance.GetComponent<Transform>().position = ambulancePosition;
                 Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
@@ -1449,6 +1459,7 @@ public class GameManager : MonoBehaviourPun
                 Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
                 Vector3 position2 = currentSpaceEngine.worldPosition;
                 GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
+
                 Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);
 
                 Engine.GetComponent<Transform>().position = enginePosition;
@@ -1481,7 +1492,7 @@ public class GameManager : MonoBehaviourPun
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
         }
-        else if(evCode == (byte)PhotonEventCodes.ReplenishPOI)
+        else if (evCode == (byte)PhotonEventCodes.ReplenishPOI)
         {
 
             object[] dataReceived = eventData.CustomData as object[];
@@ -1553,7 +1564,7 @@ public class GameManager : MonoBehaviourPun
                 }
             }
             Vector3 position = new Vector3(curr.worldPosition.x, curr.worldPosition.y, -5);
-            
+
             if (string.Compare(POIname, "false alarm") == 0)
             {
                 NumFA--;
@@ -1590,22 +1601,31 @@ public class GameManager : MonoBehaviourPun
                 Destroy(questionMark.physicalObject);
                 Destroy(questionMark);
             }
-           
+
 
 
         }
 
-        /*
-        else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
+        else if (evCode == (byte)PhotonEventCodes.ChangeCrew)
         {
-            object[] receivedData = eventData.CustomData as object[];
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] updatedIndexList = (int[]) dataReceived[0];
 
-            for (int i = 0; i < receivedData.Length; i++)
+            freeSpecialistIndex = updatedIndexList;
+
+        }
+
+            /*
+            else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
             {
-                Debug.Log("Received at " + i + " the name " + receivedData[i]);
-                playersListNameCache.Insert(i, receivedData[i]);
-            }
-        }*/
+                object[] receivedData = eventData.CustomData as object[];
 
-    }
+                for (int i = 0; i < receivedData.Length; i++)
+                {
+                    Debug.Log("Received at " + i + " the name " + receivedData[i]);
+                    playersListNameCache.Insert(i, receivedData[i]);
+                }
+            }*/
+
+        }
 }
