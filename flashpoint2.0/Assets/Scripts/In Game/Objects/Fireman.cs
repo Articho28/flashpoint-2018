@@ -14,7 +14,6 @@ public class Fireman : GameUnit
     FMStatus status;
     Victim carriedVictim;
     Hazmat carriedHazmat;
-    Vehicle movedVehicle;
     Ambulance movedAmbulance;
     Engine movedEngine;
     private PhotonView PV;
@@ -971,7 +970,6 @@ public class Fireman : GameUnit
             return;
         }
         else {
-
             List<GameUnit> gameUnits = current.getOccupants();
 
             foreach (GameUnit gu in gameUnits) {
@@ -1133,8 +1131,64 @@ public class Fireman : GameUnit
         }
     }
 
-    private void move(Hazmat h) { 
-    
+    private void move(Hazmat h, Space curr, Space dst) {
+        SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
+
+        SpaceKind destinationSpaceKind = dst.getSpaceKind();
+        Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
+        Debug.Log("firefighter pos " + newPosition);
+        Debug.Log("Hazmat pos " + newPosition);
+
+        if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
+            this.setCurrentSpace(dst);
+            h.setCurrentSpace(dst);
+            this.GetComponent<Transform>().position = newPosition;
+            h.GetComponent<Transform>().position = newPosition;
+
+            this.decrementAP(2);
+            FiremanUI.instance.SetAP(this.AP);
+
+            dst.addOccupant(this);
+            dst.addOccupant(h);
+            //removing the victim from the current space.
+            List<GameUnit> currentGameUnits = curr.getOccupants();
+            foreach (GameUnit gu in currentGameUnits) {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT) {
+                    currentGameUnits.Remove(gu);
+                    break;
+                }
+            }
+
+            GameConsole.instance.UpdateFeedback("You have successfully moved with a hazmat");
+        }
+        else if (destinationSpaceKind == SpaceKind.Outdoor) {
+            //carry victim outside the building
+            this.setCurrentSpace(dst);
+            dst.addOccupant(this);
+            this.decrementAP(2);
+            this.GetComponent<Transform>().position = newPosition;
+
+            List<GameUnit> gameUnits = curr.getOccupants();
+            foreach (GameUnit gu in gameUnits) {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                    gameUnits.Remove(gu);
+                    break;
+                }
+            }
+            Destroy(h.physicalObject);
+            Destroy(h);
+            this.setHazmat(null);
+            GameConsole.instance.UpdateFeedback("You have successfully cleared a hazmat");
+
+            return;
+
+        }
+        else //Fire
+        {
+            //can not carry victim
+            GameConsole.instance.UpdateFeedback("Cannot carry a hazmat onto fire!");
+            return;
+        }
     }
 
     private void move(Victim v, Space curr, Space dst) {
@@ -1267,7 +1321,7 @@ public class Fireman : GameUnit
             }
         }
         else {
-            if (v == null && ap >= 1) {
+            if (v == null && hazmat == null && ap >= 1) {
                 this.setCurrentSpace(newSpace);
                 this.decrementAP(1);
                 newSpace.addOccupant(this);
@@ -1287,8 +1341,7 @@ public class Fireman : GameUnit
             else if (!GameManager.GM.isFamilyGame && a != null && ap >= 2)//if the fireman riding the ambulance
             {
                 Kind destinationKind = destination.getKind();
-                if (destinationKind == Kind.AmbulanceParkingSpot)
-                {
+                if (destinationKind == Kind.AmbulanceParkingSpot) {
                     //ride ambulance
                     this.setCurrentSpace(destination);
                     v.setCurrentSpace(destination);
@@ -1300,10 +1353,8 @@ public class Fireman : GameUnit
                     //removing the ambulance from the current space
                     List<GameUnit> currentGameUnits = curr.getOccupants();
                     GameUnit ambulance = null;
-                    foreach (GameUnit gu in currentGameUnits)
-                    {
-                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
-                        {
+                    foreach (GameUnit gu in currentGameUnits) {
+                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE) {
                             ambulance = gu;
                             break;
                         }
@@ -1320,8 +1371,7 @@ public class Fireman : GameUnit
             else if (!GameManager.GM.isFamilyGame && n != null && ap >= 2)//if the fireman riding the engine
             {
                 Kind destinationKind = destination.getKind();
-                if (destinationKind == Kind.AmbulanceParkingSpot)
-                {
+                if (destinationKind == Kind.AmbulanceParkingSpot) {
                     //ride engine
                     this.setCurrentSpace(destination);
                     v.setCurrentSpace(destination);
@@ -1333,10 +1383,8 @@ public class Fireman : GameUnit
                     //removing the engine from the current space
                     List<GameUnit> currentGameUnits = curr.getOccupants();
                     GameUnit engine = null;
-                    foreach (GameUnit gu in currentGameUnits)
-                    {
-                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
-                        {
+                    foreach (GameUnit gu in currentGameUnits) {
+                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE) {
                             engine = gu;
                             break;
                         }
@@ -1350,9 +1398,15 @@ public class Fireman : GameUnit
                     deassociateEngine();
                 }
             }
-            else if (v != null && ap >= 2)//if the fireman is carrying a victim
-            {
-                this.move(v, curr, destination);
+            //else if (v != null && ap >= 2)//if the fireman is carrying a victim
+            //{
+            //    this.move(v, curr, destination);
+            //}
+            else if (hazmat != null) {
+                Debug.Log("INSIDE HAZMAT IF STATEMENT");
+                Debug.Log("HAZMAT POS IS " + hazmat.getCurrentSpace().indexX + ", " + hazmat.getCurrentSpace().indexY);
+
+                this.move(hazmat, curr, destination);
             }
             else {
                 GameConsole.instance.UpdateFeedback("Insufficient AP");
