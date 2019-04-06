@@ -259,7 +259,7 @@ public class SpaceGrid : MonoBehaviourPun {
     }
 
     private bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
-
+        if (grid[checkX, checkX].spaceKind == SpaceKind.Outdoor) return false;
     
         Space curr = grid[checkX, checkY];
         Wall dirWall = curr.getWalls()[wallIndex];
