@@ -44,11 +44,17 @@ TagManager:
   - name: Board
     uniqueID: 3027716261
     locked: 0
+  - name: Bigdice
+    uniqueID: 1538007827
+    locked: 0
   - name: parkingSpot
     uniqueID: 141392631
     locked: 0
   - name: Small red dice
     uniqueID: 2864740261
+    locked: 0
+  - name: parkingSpot
+    uniqueID: 1355876329
     locked: 0
   - name: POI
     uniqueID: 1492731481

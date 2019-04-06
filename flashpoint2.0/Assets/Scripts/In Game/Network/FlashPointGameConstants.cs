@@ -22,7 +22,8 @@ public static class FlashPointGameConstants
     public const string GAMEUNIT_TYPE_AMBULANCE = "ambulance";
     public const string GAMEUNIT_TYPE_ENGINE = "engine";
     public const string GAMEUNIT_TYPE_FIREMAN = "fireman";
-
+    public const string GAMEUNIT_TYPE_ENGINEPARKINGSPOT = "engineParkingSpot";
+    public const string GAMEUNIT_TYPE_AMBULANCEPARKINGSPOT = "ambulanceParkingSpot";
 
 }
 
