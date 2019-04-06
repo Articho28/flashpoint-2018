@@ -393,8 +393,6 @@ public class GameManager : MonoBehaviourPun
             POI.GetComponent<GameUnit>().setPhysicalObject(POI);
             currentSpace.addOccupant(POI.GetComponent<POI>());
             numOfActivePOI++;
-
-       
     }
 
 
