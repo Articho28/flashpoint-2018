@@ -1357,7 +1357,6 @@ public class Fireman : GameUnit
 
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.EndTurn, null, sendToAllOptions, SendOptions.SendReliable);
 
-        GameManager.IncrementTurn();
     }
 
 
@@ -1493,6 +1492,7 @@ public class Fireman : GameUnit
         {
             GameManager.advanceFire();
             GameManager.replenishPOI();
+            GameManager.IncrementTurn();
         }
     }
 }
