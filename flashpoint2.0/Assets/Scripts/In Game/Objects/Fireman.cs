@@ -74,13 +74,15 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
-                    //rideAmbulance(); //if getAmbulance TODO
-                    //rideEngine(); //if getEngine TODO
+                    //if getAmbulance TODO
+                        rideAmbulance();
+                    //if getEngine TODO
+                        rideEngine();
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
-                    //deassociateAmbulance(); //if fireman riding ambulance TODO
-                   //deassociateEngine(); //if fireman riding engine TODO
+                    deassociateAmbulance(); //if fireman riding ambulance TODO
+                    deassociateEngine(); //if fireman riding engine TODO
                 }
                 else if (Input.GetKeyDown(KeyCode.W))
                 {
@@ -735,7 +737,6 @@ public class Fireman : GameUnit
 
     }
 
-
     public int getSavedAP()
     {
         return AP;
@@ -833,7 +834,6 @@ public class Fireman : GameUnit
             return;
         }
 
-
         //Get neighbors and their spacestatus. 
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
         SpaceStatus[] neighborsStatuses = new SpaceStatus[4];
@@ -847,7 +847,6 @@ public class Fireman : GameUnit
 
         }
          
-
         //Check if sufficient AP.
         if (numAP < 1)
         {
@@ -924,8 +923,6 @@ public class Fireman : GameUnit
 
     public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                  if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
             isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
-
-
     public void carryVictim()       //if ambulance carrying victim: 0AP && Victim is carried by ambulance in experienced game TODO
     {
         //get current space
@@ -938,7 +935,6 @@ public class Fireman : GameUnit
         }
         else
         {
-
             List<GameUnit> gameUnits = current.getOccupants();
 
             foreach (GameUnit gu in gameUnits)
@@ -954,25 +950,7 @@ public class Fireman : GameUnit
             }
             GameConsole.instance.UpdateFeedback("There is no victim to be carried!");
         }
-
     }
-
-    private ArrayList getNearbyParkingSpots(Space s)
-    {
-        ArrayList nearbyParkingSpots = new ArrayList();
-        ParkingSpot[] psArray = s.getParkingSpots();
-
-        //Collect directions in which there is a parking spot
-        for (int i = 0; i < psArray.Length; i++)
-        {
-            if (psArray[i] != null)
-            {
-                nearbyParkingSpots.Add(i);
-            }
-        }
-        return nearbyParkingSpots;
-    }
-
 
     void driveAmbulance(Space targetSpace, int direction)
     {
@@ -982,25 +960,24 @@ public class Fireman : GameUnit
             Space current = this.getCurrentSpace();
             this.getAmbulance();
 
-            ArrayList nearbyParkingSpots = getNearbyParkingSpots(this.getCurrentSpace());
-            validInputOptions = nearbyParkingSpots;
+            //get parkingspots
 
             //if fireman is in same space with ambulance
            
                 //promt: right or left
                 string optionsToUser = "";
 
-                foreach (int index in nearbyParkingSpots)
-                {
-                    if (index == 1)
-                    {
-                        optionsToUser += "Press 1 for Driving Clockwise";
-                    }
-                    else if (index == 3)
-                    {
-                        optionsToUser += " Press 2 for Driving Counter-Clockwise";
-                    }
-                }
+                //foreach (int index in nearbyParkingSpots)
+                //{
+                //    if (index == 1)
+                //    {
+                //        optionsToUser += "Press 1 for Driving Clockwise";
+                //    }
+                //    else if (index == 3)
+                //    {
+                //        optionsToUser += " Press 2 for Driving Counter-Clockwise";
+                //    }
+                //}
 
                 GameConsole.instance.UpdateFeedback(optionsToUser);
 
@@ -1013,32 +990,32 @@ public class Fireman : GameUnit
                     int currentSpaceX = this.getCurrentSpace().indexX;
                     int currentSpaceY = this.getCurrentSpace().indexY;
                     object[] data = { currentSpaceX, currentSpaceY };
-                    ParkingSpot[] parkingSpots = targetSpace.getParkingSpots();
+                    //AmbulanceParkingSpot[] parkingSpots = targetSpace.getParkingSpots();
                     int indexX = targetSpace.indexX;
                     int indexY = targetSpace.indexY;
-                    if (parkingSpots != null)
-                    {
-                        for (int i = 0; i < 4; i++)
-                        {
-                            direction = i;
-                            ParkingSpot ps = parkingSpots[i];
-                            if (ps != null)
-                            {
-                                //switch (direction)
-                                //{
-                                //    case 0:
-                                //        //targetSpace.   (null, direction);
-                                //        int northX = targetSpace.indexX;
-                                //        int northY = targetSpace.indexY - 1;
-                                //        if (northX <= 10 && northY <= 8)
-                                //        {
-                                //            Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
-                                //        }
-                                //        break;
-                                //}
-                            }
-                        }
-                    }
+                    //if (parkingSpots != null)
+                    //{
+                    //    for (int i = 0; i < 4; i++)
+                    //    {
+                    //        direction = i;
+                    //        AmbulanceParkingSpot ps = parkingSpots[i];
+                    //        if (ps != null)
+                    //        {
+                    //            //switch (direction)
+                    //            //{
+                    //            //    case 0:
+                    //            //        //targetSpace.   (null, direction);
+                    //            //        int northX = targetSpace.indexX;
+                    //            //        int northY = targetSpace.indexY - 1;
+                    //            //        if (northX <= 10 && northY <= 8)
+                    //            //        {
+                    //            //            Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
+                    //            //        }
+                    //            //        break;
+                    //            //}
+                    //        }
+                    //    }
+                    //}
                 }
                 //if prompt is left
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -1190,7 +1167,7 @@ public class Fireman : GameUnit
                 else if(h != null && ap >= 2)//if the fireman riding the ambulance
                 {
                     Kind destinationKind = destination.getKind();
-                    if(destinationKind == Kind.ParkingSpot)
+                    if(destinationKind == Kind.AmbulanceParkingSpot)
                     {
                         //ride ambulance
                         Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
@@ -1216,7 +1193,6 @@ public class Fireman : GameUnit
                         currentGameUnits.Remove(ambulance);
                         destination.addOccupant(ambulance);
 
-
                         GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
 
                         //if fireman want to exit the ambulance
@@ -1226,7 +1202,7 @@ public class Fireman : GameUnit
                 else if (h != null && ap >= 2)//if the fireman riding the engine
                 {
                     Kind destinationKind = destination.getKind();
-                    if (destinationKind == Kind.ParkingSpot)
+                    if (destinationKind == Kind.AmbulanceParkingSpot)
                     {
                         //ride engine
                         Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);

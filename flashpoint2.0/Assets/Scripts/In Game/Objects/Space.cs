@@ -14,7 +14,6 @@ public class Space {
     [SerializeField]
     Wall[] walls;
     Door[] doors;
-    ParkingSpot[] parkingSpots;
     public List<GameUnit> occupants = new List<GameUnit>();
 
 
@@ -25,7 +24,6 @@ public class Space {
         indexY = _indexY;
         walls = new Wall[4];
         doors = new Door[4];
-        parkingSpots = new ParkingSpot[4];
         status = SpaceStatus.Safe;
         spaceKind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
 
@@ -42,12 +40,6 @@ public class Space {
     {
         this.doors[index] = door;
     }
-
-    //function to add parkingspots at a certain index
-    public void addParkingSpots(ParkingSpot parkingSpot, int index)
-    {
-        this.parkingSpots[index] = parkingSpot;
-    }
 
     public SpaceStatus getSpaceStatus()
     {
@@ -100,16 +92,6 @@ public class Space {
     {
         occupants.Add(u);
     }
-
-    public void setParkingSpots(ParkingSpot[] newParkingSpots)
-    {
-        this.parkingSpots = newParkingSpots;
-    }
-
-    public ParkingSpot[] getParkingSpots()
-    {
-        return this.parkingSpots;
-    }
 
     public List<GameUnit> getOccupants()
     {
