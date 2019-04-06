@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviourPun
     public static int totalPOIs = 15;
     public static int NumFA = 5;
     public static int numVictim = 10;
+    public static bool isDestroyingVictim;
 
     //Network Options
 
@@ -79,6 +80,8 @@ public class GameManager : MonoBehaviourPun
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
             isFamilyGame = true;
+            isDestroyingVictim = false;
+
         }
         else
         {
@@ -387,34 +390,36 @@ public class GameManager : MonoBehaviourPun
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
     public void testFunctionPlacePOI()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 3];
-        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
-        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
-        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+       
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
+            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+            GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+            //Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-        POI.GetComponent<Transform>().position = newPosition;
-        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
-        currentSpace.addOccupant(POI.GetComponent<POI>());
-        numOfActivePOI++;
+            POI.GetComponent<Transform>().position = position;
+            POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+            POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+            currentSpace.addOccupant(POI.GetComponent<POI>());
+            numOfActivePOI++;
     }
 
 
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING 
-    public void testFunctionPlaceVictim(Space targetSpace)
+    public void testFunctionPlaceVictim()
     {
-        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 1];
-        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
-        GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
 
-        poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
-        poi.GetComponent<POI>().setIsFlipped(true);
-        poi.GetComponent<Transform>().position = position;
-        poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-        poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-        poi.GetComponent<GameUnit>().setPhysicalObject(poi);
-        currentSpace.addOccupant(poi.GetComponent<POI>());
+            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[3, 1];
+            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+            GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/man POI") as GameObject);
+
+            poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
+            poi.GetComponent<POI>().setIsFlipped(true);
+            poi.GetComponent<Transform>().position = position;
+            poi.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+            poi.GetComponent<GameUnit>().setPhysicalObject(poi);
+            currentSpace.addOccupant(poi.GetComponent<POI>());
 
 
     }
@@ -435,9 +440,8 @@ public class GameManager : MonoBehaviourPun
         }
         if (targetMarker != null)
         {
-            Debug.Log("Removing Smoke Marker");
             string message = "Removing Smoke at (" + indexX + "," + indexY + ")";
-            GameConsole.instance.UpdateFeedback(message);
+            Debug.Log(message);
             spaceOccupants.Remove(targetMarker);
             Destroy(targetMarker.physicalObject);
             Destroy(targetMarker);
@@ -482,7 +486,6 @@ public class GameManager : MonoBehaviourPun
         newFireMarker.GetComponent<GameUnit>().setPhysicalObject(newFireMarker);
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
         targetSpace.setSpaceStatus(SpaceStatus.Fire);
-        //TODO Find POIs and destroy them
 
         removePOIFromSpace(targetSpace);
 
@@ -513,11 +516,9 @@ public class GameManager : MonoBehaviourPun
                 }
                 else
                 {
-                    FlipPOI(targetSpace);
-                    Debug.Log("there shoudl be a flipped poi or a false alarm has alraedy disappeared ");
+                    targetPOI = unit;
+                    Debug.Log("Tagged a POI");
                     foundUnflippedPOI = true;
-                    break;
-
                 }
             }
         }
@@ -525,36 +526,42 @@ public class GameManager : MonoBehaviourPun
 
         if (targetVictim != null)
         {
-            //TODO destroy targetVictim
             Debug.Log("Killing victim");
             occupants.Remove(targetVictim);
             Destroy(targetVictim.physicalObject);
             Destroy(targetVictim);
             GameManager.lostVictims++;
+            GameUI.instance.AddLostVictim();
         }
+
         else if (foundUnflippedPOI)
         {
-            foreach (GameUnit u in occupants) 
-            { 
-                if (u.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && u.GetComponent<POI>().getIsFlipped())
-                {
-                    Debug.Log("Found the flipped POI");
-                    targetPOI = u;
-                    break;
-                }
-            }
+            Debug.Log("Handling the unflipped poi");
 
-            if (targetPOI != null)
+            if (isDestroyingVictim && numVictim > 0)
             {
-                Debug.Log("Deleting POI");
+                isDestroyingVictim = false;
+                Debug.Log("Selected the unflipped POI to be a victim");
                 occupants.Remove(targetPOI);
                 Destroy(targetPOI.physicalObject);
                 Destroy(targetPOI);
-                GameManager.lostVictims++;
+                lostVictims++;
+                numVictim--;
                 GameUI.instance.AddLostVictim();
+                GameConsole.instance.UpdateFeedback("A victim just perished.");
+                numOfActivePOI--;
             }
-
-
+            else
+            {
+                isDestroyingVictim = true;
+                Debug.Log("Selected the unflipped POI to be a false Alarm");
+                occupants.Remove(targetPOI);
+                Destroy(targetPOI.physicalObject);
+                Destroy(targetPOI);
+                NumFA--;
+                GameConsole.instance.UpdateFeedback("A false alarm was destroyed");
+                numOfActivePOI--;
+            }
         }
 
     }
@@ -1492,7 +1499,7 @@ public class GameManager : MonoBehaviourPun
                 GameConsole.instance.UpdateFeedback("It was a Victim!");
                 numVictim--;
             }
-            //Instiate Object
+            //Instantiate Object
             GameObject poi = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/" + POIname) as GameObject);
 
             poi.GetComponent<POI>().setPOIKind(POIKind.Victim);
@@ -1504,8 +1511,16 @@ public class GameManager : MonoBehaviourPun
 
             gameUnits.Remove(questionMark);
             curr.addOccupant(poi.GetComponent<GameUnit>());
-            Destroy(questionMark.physicalObject);
-            Destroy(questionMark);
+
+            Debug.Log("This is from flip poi. The flipped status is " + poi.GetComponent<POI>().getIsFlipped());
+
+
+            if (questionMark != null)
+            {
+                Destroy(questionMark.physicalObject);
+                Destroy(questionMark);
+            }
+           
 
 
         }
