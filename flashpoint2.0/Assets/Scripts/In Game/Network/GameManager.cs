@@ -322,6 +322,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeInitialFireMarker()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
         int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
