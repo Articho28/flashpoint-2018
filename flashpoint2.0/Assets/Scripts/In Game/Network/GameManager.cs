@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviourPun
     public static int totalPOIs = 15;
     public static int NumFA = 5;
     public static int numVictim = 10;
+    public static bool isDestroyingVictim;
 
     //Network Options
 
@@ -79,7 +80,7 @@ public class GameManager : MonoBehaviourPun
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
             isFamilyGame = true;
-            isFlippingPOI = false;
+            isDestroyingVictim = false;
 
         }
         else
@@ -532,8 +533,22 @@ public class GameManager : MonoBehaviourPun
         {
             Debug.Log("Handling the unflipped poi");
 
-            if (NumFA > 0)
+            if (isDestroyingVictim && numVictim > 0)
             {
+                isDestroyingVictim = false;
+                Debug.Log("Selected the unflipped POI to be a victim");
+                occupants.Remove(targetPOI);
+                Destroy(targetPOI.physicalObject);
+                Destroy(targetPOI);
+                lostVictims++;
+                numVictim--;
+                GameUI.instance.AddLostVictim();
+                GameConsole.instance.UpdateFeedback("A victim just perished.");
+                numOfActivePOI--;
+            }
+            else
+            {
+                isDestroyingVictim = true;
                 Debug.Log("Selected the unflipped POI to be a false Alarm");
                 occupants.Remove(targetPOI);
                 Destroy(targetPOI.physicalObject);
@@ -541,50 +556,7 @@ public class GameManager : MonoBehaviourPun
                 NumFA--;
                 GameConsole.instance.UpdateFeedback("A false alarm was destroyed");
                 numOfActivePOI--;
-
             }
-            else
-            {
-                Debug.Log("Selected the unflipped POI to be a victim");
-                occupants.Remove(targetPOI);
-                Destroy(targetPOI.physicalObject);
-                Destroy(targetPOI);
-                lostVictims++;
-                GameUI.instance.AddLostVictim();
-                GameConsole.instance.UpdateFeedback("A victim just perished.");
-                numOfActivePOI--;
-            }
-
-
-
-            //List<GameUnit> updatedOccupants = targetSpace.getOccupants();
-            /*
-            foreach (GameUnit g in updatedOccupants)
-            {
-                Debug.Log("Finding this gameunit in" + targetSpace.indexX + " and " + targetSpace.indexY + " : " + g);
-
-                string type = g.getType();
-
-                Debug.Log("It says it's this type dawg " + type);
-
-                if (type == FlashPointGameConstants.GAMEUNIT_TYPE_POI) 
-                {
-                    Debug.Log("It's a type POI dawg");
-                    targetPOI = g;
-
-                }
-            }
-
-          
-            if (targetPOI != null)
-            {
-                Debug.Log("Deleting POI");
-                updatedOccupants.Remove(targetPOI);
-                Destroy(targetPOI.physicalObject);
-                Destroy(targetPOI);
-                GameManager.lostVictims++;
-                GameUI.instance.AddLostVictim();
-            }*/
         }
 
     }
