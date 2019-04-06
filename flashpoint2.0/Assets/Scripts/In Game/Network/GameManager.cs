@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviourPun
     ArrayList playersListNameCache;
 
     //Game relevant variables
-    public List<Specialist> availableSpecialists = new List<Specialist> 
+    public ArrayList availableSpecialists = new ArrayList 
     { 
         Specialist.Paramedic,
         Specialist.FireCaptain,
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviourPun
         Specialist.RescueSpecialist,
         Specialist.DriverOperator
     };
-    public List<int> freeSpecialistIndex = new List <int> //all specilaists are free at first
+    public ArrayList freeSpecialistIndex = new ArrayList //all specilaists are free at first
     { 
         0,1,2,3,4,5,6,7
     };
@@ -1489,6 +1489,9 @@ public class GameManager : MonoBehaviourPun
             Destroy(questionMark.physicalObject);
             Destroy(questionMark);
 
+
+        } else if (evCode == (byte)PhotonEventCodes.SpecialistIsPicked)
+        {
 
         }
 
