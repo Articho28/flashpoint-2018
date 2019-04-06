@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviourPun
     //Variables for game status and turn.
     public static string GameStatus;
     public int Turn = 1;
-    public static bool isFlippingPOI;
 
     //Local store of Players.
     public static int NumberOfPlayers;
@@ -481,7 +480,7 @@ public class GameManager : MonoBehaviourPun
         targetSpace.setSpaceStatus(SpaceStatus.Fire);
 
         //TODO Find POIs and destroy them
-
+        
         removePOIFromSpace(targetSpace);
 
         //TODO Find firefighters and select knockdown placement.
@@ -511,11 +510,9 @@ public class GameManager : MonoBehaviourPun
                 }
                 else
                 {
-                    Debug.Log("Flip flip flipping");
-                    FlipPOI(targetSpace);
-                    Debug.Log("A victim should have appeared of a false alarm at  " + targetSpace.indexX + " and " + targetSpace.indexY);
+                    targetPOI = unit;
+                    Debug.Log("Tagged a POI");
                     foundUnflippedPOI = true;
-                    break;
                 }
             }
         }
@@ -533,10 +530,35 @@ public class GameManager : MonoBehaviourPun
 
         else if (foundUnflippedPOI)
         {
-            Debug.Log("Made is this far bro");
+            Debug.Log("Handling the unflipped poi");
 
-            List<GameUnit> updatedOccupants = targetSpace.getOccupants();
-            
+            if (NumFA > 0)
+            {
+                Debug.Log("Selected the unflipped POI to be a false Alarm");
+                occupants.Remove(targetPOI);
+                Destroy(targetPOI.physicalObject);
+                Destroy(targetPOI);
+                NumFA--;
+                GameConsole.instance.UpdateFeedback("A false alarm was destroyed");
+                numOfActivePOI--;
+
+            }
+            else
+            {
+                Debug.Log("Selected the unflipped POI to be a victim");
+                occupants.Remove(targetPOI);
+                Destroy(targetPOI.physicalObject);
+                Destroy(targetPOI);
+                lostVictims++;
+                GameUI.instance.AddLostVictim();
+                GameConsole.instance.UpdateFeedback("A victim just perished.");
+                numOfActivePOI--;
+            }
+
+
+
+            //List<GameUnit> updatedOccupants = targetSpace.getOccupants();
+            /*
             foreach (GameUnit g in updatedOccupants)
             {
                 Debug.Log("Finding this gameunit in" + targetSpace.indexX + " and " + targetSpace.indexY + " : " + g);
@@ -562,7 +584,7 @@ public class GameManager : MonoBehaviourPun
                 Destroy(targetPOI);
                 GameManager.lostVictims++;
                 GameUI.instance.AddLostVictim();
-            }
+            }*/
         }
 
     }
@@ -1516,6 +1538,7 @@ public class GameManager : MonoBehaviourPun
             curr.addOccupant(poi.GetComponent<GameUnit>());
 
             Debug.Log("This is from flip poi. The flipped status is " + poi.GetComponent<POI>().getIsFlipped());
+
 
             if (questionMark != null)
             {
