@@ -91,12 +91,29 @@ public class Space {
     public void addOccupant(GameUnit u)
     {
         occupants.Add(u);
+<<<<<<< HEAD
     }
 
     public List<GameUnit> getOccupants()
     {
         return this.occupants;
  
+=======
+    }
+    public void setParkingSpots(ParkingSpot[] newParkingSpots)
+    {
+        this.parkingSpots = newParkingSpots;
+    }
+
+    public ParkingSpot[] getParkingSpots()
+    {
+        return this.parkingSpots;
+    }
+
+    public List<GameUnit> getOccupants()
+    {
+        return this.occupants;
+>>>>>>> 94c5870988793720acb180b337e885c9ea5c41bf
     }
 
     public bool removeOccupant(GameUnit u)
