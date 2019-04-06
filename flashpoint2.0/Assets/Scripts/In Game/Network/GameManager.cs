@@ -76,7 +76,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             lostVictims = 0;
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
-            isFamilyGame = false;
+            isFamilyGame = true;
             isDestroyingVictim = false;
             availableSpecialists = new Specialist [8];
             availableSpecialists[0] = Specialist.Paramedic;
@@ -436,7 +436,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     {
        
             Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
-            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -5);
+            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -10);
             GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
             //Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
