@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviourPun
 
 
     //Local store of Players.
+
     public static int NumberOfPlayers;
     public bool isFirstReset;
     public bool isPickSpecialist;
@@ -44,10 +45,14 @@ public class GameManager : MonoBehaviourPun
     public static int NumFA = 5;
     public static int numVictim = 10;
     public static bool isDestroyingVictim;
+    public static int placeInitialPOI = 3;
+    public static int[] initialFireMarkerRows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
+    public static int[] initialFireMarkerColumns = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
 
-    //Network Options
 
-    public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
+//Network Options
+
+public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
         CachingOption = Photon.Realtime.EventCaching.DoNotCache,
         Receivers = Photon.Realtime.ReceiverGroup.All
@@ -370,7 +375,9 @@ public class GameManager : MonoBehaviourPun
     public void randomizePOI()
     {
         if (!PhotonNetwork.IsMasterClient)
+        {
             return;
+        }
 
         int col;
         int row;
@@ -380,7 +387,27 @@ public class GameManager : MonoBehaviourPun
             col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
             row = UnityEngine.Random.Range(1, 6);
-            
+            Debug.Log("Initial poi placement: The x value is " + col + " and the y value is " + row);
+            bool gottaRestart = false;
+            if (placeInitialPOI > 0) 
+            {
+                Debug.Log("We entering first three poi placements");
+
+                for (int i = 0; i < initialFireMarkerRows.Length; i++)
+                {
+                    if (row == initialFireMarkerRows[i] && col == initialFireMarkerColumns[i])
+                    {
+                        Debug.Log("The row and column is the same as this fire location :" + initialFireMarkerColumns[i] + " and " + initialFireMarkerRows[i]);
+                        gottaRestart = true;
+                    }
+                }
+            }
+
+            if (gottaRestart)
+            {
+                continue;
+            }
+
             if (containsFireORSmoke(col, row))
             {
                 continue;
@@ -393,6 +420,10 @@ public class GameManager : MonoBehaviourPun
             break;
         }
 
+        if (placeInitialPOI > 0)
+        {
+            placeInitialPOI--;
+        }
 
         object[] data = { col, row };
 
