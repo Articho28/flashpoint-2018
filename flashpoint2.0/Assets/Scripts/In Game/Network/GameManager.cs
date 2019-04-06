@@ -227,13 +227,11 @@ public class GameManager : MonoBehaviourPun
         {
             Debug.Log("It's an explosion");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data, sendToAllOptions, SendOptions.SendReliable);
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else if (sp == SpaceStatus.Smoke)
         {
             Debug.Log("It's turned to Fire.");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -601,11 +599,11 @@ public class GameManager : MonoBehaviourPun
                 {
                     WallStatus wStatus = w.getWallStatus();
 
-                    Debug.Log("Wall status before addDamage is " + wStatus);
+                    //Debug.Log("Wall status before addDamage is " + wStatus);
                     w.addDamage();
                     GameUI.instance.AddDamage(1);
-                    Debug.Log("Adding damage to " + w);
-                    Debug.Log("Wall status after addDamage is " + w.getWallStatus());
+                    //Debug.Log("Adding damage to " + w);
+                    //Debug.Log("Wall status after addDamage is " + w.getWallStatus());
 
 
                     //Handle wall deletion in relevant spaces
@@ -688,6 +686,7 @@ public class GameManager : MonoBehaviourPun
         }
 
         SpaceStatus spaceStatus = targetSpace.getSpaceStatus();
+        object[] knockdownData = new object[] { targetSpace.indexX, targetSpace.indexY};
 
         //If the space is smoke or safe, turn it to fire
         if (spaceStatus == SpaceStatus.Safe)
@@ -695,6 +694,7 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, knockdownData, sendToAllOptions, SendOptions.SendReliable);
         }
         else if (spaceStatus == SpaceStatus.Smoke)
         {
@@ -702,6 +702,7 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, knockdownData, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -1089,11 +1090,13 @@ public class GameManager : MonoBehaviourPun
             targetSpace.setSpaceStatus(SpaceStatus.Fire);
             placeFireMarker(targetSpace);
 
+            object[] knockdownData = new object[] {indexX, indexY};
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.KnockdownFireman, knockdownData, sendToAllOptions, SendOptions.SendReliable);
         }
         else if(evCode == (byte)PhotonEventCodes.KnockdownFireman) { //pass the space x, and space y for data
             object[] dataReceived = eventData.CustomData as object[];
-            int x = (int) dataReceived[1];
-            int y = (int) dataReceived[2];
+            int x = (int) dataReceived[0];
+            int y = (int) dataReceived[1];
 
             Space space = StateManager.instance.spaceGrid.grid[x, y];
             Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(space);
