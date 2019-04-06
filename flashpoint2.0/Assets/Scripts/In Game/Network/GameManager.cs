@@ -219,6 +219,9 @@ public class GameManager : MonoBehaviourPun
 
     public static void advanceFire()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
         rollDice();
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[blackDice, redDice];
 
@@ -335,6 +338,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeInitialHotSpot()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         int[] rows = new int[] { 3, 3, 3, 3, 4, 4, 4, 4 };
         int[] cols = new int[] { 3, 4, 5, 6, 6, 5, 4, 3 };
@@ -345,6 +350,8 @@ public class GameManager : MonoBehaviourPun
     }
     public void placeInitialFireMarkerExperienced()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         int[] rows = new int[] {  3, 4, 4, 4 };
         int[] cols = new int[] {  6, 6, 5, 3 };
@@ -479,6 +486,7 @@ public class GameManager : MonoBehaviourPun
 
     void placeFireMarker(Space targetSpace)
     {
+
         GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
         Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
         newFireMarker.GetComponent<Transform>().position = newPosition;
@@ -855,6 +863,9 @@ public class GameManager : MonoBehaviourPun
 
     public static void replenishPOI()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
         if (totalPOIs == 0)
         {
             return;
