@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviourPun
     ArrayList playersListNameCache;
 
     //Game relevant variables
+
     public Specialist[] availableSpecialists;
     public int[] freeSpecialistIndex; //all specilaists are free at first
     public int buildingDamage;
@@ -73,9 +74,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
-            isPickSpecialist = false;
+            isPickSpecialist = true;
             playersListNameCache = new ArrayList();
-            isFamilyGame = true;
+            isFamilyGame = false;
             isDestroyingVictim = false;
             availableSpecialists = new Specialist [8];
             availableSpecialists[0] = Specialist.Paramedic;
@@ -184,8 +185,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         if (!isFamilyGame)
         {
-            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
+            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -1626,6 +1627,14 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 Destroy(questionMark);
             }
 
+
+
+        } else if (evCode == (byte)PhotonEventCodes.SpecialistIsPicked)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] updatedIndexList = (int[])dataReceived[0];
+
+            freeSpecialistIndex = updatedIndexList;
 
 
         }

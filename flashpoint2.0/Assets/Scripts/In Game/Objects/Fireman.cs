@@ -44,6 +44,8 @@ public class Fireman : GameUnit
         validInputOptions = new ArrayList();
         isChoppingWall = false;
         isSelectingExtinguishOption = false;
+        isChangingCrew = false;
+        isSelectingSpecialist = false;
     }
 
     void Update()
@@ -62,7 +64,7 @@ public class Fireman : GameUnit
             {
                 if (Input.GetKeyDown(KeyCode.G))
                 {
-                    //deckGun(); TODO 
+                    //deckGun(); 
                 }
                 else if (Input.GetKeyDown(KeyCode.H))
                 {
@@ -144,7 +146,7 @@ public class Fireman : GameUnit
                         }
                         else
                         {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            GameConsole.instance.UpdateFeedback("Insufficient AP 1");
                             return;
                         }
 
@@ -160,7 +162,7 @@ public class Fireman : GameUnit
                         }
                         else
                         {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP");
+                            GameConsole.instance.UpdateFeedback("Insufficient AP 2");
                             return;
                         }
                     }
@@ -1063,7 +1065,7 @@ public class Fireman : GameUnit
                     isSelectingExtinguishOption = false;
                     this.setAP(this.getAP() - 1);
                     FiremanUI.instance.SetAP(this.getAP());
-                }
+                } 
 
             }
             else if (Input.GetKeyDown(KeyCode.V))
@@ -1077,25 +1079,200 @@ public class Fireman : GameUnit
        else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST)
         {
-            ////if the user presses 0
-            //if (Input.GetKeyDown(KeyCode.Alpha0))
-            //{
-            //    if (isWaitingForInput && isSelectingSpecialist)
-            //    {
-            //        isWaitingForInput = false;
-            //        isSelectingSpecialist = false;
-            //        GameManager.GM.availableSpecialists[0] = null;
+            //if the user presses 0
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 0 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
 
+                    if (GameManager.GM.freeSpecialistIndex[0] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[0] = 0;
+                        this.spec = Specialist.Paramedic;
+                        GameConsole.instance.UpdateFeedback("Paramedic is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
 
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            } 
+            else if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 1 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
 
+                    if (GameManager.GM.freeSpecialistIndex[1] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[1] = 0;
+                        this.spec = Specialist.FireCaptain;
+                        GameConsole.instance.UpdateFeedback("Fire Captain is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 2 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
 
-            //        GameManager.IncrementTurn();
+                    if (GameManager.GM.freeSpecialistIndex[2] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[2] = 0;
+                        this.spec = Specialist.ImagingTechnician;
+                        GameConsole.instance.UpdateFeedback("Imaging Technician is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 3 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
 
-            //    }
+                    if (GameManager.GM.freeSpecialistIndex[3] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[3] = 0;
+                        this.spec = Specialist.CAFSFirefighter;
+                        GameConsole.instance.UpdateFeedback("CAFS Firefighter is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 4 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
 
-               
-            //}
+                    if (GameManager.GM.freeSpecialistIndex[4] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[4] = 0;
+                        this.spec = Specialist.HazmatTechinician;
+                        GameConsole.instance.UpdateFeedback("Hazmat Technician is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 5 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
 
+                    if (GameManager.GM.freeSpecialistIndex[5] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[5] = 0;
+                        this.spec = Specialist.Generalist;
+                        GameConsole.instance.UpdateFeedback("Generalist is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6)) 
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 6 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
+
+                    if (GameManager.GM.freeSpecialistIndex[6] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[6] = 0;
+                        this.spec = Specialist.RescueSpecialist;
+                        GameConsole.instance.UpdateFeedback("Rescue Specialist is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 7 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
+
+                    if (GameManager.GM.freeSpecialistIndex[7] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[7] = 0;
+                        this.spec = Specialist.DriverOperator;
+                        GameConsole.instance.UpdateFeedback("Driver Operator is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
         }
         else if (GameManager.GM.Turn != PhotonNetwork.LocalPlayer.ActorNumber)
         {
@@ -1273,12 +1450,18 @@ public class Fireman : GameUnit
     {
         isWaitingForInput = true;
         isSelectingSpecialist = true;
-        GameConsole.instance.UpdateFeedback("Choose your preferred specialist.");
-        GameConsole.instance.UpdateFeedback("Press 0 for Paramedic. Press 1 for Fire Captain." +
-            "Press 2 for Imaging Technician. Press 3 for CAFS Firefighter" + "\nPress 4 for HazmatTechinician. Press 5 for Generalist." 
-            + "Press 6 for Rescue Specialist. Press 7 for Driver Operator.");
+        string optionsToUser = "";
+        for (int i = 0; i < GameManager.GM.freeSpecialistIndex.Length; i++)
+        {
+            Debug.Log("iteration " + i);
+            if (GameManager.GM.freeSpecialistIndex[i] != 0)
+            {
+                optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
+                Debug.Log(optionsToUser);
+            }
 
-    }
+        }
+    }    
     public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
@@ -1760,7 +1943,7 @@ public class Fireman : GameUnit
         Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
 
         if (sp == SpaceStatus.Fire) {
-            if (ap >= 3 && v == null) //&&f has enough to move
+            if (ap >= 3 && v != null) //&&f has enough to move
             {
                 this.setCurrentSpace(newSpace);
                 this.decrementAP(2);
@@ -1769,7 +1952,7 @@ public class Fireman : GameUnit
                 this.GetComponent<Transform>().position = newPosition;
             }
             else {
-                GameConsole.instance.UpdateFeedback("Insufficient AP");
+                GameConsole.instance.UpdateFeedback("Insufficient AP 3");
                 return;
             }
         }
@@ -1851,10 +2034,10 @@ public class Fireman : GameUnit
                     deassociateEngine();
                 }
             }
-            //else if (v != null && ap >= 2)//if the fireman is carrying a victim
-            //{
-            //    this.move(v, curr, destination);
-            //}
+            else if (v != null && ap >= 2)//if the fireman is carrying a victim
+            {
+                this.move(v, curr, destination);
+            }
             else if (hazmat != null) {
                 Debug.Log("INSIDE HAZMAT IF STATEMENT");
                 Debug.Log("HAZMAT POS IS " + hazmat.getCurrentSpace().indexX + ", " + hazmat.getCurrentSpace().indexY);
@@ -1862,7 +2045,7 @@ public class Fireman : GameUnit
                 this.move(hazmat, curr, destination);
             }
             else {
-                GameConsole.instance.UpdateFeedback("Insufficient AP");
+                GameConsole.instance.UpdateFeedback("Insufficient AP 4");
                 return;
             }
         }
@@ -1964,7 +2147,6 @@ public class Fireman : GameUnit
         object[] data = new object[] { updatedIndexList };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChangeCrew, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
-
     public void endTurn()
     {
         SpaceStatus currentSpaceStatus = currentSpace.getSpaceStatus();
@@ -1997,7 +2179,7 @@ public class Fireman : GameUnit
         if (this.getAP() >= 2)
         {
 
-            string optionsToUser = "";
+            string optionsToUser =  "";
             Specialist[] test = GameManager.GM.availableSpecialists;
 
             for (int i = 0; i< GameManager.GM.freeSpecialistIndex.Length; i++)
@@ -2117,7 +2299,7 @@ public class Fireman : GameUnit
             GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
             GameManager.GM.DisplayPlayerTurn();
             GameUI.instance.AddGameState(GameManager.GameStatus);
-            //selectSpecialist();
+            selectSpecialist();
         }
     }
 }
