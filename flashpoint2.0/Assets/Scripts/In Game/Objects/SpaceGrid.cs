@@ -116,8 +116,8 @@ public class SpaceGrid : MonoBehaviourPun {
         //INSTANTIATE WALLS
         //north:0, east:1, south:2, west:3
 
-        GameManager.GM.testFunctionPlacePOI();
-        GameManager.GM.testFunctionPlaceVictim();
+        //GameManager.GM.testFunctionPlacePOI();
+        //GameManager.GM.testFunctionPlaceVictim();
 
          Space currSpace;         GameObject w1 = GameObject.Find("/Board/Walls/1");
         w1.GetComponent<Wall>().setPhysicalObject(w1);         GameObject w2 = GameObject.Find("/Board/Walls/2");
@@ -321,12 +321,16 @@ public class SpaceGrid : MonoBehaviourPun {
                 return grid[currentX, currentY + 1];
             }
         }
-        else
+        else if(direction == 3)
         {
             if(grid[currentX-1, currentY] != null)
             {
                 return grid[currentX - 1, currentY];
             }
+        }
+        else
+        {
+            return currentLocation;
         }
 
         return null;

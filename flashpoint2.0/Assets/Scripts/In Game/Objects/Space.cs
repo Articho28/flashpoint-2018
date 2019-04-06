@@ -14,7 +14,7 @@ public class Space {
     [SerializeField]
     Wall[] walls;
     Door[] doors;
-    public List<GameUnit> occupants;
+    public List<GameUnit> occupants = new List<GameUnit>();
 
 
 
@@ -24,7 +24,6 @@ public class Space {
         indexY = _indexY;
         walls = new Wall[4];
         doors = new Door[4];
-        occupants = new List<GameUnit>();
         status = SpaceStatus.Safe;
         spaceKind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
 
@@ -42,7 +41,7 @@ public class Space {
         this.doors[index] = door;
     }
 
-    public SpaceStatus getSpaceStatus()
+    public SpaceStatus getSpaceStatus()
     {
         return this.status;
     }
@@ -75,6 +74,7 @@ public class Space {
     public void setDoors(Door[] newDoors)
     {
         this.doors = newDoors;
+
     }
 
     public void setWalls(Wall[] newWalls)
@@ -96,6 +96,7 @@ public class Space {
     public List<GameUnit> getOccupants()
     {
         return this.occupants;
+ 
     }
 
     public bool removeOccupant(GameUnit u)

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vehicle : GameUnit
-{
+public class AmbulanceParkingSpot : GameUnit {
 
 }

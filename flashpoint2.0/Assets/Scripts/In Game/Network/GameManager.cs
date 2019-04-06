@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +18,10 @@ public class GameManager : MonoBehaviourPun
     //Variables for game status and turn.
     public static string GameStatus;
     public int Turn = 1;
+
+    //array for getting ambulance parking spots
+    AmbulanceParkingSpot[] ambulanceParkingSpots;
+
 
     //Local store of Players.
     public static int NumberOfPlayers;
@@ -64,7 +68,7 @@ public class GameManager : MonoBehaviourPun
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
-            isPickSpecialist = true;
+            isPickSpecialist = false;
             playersListNameCache = new ArrayList();
             isFamilyGame = true;
             isDestroyingVictim = false;
@@ -113,7 +117,7 @@ public class GameManager : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            placeInitialFireMarker();
+            //placeInitialFireMarker();
 
             if (!isFamilyGame)
             {
@@ -175,7 +179,8 @@ public class GameManager : MonoBehaviourPun
 
         if (!isFamilyGame)
         {
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
+            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -224,6 +229,7 @@ public class GameManager : MonoBehaviourPun
 
     public static void advanceFire()
     {
+
         rollDice();
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[blackDice, redDice];
 
@@ -261,11 +267,11 @@ public class GameManager : MonoBehaviourPun
     {
         //TODO reset proper randomization
 
-        //System.Random r = new System.Random();
-        //blackDice = r.Next(1, 9);
-        //redDice = r.Next(1, 7);
-        blackDice = 1; 
-        redDice = 1;
+        System.Random r = new System.Random();
+        blackDice = r.Next(1, 9);
+        redDice = r.Next(1, 7);
+        //blackDice = 1; 
+        //redDice = 1;
 
     }
 
@@ -291,7 +297,6 @@ public class GameManager : MonoBehaviourPun
 
                             if (neighborStatus == SpaceStatus.Fire)
                             {
-                                space.setSpaceStatus(SpaceStatus.Fire);
                                 removeSmokeMarker(space);
                                 placeFireMarker(space);
                             }
@@ -328,6 +333,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeInitialFireMarker()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
         int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
@@ -483,6 +490,7 @@ public class GameManager : MonoBehaviourPun
 
     void placeFireMarker(Space targetSpace)
     {
+
         GameObject newFireMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
         Vector3 newPosition = new Vector3(targetSpace.worldPosition.x, targetSpace.worldPosition.y, -5);
         newFireMarker.GetComponent<Transform>().position = newPosition;
@@ -806,10 +814,30 @@ public class GameManager : MonoBehaviourPun
         GameManager.GM.setActivePrefabs("lost", true);
     }
 
+    public void placeAmbulanceParkingSpot()
+    {
+        int[] rows = { 5, 9, 4, 0 };
+        int[] cols = { 0, 2, 9, 5 };
+
+        object[] data = { cols, rows };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceAmbulanceParkingSpot, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+
+    public void placeEngineParkingSpot()
+    {
+        int[] rows = { 8, 9, 2, 0 };
+        int[] cols = { 0, 5, 9, 1 };
+
+        object[] data = { cols, rows };
+
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceEngineParkingSpot, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+
     public void placeInitialAmbulance()
     {
-        int[] rows = new int[] { 5 };
-        int[] cols = new int[] { 0 };
+        int[] rows = { 5 };
+        int[] cols = { 0 };
 
         object[] data = { cols, rows };
 
@@ -818,8 +846,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeInitialEngine()
     {
-        int[] rows = new int[] { 9 };
-        int[] cols = new int[] { 6 };
+        int[] rows = { 9 };
+        int[] cols = { 5 };
 
         object[] data = { cols, rows };
 
@@ -859,6 +887,7 @@ public class GameManager : MonoBehaviourPun
 
     public static void replenishPOI()
     {
+
         if (totalPOIs == 0)
         {
             return;
@@ -1051,6 +1080,7 @@ public class GameManager : MonoBehaviourPun
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
+                    placeInitialFireMarker();
                     randomizePOI();
                     randomizePOI();
                     randomizePOI();
@@ -1355,6 +1385,46 @@ public class GameManager : MonoBehaviourPun
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
         }
+        else if (evCode == (byte)PhotonEventCodes.PlaceAmbulanceParkingSpot)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] cols = (int[])dataReceived[0];
+            int[] rows = (int[])dataReceived[1];
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Vector3 position = currentSpace.worldPosition;
+                GameObject AmbulanceParkingSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/ParkingSpots/ambulanceParkingSpot")) as GameObject;
+                Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
+
+                AmbulanceParkingSpot.GetComponent<Transform>().position = ambulancePosition;
+                AmbulanceParkingSpot.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+                AmbulanceParkingSpot.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCEPARKINGSPOT);
+                AmbulanceParkingSpot.GetComponent<GameUnit>().setPhysicalObject(AmbulanceParkingSpot);
+                currentSpace.addOccupant(AmbulanceParkingSpot.GetComponent<GameUnit>());
+            }
+        }
+        else if (evCode == (byte)PhotonEventCodes.PlaceEngineParkingSpot)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int[] cols = (int[])dataReceived[0];
+            int[] rows = (int[])dataReceived[1];
+
+            for (int i = 0; i < rows.Length; i++)
+            {
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Vector3 position = currentSpace.worldPosition;
+                GameObject EngineParkingSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/ParkingSpots/engineParkingSpot")) as GameObject;
+                Vector3 enginePosition = new Vector3(position.x, position.y, -5);
+
+                EngineParkingSpot.GetComponent<Transform>().position = enginePosition;
+                EngineParkingSpot.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+                EngineParkingSpot.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_ENGINEPARKINGSPOT);
+                EngineParkingSpot.GetComponent<GameUnit>().setPhysicalObject(EngineParkingSpot);
+                currentSpace.addOccupant(EngineParkingSpot.GetComponent<GameUnit>());
+            }
+        }
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialAmbulance)
         {
             object[] dataReceived = eventData.CustomData as object[];
@@ -1366,7 +1436,9 @@ public class GameManager : MonoBehaviourPun
                 Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
                 Vector3 position = currentSpace.worldPosition;
                 GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
-                Vector3 ambulancePosition = new Vector3(position.x + 0.5f, position.y, -5);
+
+                Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
+
 
                 Ambulance.GetComponent<Transform>().position = ambulancePosition;
                 Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
@@ -1387,7 +1459,8 @@ public class GameManager : MonoBehaviourPun
                 Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
                 Vector3 position2 = currentSpaceEngine.worldPosition;
                 GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
-                Vector3 enginePosition = new Vector3(position2.x, position2.y + 0.5f, -5);
+
+                Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);
 
                 Engine.GetComponent<Transform>().position = enginePosition;
                 Engine.GetComponent<GameUnit>().setCurrentSpace(currentSpaceEngine);
