@@ -1164,7 +1164,7 @@ public class Fireman : GameUnit
                     }
 
                 }
-                else if(h != null && ap >= 2)//if the fireman riding the ambulance
+                else if(!GameManager.GM.isFamilyGame && h != null && ap >= 2)//if the fireman riding the ambulance
                 {
                     Kind destinationKind = destination.getKind();
                     if(destinationKind == Kind.AmbulanceParkingSpot)
@@ -1195,11 +1195,11 @@ public class Fireman : GameUnit
 
                         GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
 
-                        //if fireman want to exit the ambulance
+                        //if fireman wants to exit the ambulance TODO
                         deassociateAmbulance();
                     }
                 }
-                else if (h != null && ap >= 2)//if the fireman riding the engine
+                else if (!GameManager.GM.isFamilyGame && n != null && ap >= 2)//if the fireman riding the engine
                 {
                     Kind destinationKind = destination.getKind();
                     if (destinationKind == Kind.AmbulanceParkingSpot)
@@ -1231,7 +1231,7 @@ public class Fireman : GameUnit
 
                         GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
 
-                        //if fireman want to exit the engine
+                        //if fireman wants to exit the engine TODO
                         deassociateEngine();
                     }
                 }

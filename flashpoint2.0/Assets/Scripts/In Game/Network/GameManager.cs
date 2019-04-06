@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviourPun
     public int Turn = 1;
 
     //array for getting ambulance parking spots
-    AmbulanceParkingSpot[] parkingSpots = new AmbulanceParkingSpot[];
+    AmbulanceParkingSpot[] ambulanceParkingSpots;
 
 
     //Local store of Players.
@@ -800,8 +800,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeAmbulanceParkingSpot()
     {
-        int[] rows = new int[] { 5, 9, 4, 0 };
-        int[] cols = new int[] { 0, 2, 9, 5 };
+        int[] rows = { 5, 9, 4, 0 };
+        int[] cols = { 0, 2, 9, 5 };
 
         object[] data = { cols, rows };
 
@@ -810,8 +810,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeEngineParkingSpot()
     {
-        int[] rows = new int[] { 8, 9, 2, 0 };
-        int[] cols = new int[] { 0, 5, 9, 1 };
+        int[] rows = { 8, 9, 2, 0 };
+        int[] cols = { 0, 5, 9, 1 };
 
         object[] data = { cols, rows };
 
@@ -820,8 +820,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeInitialAmbulance()
     {
-        int[] rows = new int[] { 5 };
-        int[] cols = new int[] { 0 };
+        int[] rows = { 5 };
+        int[] cols = { 0 };
 
         object[] data = { cols, rows };
 
@@ -830,8 +830,8 @@ public class GameManager : MonoBehaviourPun
 
     public void placeInitialEngine()
     {
-        int[] rows = new int[] { 9 };
-        int[] cols = new int[] { 6 };
+        int[] rows = { 9 };
+        int[] cols = { 6 };
 
         object[] data = { cols, rows };
 
