@@ -1254,7 +1254,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 {
                     //change the status to play game
                     GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
-                    FiremanUI.instance.SetAP(4);
+                    //FiremanUI.instance.SetAP(4);
                     GameUI.instance.AddGameState(GameStatus);
                     isFirstReset = false;
                     Turn = 1;
