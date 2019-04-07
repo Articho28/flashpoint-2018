@@ -1223,8 +1223,7 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.V))
             {
-                object[] data = {this.currentSpace.indexX, this.currentSpace.indexY, PV.ViewID};
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateCarriedVictimsState, data, sendToAllOptions, SendOptions.SendReliable);
+                carryVictim();
             }
             else if(Input.GetKeyDown(KeyCode.M)) {
                 carryHazmat();
@@ -1866,6 +1865,9 @@ public class Fireman : GameUnit
                     this.setVictim(v);
                     GameConsole.instance.UpdateFeedback("Carried victim successfully!");
 
+                    object[] data = { this.currentSpace.indexX, this.currentSpace.indexY, PV.ViewID };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateCarriedVictimsState, data, sendToAllOptions, SendOptions.SendReliable);
+
                     return;
                 }
             }
@@ -2379,10 +2381,10 @@ public class Fireman : GameUnit
             //carry victim
 
             this.setCurrentSpace(dst);
-            v.setCurrentSpace(dst);
             this.decrementAP(2);
-            FiremanUI.instance.SetAP(this.AP);
             this.GetComponent<Transform>().position = newPosition;
+            FiremanUI.instance.SetAP(this.AP);
+            v.setCurrentSpace(dst);
             v.GetComponent<Transform>().position = newPosition;
 
             dst.addOccupant(this);
@@ -2527,9 +2529,6 @@ public class Fireman : GameUnit
                 this.move(v, curr, destination);
             }
             else if (hazmat != null) {
-                Debug.Log("INSIDE HAZMAT IF STATEMENT");
-                Debug.Log("HAZMAT POS IS " + hazmat.getCurrentSpace().indexX + ", " + hazmat.getCurrentSpace().indexY);
-
                 this.move(hazmat, curr, destination);
             }
             else {
@@ -2961,10 +2960,24 @@ public class Fireman : GameUnit
 
             Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
             if (d.ContainsKey(firemanId)) {
-                d.Remove(firemanId);
+                d[firemanId] = victim;
             }
-            if(victim != null) d.Add(firemanId, victim);
+            else d.Add(firemanId, victim);
 
+        }
+        else if(evCode == (byte) PhotonEventCodes.MoveCarriedVictim) {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int firemanId = (int)dataReceived[2];
+
+            Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
+
+            victim.setCurrentSpace(space);
+            victim.transform.position = new Vector3(space.worldPosition.x, space.worldPosition.y, -10);
+
+            space.addOccupant(victim);
         }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
