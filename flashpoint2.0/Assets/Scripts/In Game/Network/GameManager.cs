@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviourPun
     //array for getting ambulance parking spots
     AmbulanceParkingSpot[] ambulanceParkingSpots;
 
+    int[] ambulanceParkingSpotX;
+    int[] ambulanceParkingSpotY;
+
 
     //Local store of Players.
 
@@ -49,6 +52,7 @@ public class GameManager : MonoBehaviourPun
     public static int placeInitialPOI = 3;
     public static int[] initialFireMarkerRows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
     public static int[] initialFireMarkerColumns = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
+    public static Dictionary<int, Victim> carriedVictims;
 
 
 //Network Options
@@ -97,6 +101,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex[5] = 1;
             freeSpecialistIndex[6] = 1;
             freeSpecialistIndex[7] = 1;
+            carriedVictims = new Dictionary<int, Victim>();
 
         }
         else
@@ -509,6 +514,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             //randomize between 1 and 8
             row = UnityEngine.Random.Range(1, 6);
             Debug.Log("Initial poi placement: The x value is " + col + " and the y value is " + row);
+
             bool gottaRestart = false;
             if (placeInitialPOI > 0) 
             {
@@ -1538,7 +1544,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             for (int i = 0; i < rows.Length; i++)
             {
-                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
                 Vector3 position = currentSpace.worldPosition;
                 GameObject AmbulanceParkingSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/ParkingSpots/ambulanceParkingSpot")) as GameObject;
                 Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
@@ -1558,7 +1564,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             for (int i = 0; i < rows.Length; i++)
             {
-                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
                 Vector3 position = currentSpace.worldPosition;
                 GameObject EngineParkingSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/ParkingSpots/engineParkingSpot")) as GameObject;
                 Vector3 enginePosition = new Vector3(position.x, position.y, -5);
@@ -1601,7 +1607,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             for (int i = 0; i < rows.Length; i++)
             {
                 //rotate
-                Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
+                Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 5];
                 Vector3 position2 = currentSpaceEngine.worldPosition;
                 GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
 
@@ -1735,10 +1741,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             poi.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
             poi.GetComponent<GameUnit>().setPhysicalObject(poi);
 
+
             gameUnits.Remove(questionMark);
             curr.addOccupant(poi.GetComponent<GameUnit>());
 
             Debug.Log("This is from flip poi. The flipped status is " + poi.GetComponent<POI>().getIsFlipped());
+
+
+
+            
 
 
             if (questionMark != null)
