@@ -2525,7 +2525,7 @@ public class Fireman : GameUnit
             {
                 this.move(v, curr, destination);
             }
-            else if (hazmat != null) {
+            else if (hazmat != null && ap >= 2) {
                 this.move(hazmat, curr, destination);
             }
             else {
