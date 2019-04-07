@@ -197,6 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 
   physicalObject: {fileID: 0}
+  isDoubleSpec: 0
 --- !u!212 &319
 SpriteRenderer:
   m_ObjectHideFlags: 0
