@@ -20,9 +20,12 @@ public class Fireman : GameUnit
     private bool isWaitingForInput;
     private bool isExtinguishingFire;
     private bool isChoppingWall;
+    private bool isCallingAmbulance;
     private bool isSelectingExtinguishOption;
     private bool isSelectingSpecialist;
     private bool isChangingCrew;
+    private bool isOnEngine;
+    private bool isOnAmbulance;
     public bool isDoubleSpec;
     public ArrayList validInputOptions;
     Space locationArgument;
@@ -39,12 +42,17 @@ public class Fireman : GameUnit
         AP = 4;
         savedAP = 0;
         carriedVictim = null;
+        movedEngine = null;
+        movedAmbulance = null;
         PV = GetComponent<PhotonView>();
         isWaitingForInput = false;
         isExtinguishingFire = false;
+        isCallingAmbulance = false;
         validInputOptions = new ArrayList();
         isChoppingWall = false;
         isSelectingExtinguishOption = false;
+        isOnEngine = false;
+        isOnAmbulance = false;
         isChangingCrew = false;
         isSelectingSpecialist = false;
     }
@@ -69,18 +77,41 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.H))
                 {
-                    //driveAmbulance(); TODO
+                    CallAmbulance();
+                    //if (Input.GetKeyDown(KeyCode.RightArrow))
+                    //{   
+                    //    this.driveAmbulance(1);
+                    //}
+                    //else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                    //{
+                    //    this.driveAmbulance(3);
+                    //}
+                    //else if (Input.GetKeyDown(KeyCode.DownArrow))
+                    //{
+                    //    this.driveAmbulance(2);
+                    //}
                 }
                 else if (Input.GetKeyDown(KeyCode.T))
                 {
-                    //driveEngine(); TODO
+                    if (Input.GetKeyDown(KeyCode.RightArrow))
+                    {
+                        this.driveEngine(1);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                    {
+                        this.driveEngine(3);
+                    }
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
-                    //if getAmbulance TODO
+                   // if (getAmbulance() != null)
+                    //{
                         rideAmbulance();
-                    //if getEngine TODO
-                        //rideEngine();
+                    //}
+                    //if (getEngine() != null)
+                    //{
+                      //  rideEngine();
+                    //}
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
@@ -398,6 +429,15 @@ public class Fireman : GameUnit
                         isChoppingWall = true;
                     }
                 }
+                else if(isWaitingForInput && isCallingAmbulance)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingAmbulance = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveAmbulanceEvent(1);
+                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
                 else if (isWaitingForInput && isChangingCrew)
                 {
                     Debug.Log("Input 1 Received");
@@ -532,6 +572,16 @@ public class Fireman : GameUnit
                         isChoppingWall = true;
                     }
                 }
+                else if (isWaitingForInput && isCallingAmbulance)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                    isCallingAmbulance = false;
+                    decrementAP(4);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveAmbulanceEvent(2);
+                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
+                }
                 else if (isWaitingForInput && isChangingCrew)
                 {
                     Debug.Log("Input 2 Received");
@@ -665,6 +715,17 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChoppingWall = true;
                     }
+
+                }
+                else if (isWaitingForInput && isCallingAmbulance)
+                {
+                    Debug.Log("Input 3 Received");
+                    isWaitingForInput = false;
+                    isCallingAmbulance = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveAmbulanceEvent(3);
+                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -1461,8 +1522,39 @@ public class Fireman : GameUnit
                 Debug.Log(optionsToUser);
             }
 
+    }
+    public void CallAmbulance()
+    {
+
+        int numAP = getAP(); //returns the number of action points
+
+        //Check if sufficient AP.
+        if (numAP < 2)
+        {
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
         }
-    }    
+        else
+        {
+            //Build string to show.
+            string optionsToUser = "";
+
+            if (numAP < 4)
+            {
+                optionsToUser += "press 1 to move the ambulance clockwise, press 3 to move the ambulance counter-clockwise";
+            }
+            else
+            {
+                optionsToUser += "press 1 to move the ambulance clockwise, press 2 to move the ambulance to the opposite place, press 3 to move " +
+                	"the ambulance counter-clockwise";
+            }
+
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+            isCallingAmbulance = true;
+            isWaitingForInput = true;
+
+        }
+    }
     public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
@@ -1603,7 +1695,6 @@ public class Fireman : GameUnit
             GameConsole.instance.UpdateFeedback("There is no victim to be carried!");
         }
     }
-
     public void carryHazmat() {
         Space current = this.getCurrentSpace();
 
@@ -1627,87 +1718,242 @@ public class Fireman : GameUnit
         }
     }
 
-    void driveAmbulance(Space targetSpace, int direction)
+    void driveAmbulance(int direction)
     {
-        while (!GameManager.GM.isFamilyGame)
+        int xPos = 0;
+        int yPos = 0;
+        int newXPos = 0;
+        int newYPos = 0;
+        Ambulance h = this.getAmbulance();
+        if (isOnAmbulance)
         {
-            int ap = this.getAP();
-            Space current = this.getCurrentSpace();
-            this.getAmbulance();
+            Space curr = this.getCurrentSpace();
+            List<GameUnit> currGameUnits = curr.getOccupants();
+            xPos = curr.indexX;
+            yPos = curr.indexY;
 
-            //get parkingspots
+            switch (direction)
+            {
 
-            //if fireman is in same space with ambulance
-           
-                //promt: right or left
-                string optionsToUser = "";
+                case 1:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 3:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 2:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
 
-                //foreach (int index in nearbyParkingSpots)
-                //{
-                //    if (index == 1)
-                //    {
-                //        optionsToUser += "Press 1 for Driving Clockwise";
-                //    }
-                //    else if (index == 3)
-                //    {
-                //        optionsToUser += " Press 2 for Driving Counter-Clockwise";
-                //    }
-                //}
+            Space destination = StateManager.instance.spaceGrid.getGrid()[newXPos, newYPos];
+            Vector3 destinationPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -5);
 
-                GameConsole.instance.UpdateFeedback(optionsToUser);
+            GameUnit ambulance = null;
 
-                //if prompt is right
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+            foreach(GameUnit gu in currGameUnits)
+            {
+                if(gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
                 {
-                    //if opposite side: 4AP
-
-                    //get the curr x/y index & 4 switch statements: 
-                    int currentSpaceX = this.getCurrentSpace().indexX;
-                    int currentSpaceY = this.getCurrentSpace().indexY;
-                    object[] data = { currentSpaceX, currentSpaceY };
-                    //AmbulanceParkingSpot[] parkingSpots = targetSpace.getParkingSpots();
-                    int indexX = targetSpace.indexX;
-                    int indexY = targetSpace.indexY;
-                    //if (parkingSpots != null)
-                    //{
-                    //    for (int i = 0; i < 4; i++)
-                    //    {
-                    //        direction = i;
-                    //        AmbulanceParkingSpot ps = parkingSpots[i];
-                    //        if (ps != null)
-                    //        {
-                    //            //switch (direction)
-                    //            //{
-                    //            //    case 0:
-                    //            //        //targetSpace.   (null, direction);
-                    //            //        int northX = targetSpace.indexX;
-                    //            //        int northY = targetSpace.indexY - 1;
-                    //            //        if (northX <= 10 && northY <= 8)
-                    //            //        {
-                    //            //            Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
-                    //            //        }
-                    //            //        break;
-                    //            //}
-                    //        }
-                    //    }
-                    //}
-                }
-                //if prompt is left
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-
+                    ambulance = gu;
+                    break;
                 }
             }
-        //else if fireman is not in same space with ambulance
-        //iterate through entire grid 
-        //get the ambulance
-        //get index x - found ambulance in this space
-        //promt user: right or left
-        //if left SAME
-        //if right SAME
+
+            currGameUnits.Remove(this);
+            currGameUnits.Remove(ambulance);
+
+            destination.addOccupant(this);
+            destination.addOccupant(ambulance);
+
+            this.setCurrentSpace(destination);
+            this.GetComponent<Transform>().position = destinationPosition;
+
+            h.setCurrentSpace(destination);
+            h.GetComponent<Transform>().position = destinationPosition;
+        }
+        else
+        {
+            Space AmbulanceCurrentSpace = null;
+            //find the space of the ambulance
+            foreach (Space s in StateManager.instance.spaceGrid.getGrid())
+            {
+                foreach (GameUnit gu in s.getOccupants())
+                {
+                    if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                    {
+                        AmbulanceCurrentSpace = s;
+                        break;
+                    }
+                }
+            }
+
+
+            if (AmbulanceCurrentSpace != null)
+            {
+                xPos = AmbulanceCurrentSpace.indexX;
+                yPos = AmbulanceCurrentSpace.indexY;
+            }
+
+
+            switch (direction)
+            {
+                case 1:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 3:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 2:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            Space destination = StateManager.instance.spaceGrid.getGrid()[newXPos, newYPos];
+            Vector3 destinationPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -5);
+            List<GameUnit> currGameUnits = AmbulanceCurrentSpace.getOccupants();
+
+            GameUnit ambulance = null;
+
+            foreach (GameUnit gu in currGameUnits)
+            {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                {
+                    ambulance = gu;
+                    break;
+                }
+            }
+
+
+            currGameUnits.Remove(ambulance);
+
+            destination.addOccupant(ambulance);
+
+            ambulance.setCurrentSpace(destination);
+            ambulance.GetComponent<Transform>().position = destinationPosition;
+        
+        }
     }
 
-    void driveEngine()
+    void driveEngine(int direction)
     {
         //fireman has to be on the same space with engine
         //TODO
@@ -1733,6 +1979,7 @@ public class Fireman : GameUnit
                     Ambulance h = gu.GetComponent<Ambulance>();
                     this.setAmbulance(h);
                     GameConsole.instance.UpdateFeedback("Riding ambulance successfully!");
+                    isOnAmbulance = true;
                     return;
                 }
             }
@@ -2134,6 +2381,12 @@ public class Fireman : GameUnit
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
+    private void sendDriveAmbulanceEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+
     private void sendChangeCrewEvent(int[] updatedIndexList)
     {
         object[] data = new object[] { updatedIndexList };
@@ -2431,6 +2684,13 @@ public class Fireman : GameUnit
             GameManager.GM.DisplayPlayerTurn();
             GameUI.instance.AddGameState(GameManager.GameStatus);
             selectSpecialist();
+        }
+        else if (evCode == (byte)PhotonEventCodes.DriveAmbulance)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+
+            int direction = (int)dataReceived[0];
+            driveAmbulance(direction);
         }
     }
 }
