@@ -83,7 +83,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             isFamilyGame = false;
             difficulty = Difficulty.Heroic;
             isDestroyingVictim = false;
-            availableSpecialists = new Specialist [8];
+            availableSpecialists = new Specialist [10];
             availableSpecialists[0] = Specialist.Paramedic;
             availableSpecialists[1] = Specialist.FireCaptain;
             availableSpecialists[2] = Specialist.ImagingTechnician;
@@ -92,7 +92,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             availableSpecialists[5] = Specialist.Generalist;
             availableSpecialists[6] = Specialist.RescueSpecialist;
             availableSpecialists[7] = Specialist.DriverOperator;
-            freeSpecialistIndex = new int[8];
+            availableSpecialists[8] = Specialist.RescueDog;
+            availableSpecialists[9] = Specialist.Veteran;
+            freeSpecialistIndex = new int[10];
             freeSpecialistIndex[0] = 1;
             freeSpecialistIndex[1] = 1;
             freeSpecialistIndex[2] = 1;
@@ -101,7 +103,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex[5] = 1;
             freeSpecialistIndex[6] = 1;
             freeSpecialistIndex[7] = 1;
-            carriedVictims = new Dictionary<int, Victim>();
+            freeSpecialistIndex[8] = 1;
+            freeSpecialistIndex[9] = 1;
 
         }
         else
@@ -130,7 +133,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("i am master client");
-            //placeInitialFireMarker();
 
             if (!isFamilyGame)
             {
@@ -218,6 +220,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                 }
             }
+            placeInitialFireMarker();
+            randomizePOI();
+            randomizePOI();
+            randomizePOI();
         }
     }
 
@@ -493,7 +499,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         object[] data = { cols, rows };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced, data, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
 
 
     }
@@ -736,11 +742,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 occupants.Remove(targetPOI);
                 Destroy(targetPOI.physicalObject);
                 Destroy(targetPOI);
+
                 lostVictims++;
                 numVictim--;
                 GameUI.instance.AddLostVictim();
                 GameConsole.instance.UpdateFeedback("A victim just perished.");
                 numOfActivePOI--;
+
+                //object[] data = { targetSpace.indexX, targetSpace.indexY, PV.ViewID, true };
+                //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
             }
             else
             {
@@ -1273,11 +1283,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
-                    placeInitialFireMarker();
                     initialSetup(); //hazmats + initial explosions (for experienced)
-                    randomizePOI();
-                    randomizePOI();
-                    randomizePOI();
                 }
                 else
                 {
@@ -1475,7 +1481,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarker)
         {
-
             object[] dataReceived = eventData.CustomData as object[];
             int[] cols = (int[])dataReceived[0];
             int[] rows = (int[])dataReceived[1];
@@ -1494,7 +1499,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
-
         }
         else if (evCode == (byte)PhotonEventCodes.ResolveFlashOvers)
         {
@@ -1636,27 +1640,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
         }
 
-        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced)
-        {
-            object[] dataReceived = eventData.CustomData as object[];
-            int[] cols = (int[])dataReceived[0];
-            int[] rows = (int[])dataReceived[1];
-
-            for (int i = 0; i < rows.Length; i++)
-            {
-                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
-                Vector3 position = currentSpace.worldPosition;
-                GameObject newFireMarker2 = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
-                Vector3 newPosition = new Vector3(position.x, position.y, -5);
-
-                newFireMarker2.GetComponent<Transform>().position = newPosition;
-                newFireMarker2.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-                newFireMarker2.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
-                newFireMarker2.GetComponent<GameUnit>().setPhysicalObject(newFireMarker2);
-                currentSpace.addOccupant(newFireMarker2.GetComponent<GameUnit>());
-                currentSpace.setSpaceStatus(SpaceStatus.Fire);
-            }
-        }
         else if (evCode == (byte)PhotonEventCodes.ReplenishPOI)
         {
 
@@ -1792,18 +1775,41 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex = updatedIndexList;
 
         }
+        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state dictionary/fireman unique network id
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int firemanId = (int)dataReceived[2];
 
-            /*
-            else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
-            {
-                object[] receivedData = eventData.CustomData as object[];
-
-                for (int i = 0; i < receivedData.Length; i++)
-                {
-                    Debug.Log("Received at " + i + " the name " + receivedData[i]);
-                    playersListNameCache.Insert(i, receivedData[i]);
+            Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Victim victim = null;
+            foreach (GameUnit gu in space.getOccupants()) {
+                //TODO check if victim is carried by another fireman after drop functionality is implemented
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                    Victim v = gu.GetComponent<Victim>();
+                    victim = v;
                 }
-            }*/
+            }
+
+            Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
+            if (d.ContainsKey(firemanId)) {
+                d[firemanId] = victim;
+            }
+            else d.Add(firemanId, victim);
 
         }
+
+        /*
+        else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+
+            for (int i = 0; i < receivedData.Length; i++)
+            {
+                Debug.Log("Received at " + i + " the name " + receivedData[i]);
+                playersListNameCache.Insert(i, receivedData[i]);
+            }
+        }*/
+
+    }
 }

@@ -103,5 +103,7 @@ public enum Specialist
     HazmatTechinician, //4
     Generalist, //5
     RescueSpecialist, //6
-    DriverOperator //7
+    DriverOperator, //7
+    RescueDog, //8
+    Veteran //9
 }
