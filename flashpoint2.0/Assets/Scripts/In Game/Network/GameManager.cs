@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviourPun
     //array for getting ambulance parking spots
     AmbulanceParkingSpot[] ambulanceParkingSpots;
 
+    int[] ambulanceParkingSpotX;
+    int[] ambulanceParkingSpotY;
+
 
     //Local store of Players.
     public static int NumberOfPlayers;
@@ -1393,7 +1396,7 @@ public class GameManager : MonoBehaviourPun
 
             for (int i = 0; i < rows.Length; i++)
             {
-                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
                 Vector3 position = currentSpace.worldPosition;
                 GameObject AmbulanceParkingSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/ParkingSpots/ambulanceParkingSpot")) as GameObject;
                 Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
@@ -1413,7 +1416,7 @@ public class GameManager : MonoBehaviourPun
 
             for (int i = 0; i < rows.Length; i++)
             {
-                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[5, 0];
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
                 Vector3 position = currentSpace.worldPosition;
                 GameObject EngineParkingSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/ParkingSpots/engineParkingSpot")) as GameObject;
                 Vector3 enginePosition = new Vector3(position.x, position.y, -5);
@@ -1454,7 +1457,7 @@ public class GameManager : MonoBehaviourPun
             for (int i = 0; i < rows.Length; i++)
             {
                 //rotate
-                Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 6];
+                Space currentSpaceEngine = StateManager.instance.spaceGrid.getGrid()[9, 5];
                 Vector3 position2 = currentSpaceEngine.worldPosition;
                 GameObject Engine = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/engine")) as GameObject;
                 Vector3 enginePosition = new Vector3(position2.x, position2.y, -5);
