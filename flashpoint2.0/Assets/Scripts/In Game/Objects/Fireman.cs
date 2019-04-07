@@ -1591,6 +1591,7 @@ public class Fireman : GameUnit
                     Victim v = gu.GetComponent<Victim>();
                     this.setVictim(v);
                     GameConsole.instance.UpdateFeedback("Carried victim successfully!");
+
                     return;
                 }
             }
