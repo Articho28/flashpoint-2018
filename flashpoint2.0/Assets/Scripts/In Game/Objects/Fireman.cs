@@ -3054,7 +3054,7 @@ public class Fireman : GameUnit
                 }
             }
             //delete saved victim and update carried victim states
-            Destroy(victim.physicalObject);
+            Destroy(victim.gameObject);
             Destroy(victim);
             StateManager.instance.firemanCarriedVictims.Remove(firemanId);
 
