@@ -3028,7 +3028,8 @@ public class Fireman : GameUnit
             //removing the victim from the current space.
             List<GameUnit> currentGameUnits = curr.getOccupants();
             foreach (GameUnit gu in currentGameUnits) {
-                if(gu.GetComponent<Victim>().Equals(victim)) {
+                if(gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI 
+                && gu.GetComponent<Victim>().Equals(victim)) {
                     currentGameUnits.Remove(victim);
                     break;
                 }
@@ -3046,7 +3047,8 @@ public class Fireman : GameUnit
             //remove space reference to saved victim
             List<GameUnit> gameUnits = curr.getOccupants();
             foreach (GameUnit gu in gameUnits) {
-                if (gu.GetComponent<Victim>().Equals(victim)) {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && 
+                gu.GetComponent<Victim>().Equals(victim)) {
                     gameUnits.Remove(victim);
                     break;
                 }
