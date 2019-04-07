@@ -21,6 +21,7 @@ public class Fireman : GameUnit
     private bool isExtinguishingFire;
     private bool isChoppingWall;
     private bool isCallingAmbulance;
+    private bool isCallingEngine;
     private bool isSelectingExtinguishOption;
     private bool isSelectingSpecialist;
     private bool isChangingCrew;
@@ -48,6 +49,7 @@ public class Fireman : GameUnit
         isWaitingForInput = false;
         isExtinguishingFire = false;
         isCallingAmbulance = false;
+        isCallingEngine = false;
         validInputOptions = new ArrayList();
         isChoppingWall = false;
         isSelectingExtinguishOption = false;
@@ -81,23 +83,17 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.T))
                 {
-                    if (Input.GetKeyDown(KeyCode.RightArrow))
-                    {
-                        this.driveEngine(1);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                    {
-                        this.driveEngine(3);
-                    }
+                    CallEngine();
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
                     rideAmbulance();
+                    rideEngine();
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
-                    deassociateAmbulance(); //if fireman riding ambulance TODO
-                    deassociateEngine(); //if fireman riding engine TODO
+                    exitAmbulance(); //if fireman riding ambulance TODO
+                    exitEngine(); //if fireman riding engine TODO
                 }
             }
 
@@ -422,6 +418,16 @@ public class Fireman : GameUnit
                     sendDriveAmbulanceEvent(1);
                     GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
                 }
+                else if (isWaitingForInput && isCallingEngine)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingEngine = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveEngineEvent(1);
+                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
+                }
                 else if (isWaitingForInput && isChangingCrew)
                 {
                     Debug.Log("Input 1 Received");
@@ -565,6 +571,16 @@ public class Fireman : GameUnit
                     FiremanUI.instance.SetAP(this.AP);
                     sendDriveAmbulanceEvent(2);
                     GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
+                }
+                else if (isWaitingForInput && isCallingEngine)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingEngine = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveEngineEvent(2);
+                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -710,6 +726,16 @@ public class Fireman : GameUnit
                     FiremanUI.instance.SetAP(this.AP);
                     sendDriveAmbulanceEvent(3);
                     GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
+                }
+                else if (isWaitingForInput && isCallingEngine)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingEngine = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveEngineEvent(3);
+                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -1450,7 +1476,7 @@ public class Fireman : GameUnit
         this.movedAmbulance = h;
     }
 
-    public void deassociateAmbulance()
+    public void exitAmbulance()
     {
         this.movedAmbulance = null;
     }
@@ -1465,7 +1491,7 @@ public class Fireman : GameUnit
         this.movedEngine = n;
     }
 
-    public void deassociateEngine()
+    public void exitEngine()
     {
         this.movedEngine = null;
     }
@@ -1536,6 +1562,38 @@ public class Fireman : GameUnit
 
             GameConsole.instance.UpdateFeedback(optionsToUser);
             isCallingAmbulance = true;
+            isWaitingForInput = true;
+
+        }
+    }
+    public void CallEngine()
+    {
+
+        int numAP = getAP(); //returns the number of action points
+
+        //Check if sufficient AP.
+        if (numAP < 2)
+        {
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
+        }
+        else
+        {
+            //Build string to show.
+            string optionsToUser = "";
+
+            if (numAP < 4)
+            {
+                optionsToUser += "press 1 to move the engine clockwise, press 3 to move the engine counter-clockwise";
+            }
+            else
+            {
+                optionsToUser += "press 1 to move the engine clockwise, press 2 to move the engine to the opposite place, press 3 to move " +
+                    "the engine counter-clockwise";
+            }
+
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+            isCallingEngine = true;
             isWaitingForInput = true;
 
         }
@@ -1938,10 +1996,129 @@ public class Fireman : GameUnit
         }
     }
 
+//    Firefi ghters that are in the Vehicle Parking Spot of a Vehicle while it is being Driven can Ride the Vehicle for 0AP.Riding is
+//optional, and any number of Firefi ghters may Ride a Vehicle at one time.After Riding, Firefi ghters may choose to exit the
+//Vehicle in either space of the Vehicle’s Parking Spot TODO
+
     void driveEngine(int direction)
     {
         //fireman has to be on the same space with engine
-        //TODO
+        int xPos = 0;
+        int yPos = 0;
+        int newXPos = 0;
+        int newYPos = 0;
+        Engine n = this.getEngine();
+        if (isOnEngine)
+        {
+            Space curr = this.getCurrentSpace();
+            List<GameUnit> currGameUnits = curr.getOccupants();
+            xPos = curr.indexX;
+            yPos = curr.indexY;
+
+            switch (direction)
+            {
+
+                case 1:
+                    if (xPos == 9 && yPos == 5)
+                    {
+                        newXPos = 2;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 2 && yPos == 7)
+                    {
+                        newXPos = 0;
+                        newYPos = 1;
+                    }
+                    else if (xPos == 0 && yPos == 1)
+                    {
+                        newXPos = 8;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 8 && yPos == 0)
+                    {
+                        newXPos = 9;
+                        newYPos = 5;
+                    }
+                    break;
+                case 3:
+                    if (xPos == 9 && yPos == 5)
+                    {
+                        newXPos = 8;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 8 && yPos == 0)
+                    {
+                        newXPos = 0;
+                        newYPos = 1;
+                    }
+                    else if (xPos == 0 && yPos == 1)
+                    {
+                        newXPos = 2;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 2 && yPos == 7)
+                    {
+                        newXPos = 9;
+                        newYPos = 5;
+                    }
+                    break;
+                case 2:
+                    if (xPos == 9 && yPos == 5)
+                    {
+                        newXPos = 0;
+                        newYPos = 1;
+                    }
+                    else if (xPos == 0 && yPos == 1)
+                    {
+                        newXPos = 9;
+                        newYPos = 5;
+                    }
+                    else if (xPos == 8 && yPos == 0)
+                    {
+                        newXPos = 2;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 2 && yPos == 7)
+                    {
+                        newXPos = 8;
+                        newYPos = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            Space destination = StateManager.instance.spaceGrid.getGrid()[newXPos, newYPos];
+            Vector3 destinationPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -5);
+
+            GameUnit engine = null;
+
+            foreach (GameUnit gu in currGameUnits)
+            {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                {
+                    engine = gu;
+                    break;
+                }
+            }
+
+            currGameUnits.Remove(this);
+            currGameUnits.Remove(engine);
+
+            destination.addOccupant(this);
+            destination.addOccupant(engine);
+
+            this.setCurrentSpace(destination);
+            this.GetComponent<Transform>().position = destinationPosition;
+
+            n.setCurrentSpace(destination);
+            n.GetComponent<Transform>().position = destinationPosition;
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You have to be on engine to drive!");
+            return;
+        }
     }
     void rideAmbulance() 
     {
@@ -1988,7 +2165,6 @@ public class Fireman : GameUnit
         }
         else
         {
-
             List<GameUnit> gameUnits = current.getOccupants();
 
             foreach (GameUnit gu in gameUnits)
@@ -1998,11 +2174,16 @@ public class Fireman : GameUnit
                     Engine n = gu.GetComponent<Engine>();
                     this.setEngine(n);
                     GameConsole.instance.UpdateFeedback("Riding engine successfully!");
+                    isOnEngine = true;
                     return;
                 }
             }
             GameConsole.instance.UpdateFeedback("There is no engine!");
         }
+
+        //fireman that are in the Vehicle Parking Spot of a Vehicle while it is being Driven can Ride the Vehicle for 0AP
+        //any number of firemen may Ride a Vehicle at one time
+        //exit
     }
 
     private void move(Hazmat h, Space curr, Space dst) {
@@ -2147,9 +2328,6 @@ public class Fireman : GameUnit
                 }
             }
             return;
-
-
-
         }
         else //Fire
         {
@@ -2214,66 +2392,6 @@ public class Fireman : GameUnit
                             break;
                         }
                     }
-                }
-            }
-            else if (!GameManager.GM.isFamilyGame && a != null && ap >= 2)//if the fireman riding the ambulance
-            {
-                Kind destinationKind = destination.getKind();
-                if (destinationKind == Kind.AmbulanceParkingSpot) {
-                    //ride ambulance
-                    this.setCurrentSpace(destination);
-                    v.setCurrentSpace(destination);
-                    this.decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
-                    this.GetComponent<Transform>().position = newPosition;
-                    v.GetComponent<Transform>().position = newPosition;
-
-                    //removing the ambulance from the current space
-                    List<GameUnit> currentGameUnits = curr.getOccupants();
-                    GameUnit ambulance = null;
-                    foreach (GameUnit gu in currentGameUnits) {
-                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE) {
-                            ambulance = gu;
-                            break;
-                        }
-                    }
-                    currentGameUnits.Remove(ambulance);
-                    destination.addOccupant(ambulance);
-
-                    GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
-
-                    //if fireman wants to exit the ambulance TODO
-                    deassociateAmbulance();
-                }
-            }
-            else if (!GameManager.GM.isFamilyGame && n != null && ap >= 2)//if the fireman riding the engine
-            {
-                Kind destinationKind = destination.getKind();
-                if (destinationKind == Kind.AmbulanceParkingSpot) {
-                    //ride engine
-                    this.setCurrentSpace(destination);
-                    v.setCurrentSpace(destination);
-                    this.decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
-                    this.GetComponent<Transform>().position = newPosition;
-                    v.GetComponent<Transform>().position = newPosition;
-
-                    //removing the engine from the current space
-                    List<GameUnit> currentGameUnits = curr.getOccupants();
-                    GameUnit engine = null;
-                    foreach (GameUnit gu in currentGameUnits) {
-                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE) {
-                            engine = gu;
-                            break;
-                        }
-                    }
-                    currentGameUnits.Remove(engine);
-                    destination.addOccupant(engine);
-
-                    GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
-
-                    //if fireman wants to exit the engine TODO
-                    deassociateEngine();
                 }
             }
             else if (v != null && ap >= 2)//if the fireman is carrying a victim
@@ -2370,6 +2488,11 @@ public class Fireman : GameUnit
     {
         object[] data = { direction };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+    private void sendDriveEngineEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     private void sendChangeCrewEvent(int[] updatedIndexList)
@@ -2676,6 +2799,13 @@ public class Fireman : GameUnit
 
             int direction = (int)dataReceived[0];
             driveAmbulance(direction);
+        }
+        else if (evCode == (byte)PhotonEventCodes.DriveEngine)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+
+            int direction = (int)dataReceived[0];
+            driveEngine(direction);
         }
     }
 }

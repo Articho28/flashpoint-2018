@@ -36,4 +36,5 @@ public enum PhotonEventCodes
     ChangeCrew = 29,
     SpecialistIsPicked = 30,
     DriveAmbulance = 31,
+    DriveEngine = 32,
 }
