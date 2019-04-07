@@ -86,9 +86,8 @@ public class Space {
     {
         return this.walls;
     }
-
-
-    public void addOccupant(GameUnit u)
+  
+    public void addOccupant(GameUnit u)
     {
         occupants.Add(u);
     }
