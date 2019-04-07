@@ -1648,10 +1648,6 @@ public class Fireman : GameUnit
         carriedHazmat = h;
     }
 
-    public void deassociateVictim()
-    {
-        this.carriedVictim = null;
-    }
     public void selectSpecialist()
     {
         isWaitingForInput = true;
@@ -2386,11 +2382,6 @@ public class Fireman : GameUnit
             FiremanUI.instance.SetAP(this.AP);
             dst.addOccupant(this);
 
-            object[] data = {curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedVictim, data, sendToAllOptions, SendOptions.SendReliable);
-
-            GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
-
             //if has POI marker
             List<GameUnit> destinationGameUnits = dst.getOccupants();
             foreach (GameUnit gu in destinationGameUnits) {
@@ -2401,32 +2392,25 @@ public class Fireman : GameUnit
                     }
                 }
             }
+
+            //update carried victim positions across the network
+            object[] data = {curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedVictim, data, sendToAllOptions, SendOptions.SendReliable);
+
+            GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
         }
-        else if (destinationSpaceKind == SpaceKind.Outdoor) {
-            //carry victim outside the building
+        else if (destinationSpaceKind == SpaceKind.Outdoor) {     //carry victim outside the building
             this.setCurrentSpace(dst);
             dst.addOccupant(this);
             this.decrementAP(2);
             this.GetComponent<Transform>().position = newPosition;
+            FiremanUI.instance.SetAP(this.AP);
 
-            //change victim status to rescued
-            v.setVictimStatus(VictimStatus.Rescued);
-            GameManager.savedVictims++;
-            GameUI.instance.AddSavedVictim();
+            this.setVictim(null);
 
-            List<GameUnit> gameUnits = curr.getOccupants();
-            GameUnit victim = null;
-            foreach (GameUnit gu in gameUnits) {
-                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
-                    victim = gu;
-                    break;
-                }
-            }
-            gameUnits.Remove(victim);
-            Destroy(victim.physicalObject);
-            Destroy(victim);
-            deassociateVictim();
-            GameManager.numOfActivePOI--;
+            object[] data = { curr.indexX, curr.indexY, PV.ViewID };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSavedVictim, data, sendToAllOptions, SendOptions.SendReliable);
+
             GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
 
             //check if we won the game.
@@ -2518,7 +2502,7 @@ public class Fireman : GameUnit
                 this.move(v, curr, destination);
             }
             else if (hazmat != null) {
-                this.move(hazmat, curr, destination);
+                //this.move(hazmat, curr, destination);
             }
             else {
                 GameConsole.instance.UpdateFeedback("Insufficient AP 4");
@@ -2962,6 +2946,7 @@ public class Fireman : GameUnit
             int firemanId = (int)dataReceived[4];
 
             Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
+            victim.carried = true;
 
             //update victim and new space references
             victim.setCurrentSpace(dst);
@@ -2970,13 +2955,39 @@ public class Fireman : GameUnit
 
             //removing the victim from the current space.
             List<GameUnit> currentGameUnits = curr.getOccupants();
-            GameUnit victim = null;
             foreach (GameUnit gu in currentGameUnits) {
                 if(gu.GetComponent<Victim>().Equals(victim)) {
                     currentGameUnits.Remove(victim);
                     break;
                 }
             }
+        }
+        //0: indexX, 1: indexY, 2: fireman PV.viewId
+        else if (evCode == (byte) PhotonEventCodes.RemoveSavedVictim) {
+            //parse data
+            object[] dataReceived = eventData.CustomData as object[];
+            Space curr = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+            int firemanId = (int)dataReceived[2];
+
+            Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
+
+            //remove space reference to saved victim
+            List<GameUnit> gameUnits = curr.getOccupants();
+            foreach (GameUnit gu in gameUnits) {
+                if (gu.GetComponent<Victim>().Equals(victim)) {
+                    gameUnits.Remove(victim);
+                    break;
+                }
+            }
+            //delete saved victim and update carried victim states
+            Destroy(victim.physicalObject);
+            Destroy(victim);
+            StateManager.instance.firemanCarriedVictims.Remove(firemanId);
+
+            //update UI
+            GameManager.numOfActivePOI--;
+            GameManager.savedVictims++;
+            GameUI.instance.AddSavedVictim();
         }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
