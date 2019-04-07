@@ -12,3 +12,23 @@
   - LET EVERYONE KNOW THAT YOU WILL MEREGE.
   - MAKE SURE YOU PULL THE RECENT CHANGES BEFORE MERGING.
   - MERGE.
+  
+### PLEASE DO NOT REPEAT THE SAME KEYCODE - THANKSSS
+Move: arrows
+Chop wall: C 
+Open/close door: D
+Extinguish fire: E
+Flip POI: F
+Carry victim: V
+End Turn: Q
+Deck gun: G
+Drive ambulance: H
+Identify POI: I
+Carry Hazmat: M
+Turn fire to smoke: N
+Ride vehicle: R
+Drive engine: T
+Crew changes: W
+Exit vehicle: X
+Extinguish entire fire: Y
+Remove hazmat: Z
