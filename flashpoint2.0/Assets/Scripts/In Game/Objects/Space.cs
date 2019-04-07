@@ -117,4 +117,14 @@ public class Space {
             }
         }
     }
+
+    public void removeOccupant(Hazmat hazmat) {
+        for (int i = 0; i < occupants.Count; i++) {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT
+            && occupants[i].GetComponent<Hazmat>().Equals(hazmat)) {
+                occupants.RemoveAt(i);
+                break;
+            }
+        }
+    }
 } 

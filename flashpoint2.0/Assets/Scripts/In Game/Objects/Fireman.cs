@@ -2945,6 +2945,23 @@ public class Fireman : GameUnit
             dst.addOccupant(victim);
             curr.removeOccupant(victim);
         }
+        //0: current space X, 1: current space Y, 2: destination X, 3: dst Y, 4: fireman PV.ViewId
+        else if (evCode == (byte)PhotonEventCodes.MoveCarriedHazmat) {
+            object[] dataReceived = eventData.CustomData as object[];
+            Space curr = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+            Space dst = StateManager.instance.spaceGrid.grid[(int)dataReceived[2], (int)dataReceived[3]];
+            int firemanId = (int)dataReceived[4];
+
+            Hazmat hazmat = StateManager.instance.firemanCarriedHazmats[firemanId];
+            hazmat.carried = true;
+
+            //update victim andspace references
+            hazmat.setCurrentSpace(dst);
+            hazmat.transform.position = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
+
+            dst.addOccupant(hazmat);
+            curr.removeOccupant(hazmat);
+        }
         //0: indexX, 1: indexY, 2: fireman PV.viewId
         else if (evCode == (byte) PhotonEventCodes.RemoveSavedVictim) {
             //parse data
