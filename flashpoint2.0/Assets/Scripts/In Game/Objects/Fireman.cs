@@ -383,7 +383,10 @@ public class Fireman : GameUnit
                         {
                             GameManager.GM.freeSpecialistIndex[7] = 1;
                         }
-
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
 
                     }
@@ -1442,6 +1445,58 @@ public class Fireman : GameUnit
                     }
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 8 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
+
+                    if (GameManager.GM.freeSpecialistIndex[8] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[8] = 0;
+                        this.spec = Specialist.RescueDog;
+                        FiremanUI.instance.SetSpecialist(Specialist.RescueDog);
+                        newSpecAP();
+                        GameConsole.instance.UpdateFeedback("Rescue Dog is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                if (isWaitingForInput && isSelectingSpecialist)
+                {
+                    Debug.Log("Input 9 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isSelectingSpecialist = false;
+
+                    if (GameManager.GM.freeSpecialistIndex[9] != 0)
+                    {
+                        GameManager.GM.freeSpecialistIndex[9] = 0;
+                        this.spec = Specialist.Veteran;
+                        FiremanUI.instance.SetSpecialist(Specialist.Veteran);
+                        newSpecAP();
+                        GameConsole.instance.UpdateFeedback("Veteran is picked as Specialist.");
+                        GameManager.IncrementTurn();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSelectingSpecialist = true;
+                    }
+                }
+            }
         }
         else if (GameManager.GM.Turn != PhotonNetwork.LocalPlayer.ActorNumber)
         {
@@ -1563,7 +1618,16 @@ public class Fireman : GameUnit
             this.moveAP = 0;
             FiremanUI.instance.SetSpecialistAP(0);
         }
-
+        else if (this.spec == Specialist.Veteran) //TODO
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
     }
 
     public int getSavedAP()
@@ -2747,7 +2811,15 @@ public class Fireman : GameUnit
             this.moveAP = 0;
             FiremanUI.instance.SetSpecialistAP(0);
         }
-
+        else if (this.spec == Specialist.Veteran) //TODO
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
     }
 
     private void decrementChopWallAP()
