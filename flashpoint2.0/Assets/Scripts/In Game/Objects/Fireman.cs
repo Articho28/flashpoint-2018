@@ -23,6 +23,7 @@ public class Fireman : GameUnit
     private bool isSelectingExtinguishOption;
     private bool isSelectingSpecialist;
     private bool isChangingCrew;
+    public bool isDoubleSpec;
     public ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
@@ -186,11 +187,11 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.W))
             {
-                //if (!GameManager.GM.isFamilyGame)
-                //{
+                if (!GameManager.GM.isFamilyGame)
+                {
                     Debug.Log("Crew Change Detected");
                     changeCrew();
-                //}
+                }
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
@@ -207,16 +208,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -250,7 +251,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 0);
                     }
@@ -342,16 +343,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -385,7 +386,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 1);
                     }
@@ -476,16 +477,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -519,7 +520,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 2);
                     }
@@ -610,16 +611,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -653,7 +654,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 3);
                     }
@@ -744,16 +745,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -1051,7 +1052,7 @@ public class Fireman : GameUnit
                     locationArgument = null;
                     isWaitingForInput = false;
                     isSelectingExtinguishOption = false;
-                    this.setAP(this.getAP() - 2);
+                    this.decrementRemoveFireAP();
                     FiremanUI.instance.SetAP(this.getAP());
                 }
             }
@@ -1063,7 +1064,7 @@ public class Fireman : GameUnit
                     locationArgument = null;
                     isWaitingForInput = false;
                     isSelectingExtinguishOption = false;
-                    this.setAP(this.getAP() - 1);
+                    this.decrementFireToSmokeAP();
                     FiremanUI.instance.SetAP(this.getAP());
                 } 
 
@@ -1465,6 +1466,7 @@ public class Fireman : GameUnit
     public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
+        isDoubleSpec = this.spec == Specialist.RescueSpecialist || this.spec == Specialist.Paramedic;
 
         //Get current space and spacestatus. 
 
@@ -1567,7 +1569,10 @@ public class Fireman : GameUnit
 
 
 
-    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                  if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
+    public void chopWall()     {         int numAP = getAP(); //returns the number of action point
+        Specialist s = this.spec;
+         //Check if sufficient AP.         if (s != Specialist.RescueSpecialist && numAP < 2 || s == Specialist.RescueSpecialist && numAP < 1)
+        {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                  if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
             isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
     public void carryVictim()       //if ambulance carrying victim: 0AP && Victim is carried by ambulance in experienced game TODO
     {
@@ -2152,12 +2157,151 @@ public class Fireman : GameUnit
 
     private void restoreAP()
     {
-       
-        int currentNumAP = this.getAP();
-        int newAP = Mathf.Min(currentNumAP + 4, 8);
 
-        this.setAP(newAP);
-        FiremanUI.instance.SetAP(newAP);
+        int currentNumAP = this.getAP();
+        int newAP;
+
+        if (this.spec == Specialist.FamilyGame)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.Paramedic)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.FireCaptain)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 2;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(2);
+        }
+        else if (this.spec == Specialist.ImagingTechnician)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.CAFSFirefighter)
+        {
+            newAP = Mathf.Min(currentNumAP + 3, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 3;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(3);
+        }
+        else if (this.spec == Specialist.HazmatTechinician)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.Generalist)
+        {
+            newAP = Mathf.Min(currentNumAP + 5, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.RescueSpecialist)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 3;
+            FiremanUI.instance.SetSpecialistAP(3);
+        }
+        else if (this.spec == Specialist.DriverOperator)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+
+    }
+
+    private void decrementChopWallAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist)
+        {
+            this.setAP(this.getAP() - 1);
+        }
+        else
+        {
+            this.setAP(this.getAP() - 2);
+        }
+    }
+
+    private void decrementRemoveSmokeAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist || s == Specialist.Paramedic)
+        {
+            this.setAP(this.getAP() - 2); //double AP
+        }
+        else
+        {
+            this.setAP(this.getAP() - 1);
+        }
+    }
+
+    private void decrementFireToSmokeAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist || s == Specialist.Paramedic)
+        {
+            this.setAP(this.getAP() - 2); //double AP
+        }
+        else
+        {
+            this.setAP(this.getAP() - 1);
+        }
+    }
+
+    private void decrementRemoveFireAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist || s == Specialist.Paramedic)
+        {
+            this.setAP(this.getAP() - 4); //double AP
+        }
+        else
+        {
+            this.setAP(this.getAP() - 2);
+        }
     }
 
 
