@@ -2945,7 +2945,7 @@ public class Fireman : GameUnit
             Hazmat hazmat = null;
             foreach (GameUnit gu in space.getOccupants()) {
                 //TODO check if victim is carried by another fireman after drop functionality is implemented
-                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT) {
                     Hazmat h = gu.GetComponent<Hazmat>();
                     hazmat = h;
                 }
@@ -2966,7 +2966,7 @@ public class Fireman : GameUnit
             int firemanId = (int)dataReceived[4];
 
             Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
-            victim.carried = true;
+            //victim.carried = true;
 
             //update victim andspace references
             victim.setCurrentSpace(dst);
@@ -2982,7 +2982,7 @@ public class Fireman : GameUnit
             int firemanId = (int)dataReceived[4];
 
             Hazmat hazmat = StateManager.instance.firemanCarriedHazmats[firemanId];
-            hazmat.carried = true;
+            //hazmat.carried = true;
 
             //update victim andspace references
             hazmat.setCurrentSpace(dst);
