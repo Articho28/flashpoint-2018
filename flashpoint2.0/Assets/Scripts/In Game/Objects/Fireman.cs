@@ -29,6 +29,9 @@ public class Fireman : GameUnit
     private bool isOnEngine;
     private bool isOnAmbulance;
     private bool isIdentifyingPOI;
+    private bool isFiringDeckGun;
+    private bool driverRerolledBlackDice;
+    private bool driverRerolledRedDice;
     public bool isDoubleSpec; //for ap decrementing
     public ArrayList validInputOptions;
     Space locationArgument;
@@ -61,6 +64,9 @@ public class Fireman : GameUnit
         isChangingCrew = false;
         isSelectingSpecialist = false;
         isIdentifyingPOI = false;
+        isFiringDeckGun = false;
+        driverRerolledRedDice = false;
+        driverRerolledBlackDice = false;
     }
 
     void Update()
@@ -79,7 +85,7 @@ public class Fireman : GameUnit
             {
                 if (Input.GetKeyDown(KeyCode.G))
                 {
-                    //deckGun(); 
+                    CallDeckGun(); 
                 }
                 else if (Input.GetKeyDown(KeyCode.H))
                 {
@@ -106,6 +112,36 @@ public class Fireman : GameUnit
                     //Only for imaging technicians
 
                     identifyPOI();
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha1))
+                {
+                    if(isWaitingForInput && isFiringDeckGun)
+                    {
+                        DriverReroll(1);
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    if (isWaitingForInput && isFiringDeckGun)
+                    {
+                        DriverReroll(2);
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                {
+                    if (isWaitingForInput && isFiringDeckGun)
+                    {
+                        DriverReroll(3);
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                {
+                    if (isWaitingForInput && isFiringDeckGun)
+                    {
+                        isWaitingForInput = false;
+                        isFiringDeckGun = false;
+                        fireDeckGun();
+                    }
                 }
                 else if (Input.GetMouseButtonDown(0))
                 { // if left button pressed
@@ -1666,6 +1702,303 @@ public class Fireman : GameUnit
         }
         GameConsole.instance.UpdateFeedback(optionsToUser);
 
+    }
+    public List<Space> GetQuadrant(Space s)
+    {
+        Space[,] spaceGrid = StateManager.instance.spaceGrid.getGrid();
+        List<Space> spacesInQuadrant = new List<Space>();
+        int col = s.indexX;
+        int row = s.indexY;
+        if(col == 8 && row == 0)
+        {
+            //first row
+            spacesInQuadrant.Add(spaceGrid[5, 1]);
+            spacesInQuadrant.Add(spaceGrid[6, 1]);
+            spacesInQuadrant.Add(spaceGrid[7, 1]);
+            spacesInQuadrant.Add(spaceGrid[8, 1]);
+
+            //second row
+            spacesInQuadrant.Add(spaceGrid[5, 2]);
+            spacesInQuadrant.Add(spaceGrid[6, 2]);
+            spacesInQuadrant.Add(spaceGrid[7, 2]);
+            spacesInQuadrant.Add(spaceGrid[8, 2]);
+
+            //third row
+            spacesInQuadrant.Add(spaceGrid[5, 3]);
+            spacesInQuadrant.Add(spaceGrid[6, 3]);
+            spacesInQuadrant.Add(spaceGrid[7, 3]);
+            spacesInQuadrant.Add(spaceGrid[8, 3]);
+        }
+        else if(col == 0 && row == 1)
+        {
+            //first row
+            spacesInQuadrant.Add(spaceGrid[1, 1]);
+            spacesInQuadrant.Add(spaceGrid[2, 1]);
+            spacesInQuadrant.Add(spaceGrid[3, 1]);
+            spacesInQuadrant.Add(spaceGrid[4, 1]);
+
+            //second row
+            spacesInQuadrant.Add(spaceGrid[1, 2]);
+            spacesInQuadrant.Add(spaceGrid[2, 2]);
+            spacesInQuadrant.Add(spaceGrid[3, 2]);
+            spacesInQuadrant.Add(spaceGrid[4, 2]);
+
+            //third row
+            spacesInQuadrant.Add(spaceGrid[1, 3]);
+            spacesInQuadrant.Add(spaceGrid[2, 3]);
+            spacesInQuadrant.Add(spaceGrid[3, 3]);
+            spacesInQuadrant.Add(spaceGrid[4, 3]);
+        }
+        else if (col == 9 && row == 5)
+        {
+            //first row
+            spacesInQuadrant.Add(spaceGrid[5, 4]);
+            spacesInQuadrant.Add(spaceGrid[6, 4]);
+            spacesInQuadrant.Add(spaceGrid[7, 4]);
+            spacesInQuadrant.Add(spaceGrid[8, 4]);
+
+            //second row
+            spacesInQuadrant.Add(spaceGrid[5, 5]);
+            spacesInQuadrant.Add(spaceGrid[6, 5]);
+            spacesInQuadrant.Add(spaceGrid[7, 5]);
+            spacesInQuadrant.Add(spaceGrid[8, 5]);
+
+            //third row
+            spacesInQuadrant.Add(spaceGrid[5, 6]);
+            spacesInQuadrant.Add(spaceGrid[6, 6]);
+            spacesInQuadrant.Add(spaceGrid[7, 6]);
+            spacesInQuadrant.Add(spaceGrid[8, 6]);
+        }
+        else if (col == 2 && row == 7)
+        {
+            //first row
+            spacesInQuadrant.Add(spaceGrid[1, 4]);
+            spacesInQuadrant.Add(spaceGrid[2, 4]);
+            spacesInQuadrant.Add(spaceGrid[3, 4]);
+            spacesInQuadrant.Add(spaceGrid[4, 4]);
+
+            //second row
+            spacesInQuadrant.Add(spaceGrid[1, 5]);
+            spacesInQuadrant.Add(spaceGrid[2, 5]);
+            spacesInQuadrant.Add(spaceGrid[3, 5]);
+            spacesInQuadrant.Add(spaceGrid[4, 5]);
+
+            //third row
+            spacesInQuadrant.Add(spaceGrid[1, 6]);
+            spacesInQuadrant.Add(spaceGrid[2, 6]);
+            spacesInQuadrant.Add(spaceGrid[3, 6]);
+            spacesInQuadrant.Add(spaceGrid[4, 6]);
+        }
+        return spacesInQuadrant;
+    }
+    public void rollDiceInQuadrant(List<Space> quadrant, int col,int row)
+    {
+        bool outsideRed = true;
+        bool outsideBlack = true;
+
+        foreach(Space s in quadrant)
+        {
+            if (s.indexX == col)
+                outsideBlack = false;
+            if (s.indexY == row)
+                outsideRed = false;
+        }
+
+        if (outsideRed)
+        {
+            GameManager.redDice = 7 - row;
+        }
+        if (outsideBlack)
+        {
+            GameManager.blackDice = 9 - col;
+        }
+        Debug.Log("Deck Gun Black dice is: " + GameManager.blackDice + ", Deck gun red dice is " + GameManager.redDice);
+
+    }
+    public void DriverReroll(int number)
+    {
+        string message = "";
+        if(number == 1 && !driverRerolledBlackDice)
+        {
+            driverRerolledBlackDice = true;
+            Space currentSpace = this.getCurrentSpace();
+            List<Space> quadSpaces = GetQuadrant(currentSpace);
+
+            GameManager.RerollBlackDie();
+            rollDiceInQuadrant(quadSpaces, GameManager.blackDice, GameManager.redDice);
+            if (driverRerolledRedDice)
+            {
+                fireDeckGun();
+                return;
+            }
+            message += "Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 2 to reroll the red die. " +
+                "Press 4 to keep what you have.";
+            GameConsole.instance.UpdateFeedback(message);
+
+        }
+        else if(number == 2 && !driverRerolledRedDice)
+        {
+            driverRerolledRedDice = true;
+            Space currentSpace = this.getCurrentSpace();
+            List<Space> quadSpaces = GetQuadrant(currentSpace);
+
+            GameManager.RerollRedDie();
+            rollDiceInQuadrant(quadSpaces, GameManager.blackDice, GameManager.redDice);
+            if (driverRerolledBlackDice)
+            {
+                fireDeckGun();
+                return;
+            }
+            message += "Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 1 to reroll the " +
+                    "black die. Press 4 to keep what you have.";
+            GameConsole.instance.UpdateFeedback(message);
+
+        }
+        else if(number == 3 && !driverRerolledBlackDice && !driverRerolledRedDice)
+        {
+            driverRerolledRedDice = true;
+            driverRerolledBlackDice = true;
+            isWaitingForInput = false;
+            isFiringDeckGun = false;
+            Space currentSpace = this.getCurrentSpace();
+            List<Space> quadSpaces = GetQuadrant(currentSpace);
+
+            GameManager.rollDice();
+            rollDiceInQuadrant(quadSpaces, GameManager.blackDice, GameManager.redDice);
+            fireDeckGun();
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("Invalid input.\n");
+            if (driverRerolledRedDice)
+                GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 1 to reroll the " +
+                    "black die. Press 4 to keep what you have.");
+            else if(driverRerolledBlackDice)
+                GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 2 to reroll the red die. " +
+                "Press 4 to keep what you have.");
+        }
+    }
+    public void CallDeckGun()
+    {
+        Specialist s = this.GetSpecialist();
+        int numAP = this.getAP();
+        if(s == Specialist.DriverOperator && numAP < 2 || s != Specialist.DriverOperator && numAP < 4)
+        {
+            Debug.Log("Insufficient AP");
+            GameConsole.instance.UpdateFeedback("Insufficient AP!");
+        }
+        else
+        {
+            Space currentSpace = this.getCurrentSpace();
+            List<Space> quadSpaces = GetQuadrant(currentSpace);
+            bool isOnEngineSpace = false;
+            bool containsFiremen = false;
+
+            //FireFighters can only fire deck gun when in the same space as enigne.
+            foreach (GameUnit gu in currentSpace.getOccupants())
+            {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                    isOnEngineSpace = true;
+            }
+
+            if (!isOnEngineSpace)
+            {
+                GameConsole.instance.UpdateFeedback("You must be on the engine space to fire the deck gun!");
+                return;
+            }
+
+            //deck gun can only be fired at a quadrant where no firefighter is present.
+            foreach(Space space in quadSpaces)
+            {
+                foreach(GameUnit gu in space.getOccupants())
+                {
+                    if(gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                    {
+                        containsFiremen = true;
+                    }
+                }
+            }
+
+            if (containsFiremen)
+            {
+                GameConsole.instance.UpdateFeedback("You cannot fire deck gun on a quadrant that has a fireman");
+                return;
+            }
+
+            //rolling dice.
+            if (s == Specialist.DriverOperator)
+            {
+                GameManager.rollDice();
+                rollDiceInQuadrant(quadSpaces,GameManager.blackDice,GameManager.redDice);
+
+                GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 1 to reroll the " +
+                	"black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
+                isWaitingForInput = true;
+                isFiringDeckGun = true;
+            }
+            else
+            {
+                GameManager.rollDice();
+                rollDiceInQuadrant(quadSpaces, GameManager.blackDice, GameManager.redDice);
+                fireDeckGun();
+            }
+        }
+    }
+    public void fireDeckGun()
+    {
+        driverRerolledRedDice = false;
+        driverRerolledBlackDice = false;
+        GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + ". Splashing over adjacent spaces");
+        Space targetSpace = StateManager.instance.spaceGrid.getGrid()[GameManager.blackDice, GameManager.redDice];
+        List<GameUnit> targetSpaceGameUnits = targetSpace.getOccupants();
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(targetSpace);
+
+        //removing the target space's game units
+        foreach (GameUnit gu in targetSpaceGameUnits)
+        {
+            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
+            {
+                object[] data = { targetSpace.indexX, targetSpace.indexY };
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
+            }
+            else if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
+            {
+                object[] data = { targetSpace.indexX, targetSpace.indexY };
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSmokeMarker, data, sendToAllOptions, SendOptions.SendReliable);
+            }
+        }
+
+        //removing adjacent game units
+        foreach (Space space in neighbors)
+        {
+            if (space != null)
+            {
+                List<GameUnit> spaceGameUnits = space.getOccupants();
+
+                foreach (GameUnit gameUnit in spaceGameUnits)
+                {
+                    if (gameUnit != null && gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
+                    {
+                        object[] data = { space.indexX, space.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                    else if (gameUnit != null && gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER)
+                    {
+                        object[] data = { space.indexX, space.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSmokeMarker, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+            }
+        }
+        if(this.GetSpecialist() == Specialist.DriverOperator)
+        {
+            decrementAP(2);
+        }
+        else
+        {
+            decrementAP(4);
+        }
+        FiremanUI.instance.SetAP(this.getAP());
     }
     public void CallAmbulance()
     {
