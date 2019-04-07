@@ -22,6 +22,7 @@ public class Fireman : GameUnit
     private bool isChoppingWall;
     private bool isCallingAmbulance;
     private bool isCallingEngine;
+    private bool isRidingVehicle;
     private bool isSelectingExtinguishOption;
     private bool isSelectingSpecialist;
     private bool isChangingCrew;
@@ -50,6 +51,7 @@ public class Fireman : GameUnit
         isExtinguishingFire = false;
         isCallingAmbulance = false;
         isCallingEngine = false;
+        isRidingVehicle = false;
         validInputOptions = new ArrayList();
         isChoppingWall = false;
         isSelectingExtinguishOption = false;
@@ -87,13 +89,14 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
-                    rideAmbulance();
-                    rideEngine();
+                    GameConsole.instance.UpdateFeedback("Press 1 if you want to ride the ambulance \n" +
+                        "Press 2 if you want to ride the engine \n");
+                    isWaitingForInput = true;
+                    isRidingVehicle = true;
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
-                    exitAmbulance(); //if fireman riding ambulance TODO
-                    exitEngine(); //if fireman riding engine TODO
+                    exitVehicle();
                 }
             }
 
@@ -409,6 +412,13 @@ public class Fireman : GameUnit
                         isChoppingWall = true;
                     }
                 }
+                else if (isWaitingForInput && isRidingVehicle)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isRidingVehicle = false;
+                    sendRideAmbulanceEvent(1);
+                }
                 else if (isWaitingForInput && isCallingAmbulance)
                 {
                     Debug.Log("Input 1 Received");
@@ -563,6 +573,13 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChoppingWall = true;
                     }
+                }
+               else if (isWaitingForInput && isRidingVehicle)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                    isRidingVehicle = false;
+                    sendRideEngineEvent(2);
                 }
                 else if (isWaitingForInput && isCallingAmbulance)
                 {
@@ -1152,7 +1169,7 @@ public class Fireman : GameUnit
             {
                 carryVictim();
             }
-            else if(Input.GetKeyDown(KeyCode.H)) {
+            else if(Input.GetKeyDown(KeyCode.M)) {
                 carryHazmat();
             }
         }
@@ -1492,11 +1509,6 @@ public class Fireman : GameUnit
         this.movedAmbulance = h;
     }
 
-    public void exitAmbulance()
-    {
-        this.movedAmbulance = null;
-    }
-
     public Engine getEngine()
     {
         return this.movedEngine;
@@ -1507,9 +1519,23 @@ public class Fireman : GameUnit
         this.movedEngine = n;
     }
 
-    public void exitEngine()
+    public void exitVehicle()
     {
-        this.movedEngine = null;
+        if (movedAmbulance != null)
+        {
+            this.movedAmbulance = null;
+            GameConsole.instance.UpdateFeedback("Exited ambulance successfully");
+        }
+        else if (movedEngine != null)
+        {
+            this.movedEngine = null;
+            GameConsole.instance.UpdateFeedback("Exited engine successfully");
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You are not riding a vehicle");
+
+        }
     }
 
     public Victim getVictim()
@@ -2011,10 +2037,6 @@ public class Fireman : GameUnit
         }
     }
 
-//    Firefi ghters that are in the Vehicle Parking Spot of a Vehicle while it is being Driven can Ride the Vehicle for 0AP.Riding is
-//optional, and any number of Firefi ghters may Ride a Vehicle at one time.After Riding, Firefi ghters may choose to exit the
-//Vehicle in either space of the Vehicle’s Parking Spot TODO
-
     void driveEngine(int direction)
     {
         //fireman has to be on the same space with engine
@@ -2162,10 +2184,6 @@ public class Fireman : GameUnit
             }
             GameConsole.instance.UpdateFeedback("There is no ambulance!");
         }
-
-        //fireman that are in the Vehicle Parking Spot of a Vehicle while it is being Driven can Ride the Vehicle for 0AP
-        //any number of firemen may Ride a Vehicle at one time
-        //exit
     }
 
     void rideEngine()
@@ -2196,9 +2214,6 @@ public class Fireman : GameUnit
             GameConsole.instance.UpdateFeedback("There is no engine!");
         }
 
-        //fireman that are in the Vehicle Parking Spot of a Vehicle while it is being Driven can Ride the Vehicle for 0AP
-        //any number of firemen may Ride a Vehicle at one time
-        //exit
     }
 
     private void move(Hazmat h, Space curr, Space dst) {
@@ -2389,7 +2404,12 @@ public class Fireman : GameUnit
             }
         }
         else {
-            if (v == null && hazmat == null && ap >= 1) 
+            if(movedEngine != null || movedAmbulance != null)
+            {
+                GameConsole.instance.UpdateFeedback("You cannot move while being in the vehicle. Exit the vehicle by pressing X");
+                return;
+            }
+            else if (v == null && hazmat == null && ap >= 1) 
             {
                 this.setCurrentSpace(newSpace);
                 this.decrementAP(1);
@@ -2508,6 +2528,16 @@ public class Fireman : GameUnit
     {
         object[] data = { direction };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveEngine, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+    private void sendRideAmbulanceEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+    private void sendRideEngineEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     private void sendChangeCrewEvent(int[] updatedIndexList)
@@ -2819,6 +2849,14 @@ public class Fireman : GameUnit
 
             int direction = (int)dataReceived[0];
             driveEngine(direction);
+        }
+        else if (evCode == (byte)PhotonEventCodes.RideEngine)
+        {
+            rideEngine();
+        }
+        else if (evCode == (byte)PhotonEventCodes.RideAmbulance)
+        {
+            rideAmbulance();
         }
     }
 }
