@@ -39,4 +39,5 @@ public enum PhotonEventCodes
     DriveEngine = 32,
     RideAmbulance = 33,
     RideEngine = 34,
+    UpdateCarriedVictimsState = 35
 }

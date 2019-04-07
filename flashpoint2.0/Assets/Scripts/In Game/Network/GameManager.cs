@@ -103,7 +103,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex[5] = 1;
             freeSpecialistIndex[6] = 1;
             freeSpecialistIndex[7] = 1;
-            carriedVictims = new Dictionary<int, Victim>();
 
         }
         else

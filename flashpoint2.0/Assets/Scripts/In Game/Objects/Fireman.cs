@@ -2995,45 +2995,55 @@ public class Fireman : GameUnit
         byte evCode = eventData.Code;
 
         //Move = 5
-        if (evCode == (byte)PhotonEventCodes.Move)
-        {
+        if (evCode == (byte)PhotonEventCodes.Move) {
             object[] data = eventData.CustomData as object[];
             int direction = (int)data[1];
 
-            if ((int)data[0] == PV.ViewID)
-            {
-               move(direction);
+            if ((int)data[0] == PV.ViewID) {
+                move(direction);
             }
-        
+
         }
-        else if (evCode == (byte)PhotonEventCodes.PickSpecialist)
-        {
+        else if (evCode == (byte)PhotonEventCodes.PickSpecialist) {
             GameManager.GM.Turn = 1;
             GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
             GameManager.GM.DisplayPlayerTurn();
             GameUI.instance.AddGameState(GameManager.GameStatus);
             selectSpecialist();
         }
-        else if (evCode == (byte)PhotonEventCodes.DriveAmbulance)
-        {
+        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state array
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int stateIndex = (int)dataReceived[2];
+
+
+            Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Victim victim;
+            foreach (GameUnit gu in space.getOccupants()) {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                    victim = gu.GetComponent<Victim>();
+                }
+            }
+
+            //StateManager.instance.carriedVictims.Add(stateIndex, victim);
+        }
+        else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
 
             int direction = (int)dataReceived[0];
             driveAmbulance(direction);
         }
-        else if (evCode == (byte)PhotonEventCodes.DriveEngine)
-        {
+        else if (evCode == (byte)PhotonEventCodes.DriveEngine) {
             object[] dataReceived = eventData.CustomData as object[];
 
             int direction = (int)dataReceived[0];
             driveEngine(direction);
         }
-        else if (evCode == (byte)PhotonEventCodes.RideEngine)
-        {
+        else if (evCode == (byte)PhotonEventCodes.RideEngine) {
             rideEngine();
         }
-        else if (evCode == (byte)PhotonEventCodes.RideAmbulance)
-        {
+        else if (evCode == (byte)PhotonEventCodes.RideAmbulance) {
             rideAmbulance();
         }
     }
