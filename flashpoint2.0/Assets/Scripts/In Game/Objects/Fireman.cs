@@ -2370,67 +2370,6 @@ public class Fireman : GameUnit
         }
 
     }
-    /*
-    private void move(Hazmat h, Space curr, Space dst) {
-        SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
-
-        SpaceKind destinationSpaceKind = dst.getSpaceKind();
-        Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
-        Debug.Log("firefighter pos " + newPosition);
-        Debug.Log("Hazmat pos " + newPosition);
-
-        if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
-            this.setCurrentSpace(dst);
-            h.setCurrentSpace(dst);
-            this.GetComponent<Transform>().position = newPosition;
-            h.GetComponent<Transform>().position = newPosition;
-
-            this.decrementAP(2);
-            FiremanUI.instance.SetAP(this.AP);
-
-            dst.addOccupant(this);
-            dst.addOccupant(h);
-            //removing the victim from the current space.
-            List<GameUnit> currentGameUnits = curr.getOccupants();
-            foreach (GameUnit gu in currentGameUnits) {
-                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT) {
-                    currentGameUnits.Remove(gu);
-                    break;
-                }
-            }
-
-            GameConsole.instance.UpdateFeedback("You have successfully moved with a hazmat");
-        }
-        else if (destinationSpaceKind == SpaceKind.Outdoor) {
-            //carry victim outside the building
-            this.setCurrentSpace(dst);
-            dst.addOccupant(this);
-            this.decrementAP(2);
-            this.GetComponent<Transform>().position = newPosition;
-
-            List<GameUnit> gameUnits = curr.getOccupants();
-            foreach (GameUnit gu in gameUnits) {
-                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
-                    gameUnits.Remove(gu);
-                    break;
-                }
-            }
-            Destroy(h.physicalObject);
-            Destroy(h);
-            this.setHazmat(null);
-            GameConsole.instance.UpdateFeedback("You have successfully cleared a hazmat");
-
-            return;
-
-        }
-        else //Fire
-        {
-            //can not carry victim
-            GameConsole.instance.UpdateFeedback("Cannot carry a hazmat onto fire!");
-            return;
-        }
-    }
-    */
 
     private void move(Victim v, Space curr, Space dst) {
         SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
@@ -2460,7 +2399,6 @@ public class Fireman : GameUnit
         }
         else if (destinationSpaceKind == SpaceKind.Outdoor) {     //carry victim outside the building
             moveFirefighter(curr, dst, 2);
-
             this.setVictim(null);
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID };
@@ -2497,6 +2435,8 @@ public class Fireman : GameUnit
         this.decrementAP(apCost);
         this.GetComponent<Transform>().position = newPosition;
         FiremanUI.instance.SetAP(this.AP);
+
+        curr.removeOccupant(this);
     }
 
     public void move(int direction) {
@@ -2978,20 +2918,12 @@ public class Fireman : GameUnit
             Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
             victim.carried = true;
 
-            //update victim and new space references
+            //update victim andspace references
             victim.setCurrentSpace(dst);
             victim.transform.position = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
-            dst.addOccupant(victim);
 
-            //removing the victim from the current space.
-            List<GameUnit> currentGameUnits = curr.getOccupants();
-            foreach (GameUnit gu in currentGameUnits) {
-                if(gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI 
-                && gu.GetComponent<Victim>().Equals(victim)) {
-                    currentGameUnits.Remove(victim);
-                    break;
-                }
-            }
+            dst.addOccupant(victim);
+            curr.removeOccupant(victim);
         }
         //0: indexX, 1: indexY, 2: fireman PV.viewId
         else if (evCode == (byte) PhotonEventCodes.RemoveSavedVictim) {
@@ -3002,16 +2934,8 @@ public class Fireman : GameUnit
 
             Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
 
-            //remove space reference to saved victim
-            List<GameUnit> gameUnits = curr.getOccupants();
-            foreach (GameUnit gu in gameUnits) {
-                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI && 
-                gu.GetComponent<Victim>().Equals(victim)) {
-                    gameUnits.Remove(victim);
-                    break;
-                }
-            }
-            //delete saved victim and update carried victim states
+            //update game states
+            curr.removeOccupant(victim);
             Destroy(victim.gameObject);
             Destroy(victim);
             StateManager.instance.firemanCarriedVictims.Remove(firemanId);

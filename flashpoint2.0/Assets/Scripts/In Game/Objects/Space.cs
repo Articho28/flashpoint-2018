@@ -98,18 +98,23 @@ public class Space {
  
     }
 
-    public bool removeOccupant(GameUnit u)
-    {
-        int index = 0; 
-        foreach (GameUnit current in occupants)
-        {
-            if (current == u)
-            {
-                occupants.RemoveAt(index);
-                return true;
+    public void removeOccupant(Fireman fireman) {
+        for(int i = 0; i < occupants.Count; i++) {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN
+            && occupants[i].GetComponent<Fireman>().Equals(fireman)) {
+                occupants.RemoveAt(i);
+                break;
             }
-            index++;
         }
-        return false;
+    }
+
+    public void removeOccupant(Victim victim) {
+        for (int i = 0; i < occupants.Count; i++) {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI
+            && occupants[i].GetComponent<Victim>().Equals(victim)) {
+                occupants.RemoveAt(i);
+                break;
+            }
+        }
     }
 } 
