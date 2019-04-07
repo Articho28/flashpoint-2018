@@ -2439,12 +2439,7 @@ public class Fireman : GameUnit
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
-            //update local fireman things
-            this.setCurrentSpace(dst);
-            this.decrementAP(2);
-            this.GetComponent<Transform>().position = newPosition;
-            FiremanUI.instance.SetAP(this.AP);
-            dst.addOccupant(this);
+            moveFirefighter(curr, dst, 2);
 
             //if has POI marker
             List<GameUnit> destinationGameUnits = dst.getOccupants();
@@ -2464,11 +2459,7 @@ public class Fireman : GameUnit
             GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
         }
         else if (destinationSpaceKind == SpaceKind.Outdoor) {     //carry victim outside the building
-            this.setCurrentSpace(dst);
-            dst.addOccupant(this);
-            this.decrementAP(2);
-            this.GetComponent<Transform>().position = newPosition;
-            FiremanUI.instance.SetAP(this.AP);
+            moveFirefighter(curr, dst, 2);
 
             this.setVictim(null);
 
@@ -2498,10 +2489,18 @@ public class Fireman : GameUnit
         }
     }
 
+    private void moveFirefighter(Space curr, Space dst, int apCost) {
+        Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
+
+        this.setCurrentSpace(dst);
+        dst.addOccupant(this);
+        this.decrementAP(apCost);
+        this.GetComponent<Transform>().position = newPosition;
+        FiremanUI.instance.SetAP(this.AP);
+    }
 
     public void move(int direction) {
 
-        //TODO NEED TO KNOW IF F HAS ENOUGH AP TO MOVE TO A SAFE SPACE
         int ap = this.getAP();
         Victim v = this.getVictim();
         Hazmat hazmat = this.getHazmat();
@@ -2524,11 +2523,7 @@ public class Fireman : GameUnit
         if (sp == SpaceStatus.Fire) {
             if (ap >= 3 && v == null) //&&f has enough to move
             {
-                this.setCurrentSpace(newSpace);
-                this.decrementAP(2);
-                newSpace.addOccupant(this);
-                FiremanUI.instance.SetAP(this.AP);
-                this.GetComponent<Transform>().position = newPosition;
+                moveFirefighter(curr, destination, 2);
             }
             else {
                 GameConsole.instance.UpdateFeedback("Cannot carry a victim into a fire");
@@ -2543,12 +2538,7 @@ public class Fireman : GameUnit
             }
             else if (v == null && hazmat == null && ap >= 1) 
             {
-                this.setCurrentSpace(newSpace);
-                this.decrementAP(1);
-                newSpace.addOccupant(this);
-                FiremanUI.instance.SetAP(this.AP);
-                GameConsole.instance.UpdateFeedback("You have successfully moved");
-                this.GetComponent<Transform>().position = newPosition;
+                moveFirefighter(curr, destination, 1);
 
                 //flip poi feature
                 List<GameUnit> gameUnits = destination.getOccupants();
@@ -2573,38 +2563,6 @@ public class Fireman : GameUnit
                 return;
             }
         }
-
-
-                //after the move TODO??
-
-        //        List<GameUnit> occ = destination.getOccupants();
-        //foreach (GameUnit gu in occ)
-        //{
-        //    if (gu is POI)
-        //    {
-        //        POIKind gukind = ((POI)gu).getPOIKind();
-        //        if (gukind == POIKind.FalseAlarm)
-        //        {
-        //            //TODO remove false alarm
-        //        }
-        //    }
-        //}
-        
-        //if (v != null && destination.getSpaceKind() == SpaceKind.Outdoor)
-        //{
-        //    v.setVictimStatus(VictimStatus.Rescued);
-        //    //place victim marker on the rescued space 
-
-        //    Game.incrementNumSavedVictims();
-        //    GameUI.instance.AddSavedVictim();
-        //    this.deassociateVictim();
-        //    if (Game.getNumSavedVictims() >= 7)
-        //    {
-        //        Game.setGameWon(true);
-        //        Game.setGameState(GameState.Completed);
-        //        GameUI.instance.AddGameState("Completed");
-        //    }
-        //}
     }
 
 
