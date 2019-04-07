@@ -27,6 +27,8 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
     public InputField RoomNameInputField;
     public InputField MaxPlayersInputField;
+    public Dropdown GameTypeDropdown;
+    public Dropdown ExperiencedGameDifficultyDropdown;
 
     [Header("Room List Panel")]
     public GameObject RoomListPanel;
@@ -149,6 +151,10 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
     {
         string roomName = RoomNameInputField.text;
         roomName = (roomName.Equals(string.Empty)) ? "Room " + Random.Range(1000, 10000) : roomName;
+        int dropDownValueGameMode = GameTypeDropdown.GetComponent<Dropdown>().value;
+        int difficutlDropDownValue = ExperiencedGameDifficultyDropdown.GetComponent<Dropdown>().value;
+        Debug.Log("This is the dropdown value for game mode :" + dropDownValueGameMode);
+        Debug.Log("This is the difficulty level index : " + difficutlDropDownValue);
 
         byte maxPlayers;
         byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
@@ -304,6 +310,7 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
     public void Start()
     {
         NoPlayerNameError.SetActive(false);
+
     }
 
     private void ClearRoomListView()

@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviourPun
     public static int placeInitialPOI = 3;
     public static int[] initialFireMarkerRows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
     public static int[] initialFireMarkerColumns = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
-    public static Dictionary<int, Victim> carriedVictims;
+    //public static Dictionary<int, Victim> carriedVictims;
 
 
 //Network Options
@@ -97,7 +97,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex[5] = 1;
             freeSpecialistIndex[6] = 1;
             freeSpecialistIndex[7] = 1;
-            carriedVictims = new Dictionary<int, GameObject>();
+            //carriedVictims = new Dictionary<int, GameObject>();
 
         }
         else
