@@ -40,6 +40,9 @@ public enum PhotonEventCodes
     RideAmbulance = 33,
     RideEngine = 34,
     UpdateCarriedVictimsState = 35,
-    MoveCarriedVictim = 36,
-    RemoveSavedVictim = 37
+    UpdateCarriedHazmatsState = 36,
+    MoveCarriedVictim = 37,
+    MoveCarriedHazmat = 38,
+    RemoveSavedVictim = 39,
+    RemoveHazmat = 40
 }

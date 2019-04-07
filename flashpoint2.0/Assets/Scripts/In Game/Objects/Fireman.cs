@@ -2891,13 +2891,10 @@ public class Fireman : GameUnit
             Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
             Victim victim = null;
             foreach (GameUnit gu in space.getOccupants()) {
+                //TODO check if victim is carried by another fireman after drop functionality is implemented
                 if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
                     Victim v = gu.GetComponent<Victim>();
-
-                    if(!v.carried) {
-                        victim = v;
-                        break;
-                    }
+                    victim = v;
                 }
             }
 
@@ -2906,6 +2903,29 @@ public class Fireman : GameUnit
                 d[firemanId] = victim;
             }
             else d.Add(firemanId, victim);
+
+        }
+        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedHazmatsState) { //0: indexX, 1: indexY, 2: index in state dictionary/fireman unique network id
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int firemanId = (int)dataReceived[2];
+
+            Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Hazmat hazmat = null;
+            foreach (GameUnit gu in space.getOccupants()) {
+                //TODO check if victim is carried by another fireman after drop functionality is implemented
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                    Hazmat h = gu.GetComponent<Hazmat>();
+                    hazmat = h;
+                }
+            }
+
+            Dictionary<int, Hazmat> d = StateManager.instance.firemanCarriedHazmats;
+            if (d.ContainsKey(firemanId)) {
+                d[firemanId] = hazmat;
+            }
+            else d.Add(firemanId, hazmat);
 
         }
         //0: current space X, 1: current space Y, 2: destination X, 3: dst Y, 4: fireman PV.ViewId
@@ -2945,6 +2965,7 @@ public class Fireman : GameUnit
             GameManager.savedVictims++;
             GameUI.instance.AddSavedVictim();
         }
+
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
 
