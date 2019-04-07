@@ -133,7 +133,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("i am master client");
-            //placeInitialFireMarker();
 
             if (!isFamilyGame)
             {
@@ -221,6 +220,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                 }
             }
+            placeInitialFireMarker();
+            randomizePOI();
+            randomizePOI();
+            randomizePOI();
         }
     }
 
@@ -496,7 +499,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         object[] data = { cols, rows };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced, data, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
 
 
     }
@@ -1267,11 +1270,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
-                    placeInitialFireMarker();
                     initialSetup(); //hazmats + initial explosions (for experienced)
-                    randomizePOI();
-                    randomizePOI();
-                    randomizePOI();
                 }
                 else
                 {
@@ -1469,7 +1468,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarker)
         {
-
             object[] dataReceived = eventData.CustomData as object[];
             int[] cols = (int[])dataReceived[0];
             int[] rows = (int[])dataReceived[1];
@@ -1488,7 +1486,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
-
         }
         else if (evCode == (byte)PhotonEventCodes.ResolveFlashOvers)
         {
@@ -1630,27 +1627,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
         }
 
-        else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarkerExperienced)
-        {
-            object[] dataReceived = eventData.CustomData as object[];
-            int[] cols = (int[])dataReceived[0];
-            int[] rows = (int[])dataReceived[1];
-
-            for (int i = 0; i < rows.Length; i++)
-            {
-                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
-                Vector3 position = currentSpace.worldPosition;
-                GameObject newFireMarker2 = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/FireMarker/FireMarker")) as GameObject;
-                Vector3 newPosition = new Vector3(position.x, position.y, -5);
-
-                newFireMarker2.GetComponent<Transform>().position = newPosition;
-                newFireMarker2.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-                newFireMarker2.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
-                newFireMarker2.GetComponent<GameUnit>().setPhysicalObject(newFireMarker2);
-                currentSpace.addOccupant(newFireMarker2.GetComponent<GameUnit>());
-                currentSpace.setSpaceStatus(SpaceStatus.Fire);
-            }
-        }
         else if (evCode == (byte)PhotonEventCodes.ReplenishPOI)
         {
 
