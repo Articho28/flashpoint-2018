@@ -259,7 +259,7 @@ public class Game : MonoBehaviour
                         //make a function call --> KnockedDown
                         if (occ is Fireman)
                         {
-                            ((Fireman)occ).KnockedDown();
+                            //((Fireman)occ).KnockedDown();
                         }
                         //Any Victims or POI in a space with Fire are Lost
                         //Place the POI or Victim marker on the Lost space at the edge of the board

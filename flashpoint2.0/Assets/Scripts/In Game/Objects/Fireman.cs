@@ -78,18 +78,6 @@ public class Fireman : GameUnit
                 else if (Input.GetKeyDown(KeyCode.H))
                 {
                     CallAmbulance();
-                    //if (Input.GetKeyDown(KeyCode.RightArrow))
-                    //{   
-                    //    this.driveAmbulance(1);
-                    //}
-                    //else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                    //{
-                    //    this.driveAmbulance(3);
-                    //}
-                    //else if (Input.GetKeyDown(KeyCode.DownArrow))
-                    //{
-                    //    this.driveAmbulance(2);
-                    //}
                 }
                 else if (Input.GetKeyDown(KeyCode.T))
                 {
@@ -104,14 +92,7 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
-                   // if (getAmbulance() != null)
-                    //{
-                        rideAmbulance();
-                    //}
-                    //if (getEngine() != null)
-                    //{
-                      //  rideEngine();
-                    //}
+                    rideAmbulance();
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
@@ -348,6 +329,7 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
                     }
                     else
                     {
@@ -355,6 +337,7 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChangingCrew = true;
                     }
+
                 } 
 
 
@@ -429,7 +412,7 @@ public class Fireman : GameUnit
                         isChoppingWall = true;
                     }
                 }
-                else if(isWaitingForInput && isCallingAmbulance)
+                else if (isWaitingForInput && isCallingAmbulance)
                 {
                     Debug.Log("Input 1 Received");
                     isWaitingForInput = false;
@@ -438,6 +421,7 @@ public class Fireman : GameUnit
                     FiremanUI.instance.SetAP(this.AP);
                     sendDriveAmbulanceEvent(1);
                     GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
+                }
                 else if (isWaitingForInput && isChangingCrew)
                 {
                     Debug.Log("Input 1 Received");
@@ -1521,6 +1505,7 @@ public class Fireman : GameUnit
                 optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
                 Debug.Log(optionsToUser);
             }
+        }
 
     }
     public void CallAmbulance()

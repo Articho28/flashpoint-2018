@@ -80,7 +80,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             lostVictims = 0;
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
-            isFamilyGame = true;
+            isFamilyGame = false;
             isDestroyingVictim = false;
             availableSpecialists = new Specialist [8];
             availableSpecialists[0] = Specialist.Paramedic;
@@ -100,7 +100,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex[5] = 1;
             freeSpecialistIndex[6] = 1;
             freeSpecialistIndex[7] = 1;
-            carriedVictims = new Dictionary<int, GameObject>();
+            carriedVictims = new Dictionary<int, Victim>();
 
         }
         else
