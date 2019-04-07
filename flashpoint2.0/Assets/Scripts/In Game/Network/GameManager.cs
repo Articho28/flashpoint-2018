@@ -38,8 +38,8 @@ public class GameManager : MonoBehaviourPun
     public Specialist[] availableSpecialists;
     public int[] freeSpecialistIndex; //all specilaists are free at first
     public int buildingDamage;
-    static int blackDice;
-    static int redDice;
+    public static int blackDice;
+    public static int redDice;
     public static int numOfActivePOI;
     public bool isFamilyGame; //true if family game, false if experienced
     public static Difficulty difficulty; //Recruit, Veteran, Heroic
@@ -400,7 +400,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveFlashOvers, null, sendToAllOptions, SendOptions.SendUnreliable);
     }
 
-    static void rollDice()
+    public static void rollDice()
     {
         //TODO reset proper randomization
 
@@ -600,7 +600,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     }
 
-    void removeSmokeMarker(Space targetSpace)
+    public void removeSmokeMarker(Space targetSpace)
     {
         int indexX = targetSpace.indexX;
         int indexY = targetSpace.indexY;
@@ -626,7 +626,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
     }
 
-    void removeFireMarker(Space targetSpace)
+    public void removeFireMarker(Space targetSpace)
     {
         int indexX = targetSpace.indexX;
         int indexY = targetSpace.indexY;
@@ -983,6 +983,19 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 resolveExplosionInDirection(nextSpace, direction);
             }
         }
+    }
+
+    public static void RerollRedDie()
+    {
+        int black = blackDice;
+        rollDice();
+        blackDice = black;
+    }
+    public static void RerollBlackDie()
+    {
+        int red = redDice;
+        rollDice();
+        redDice = red;
     }
 
     private void destroyDoor(Door door)
