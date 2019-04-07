@@ -83,7 +83,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             isFamilyGame = false;
             difficulty = Difficulty.Heroic;
             isDestroyingVictim = false;
-            availableSpecialists = new Specialist [8];
+            availableSpecialists = new Specialist [10];
             availableSpecialists[0] = Specialist.Paramedic;
             availableSpecialists[1] = Specialist.FireCaptain;
             availableSpecialists[2] = Specialist.ImagingTechnician;
@@ -92,7 +92,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             availableSpecialists[5] = Specialist.Generalist;
             availableSpecialists[6] = Specialist.RescueSpecialist;
             availableSpecialists[7] = Specialist.DriverOperator;
-            freeSpecialistIndex = new int[8];
+            availableSpecialists[8] = Specialist.RescueDog;
+            availableSpecialists[9] = Specialist.Veteran;
+            freeSpecialistIndex = new int[10];
             freeSpecialistIndex[0] = 1;
             freeSpecialistIndex[1] = 1;
             freeSpecialistIndex[2] = 1;
@@ -101,6 +103,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex[5] = 1;
             freeSpecialistIndex[6] = 1;
             freeSpecialistIndex[7] = 1;
+            freeSpecialistIndex[8] = 1;
+            freeSpecialistIndex[9] = 1;
 
         }
         else
