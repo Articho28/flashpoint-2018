@@ -116,7 +116,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     void Start()
     {
-        initialSetup();
+        //initialSetup();
     }
 
     // Update is called once per frame
@@ -1261,6 +1261,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
                     placeInitialFireMarker();
+                    initialSetup(); //hazmats + initial explosions (for experienced)
                     randomizePOI();
                     randomizePOI();
                     randomizePOI();
