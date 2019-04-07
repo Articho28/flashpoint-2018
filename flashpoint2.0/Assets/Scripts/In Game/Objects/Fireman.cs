@@ -2310,7 +2310,7 @@ public class Fireman : GameUnit
         }
 
     }
-
+    /*
     private void move(Hazmat h, Space curr, Space dst) {
         SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
 
@@ -2370,6 +2370,7 @@ public class Fireman : GameUnit
             return;
         }
     }
+    */
 
     private void move(Victim v, Space curr, Space dst) {
         SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
@@ -2378,31 +2379,18 @@ public class Fireman : GameUnit
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
-            //carry victim
-
+            //update local fireman things
             this.setCurrentSpace(dst);
             this.decrementAP(2);
             this.GetComponent<Transform>().position = newPosition;
             FiremanUI.instance.SetAP(this.AP);
-            v.setCurrentSpace(dst);
-            v.GetComponent<Transform>().position = newPosition;
-
             dst.addOccupant(this);
 
-            //removing the victim from the current space.
-            List<GameUnit> currentGameUnits = curr.getOccupants();
-            GameUnit victim = null;
-            foreach (GameUnit gu in currentGameUnits) {
-                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
-                    victim = gu;
-                    break;
-                }
-            }
-            currentGameUnits.Remove(victim);
-            dst.addOccupant(victim);
-
+            object[] data = {curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedVictim, data, sendToAllOptions, SendOptions.SendReliable);
 
             GameConsole.instance.UpdateFeedback("You have successfully moved with a victim");
+
             //if has POI marker
             List<GameUnit> destinationGameUnits = dst.getOccupants();
             foreach (GameUnit gu in destinationGameUnits) {
@@ -2461,6 +2449,7 @@ public class Fireman : GameUnit
             return;
         }
     }
+
 
     public void move(int direction) {
 
@@ -2965,19 +2954,29 @@ public class Fireman : GameUnit
             else d.Add(firemanId, victim);
 
         }
+        //0: current space X, 1: current space Y, 2: destination X, 3: dst Y, 4: fireman PV.ViewId
         else if(evCode == (byte) PhotonEventCodes.MoveCarriedVictim) {
             object[] dataReceived = eventData.CustomData as object[];
-            int indexX = (int)dataReceived[0];
-            int indexY = (int)dataReceived[1];
-            int firemanId = (int)dataReceived[2];
+            Space curr = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+            Space dst = StateManager.instance.spaceGrid.grid[(int)dataReceived[2], (int)dataReceived[3]];
+            int firemanId = (int)dataReceived[4];
 
-            Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
             Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
 
-            victim.setCurrentSpace(space);
-            victim.transform.position = new Vector3(space.worldPosition.x, space.worldPosition.y, -10);
+            //update victim and new space references
+            victim.setCurrentSpace(dst);
+            victim.transform.position = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
+            dst.addOccupant(victim);
 
-            space.addOccupant(victim);
+            //removing the victim from the current space.
+            List<GameUnit> currentGameUnits = curr.getOccupants();
+            GameUnit victim = null;
+            foreach (GameUnit gu in currentGameUnits) {
+                if(gu.GetComponent<Victim>().Equals(victim)) {
+                    currentGameUnits.Remove(victim);
+                    break;
+                }
+            }
         }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
