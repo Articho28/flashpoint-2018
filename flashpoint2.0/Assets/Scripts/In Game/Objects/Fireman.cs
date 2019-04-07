@@ -1591,6 +1591,7 @@ public class Fireman : GameUnit
                     Victim v = gu.GetComponent<Victim>();
                     this.setVictim(v);
                     GameConsole.instance.UpdateFeedback("Carried victim successfully!");
+
                     return;
                 }
             }
@@ -1844,6 +1845,7 @@ public class Fireman : GameUnit
             v.GetComponent<Transform>().position = newPosition;
 
             dst.addOccupant(this);
+
             //removing the victim from the current space.
             List<GameUnit> currentGameUnits = curr.getOccupants();
             GameUnit victim = null;
@@ -1943,7 +1945,7 @@ public class Fireman : GameUnit
         Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
 
         if (sp == SpaceStatus.Fire) {
-            if (ap >= 3 && v != null) //&&f has enough to move
+            if (ap >= 3 && v == null) //&&f has enough to move
             {
                 this.setCurrentSpace(newSpace);
                 this.decrementAP(2);
@@ -1952,18 +1954,21 @@ public class Fireman : GameUnit
                 this.GetComponent<Transform>().position = newPosition;
             }
             else {
-                GameConsole.instance.UpdateFeedback("Insufficient AP 3");
+                GameConsole.instance.UpdateFeedback("Cannot carry a victim into a fire");
                 return;
             }
         }
         else {
-            if (v == null && hazmat == null && ap >= 1) {
+            if (v == null && hazmat == null && ap >= 1) 
+            {
                 this.setCurrentSpace(newSpace);
                 this.decrementAP(1);
                 newSpace.addOccupant(this);
                 FiremanUI.instance.SetAP(this.AP);
                 GameConsole.instance.UpdateFeedback("You have successfully moved");
                 this.GetComponent<Transform>().position = newPosition;
+
+                //flip poi feature
                 List<GameUnit> gameUnits = destination.getOccupants();
                 foreach (GameUnit gu in gameUnits) {
                     if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
@@ -2083,24 +2088,6 @@ public class Fireman : GameUnit
         //}
     }
 
-
-    public void KnockedDown()
-    {
-        //A Firefighter is Knocked Down when Fire advances into their space; this could be from an explosion or being in a Smoke
-        //filled space that ignites
-
-        //if: KnockedDown
-        //take the Firefighter from its space
-        //place it on the closest (as the crow flies) Ambulance Parking Spot outside the building
-        //if: two Parking Spots are equally distant, choose one
-
-
-        //Leave the Fire marker in the space
-
-        //if: the KnockedDown Firefighter was carrying a Victim
-        //Victim is Lost --> Place the Victim marker on the Lost space at the edge of the board
-        //make a function call to VictimLoss
-    }
 
     private void sendFireMarkerExtinguishEvent(Space targetSpace)
     {
