@@ -1925,7 +1925,7 @@ public class Fireman : GameUnit
                     this.setVictim(v);
                     GameConsole.instance.UpdateFeedback("Carried victim successfully!");
 
-                    object[] data = { this.currentSpace.indexX, this.currentSpace.indexY, PV.ViewID };
+                    object[] data = { this.currentSpace.indexX, this.currentSpace.indexY, PV.ViewID};
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateCarriedVictimsState, data, sendToAllOptions, SendOptions.SendReliable);
 
                     return;
@@ -2431,8 +2431,8 @@ public class Fireman : GameUnit
             moveFirefighter(curr, dst, 2);
             this.setVictim(null);
 
-            object[] data = { curr.indexX, curr.indexY, PV.ViewID };
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveSavedVictim, data, sendToAllOptions, SendOptions.SendReliable);
+            object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
 
             GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
 
@@ -2991,12 +2991,13 @@ public class Fireman : GameUnit
             dst.addOccupant(hazmat);
             curr.removeOccupant(hazmat);
         }
-        //0: indexX, 1: indexY, 2: fireman PV.viewId
-        else if (evCode == (byte) PhotonEventCodes.RemoveSavedVictim) {
+        //0: indexX, 1: indexY, 2: fireman PV.viewId, 3: true for saved, false for lost
+        else if (evCode == (byte) PhotonEventCodes.RemoveVictim) {
             //parse data
             object[] dataReceived = eventData.CustomData as object[];
             Space curr = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
             int firemanId = (int)dataReceived[2];
+            bool saved = (bool) dataReceived[3];
 
             Victim victim = StateManager.instance.firemanCarriedVictims[firemanId];
 
@@ -3007,9 +3008,19 @@ public class Fireman : GameUnit
             StateManager.instance.firemanCarriedVictims.Remove(firemanId);
 
             //update UI
-            GameManager.numOfActivePOI--;
-            GameManager.savedVictims++;
-            GameUI.instance.AddSavedVictim();
+            if(saved) {
+                GameManager.numOfActivePOI--;
+                GameManager.savedVictims++;
+                GameUI.instance.AddSavedVictim();
+            }
+            else {
+                GameManager.numOfActivePOI--;
+                GameManager.lostVictims++;
+                GameUI.instance.AddLostVictim();
+                GameManager.numVictim--;
+                GameConsole.instance.UpdateFeedback("A victim just perished.");
+            }
+
         }
         else if (evCode == (byte)PhotonEventCodes.RemoveHazmat) {
             //parse data

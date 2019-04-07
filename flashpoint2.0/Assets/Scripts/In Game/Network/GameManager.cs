@@ -739,11 +739,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 occupants.Remove(targetPOI);
                 Destroy(targetPOI.physicalObject);
                 Destroy(targetPOI);
+
                 lostVictims++;
                 numVictim--;
                 GameUI.instance.AddLostVictim();
                 GameConsole.instance.UpdateFeedback("A victim just perished.");
                 numOfActivePOI--;
+
+                //object[] data = { targetSpace.indexX, targetSpace.indexY, PV.ViewID, true };
+                //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
             }
             else
             {
@@ -1782,18 +1786,41 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             freeSpecialistIndex = updatedIndexList;
 
         }
+        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state dictionary/fireman unique network id
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int firemanId = (int)dataReceived[2];
 
-            /*
-            else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
-            {
-                object[] receivedData = eventData.CustomData as object[];
-
-                for (int i = 0; i < receivedData.Length; i++)
-                {
-                    Debug.Log("Received at " + i + " the name " + receivedData[i]);
-                    playersListNameCache.Insert(i, receivedData[i]);
+            Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Victim victim = null;
+            foreach (GameUnit gu in space.getOccupants()) {
+                //TODO check if victim is carried by another fireman after drop functionality is implemented
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                    Victim v = gu.GetComponent<Victim>();
+                    victim = v;
                 }
-            }*/
+            }
+
+            Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
+            if (d.ContainsKey(firemanId)) {
+                d[firemanId] = victim;
+            }
+            else d.Add(firemanId, victim);
 
         }
+
+        /*
+        else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+
+            for (int i = 0; i < receivedData.Length; i++)
+            {
+                Debug.Log("Received at " + i + " the name " + receivedData[i]);
+                playersListNameCache.Insert(i, receivedData[i]);
+            }
+        }*/
+
+    }
 }

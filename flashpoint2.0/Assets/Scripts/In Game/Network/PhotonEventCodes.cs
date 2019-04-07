@@ -43,6 +43,6 @@ public enum PhotonEventCodes
     UpdateCarriedHazmatsState = 36,
     MoveCarriedVictim = 37,
     MoveCarriedHazmat = 38,
-    RemoveSavedVictim = 39,
+    RemoveVictim = 39,
     RemoveHazmat = 40
 }
