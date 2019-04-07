@@ -59,11 +59,11 @@ TagManager:
   - name: POI
     uniqueID: 1492731481
     locked: 0
-  - name: Fireman
-    uniqueID: 4291518653
-    locked: 0
   - name: vehicle
     uniqueID: 2381171265
+    locked: 0
+  - name: Fireman
+    uniqueID: 4291518653
     locked: 0
   - name: HotSpot
     uniqueID: 1404519087

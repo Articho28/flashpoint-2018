@@ -20,9 +20,16 @@ public class Fireman : GameUnit
     private bool isWaitingForInput;
     private bool isExtinguishingFire;
     private bool isChoppingWall;
+    private bool isCallingAmbulance;
+    private bool isCallingEngine;
+    private bool isRidingVehicle;
     private bool isSelectingExtinguishOption;
     private bool isSelectingSpecialist;
     private bool isChangingCrew;
+    private bool isOnEngine;
+    private bool isOnAmbulance;
+    private bool isIdentifyingPOI;
+    public bool isDoubleSpec; //for ap decrementing
     public ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
@@ -35,17 +42,25 @@ public class Fireman : GameUnit
 
     void Start()
     {
-        AP = 4;
+        //AP = 4;
         savedAP = 0;
         carriedVictim = null;
+        movedEngine = null;
+        movedAmbulance = null;
         PV = GetComponent<PhotonView>();
         isWaitingForInput = false;
         isExtinguishingFire = false;
+        isCallingAmbulance = false;
+        isCallingEngine = false;
+        isRidingVehicle = false;
         validInputOptions = new ArrayList();
         isChoppingWall = false;
         isSelectingExtinguishOption = false;
+        isOnEngine = false;
+        isOnAmbulance = false;
         isChangingCrew = false;
         isSelectingSpecialist = false;
+        isIdentifyingPOI = false;
     }
 
     void Update()
@@ -68,23 +83,76 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.H))
                 {
-                    //driveAmbulance(); TODO
+                    CallAmbulance();
                 }
                 else if (Input.GetKeyDown(KeyCode.T))
                 {
-                    //driveEngine(); TODO
+                    CallEngine();
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
-                    //if getAmbulance TODO
-                        rideAmbulance();
-                    //if getEngine TODO
-                        //rideEngine();
+                    GameConsole.instance.UpdateFeedback("Press 1 if you want to ride the ambulance \n" +
+                        "Press 2 if you want to ride the engine \n");
+                    isWaitingForInput = true;
+                    isRidingVehicle = true;
                 }
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
-                    deassociateAmbulance(); //if fireman riding ambulance TODO
-                    deassociateEngine(); //if fireman riding engine TODO
+                    exitVehicle();
+                }
+                else if (Input.GetKeyDown(KeyCode.I)) 
+                {
+                    //Identify POI anywhere on the board
+                    //Only for imaging technicians
+
+                    identifyPOI();
+                }
+                else if (Input.GetMouseButtonDown(0))
+                { // if left button pressed
+                    Space spaceClicked = StateManager.instance.spaceGrid.getGrid()[0, 0]; //initialize it randomly hehe
+                    if (isWaitingForInput && isIdentifyingPOI)
+                    {
+                        isWaitingForInput = false;
+                        isIdentifyingPOI = false;
+
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit hit;
+                        if (Physics.Raycast(ray, out hit))
+                        {
+                            GameObject objectClicked = hit.transform.gameObject;
+
+                            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
+                            {
+                                Debug.Log("a tile was clicked");
+                                spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
+                                Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
+                            }
+
+                        }
+                        List<GameUnit> gameUnits = spaceClicked.getOccupants();
+                        bool hasPOI = false;
+                        foreach (GameUnit gu in gameUnits)
+                        {
+                            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                hasPOI = true;
+                                break;
+                            }
+                        }
+
+                        if (hasPOI == true)
+                        {
+                            GameManager.FlipPOI(spaceClicked);
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
+                            isWaitingForInput = true;
+                            isIdentifyingPOI = true;
+                        }
+                    }
                 }
             }
 
@@ -186,11 +254,11 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.W))
             {
-                //if (!GameManager.GM.isFamilyGame)
-                //{
+                if (!GameManager.GM.isFamilyGame)
+                {
                     Debug.Log("Crew Change Detected");
                     changeCrew();
-                //}
+                }
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
@@ -207,16 +275,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -250,7 +318,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 0);
                     }
@@ -273,8 +341,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to paramedic (0)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.Paramedic;
+                        FiremanUI.instance.SetSpecialist(Specialist.Paramedic);
                         GameManager.GM.freeSpecialistIndex[0] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Paramedic.");
@@ -316,6 +385,7 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
                     }
                     else
                     {
@@ -323,6 +393,7 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChangingCrew = true;
                     }
+
                 } 
 
 
@@ -342,16 +413,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -385,7 +456,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 1);
                     }
@@ -396,6 +467,33 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChoppingWall = true;
                     }
+                }
+                else if (isWaitingForInput && isRidingVehicle)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isRidingVehicle = false;
+                    sendRideAmbulanceEvent(1);
+                }
+                else if (isWaitingForInput && isCallingAmbulance)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingAmbulance = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveAmbulanceEvent(1);
+                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
+                }
+                else if (isWaitingForInput && isCallingEngine)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingEngine = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveEngineEvent(1);
+                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -408,8 +506,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to fire captain (1)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.FireCaptain;
+                        FiremanUI.instance.SetSpecialist(Specialist.FireCaptain);
                         GameManager.GM.freeSpecialistIndex[1] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Fire Captain.");
@@ -476,16 +575,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -519,7 +618,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 2);
                     }
@@ -530,6 +629,33 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChoppingWall = true;
                     }
+                }
+               else if (isWaitingForInput && isRidingVehicle)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                    isRidingVehicle = false;
+                    sendRideEngineEvent(2);
+                }
+                else if (isWaitingForInput && isCallingAmbulance)
+                {
+                    Debug.Log("Input 2 Received");
+                    isWaitingForInput = false;
+                    isCallingAmbulance = false;
+                    decrementAP(4);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveAmbulanceEvent(2);
+                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
+                }
+                else if (isWaitingForInput && isCallingEngine)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingEngine = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveEngineEvent(2);
+                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -542,8 +668,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to imaging technician (2)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.ImagingTechnician;
+                        FiremanUI.instance.SetSpecialist(Specialist.ImagingTechnician);
                         GameManager.GM.freeSpecialistIndex[2] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Imaging Technician.");
@@ -610,16 +737,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -653,7 +780,7 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Chopping wall.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = this.getCurrentSpace();
-                        this.setAP(this.getAP() - 2);
+                        this.decrementChopWallAP();
                         FiremanUI.instance.SetAP(this.getAP());
                         sendChopWallEvent(targetSpace, 3);
                     }
@@ -664,6 +791,27 @@ public class Fireman : GameUnit
                         isWaitingForInput = true;
                         isChoppingWall = true;
                     }
+
+                }
+                else if (isWaitingForInput && isCallingAmbulance)
+                {
+                    Debug.Log("Input 3 Received");
+                    isWaitingForInput = false;
+                    isCallingAmbulance = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveAmbulanceEvent(3);
+                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
+                }
+                else if (isWaitingForInput && isCallingEngine)
+                {
+                    Debug.Log("Input 1 Received");
+                    isWaitingForInput = false;
+                    isCallingEngine = false;
+                    decrementAP(2);
+                    FiremanUI.instance.SetAP(this.AP);
+                    sendDriveEngineEvent(3);
+                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -676,8 +824,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to CAFS Firefighter (3)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.CAFSFirefighter;
+                        FiremanUI.instance.SetSpecialist(Specialist.CAFSFirefighter);
                         GameManager.GM.freeSpecialistIndex[3] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to CAFS Firefighter.");
@@ -744,16 +893,16 @@ public class Fireman : GameUnit
                         int numAP = this.getAP();
                         if (targetSpace.getSpaceStatus() == SpaceStatus.Smoke)
                         {
-                            this.setAP(numAP - 1);
+                            this.decrementRemoveSmokeAP();
                             FiremanUI.instance.SetAP(this.getAP());
                             sendSmokeMarkerExtinguishEvent(targetSpace);
                         }
                         else
                         {
-                            if (numAP < 2)
+                            if ((!isDoubleSpec && numAP < 2) || (isDoubleSpec && numAP < 4))
                             {
                                 GameConsole.instance.UpdateFeedback("Turning Fire To Smoke...");
-                                this.setAP(numAP - 1);
+                                this.decrementFireToSmokeAP();
                                 FiremanUI.instance.SetAP(this.getAP());
                                 sendTurnFireMarkerToSmokeEvent(targetSpace);
                             }
@@ -787,8 +936,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Hazmat Technician (4)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.HazmatTechinician;
+                        FiremanUI.instance.SetSpecialist(Specialist.HazmatTechinician);
                         GameManager.GM.freeSpecialistIndex[4] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Hazmat Technician.");
@@ -853,8 +1003,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Generalist (5)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.Generalist;
+                        FiremanUI.instance.SetSpecialist(Specialist.Generalist);
                         GameManager.GM.freeSpecialistIndex[5] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Generalist.");
@@ -919,8 +1070,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Rescue Specialist (6)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.RescueSpecialist;
+                        FiremanUI.instance.SetSpecialist(Specialist.RescueSpecialist);
                         GameManager.GM.freeSpecialistIndex[6] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Rescue Specialist.");
@@ -985,8 +1137,9 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Driver/Operator (7)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.DriverOperator;
+                        FiremanUI.instance.SetSpecialist(Specialist.DriverOperator);
                         GameManager.GM.freeSpecialistIndex[7] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Driver/Operator.");
@@ -1051,7 +1204,7 @@ public class Fireman : GameUnit
                     locationArgument = null;
                     isWaitingForInput = false;
                     isSelectingExtinguishOption = false;
-                    this.setAP(this.getAP() - 2);
+                    this.decrementRemoveFireAP();
                     FiremanUI.instance.SetAP(this.getAP());
                 }
             }
@@ -1063,7 +1216,7 @@ public class Fireman : GameUnit
                     locationArgument = null;
                     isWaitingForInput = false;
                     isSelectingExtinguishOption = false;
-                    this.setAP(this.getAP() - 1);
+                    this.decrementFireToSmokeAP();
                     FiremanUI.instance.SetAP(this.getAP());
                 } 
 
@@ -1072,7 +1225,7 @@ public class Fireman : GameUnit
             {
                 carryVictim();
             }
-            else if(Input.GetKeyDown(KeyCode.H)) {
+            else if(Input.GetKeyDown(KeyCode.M)) {
                 carryHazmat();
             }
         }
@@ -1093,6 +1246,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[0] = 0;
                         this.spec = Specialist.Paramedic;
+                        FiremanUI.instance.SetSpecialist(Specialist.Paramedic);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Paramedic is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1118,6 +1273,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[1] = 0;
                         this.spec = Specialist.FireCaptain;
+                        FiremanUI.instance.SetSpecialist(Specialist.FireCaptain);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Fire Captain is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1142,6 +1299,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[2] = 0;
                         this.spec = Specialist.ImagingTechnician;
+                        FiremanUI.instance.SetSpecialist(Specialist.ImagingTechnician);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Imaging Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1166,6 +1325,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[3] = 0;
                         this.spec = Specialist.CAFSFirefighter;
+                        FiremanUI.instance.SetSpecialist(Specialist.CAFSFirefighter);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("CAFS Firefighter is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1190,6 +1351,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[4] = 0;
                         this.spec = Specialist.HazmatTechinician;
+                        FiremanUI.instance.SetSpecialist(Specialist.HazmatTechinician);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Hazmat Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1214,6 +1377,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[5] = 0;
                         this.spec = Specialist.Generalist;
+                        FiremanUI.instance.SetSpecialist(Specialist.Generalist);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Generalist is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1238,6 +1403,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[6] = 0;
                         this.spec = Specialist.RescueSpecialist;
+                        FiremanUI.instance.SetSpecialist(Specialist.RescueSpecialist);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Rescue Specialist is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1262,6 +1429,8 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[7] = 0;
                         this.spec = Specialist.DriverOperator;
+                        FiremanUI.instance.SetSpecialist(Specialist.DriverOperator);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Driver Operator is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1300,71 +1469,99 @@ public class Fireman : GameUnit
         this.spec = newSpecialist;
     }
 
-    public void newTurnAP()
+    public void newSpecAP()
     {
-
+        int currentNumAP = this.getAP();
+        int newAP;
         if (this.spec == Specialist.FamilyGame)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.Paramedic)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.FireCaptain)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 2;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(2);
         }
         else if (this.spec == Specialist.ImagingTechnician)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.CAFSFirefighter)
         {
-            this.AP = this.savedAP + 3;
+            newAP = Mathf.Min(currentNumAP + 3, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 3;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(3);
         }
         else if (this.spec == Specialist.HazmatTechinician)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.Generalist)
         {
-            this.AP = this.savedAP + 5;
+            newAP = Mathf.Min(currentNumAP + 5, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.RescueSpecialist)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 3;
+            FiremanUI.instance.SetSpecialistAP(3);
         }
         else if (this.spec == Specialist.DriverOperator)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
 
     }
@@ -1404,11 +1601,6 @@ public class Fireman : GameUnit
         this.movedAmbulance = h;
     }
 
-    public void deassociateAmbulance()
-    {
-        this.movedAmbulance = null;
-    }
-
     public Engine getEngine()
     {
         return this.movedEngine;
@@ -1419,9 +1611,23 @@ public class Fireman : GameUnit
         this.movedEngine = n;
     }
 
-    public void deassociateEngine()
+    public void exitVehicle()
     {
-        this.movedEngine = null;
+        if (movedAmbulance != null)
+        {
+            this.movedAmbulance = null;
+            GameConsole.instance.UpdateFeedback("Exited ambulance successfully");
+        }
+        else if (movedEngine != null)
+        {
+            this.movedEngine = null;
+            GameConsole.instance.UpdateFeedback("Exited engine successfully");
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You are not riding a vehicle");
+
+        }
     }
 
     public Victim getVictim()
@@ -1453,18 +1659,82 @@ public class Fireman : GameUnit
         string optionsToUser = "";
         for (int i = 0; i < GameManager.GM.freeSpecialistIndex.Length; i++)
         {
-            Debug.Log("iteration " + i);
             if (GameManager.GM.freeSpecialistIndex[i] != 0)
             {
                 optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
-                Debug.Log(optionsToUser);
+            }
+        }
+        GameConsole.instance.UpdateFeedback(optionsToUser);
+
+    }
+    public void CallAmbulance()
+    {
+
+        int numAP = getAP(); //returns the number of action points
+
+        //Check if sufficient AP.
+        if (numAP < 2)
+        {
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
+        }
+        else
+        {
+            //Build string to show.
+            string optionsToUser = "";
+
+            if (numAP < 4)
+            {
+                optionsToUser += "press 1 to move the ambulance clockwise, press 3 to move the ambulance counter-clockwise";
+            }
+            else
+            {
+                optionsToUser += "press 1 to move the ambulance clockwise, press 2 to move the ambulance to the opposite place, press 3 to move " +
+                	"the ambulance counter-clockwise";
             }
 
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+            isCallingAmbulance = true;
+            isWaitingForInput = true;
+
         }
-    }    
+    }
+    public void CallEngine()
+    {
+
+        int numAP = getAP(); //returns the number of action points
+
+        //Check if sufficient AP.
+        if (numAP < 2)
+        {
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
+        }
+        else
+        {
+            //Build string to show.
+            string optionsToUser = "";
+
+            if (numAP < 4)
+            {
+                optionsToUser += "press 1 to move the engine clockwise, press 3 to move the engine counter-clockwise";
+            }
+            else
+            {
+                optionsToUser += "press 1 to move the engine clockwise, press 2 to move the engine to the opposite place, press 3 to move " +
+                    "the engine counter-clockwise";
+            }
+
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+            isCallingEngine = true;
+            isWaitingForInput = true;
+
+        }
+    }
     public void extinguishFire()
     {
         int numAP = getAP(); //returns the number of action points
+        isDoubleSpec = this.spec == Specialist.RescueSpecialist || this.spec == Specialist.Paramedic;
 
         //Get current space and spacestatus. 
 
@@ -1567,7 +1837,10 @@ public class Fireman : GameUnit
 
 
 
-    public void chopWall()     {         int numAP = getAP(); //returns the number of action points          //Check if sufficient AP.         if (numAP < 2)         {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                  if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
+    public void chopWall()     {         int numAP = getAP(); //returns the number of action point
+        Specialist s = this.spec;
+         //Check if sufficient AP.         if (s != Specialist.RescueSpecialist && numAP < 2 || s == Specialist.RescueSpecialist && numAP < 1)
+        {             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure             GameConsole.instance.UpdateFeedback("Not enough AP!");         }         else         {             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).             ArrayList nearbyWalls = getNearbyWalls(this.getCurrentSpace());             validInputOptions = nearbyWalls;              //Build string to show.             string optionsToUser = "";              foreach (int index in nearbyWalls)             {                  if (index == 0)                 {                     optionsToUser += "Press 0 for the Wall on Top ";                 }                 else if (index == 1)                 {                     optionsToUser += " Press 1 for the Wall to Your Right";                 }                 else if (index == 2)                 {                     optionsToUser += " Press 2 for the Wall to the Bottom";                 }                 else if (index == 3)                 {                     optionsToUser += " Press 3 for the Wall to Your Left";                  }             }              GameConsole.instance.UpdateFeedback(optionsToUser);              isWaitingForInput = true;
             isChoppingWall = true;          }     }      private ArrayList getNearbyWalls(Space s)     {         ArrayList nearbyWalls = new ArrayList();         Wall[] wallArray = s.getWalls();          //Collect directions in which there is a wall         for (int i = 0; i < wallArray.Length; i++)         {             if (wallArray[i] != null)             {                 nearbyWalls.Add(i);             }         }         return nearbyWalls;     } 
     public void carryVictim()       //if ambulance carrying victim: 0AP && Victim is carried by ambulance in experienced game TODO
     {
@@ -1598,7 +1871,6 @@ public class Fireman : GameUnit
             GameConsole.instance.UpdateFeedback("There is no victim to be carried!");
         }
     }
-
     public void carryHazmat() {
         Space current = this.getCurrentSpace();
 
@@ -1622,90 +1894,360 @@ public class Fireman : GameUnit
         }
     }
 
-    void driveAmbulance(Space targetSpace, int direction)
+    void driveAmbulance(int direction)
     {
-        while (!GameManager.GM.isFamilyGame)
+        int xPos = 0;
+        int yPos = 0;
+        int newXPos = 0;
+        int newYPos = 0;
+        Ambulance h = this.getAmbulance();
+        if (isOnAmbulance)
         {
-            int ap = this.getAP();
-            Space current = this.getCurrentSpace();
-            this.getAmbulance();
+            Space curr = this.getCurrentSpace();
+            List<GameUnit> currGameUnits = curr.getOccupants();
+            xPos = curr.indexX;
+            yPos = curr.indexY;
 
-            //get parkingspots
+            switch (direction)
+            {
 
-            //if fireman is in same space with ambulance
-           
-                //promt: right or left
-                string optionsToUser = "";
+                case 1:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 3:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 2:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
 
-                //foreach (int index in nearbyParkingSpots)
-                //{
-                //    if (index == 1)
-                //    {
-                //        optionsToUser += "Press 1 for Driving Clockwise";
-                //    }
-                //    else if (index == 3)
-                //    {
-                //        optionsToUser += " Press 2 for Driving Counter-Clockwise";
-                //    }
-                //}
+            Space destination = StateManager.instance.spaceGrid.getGrid()[newXPos, newYPos];
+            Vector3 destinationPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -5);
 
-                GameConsole.instance.UpdateFeedback(optionsToUser);
+            GameUnit ambulance = null;
 
-                //if prompt is right
-                if (Input.GetKeyDown(KeyCode.Alpha1))
+            foreach(GameUnit gu in currGameUnits)
+            {
+                if(gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
                 {
-                    //if opposite side: 4AP
-
-                    //get the curr x/y index & 4 switch statements: 
-                    int currentSpaceX = this.getCurrentSpace().indexX;
-                    int currentSpaceY = this.getCurrentSpace().indexY;
-                    object[] data = { currentSpaceX, currentSpaceY };
-                    //AmbulanceParkingSpot[] parkingSpots = targetSpace.getParkingSpots();
-                    int indexX = targetSpace.indexX;
-                    int indexY = targetSpace.indexY;
-                    //if (parkingSpots != null)
-                    //{
-                    //    for (int i = 0; i < 4; i++)
-                    //    {
-                    //        direction = i;
-                    //        AmbulanceParkingSpot ps = parkingSpots[i];
-                    //        if (ps != null)
-                    //        {
-                    //            //switch (direction)
-                    //            //{
-                    //            //    case 0:
-                    //            //        //targetSpace.   (null, direction);
-                    //            //        int northX = targetSpace.indexX;
-                    //            //        int northY = targetSpace.indexY - 1;
-                    //            //        if (northX <= 10 && northY <= 8)
-                    //            //        {
-                    //            //            Space northSpace = StateManager.instance.spaceGrid.grid[northX, northY];
-                    //            //        }
-                    //            //        break;
-                    //            //}
-                    //        }
-                    //    }
-                    //}
-                }
-                //if prompt is left
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-
+                    ambulance = gu;
+                    break;
                 }
             }
-        //else if fireman is not in same space with ambulance
-        //iterate through entire grid 
-        //get the ambulance
-        //get index x - found ambulance in this space
-        //promt user: right or left
-        //if left SAME
-        //if right SAME
+
+            currGameUnits.Remove(this);
+            currGameUnits.Remove(ambulance);
+
+            destination.addOccupant(this);
+            destination.addOccupant(ambulance);
+
+            this.setCurrentSpace(destination);
+            this.GetComponent<Transform>().position = destinationPosition;
+
+            h.setCurrentSpace(destination);
+            h.GetComponent<Transform>().position = destinationPosition;
+        }
+        else
+        {
+            Space AmbulanceCurrentSpace = null;
+            //find the space of the ambulance
+            foreach (Space s in StateManager.instance.spaceGrid.getGrid())
+            {
+                foreach (GameUnit gu in s.getOccupants())
+                {
+                    if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                    {
+                        AmbulanceCurrentSpace = s;
+                        break;
+                    }
+                }
+            }
+
+
+            if (AmbulanceCurrentSpace != null)
+            {
+                xPos = AmbulanceCurrentSpace.indexX;
+                yPos = AmbulanceCurrentSpace.indexY;
+            }
+
+
+            switch (direction)
+            {
+                case 1:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 3:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    break;
+                case 2:
+                    if (xPos == 0 && yPos == 5)
+                    {
+                        newXPos = 9;
+                        newYPos = 2;
+                    }
+                    else if (xPos == 9 && yPos == 2)
+                    {
+                        newXPos = 0;
+                        newYPos = 5;
+                    }
+                    else if (xPos == 5 && yPos == 0)
+                    {
+                        newXPos = 4;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 4 && yPos == 7)
+                    {
+                        newXPos = 5;
+                        newYPos = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            Space destination = StateManager.instance.spaceGrid.getGrid()[newXPos, newYPos];
+            Vector3 destinationPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -5);
+            List<GameUnit> currGameUnits = AmbulanceCurrentSpace.getOccupants();
+
+            GameUnit ambulance = null;
+
+            foreach (GameUnit gu in currGameUnits)
+            {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+                {
+                    ambulance = gu;
+                    break;
+                }
+            }
+
+
+            currGameUnits.Remove(ambulance);
+
+            destination.addOccupant(ambulance);
+
+            ambulance.setCurrentSpace(destination);
+            ambulance.GetComponent<Transform>().position = destinationPosition;
+        
+        }
     }
 
-    void driveEngine()
+    void driveEngine(int direction)
     {
         //fireman has to be on the same space with engine
-        //TODO
+        int xPos = 0;
+        int yPos = 0;
+        int newXPos = 0;
+        int newYPos = 0;
+        Engine n = this.getEngine();
+        if (isOnEngine)
+        {
+            Space curr = this.getCurrentSpace();
+            List<GameUnit> currGameUnits = curr.getOccupants();
+            xPos = curr.indexX;
+            yPos = curr.indexY;
+
+            switch (direction)
+            {
+
+                case 1:
+                    if (xPos == 9 && yPos == 5)
+                    {
+                        newXPos = 2;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 2 && yPos == 7)
+                    {
+                        newXPos = 0;
+                        newYPos = 1;
+                    }
+                    else if (xPos == 0 && yPos == 1)
+                    {
+                        newXPos = 8;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 8 && yPos == 0)
+                    {
+                        newXPos = 9;
+                        newYPos = 5;
+                    }
+                    break;
+                case 3:
+                    if (xPos == 9 && yPos == 5)
+                    {
+                        newXPos = 8;
+                        newYPos = 0;
+                    }
+                    else if (xPos == 8 && yPos == 0)
+                    {
+                        newXPos = 0;
+                        newYPos = 1;
+                    }
+                    else if (xPos == 0 && yPos == 1)
+                    {
+                        newXPos = 2;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 2 && yPos == 7)
+                    {
+                        newXPos = 9;
+                        newYPos = 5;
+                    }
+                    break;
+                case 2:
+                    if (xPos == 9 && yPos == 5)
+                    {
+                        newXPos = 0;
+                        newYPos = 1;
+                    }
+                    else if (xPos == 0 && yPos == 1)
+                    {
+                        newXPos = 9;
+                        newYPos = 5;
+                    }
+                    else if (xPos == 8 && yPos == 0)
+                    {
+                        newXPos = 2;
+                        newYPos = 7;
+                    }
+                    else if (xPos == 2 && yPos == 7)
+                    {
+                        newXPos = 8;
+                        newYPos = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            Space destination = StateManager.instance.spaceGrid.getGrid()[newXPos, newYPos];
+            Vector3 destinationPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -5);
+
+            GameUnit engine = null;
+
+            foreach (GameUnit gu in currGameUnits)
+            {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                {
+                    engine = gu;
+                    break;
+                }
+            }
+
+            currGameUnits.Remove(this);
+            currGameUnits.Remove(engine);
+
+            destination.addOccupant(this);
+            destination.addOccupant(engine);
+
+            this.setCurrentSpace(destination);
+            this.GetComponent<Transform>().position = destinationPosition;
+
+            n.setCurrentSpace(destination);
+            n.GetComponent<Transform>().position = destinationPosition;
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You have to be on engine to drive!");
+            return;
+        }
     }
     void rideAmbulance() 
     {
@@ -1728,15 +2270,12 @@ public class Fireman : GameUnit
                     Ambulance h = gu.GetComponent<Ambulance>();
                     this.setAmbulance(h);
                     GameConsole.instance.UpdateFeedback("Riding ambulance successfully!");
+                    isOnAmbulance = true;
                     return;
                 }
             }
             GameConsole.instance.UpdateFeedback("There is no ambulance!");
         }
-
-        //fireman that are in the Vehicle Parking Spot of a Vehicle while it is being Driven can Ride the Vehicle for 0AP
-        //any number of firemen may Ride a Vehicle at one time
-        //exit
     }
 
     void rideEngine()
@@ -1751,7 +2290,6 @@ public class Fireman : GameUnit
         }
         else
         {
-
             List<GameUnit> gameUnits = current.getOccupants();
 
             foreach (GameUnit gu in gameUnits)
@@ -1761,11 +2299,13 @@ public class Fireman : GameUnit
                     Engine n = gu.GetComponent<Engine>();
                     this.setEngine(n);
                     GameConsole.instance.UpdateFeedback("Riding engine successfully!");
+                    isOnEngine = true;
                     return;
                 }
             }
             GameConsole.instance.UpdateFeedback("There is no engine!");
         }
+
     }
 
     private void move(Hazmat h, Space curr, Space dst) {
@@ -1910,9 +2450,6 @@ public class Fireman : GameUnit
                 }
             }
             return;
-
-
-
         }
         else //Fire
         {
@@ -1959,7 +2496,12 @@ public class Fireman : GameUnit
             }
         }
         else {
-            if (v == null && hazmat == null && ap >= 1) 
+            if(movedEngine != null || movedAmbulance != null)
+            {
+                GameConsole.instance.UpdateFeedback("You cannot move while being in the vehicle. Exit the vehicle by pressing X");
+                return;
+            }
+            else if (v == null && hazmat == null && ap >= 1) 
             {
                 this.setCurrentSpace(newSpace);
                 this.decrementAP(1);
@@ -1977,66 +2519,6 @@ public class Fireman : GameUnit
                             break;
                         }
                     }
-                }
-            }
-            else if (!GameManager.GM.isFamilyGame && a != null && ap >= 2)//if the fireman riding the ambulance
-            {
-                Kind destinationKind = destination.getKind();
-                if (destinationKind == Kind.AmbulanceParkingSpot) {
-                    //ride ambulance
-                    this.setCurrentSpace(destination);
-                    v.setCurrentSpace(destination);
-                    this.decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
-                    this.GetComponent<Transform>().position = newPosition;
-                    v.GetComponent<Transform>().position = newPosition;
-
-                    //removing the ambulance from the current space
-                    List<GameUnit> currentGameUnits = curr.getOccupants();
-                    GameUnit ambulance = null;
-                    foreach (GameUnit gu in currentGameUnits) {
-                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE) {
-                            ambulance = gu;
-                            break;
-                        }
-                    }
-                    currentGameUnits.Remove(ambulance);
-                    destination.addOccupant(ambulance);
-
-                    GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
-
-                    //if fireman wants to exit the ambulance TODO
-                    deassociateAmbulance();
-                }
-            }
-            else if (!GameManager.GM.isFamilyGame && n != null && ap >= 2)//if the fireman riding the engine
-            {
-                Kind destinationKind = destination.getKind();
-                if (destinationKind == Kind.AmbulanceParkingSpot) {
-                    //ride engine
-                    this.setCurrentSpace(destination);
-                    v.setCurrentSpace(destination);
-                    this.decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
-                    this.GetComponent<Transform>().position = newPosition;
-                    v.GetComponent<Transform>().position = newPosition;
-
-                    //removing the engine from the current space
-                    List<GameUnit> currentGameUnits = curr.getOccupants();
-                    GameUnit engine = null;
-                    foreach (GameUnit gu in currentGameUnits) {
-                        if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE) {
-                            engine = gu;
-                            break;
-                        }
-                    }
-                    currentGameUnits.Remove(engine);
-                    destination.addOccupant(engine);
-
-                    GameConsole.instance.UpdateFeedback("You have successfully moved with the ambulance");
-
-                    //if fireman wants to exit the engine TODO
-                    deassociateEngine();
                 }
             }
             else if (v != null && ap >= 2)//if the fireman is carrying a victim
@@ -2129,6 +2611,27 @@ public class Fireman : GameUnit
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChopWall, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
 
+    private void sendDriveAmbulanceEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+    private void sendDriveEngineEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveEngine, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+    private void sendRideAmbulanceEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+    private void sendRideEngineEvent(int direction)
+    {
+        object[] data = { direction };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideEngine, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+
     private void sendChangeCrewEvent(int[] updatedIndexList)
     {
         object[] data = new object[] { updatedIndexList };
@@ -2152,12 +2655,151 @@ public class Fireman : GameUnit
 
     private void restoreAP()
     {
-       
-        int currentNumAP = this.getAP();
-        int newAP = Mathf.Min(currentNumAP + 4, 8);
 
-        this.setAP(newAP);
-        FiremanUI.instance.SetAP(newAP);
+        int currentNumAP = this.getAP();
+        int newAP;
+
+        if (this.spec == Specialist.FamilyGame)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.Paramedic)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.FireCaptain)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 2;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(2);
+        }
+        else if (this.spec == Specialist.ImagingTechnician)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.CAFSFirefighter)
+        {
+            newAP = Mathf.Min(currentNumAP + 3, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 3;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(3);
+        }
+        else if (this.spec == Specialist.HazmatTechinician)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.Generalist)
+        {
+            newAP = Mathf.Min(currentNumAP + 5, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.RescueSpecialist)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 3;
+            FiremanUI.instance.SetSpecialistAP(3);
+        }
+        else if (this.spec == Specialist.DriverOperator)
+        {
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+
+    }
+
+    private void decrementChopWallAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist)
+        {
+            this.setAP(this.getAP() - 1);
+        }
+        else
+        {
+            this.setAP(this.getAP() - 2);
+        }
+    }
+
+    private void decrementRemoveSmokeAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist || s == Specialist.Paramedic)
+        {
+            this.setAP(this.getAP() - 2); //double AP
+        }
+        else
+        {
+            this.setAP(this.getAP() - 1);
+        }
+    }
+
+    private void decrementFireToSmokeAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist || s == Specialist.Paramedic)
+        {
+            this.setAP(this.getAP() - 2); //double AP
+        }
+        else
+        {
+            this.setAP(this.getAP() - 1);
+        }
+    }
+
+    private void decrementRemoveFireAP()
+    {
+        Specialist s = this.GetSpecialist();
+        if (s == Specialist.RescueSpecialist || s == Specialist.Paramedic)
+        {
+            this.setAP(this.getAP() - 4); //double AP
+        }
+        else
+        {
+            this.setAP(this.getAP() - 2);
+        }
     }
 
 
@@ -2171,11 +2813,9 @@ public class Fireman : GameUnit
 
             for (int i = 0; i< GameManager.GM.freeSpecialistIndex.Length; i++)
             {
-                Debug.Log("iteration " + i);
                 if (GameManager.GM.freeSpecialistIndex[i] != 0)
                 {
                     optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
-                    Debug.Log(optionsToUser);
                 }
             }
 
@@ -2253,6 +2893,20 @@ public class Fireman : GameUnit
         
     }
 
+    public void identifyPOI()
+    {
+        if(!GameManager.GM.isFamilyGame && this.spec == Specialist.ImagingTechnician)
+        {
+            GameConsole.instance.UpdateFeedback("Click anywhere on the bpard to flip a POI.");
+            isWaitingForInput = true;
+            isIdentifyingPOI = true;
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You can't do this move! You have to be an imaging technician.");
+        }
+    }
+
     //  =============== NETWORK SYNCRONIZATION SECTION ===============
     public void OnEnable()
     {
@@ -2269,41 +2923,56 @@ public class Fireman : GameUnit
         byte evCode = eventData.Code;
 
         //Move = 5
-        if (evCode == (byte)PhotonEventCodes.Move)
-        {
+        if (evCode == (byte)PhotonEventCodes.Move) {
             object[] data = eventData.CustomData as object[];
             int direction = (int)data[1];
 
-            if ((int)data[0] == PV.ViewID)
-            {
-               move(direction);
+            if ((int)data[0] == PV.ViewID) {
+                move(direction);
             }
-        
+
         }
-        else if (evCode == (byte)PhotonEventCodes.PickSpecialist)
-        {
+        else if (evCode == (byte)PhotonEventCodes.PickSpecialist) {
             GameManager.GM.Turn = 1;
             GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
             GameManager.GM.DisplayPlayerTurn();
             GameUI.instance.AddGameState(GameManager.GameStatus);
             selectSpecialist();
         }
-        else if(evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state array
+        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state array
             object[] dataReceived = eventData.CustomData as object[];
-            int indexX = (int) dataReceived[0];
-            int indexY = (int) dataReceived[1];
-            int stateIndex = (int) dataReceived[2];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+            int stateIndex = (int)dataReceived[2];
 
 
             Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
             Victim victim;
-            foreach(GameUnit gu in space.getOccupants()) { 
-                if(gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+            foreach (GameUnit gu in space.getOccupants()) {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
                     victim = gu.GetComponent<Victim>();
                 }
             }
 
             //StateManager.instance.carriedVictims.Add(stateIndex, victim);
+        }
+        else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
+            object[] dataReceived = eventData.CustomData as object[];
+
+            int direction = (int)dataReceived[0];
+            driveAmbulance(direction);
+        }
+        else if (evCode == (byte)PhotonEventCodes.DriveEngine) {
+            object[] dataReceived = eventData.CustomData as object[];
+
+            int direction = (int)dataReceived[0];
+            driveEngine(direction);
+        }
+        else if (evCode == (byte)PhotonEventCodes.RideEngine) {
+            rideEngine();
+        }
+        else if (evCode == (byte)PhotonEventCodes.RideAmbulance) {
+            rideAmbulance();
         }
     }
 }

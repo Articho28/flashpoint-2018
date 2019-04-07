@@ -10,8 +10,10 @@ public class FiremanUI : MonoBehaviour
     public static FiremanUI instance; //singleton
 
     public Text playerNameText;
+    public Text specialistText; //TODO
     public Text APText;
     public Text SpecialistAPText;
+    private string specialistName;
     private int SpecialistAP;
     private int AP;
 
@@ -27,6 +29,7 @@ public class FiremanUI : MonoBehaviour
     void Start()
     {
         playerNameText.text = "Player Name : \n" + PhotonNetwork.LocalPlayer.NickName;
+        specialistText.text = "Specialist : \n" + "-";
         AP = 0;
         UpdateAP();
     }
@@ -34,10 +37,19 @@ public class FiremanUI : MonoBehaviour
     private void UpdateAP()
     {
         APText.text = "AP: \n" + AP;
-
+    }
+    private void UpdateSpecialistAP()
+    {
         if (!GameManager.GM.isFamilyGame)
         {
             SpecialistAPText.text = "Specialist AP: \n" + SpecialistAP;
+        }
+    }
+    private void UpdateSpecialist()
+    {
+        if (!GameManager.GM.isFamilyGame)
+        {
+            specialistText.text = "Specialist: \n" + specialistName;
         }
     }
 
@@ -45,5 +57,20 @@ public class FiremanUI : MonoBehaviour
     {
         AP = newAP;
         UpdateAP();
+    }
+
+    public void SetSpecialistAP(int newSpecialistAP)
+    {
+        if (!GameManager.GM.isFamilyGame)
+        {
+            SpecialistAP = newSpecialistAP;
+        }
+        UpdateSpecialistAP();
+    }
+
+    public void SetSpecialist(Specialist newSpecialist)
+    {
+        specialistName = newSpecialist.ToString();
+        UpdateSpecialist();
     }
 }
