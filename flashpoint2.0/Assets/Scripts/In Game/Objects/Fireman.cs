@@ -282,6 +282,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to paramedic (0)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.Paramedic;
+                        FiremanUI.instance.SetSpecialist(Specialist.Paramedic);
                         GameManager.GM.freeSpecialistIndex[0] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -439,6 +440,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to fire captain (1)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.FireCaptain;
+                        FiremanUI.instance.SetSpecialist(Specialist.FireCaptain);
                         GameManager.GM.freeSpecialistIndex[1] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -593,6 +595,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to imaging technician (2)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.ImagingTechnician;
+                        FiremanUI.instance.SetSpecialist(Specialist.ImagingTechnician);
                         GameManager.GM.freeSpecialistIndex[2] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -748,6 +751,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to CAFS Firefighter (3)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.CAFSFirefighter;
+                        FiremanUI.instance.SetSpecialist(Specialist.CAFSFirefighter);
                         GameManager.GM.freeSpecialistIndex[3] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -859,6 +863,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Hazmat Technician (4)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.HazmatTechinician;
+                        FiremanUI.instance.SetSpecialist(Specialist.HazmatTechinician);
                         GameManager.GM.freeSpecialistIndex[4] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -925,6 +930,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Generalist (5)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.Generalist;
+                        FiremanUI.instance.SetSpecialist(Specialist.Generalist);
                         GameManager.GM.freeSpecialistIndex[5] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -991,6 +997,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Rescue Specialist (6)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.RescueSpecialist;
+                        FiremanUI.instance.SetSpecialist(Specialist.RescueSpecialist);
                         GameManager.GM.freeSpecialistIndex[6] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -1057,6 +1064,7 @@ public class Fireman : GameUnit
                         Debug.Log("changing specialist to Driver/Operator (7)");
                         Specialist oldSpec = this.spec;
                         this.spec = Specialist.DriverOperator;
+                        FiremanUI.instance.SetSpecialist(Specialist.DriverOperator);
                         GameManager.GM.freeSpecialistIndex[7] = 0;
                         //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
                         this.setAP(this.getAP() - 2);
@@ -1165,6 +1173,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[0] = 0;
                         this.spec = Specialist.Paramedic;
+                        FiremanUI.instance.SetSpecialist(Specialist.Paramedic);
                         GameConsole.instance.UpdateFeedback("Paramedic is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1190,6 +1199,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[1] = 0;
                         this.spec = Specialist.FireCaptain;
+                        FiremanUI.instance.SetSpecialist(Specialist.FireCaptain);
                         GameConsole.instance.UpdateFeedback("Fire Captain is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1214,6 +1224,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[2] = 0;
                         this.spec = Specialist.ImagingTechnician;
+                        FiremanUI.instance.SetSpecialist(Specialist.ImagingTechnician);
                         GameConsole.instance.UpdateFeedback("Imaging Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1238,6 +1249,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[3] = 0;
                         this.spec = Specialist.CAFSFirefighter;
+                        FiremanUI.instance.SetSpecialist(Specialist.CAFSFirefighter);
                         GameConsole.instance.UpdateFeedback("CAFS Firefighter is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1262,6 +1274,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[4] = 0;
                         this.spec = Specialist.HazmatTechinician;
+                        FiremanUI.instance.SetSpecialist(Specialist.HazmatTechinician);
                         GameConsole.instance.UpdateFeedback("Hazmat Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1286,6 +1299,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[5] = 0;
                         this.spec = Specialist.Generalist;
+                        FiremanUI.instance.SetSpecialist(Specialist.Generalist);
                         GameConsole.instance.UpdateFeedback("Generalist is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1310,6 +1324,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[6] = 0;
                         this.spec = Specialist.RescueSpecialist;
+                        FiremanUI.instance.SetSpecialist(Specialist.RescueSpecialist);
                         GameConsole.instance.UpdateFeedback("Rescue Specialist is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1334,6 +1349,7 @@ public class Fireman : GameUnit
                     {
                         GameManager.GM.freeSpecialistIndex[7] = 0;
                         this.spec = Specialist.DriverOperator;
+                        FiremanUI.instance.SetSpecialist(Specialist.DriverOperator);
                         GameConsole.instance.UpdateFeedback("Driver Operator is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1525,13 +1541,12 @@ public class Fireman : GameUnit
         string optionsToUser = "";
         for (int i = 0; i < GameManager.GM.freeSpecialistIndex.Length; i++)
         {
-            Debug.Log("iteration " + i);
             if (GameManager.GM.freeSpecialistIndex[i] != 0)
             {
                 optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
-                Debug.Log(optionsToUser);
             }
         }
+        GameConsole.instance.UpdateFeedback(optionsToUser);
 
     }
     public void CallAmbulance()
@@ -2676,11 +2691,9 @@ public class Fireman : GameUnit
 
             for (int i = 0; i< GameManager.GM.freeSpecialistIndex.Length; i++)
             {
-                Debug.Log("iteration " + i);
                 if (GameManager.GM.freeSpecialistIndex[i] != 0)
                 {
                     optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
-                    Debug.Log(optionsToUser);
                 }
             }
 
