@@ -32,5 +32,7 @@ public enum PhotonEventCodes
     PickSpecialist = 25,
     PlaceAmbulanceParkingSpot = 26,
     PlaceEngineParkingSpot = 27,
-    EndTurn = 28
+    EndTurn = 28,
+    DriveAmbulance = 29,
+
 }
