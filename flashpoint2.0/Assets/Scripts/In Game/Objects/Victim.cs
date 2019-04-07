@@ -5,7 +5,7 @@ using UnityEngine;
 public class Victim : POI
 {
     VictimStatus status;
-    bool carried;
+    public bool carried;
 
     void createVictim()
     {

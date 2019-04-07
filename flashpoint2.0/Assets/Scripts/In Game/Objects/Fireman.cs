@@ -1223,7 +1223,8 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.V))
             {
-                carryVictim();
+                object[] data = {this.currentSpace.indexX, this.currentSpace.indexY, PV.ViewID};
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateCarriedVictimsState, data, sendToAllOptions, SendOptions.SendReliable);
             }
             else if(Input.GetKeyDown(KeyCode.M)) {
                 carryHazmat();
@@ -2939,22 +2940,31 @@ public class Fireman : GameUnit
             GameUI.instance.AddGameState(GameManager.GameStatus);
             selectSpecialist();
         }
-        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state array
+        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state dictionary/fireman unique network id
             object[] dataReceived = eventData.CustomData as object[];
             int indexX = (int)dataReceived[0];
             int indexY = (int)dataReceived[1];
-            int stateIndex = (int)dataReceived[2];
-
+            int firemanId = (int)dataReceived[2];
 
             Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
-            Victim victim;
+            Victim victim = null;
             foreach (GameUnit gu in space.getOccupants()) {
                 if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
-                    victim = gu.GetComponent<Victim>();
+                    Victim v = gu.GetComponent<Victim>();
+
+                    if(!v.carried) {
+                        victim = v;
+                        break;
+                    }
                 }
             }
 
-            //StateManager.instance.carriedVictims.Add(stateIndex, victim);
+            Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
+            if (d.ContainsKey(firemanId)) {
+                d.Remove(firemanId);
+            }
+            if(victim != null) d.Add(firemanId, victim);
+
         }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
