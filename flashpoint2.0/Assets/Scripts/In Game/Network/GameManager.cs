@@ -978,7 +978,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     private void destroyDoor(Door door)
     {
         door.setDoorStatus(DoorStatus.Destroyed);
-        string doorObjectPath = "Board/doorCol45";
+        door.GetComponent<SpriteRenderer>().sprite = null;
         //TODO Change sprite of door.
         //GameObject.Find(doorObjectPath).GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("PhotonPrefabs/DamageMarker");
 
