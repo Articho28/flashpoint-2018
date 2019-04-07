@@ -1454,7 +1454,6 @@ public class Fireman : GameUnit
         string optionsToUser = "";
         for (int i = 0; i < GameManager.GM.freeSpecialistIndex.Length; i++)
         {
-            Debug.Log("iteration " + i);
             if (GameManager.GM.freeSpecialistIndex[i] != 0)
             {
                 optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
@@ -2328,7 +2327,6 @@ public class Fireman : GameUnit
 
             for (int i = 0; i< GameManager.GM.freeSpecialistIndex.Length; i++)
             {
-                Debug.Log("iteration " + i);
                 if (GameManager.GM.freeSpecialistIndex[i] != 0)
                 {
                     optionsToUser = optionsToUser + "Press " + i + " for " + GameManager.GM.availableSpecialists[i] + ". ";
