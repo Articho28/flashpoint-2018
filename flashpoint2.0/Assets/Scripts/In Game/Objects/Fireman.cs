@@ -28,7 +28,8 @@ public class Fireman : GameUnit
     private bool isChangingCrew;
     private bool isOnEngine;
     private bool isOnAmbulance;
-    public bool isDoubleSpec;
+    private bool isIdentifyingPOI;
+    public bool isDoubleSpec; //for ap decrementing
     public ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
@@ -41,7 +42,7 @@ public class Fireman : GameUnit
 
     void Start()
     {
-        AP = 4;
+        //AP = 4;
         savedAP = 0;
         carriedVictim = null;
         movedEngine = null;
@@ -59,6 +60,7 @@ public class Fireman : GameUnit
         isOnAmbulance = false;
         isChangingCrew = false;
         isSelectingSpecialist = false;
+        isIdentifyingPOI = false;
     }
 
     void Update()
@@ -97,6 +99,60 @@ public class Fireman : GameUnit
                 else if (Input.GetKeyDown(KeyCode.X))
                 {
                     exitVehicle();
+                }
+                else if (Input.GetKeyDown(KeyCode.I)) 
+                {
+                    //Identify POI anywhere on the board
+                    //Only for imaging technicians
+
+                    identifyPOI();
+                }
+                else if (Input.GetMouseButtonDown(0))
+                { // if left button pressed
+                    Space spaceClicked = StateManager.instance.spaceGrid.getGrid()[0, 0]; //initialize it randomly hehe
+                    if (isWaitingForInput && isIdentifyingPOI)
+                    {
+                        isWaitingForInput = false;
+                        isIdentifyingPOI = false;
+
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit hit;
+                        if (Physics.Raycast(ray, out hit))
+                        {
+                            GameObject objectClicked = hit.transform.gameObject;
+
+                            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
+                            {
+                                Debug.Log("a tile was clicked");
+                                spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
+                                Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
+                            }
+
+                        }
+                        List<GameUnit> gameUnits = spaceClicked.getOccupants();
+                        bool hasPOI = false;
+                        foreach (GameUnit gu in gameUnits)
+                        {
+                            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                hasPOI = true;
+                                break;
+                            }
+                        }
+
+                        if (hasPOI == true)
+                        {
+                            GameManager.FlipPOI(spaceClicked);
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
+                            isWaitingForInput = true;
+                            isIdentifyingPOI = true;
+                        }
+                    }
                 }
             }
 
@@ -287,7 +343,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.Paramedic;
                         FiremanUI.instance.SetSpecialist(Specialist.Paramedic);
                         GameManager.GM.freeSpecialistIndex[0] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Paramedic.");
@@ -452,7 +508,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.FireCaptain;
                         FiremanUI.instance.SetSpecialist(Specialist.FireCaptain);
                         GameManager.GM.freeSpecialistIndex[1] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Fire Captain.");
@@ -614,7 +670,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.ImagingTechnician;
                         FiremanUI.instance.SetSpecialist(Specialist.ImagingTechnician);
                         GameManager.GM.freeSpecialistIndex[2] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Imaging Technician.");
@@ -770,7 +826,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.CAFSFirefighter;
                         FiremanUI.instance.SetSpecialist(Specialist.CAFSFirefighter);
                         GameManager.GM.freeSpecialistIndex[3] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to CAFS Firefighter.");
@@ -882,7 +938,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.HazmatTechinician;
                         FiremanUI.instance.SetSpecialist(Specialist.HazmatTechinician);
                         GameManager.GM.freeSpecialistIndex[4] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Hazmat Technician.");
@@ -949,7 +1005,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.Generalist;
                         FiremanUI.instance.SetSpecialist(Specialist.Generalist);
                         GameManager.GM.freeSpecialistIndex[5] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Generalist.");
@@ -1016,7 +1072,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.RescueSpecialist;
                         FiremanUI.instance.SetSpecialist(Specialist.RescueSpecialist);
                         GameManager.GM.freeSpecialistIndex[6] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Rescue Specialist.");
@@ -1083,7 +1139,7 @@ public class Fireman : GameUnit
                         this.spec = Specialist.DriverOperator;
                         FiremanUI.instance.SetSpecialist(Specialist.DriverOperator);
                         GameManager.GM.freeSpecialistIndex[7] = 0;
-                        //TODO UPDATE THE UI TO DISPLAY THE NEW SPECIALIST
+                        newSpecAP();
                         this.setAP(this.getAP() - 2);
                         FiremanUI.instance.SetAP(this.getAP());
                         GameConsole.instance.UpdateFeedback("Updated Specialist to Driver/Operator.");
@@ -1191,6 +1247,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[0] = 0;
                         this.spec = Specialist.Paramedic;
                         FiremanUI.instance.SetSpecialist(Specialist.Paramedic);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Paramedic is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1217,6 +1274,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[1] = 0;
                         this.spec = Specialist.FireCaptain;
                         FiremanUI.instance.SetSpecialist(Specialist.FireCaptain);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Fire Captain is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1242,6 +1300,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[2] = 0;
                         this.spec = Specialist.ImagingTechnician;
                         FiremanUI.instance.SetSpecialist(Specialist.ImagingTechnician);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Imaging Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1267,6 +1326,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[3] = 0;
                         this.spec = Specialist.CAFSFirefighter;
                         FiremanUI.instance.SetSpecialist(Specialist.CAFSFirefighter);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("CAFS Firefighter is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1292,6 +1352,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[4] = 0;
                         this.spec = Specialist.HazmatTechinician;
                         FiremanUI.instance.SetSpecialist(Specialist.HazmatTechinician);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Hazmat Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1317,6 +1378,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[5] = 0;
                         this.spec = Specialist.Generalist;
                         FiremanUI.instance.SetSpecialist(Specialist.Generalist);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Generalist is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1342,6 +1404,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[6] = 0;
                         this.spec = Specialist.RescueSpecialist;
                         FiremanUI.instance.SetSpecialist(Specialist.RescueSpecialist);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Rescue Specialist is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1367,6 +1430,7 @@ public class Fireman : GameUnit
                         GameManager.GM.freeSpecialistIndex[7] = 0;
                         this.spec = Specialist.DriverOperator;
                         FiremanUI.instance.SetSpecialist(Specialist.DriverOperator);
+                        newSpecAP();
                         GameConsole.instance.UpdateFeedback("Driver Operator is picked as Specialist.");
                         GameManager.IncrementTurn();
                     }
@@ -1405,71 +1469,99 @@ public class Fireman : GameUnit
         this.spec = newSpecialist;
     }
 
-    public void newTurnAP()
+    public void newSpecAP()
     {
-
+        int currentNumAP = this.getAP();
+        int newAP;
         if (this.spec == Specialist.FamilyGame)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.Paramedic)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.FireCaptain)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 2;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(2);
         }
         else if (this.spec == Specialist.ImagingTechnician)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.CAFSFirefighter)
         {
-            this.AP = this.savedAP + 3;
+            newAP = Mathf.Min(currentNumAP + 3, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 3;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(3);
         }
         else if (this.spec == Specialist.HazmatTechinician)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.Generalist)
         {
-            this.AP = this.savedAP + 5;
+            newAP = Mathf.Min(currentNumAP + 5, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.RescueSpecialist)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 3;
+            FiremanUI.instance.SetSpecialistAP(3);
         }
         else if (this.spec == Specialist.DriverOperator)
         {
-            this.AP = this.savedAP + 4;
+            newAP = Mathf.Min(currentNumAP + 4, 8);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
         }
 
     }
@@ -2799,6 +2891,20 @@ public class Fireman : GameUnit
         Destroy(questionMark.physicalObject);
         Destroy(questionMark);
         
+    }
+
+    public void identifyPOI()
+    {
+        if(!GameManager.GM.isFamilyGame && this.spec == Specialist.ImagingTechnician)
+        {
+            GameConsole.instance.UpdateFeedback("Click anywhere on the bpard to flip a POI.");
+            isWaitingForInput = true;
+            isIdentifyingPOI = true;
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You can't do this move! You have to be an imaging technician.");
+        }
     }
 
     //  =============== NETWORK SYNCRONIZATION SECTION ===============
