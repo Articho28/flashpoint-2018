@@ -2288,6 +2288,23 @@ public class Fireman : GameUnit
             GameUI.instance.AddGameState(GameManager.GameStatus);
             selectSpecialist();
         }
+        else if(evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state array
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int) dataReceived[0];
+            int indexY = (int) dataReceived[1];
+            int stateIndex = (int) dataReceived[2];
+
+
+            Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
+            Victim victim;
+            foreach(GameUnit gu in space.getOccupants()) { 
+                if(gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                    victim = gu.GetComponent<Victim>();
+                }
+            }
+
+            //StateManager.instance.carriedVictims.Add(stateIndex, victim);
+        }
     }
 }
 
