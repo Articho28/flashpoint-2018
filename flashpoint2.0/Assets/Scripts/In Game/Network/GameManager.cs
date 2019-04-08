@@ -611,20 +611,17 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         targetSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
         targetSpace.setSpaceStatus(SpaceStatus.Fire);
 
-        removePOIFromSpace(targetSpace);
-
-        //knockdown placement
+        //knockdown placement - handle carried poi's
         Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(targetSpace);
 
         Vector3 pos = new Vector3(ambulanceSpot.worldPosition.x, ambulanceSpot.worldPosition.y, -10);
 
         List<GameUnit> occupants = targetSpace.occupants;
         //Debug.Log("OCCUPANTS LIST LENGTH IS " + occupants.Count);
-        foreach (GameUnit gameUnit in occupants) {
-            if (gameUnit.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
-                gameUnit.transform.position = pos;
-                gameUnit.GetComponent<Fireman>().setCurrentSpace(ambulanceSpot);
-                ambulanceSpot.addOccupant(gameUnit);
+        foreach (GameUnit gu in occupants) {
+            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                Fireman fireman = gu.GetComponent<Fireman>();
+                Fireman.moveFirefighter(fireman, fireman.getCurrentSpace(), ambulanceSpot);
             }
             //Debug.Log("GameUnit type is " + gameUnit.getType());
         }
@@ -632,6 +629,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         //Debug.Log("Firemarker was placed at " + newPosition);
 
         //Debug.Log("It was placed at " + newPosition);
+
+        removePOIFromSpace(targetSpace);
 
     }
 
