@@ -470,7 +470,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         {
             if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI 
                 || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT 
-                || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT)
+                || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT
+                || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
             {
                 return true;
             }
