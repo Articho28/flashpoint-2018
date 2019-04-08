@@ -73,8 +73,25 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             lostVictims = 0;
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
-            isFamilyGame = false;
-            difficulty = Difficulty.Heroic;
+            isFamilyGame = RoomSetup.RM.getIsFamilyGame();
+            Debug.Log("From GM: isFamilyGame parameter received to be" + isFamilyGame);
+            if (!isFamilyGame)
+            {
+                int difficultyIndex = RoomSetup.RM.getExperiencedModeDifficultyIndex();
+
+                switch (difficultyIndex)
+                {
+                    case 0:
+                        difficulty = Difficulty.Recruit;
+                        break;
+                    case 1:
+                        difficulty = Difficulty.Veteran;
+                        break;
+                    case 2: difficulty = Difficulty.Heroic;
+                        break;
+                }
+
+            }
             isDestroyingVictim = false;
             availableSpecialists = new Specialist [10];
             availableSpecialists[0] = Specialist.Paramedic;

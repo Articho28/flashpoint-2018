@@ -153,9 +153,18 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         roomName = (roomName.Equals(string.Empty)) ? "Room " + Random.Range(1000, 10000) : roomName;
         int dropDownValueGameMode = GameTypeDropdown.GetComponent<Dropdown>().value;
         int difficutlDropDownValue = ExperiencedGameDifficultyDropdown.GetComponent<Dropdown>().value;
-        Debug.Log("This is the dropdown value for game mode :" + dropDownValueGameMode);
-        Debug.Log("This is the difficulty level index : " + difficutlDropDownValue);
 
+        if (dropDownValueGameMode == 0)
+        {
+            RoomSetup.RM.setIsFamilyGame(true);
+        }
+        else
+        {
+            RoomSetup.RM.setIsFamilyGame(false);
+            RoomSetup.RM.setExperiencedModeDifficultyIndex(difficutlDropDownValue);
+        }
+
+       
         byte maxPlayers;
         byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
         maxPlayers = (byte)Mathf.Clamp(maxPlayers, 2, 6);
