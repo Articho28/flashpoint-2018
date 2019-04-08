@@ -77,12 +77,20 @@ public class GameUI : MonoBehaviour
     public void AddSavedVictim()
     {
         savedVictim++;
+        if (savedVictim >= 7)
+        {
+            GameManager.GameWon();
+        }
         UpdateSavedVictim();
     }
 
     public void AddLostVictim()
     {
         lostVictim++;
+        if (lostVictim >= 4)
+        {
+            GameManager.GameLost();
+        }
         UpdateLostVictim();
     }
 

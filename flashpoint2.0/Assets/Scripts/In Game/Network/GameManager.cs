@@ -803,7 +803,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                                 }
                                 break;
                         }
-
+ 
                         if (buildingDamage >= 24)
                         {
                             GameLost();
