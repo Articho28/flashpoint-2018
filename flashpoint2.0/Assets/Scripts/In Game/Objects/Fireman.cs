@@ -519,20 +519,14 @@ public class Fireman : GameUnit
                     Debug.Log("Input 1 Received");
                     isWaitingForInput = false;
                     isCallingAmbulance = false;
-                    decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
                     sendDriveAmbulanceEvent(1);
-                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
                 }
                 else if (isWaitingForInput && isCallingEngine)
                 {
                     Debug.Log("Input 1 Received");
                     isWaitingForInput = false;
                     isCallingEngine = false;
-                    decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
                     sendDriveEngineEvent(1);
-                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -681,20 +675,14 @@ public class Fireman : GameUnit
                     Debug.Log("Input 2 Received");
                     isWaitingForInput = false;
                     isCallingAmbulance = false;
-                    decrementAP(4);
-                    FiremanUI.instance.SetAP(this.AP);
                     sendDriveAmbulanceEvent(2);
-                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
                 }
                 else if (isWaitingForInput && isCallingEngine)
                 {
-                    Debug.Log("Input 1 Received");
+                    Debug.Log("Input 2 Received");
                     isWaitingForInput = false;
                     isCallingEngine = false;
-                    decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
                     sendDriveEngineEvent(2);
-                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -837,20 +825,14 @@ public class Fireman : GameUnit
                     Debug.Log("Input 3 Received");
                     isWaitingForInput = false;
                     isCallingAmbulance = false;
-                    decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
                     sendDriveAmbulanceEvent(3);
-                    GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
                 }
                 else if (isWaitingForInput && isCallingEngine)
                 {
-                    Debug.Log("Input 1 Received");
+                    Debug.Log("Input 3 Received");
                     isWaitingForInput = false;
                     isCallingEngine = false;
-                    decrementAP(2);
-                    FiremanUI.instance.SetAP(this.AP);
                     sendDriveEngineEvent(3);
-                    GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
                 }
                 else if (isWaitingForInput && isChangingCrew)
                 {
@@ -1972,7 +1954,7 @@ public class Fireman : GameUnit
             {
                 foreach(GameUnit gu in space.getOccupants())
                 {
-                    if(gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                    if(gu != null && gu.GetType() == typeof(Fireman))
                     {
                         containsFiremen = true;
                     }
@@ -1995,13 +1977,16 @@ public class Fireman : GameUnit
                 	"black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
                 isWaitingForInput = true;
                 isFiringDeckGun = true;
+                decrementAP(2);
             }
             else
             {
                 GameManager.rollDice();
                 rollDiceInQuadrant(quadSpaces, GameManager.blackDice, GameManager.redDice);
+                decrementAP(4);
                 fireDeckGun();
             }
+            FiremanUI.instance.SetAP(this.getAP());
         }
     }
     public void fireDeckGun()
@@ -2050,15 +2035,6 @@ public class Fireman : GameUnit
                 }
             }
         }
-        if(this.GetSpecialist() == Specialist.DriverOperator)
-        {
-            decrementAP(2);
-        }
-        else
-        {
-            decrementAP(4);
-        }
-        FiremanUI.instance.SetAP(this.getAP());
     }
     public void CallAmbulance()
     {
@@ -2331,6 +2307,7 @@ public class Fireman : GameUnit
                         newXPos = 0;
                         newYPos = 5;
                     }
+                    decrementAP(2);
                     break;
                 case 3:
                     if (xPos == 0 && yPos == 5)
@@ -2353,6 +2330,7 @@ public class Fireman : GameUnit
                         newXPos = 0;
                         newYPos = 5;
                     }
+                    decrementAP(2);
                     break;
                 case 2:
                     if (xPos == 0 && yPos == 5)
@@ -2375,6 +2353,7 @@ public class Fireman : GameUnit
                         newXPos = 5;
                         newYPos = 0;
                     }
+                    decrementAP(4);
                     break;
                 default:
                     break;
@@ -2405,6 +2384,9 @@ public class Fireman : GameUnit
 
             h.setCurrentSpace(destination);
             h.GetComponent<Transform>().position = destinationPosition;
+
+            FiremanUI.instance.SetAP(this.AP);
+            GameConsole.instance.UpdateFeedback("You have moved with the ambulance successfully");
         }
         else
         {
@@ -2453,6 +2435,7 @@ public class Fireman : GameUnit
                         newXPos = 0;
                         newYPos = 5;
                     }
+                    decrementAP(2);
                     break;
                 case 3:
                     if (xPos == 0 && yPos == 5)
@@ -2475,6 +2458,7 @@ public class Fireman : GameUnit
                         newXPos = 0;
                         newYPos = 5;
                     }
+                    decrementAP(2);
                     break;
                 case 2:
                     if (xPos == 0 && yPos == 5)
@@ -2497,6 +2481,7 @@ public class Fireman : GameUnit
                         newXPos = 5;
                         newYPos = 0;
                     }
+                    decrementAP(4);
                     break;
                 default:
                     break;
@@ -2524,7 +2509,9 @@ public class Fireman : GameUnit
 
             ambulance.setCurrentSpace(destination);
             ambulance.GetComponent<Transform>().position = destinationPosition;
-        
+
+            FiremanUI.instance.SetAP(this.AP);
+            GameConsole.instance.UpdateFeedback("Ambulance moved successfully");
         }
     }
 
@@ -2567,6 +2554,7 @@ public class Fireman : GameUnit
                         newXPos = 9;
                         newYPos = 5;
                     }
+                    decrementAP(2);
                     break;
                 case 3:
                     if (xPos == 9 && yPos == 5)
@@ -2589,6 +2577,7 @@ public class Fireman : GameUnit
                         newXPos = 9;
                         newYPos = 5;
                     }
+                    decrementAP(2);
                     break;
                 case 2:
                     if (xPos == 9 && yPos == 5)
@@ -2611,6 +2600,7 @@ public class Fireman : GameUnit
                         newXPos = 8;
                         newYPos = 0;
                     }
+                    decrementAP(4);
                     break;
                 default:
                     break;
@@ -2641,6 +2631,9 @@ public class Fireman : GameUnit
 
             n.setCurrentSpace(destination);
             n.GetComponent<Transform>().position = destinationPosition;
+
+            FiremanUI.instance.SetAP(this.AP);
+            GameConsole.instance.UpdateFeedback("You have moved with the engine successfully");
         }
         else
         {
@@ -2903,22 +2896,22 @@ public class Fireman : GameUnit
 
     private void sendDriveAmbulanceEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction , PV.ViewID};
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendDriveEngineEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction , PV.ViewID};
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendRideAmbulanceEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { PV.ViewID};
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendRideEngineEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
@@ -3368,19 +3361,27 @@ public class Fireman : GameUnit
             object[] dataReceived = eventData.CustomData as object[];
 
             int direction = (int)dataReceived[0];
-            driveAmbulance(direction);
+
+            if (PV.ViewID == (int)dataReceived[1])
+                driveAmbulance(direction);
         }
         else if (evCode == (byte)PhotonEventCodes.DriveEngine) {
             object[] dataReceived = eventData.CustomData as object[];
 
             int direction = (int)dataReceived[0];
-            driveEngine(direction);
+
+            if(PV.ViewID == (int)dataReceived[1])
+                driveEngine(direction);
         }
         else if (evCode == (byte)PhotonEventCodes.RideEngine) {
-            rideEngine();
+            object[] dataReceived = eventData.CustomData as object[];
+            if (PV.ViewID == (int)dataReceived[0])
+                rideEngine();
         }
         else if (evCode == (byte)PhotonEventCodes.RideAmbulance) {
-            rideAmbulance();
+            object[] dataReceived = eventData.CustomData as object[];
+            if (PV.ViewID == (int)dataReceived[0])
+                rideAmbulance();
         }
     }
 }
