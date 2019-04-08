@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class GameLostUI : MonoBehaviour
 {
@@ -23,5 +25,10 @@ public class GameLostUI : MonoBehaviour
     public void returnToLobby()
     {
         Debug.Log("RETURNING TO LOBBY");
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("StartScreen");
     }
+
+  
 }

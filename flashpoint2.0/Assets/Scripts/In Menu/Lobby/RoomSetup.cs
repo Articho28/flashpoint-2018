@@ -7,8 +7,8 @@ public class RoomSetup : MonoBehaviour
 
     public static RoomSetup RM;
 
-    private bool isFamilyGame;
-    private int experiencedModeDifficultyIndex;
+    public bool isFamilyGame;
+    public int experiencedModeDifficultyIndex;
 
     // Start is called before the first frame update
 
