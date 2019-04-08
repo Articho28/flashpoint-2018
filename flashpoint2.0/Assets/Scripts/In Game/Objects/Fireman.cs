@@ -2796,6 +2796,9 @@ public class Fireman : GameUnit
         FiremanUI.instance.SetAP(this.AP);
 
         curr.removeOccupant(this);
+
+        object[] data = new object[] { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     public void move(int direction) {
@@ -3378,9 +3381,10 @@ public class Fireman : GameUnit
             Space newSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[2], (int)dataReceived[3]];
             int firemanId = (int)dataReceived[4];
 
-            Fireman firemanThatMoved = oldSpace.getFiremanWithId(firemanId);
-            moveFirefighter(firemanThatMoved, oldSpace, newSpace);
-
+            if(this.PV.ViewID != firemanId) {
+                Fireman firemanThatMoved = oldSpace.getFiremanWithId(firemanId);
+                moveFirefighter(firemanThatMoved, oldSpace, newSpace);
+            }
         }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
