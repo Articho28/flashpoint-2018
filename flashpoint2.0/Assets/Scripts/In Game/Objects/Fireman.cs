@@ -2824,8 +2824,13 @@ public class Fireman : GameUnit
             {
                 moveFirefighter(curr, destination, 2);
             }
-            else {
+            else if(ap >= 3 && v != null) //cannot carry a victim into a fire
+            {
                 GameConsole.instance.UpdateFeedback("Cannot carry a victim into a fire");
+                return;
+            }
+            else {
+                GameConsole.instance.UpdateFeedback("Insufficient AP");
                 return;
             }
         }
