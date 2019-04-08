@@ -67,6 +67,18 @@ public class SpaceGrid : MonoBehaviourPun {
 
     }
 
+    public void printStatus() {
+        string s = "";
+        for (int y = 0; y < gridSizeY; y++) {
+            for (int x = 0; x < gridSizeX; x++) {
+                s += grid[x, y].status + " ";
+            }
+            s += '\n';
+        }
+
+        Debug.Log(s);
+    }
+
     private void InitVehicleSpots() {
         ambulanceSpaces = new Space[8];
         engineSpaces = new Space[8];

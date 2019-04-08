@@ -52,6 +52,10 @@ public class GameManager : MonoBehaviourPun
     public static int placeInitialPOI = 3;
     public static int[] initialFireMarkerRows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
     public static int[] initialFireMarkerColumns = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
+    public static int[] initialFireMarkerRows2 = new int[] { 3, 4, 4, 4 };
+    public static int[] initialFireMarkerColumns2 = new int[] { 6, 6, 5, 3 };
+
+    public static bool firesSetup = false;
     public static Dictionary<int, Victim> carriedVictims;
 
 
@@ -133,10 +137,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         if (PhotonNetwork.IsMasterClient)
         {
             Debug.Log("i am master client");
+            placeInitialFireMarker();
 
             if (!isFamilyGame)
             {
                 Debug.Log("not family game");
+
                 placeInitialFireMarkerExperienced();
                 placeInitialHotSpot();
                 placeInitialAmbulance();
@@ -220,10 +226,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                 }
             }
-            placeInitialFireMarker();
-            randomizePOI();
-            randomizePOI();
-            randomizePOI();
+            object[] data5 = new object[] { };
+            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.InitializePOI, data, sendToAllOptions, SendOptions.SendReliable);
+
         }
     }
 
@@ -329,8 +334,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     public static void IncrementTurn()
     {
-
-
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.IncrementTurn, null, sendToAllOptions, SendOptions.SendReliable);
     }
 
@@ -444,7 +447,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
     }
 
-    public bool containsFireORSmoke(int col, int row)
+    public bool containsFireOrSmoke(int col, int row)
     {
         if (StateManager.instance.spaceGrid.getGrid()[col, row].getSpaceStatus() == SpaceStatus.Fire || StateManager.instance.spaceGrid.getGrid()[col, row].getSpaceStatus() == SpaceStatus.Smoke)
         {
@@ -519,29 +522,35 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             col = UnityEngine.Random.Range(1, 8);
             //randomize between 1 and 8
             row = UnityEngine.Random.Range(1, 6);
-            Debug.Log("Initial poi placement: The x value is " + col + " and the y value is " + row);
+            //Debug.Log("Initial poi placement: The x value is " + col + " and the y value is " + row);
 
-            bool gottaRestart = false;
-            if (placeInitialPOI > 0) 
-            {
-                Debug.Log("We entering first three poi placements");
+            //bool gottaRestart = false;
+            //if (placeInitialPOI > 0) 
+            //{
+            //    //Debug.Log("We entering first three poi placements");
 
-                for (int i = 0; i < initialFireMarkerRows.Length; i++)
-                {
-                    if (row == initialFireMarkerRows[i] && col == initialFireMarkerColumns[i])
-                    {
-                        Debug.Log("The row and column is the same as this fire location :" + initialFireMarkerColumns[i] + " and " + initialFireMarkerRows[i]);
-                        gottaRestart = true;
-                    }
-                }
-            }
+            //    for (int i = 0; i < initialFireMarkerRows.Length; i++)
+            //    {
+            //        if (row == initialFireMarkerRows[i] && col == initialFireMarkerColumns[i])
+            //        {
+            //            //Debug.Log("The row and column is the same as this fire location :" + initialFireMarkerColumns[i] + " and " + initialFireMarkerRows[i]);
+            //            gottaRestart = true;
+            //        }
+            //    }
 
-            if (gottaRestart)
-            {
-                continue;
-            }
+            //    for(int i = 0; i < initialFireMarkerRows2.Length; i++) { 
+            //        if(row == initialFireMarkerRows2[i] && col == initialFireMarkerRows2[i]) {
+            //            gottaRestart = true;
+            //        }
+            //    }
+            //}
 
-            if (containsFireORSmoke(col, row))
+            //if (gottaRestart)
+            //{
+            //    continue;
+            //}
+
+            if (containsFireOrSmoke(col, row))
             {
                 continue;
             }
@@ -563,22 +572,22 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
-    //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
-    public void testFunctionPlacePOI()
-    {
+    ////TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING
+    //public void testFunctionPlacePOI()
+    //{
        
-            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
-            Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -10);
-            GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
-            //Vector3 newPosition = new Vector3(position.x, position.y, -5);
+    //        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[1, 2];
+    //        Vector3 position = new Vector3(currentSpace.worldPosition.x, currentSpace.worldPosition.y, -10);
+    //        GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+    //        //Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-            POI.GetComponent<Transform>().position = position;
-            POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-            POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-            POI.GetComponent<GameUnit>().setPhysicalObject(POI);
-            currentSpace.addOccupant(POI.GetComponent<POI>());
-            numOfActivePOI++;
-    }
+    //        POI.GetComponent<Transform>().position = position;
+    //        POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+    //        POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+    //        POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+    //        currentSpace.addOccupant(POI.GetComponent<POI>());
+    //        numOfActivePOI++;
+    //}
 
 
     //TEST FUNCTION NOT USED DURING GAME SOLELY FOR TESTING 
@@ -1057,7 +1066,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             //randomize between 1 and 8
             row = UnityEngine.Random.Range(1, 6);
 
-            if (containsFireORSmoke(col, row))
+            if (containsFireOrSmoke(col, row))
             {
                 continue;
             }
@@ -1117,7 +1126,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         while (true)
         {
 
-            if (containsFireORSmoke(col, row) || alreadyPlaced(col, row))
+            if (containsFireOrSmoke(col, row) || alreadyPlaced(col, row))
             {
                 int[] altSpace = replenishPOIAltSpace(col, row);
                 col = altSpace[0];
@@ -1466,6 +1475,19 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             numOfActivePOI++;
             totalPOIs--;
         }
+        else if (evCode == (byte)PhotonEventCodes.InitializePOI) {
+
+            if(PhotonNetwork.IsMasterClient) {
+                Debug.Log("HI TESTINGWAFSFNISDZNIASEBNFIAE =========");
+                StateManager.instance.spaceGrid.printStatus();
+                randomizePOI();
+                randomizePOI();
+                randomizePOI();
+                Debug.Log("HI TESTINGWAFSFNISDZNIASEBNFIAE =========");
+            }
+
+
+        }
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialFireMarker)
         {
             object[] dataReceived = eventData.CustomData as object[];
@@ -1486,6 +1508,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 currentSpace.addOccupant(newFireMarker.GetComponent<GameUnit>());
                 currentSpace.setSpaceStatus(SpaceStatus.Fire);
             }
+
+            Debug.Log("HI TESTING");
+            StateManager.instance.spaceGrid.printStatus();
         }
         else if (evCode == (byte)PhotonEventCodes.ResolveFlashOvers)
         {
