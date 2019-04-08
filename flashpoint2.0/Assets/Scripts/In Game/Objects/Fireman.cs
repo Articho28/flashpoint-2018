@@ -1970,13 +1970,7 @@ public class Fireman : GameUnit
             //deck gun can only be fired at a quadrant where no firefighter is present.
             foreach(Space space in quadSpaces)
             {
-                foreach(GameUnit gu in space.getOccupants())
-                {
-                    if(gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
-                    {
-                        containsFiremen = true;
-                    }
-                }
+                if(space.getFiremen().Count != 0) containsFiremen = true;
             }
 
             if (containsFiremen)
