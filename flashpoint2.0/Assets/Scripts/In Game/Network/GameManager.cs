@@ -468,7 +468,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         List<GameUnit> occupants = StateManager.instance.spaceGrid.getGrid()[col, row].getOccupants();
         foreach (GameUnit gu in occupants)
         {
-            if (gu.GetType() == typeof(POI) || gu.GetType() == typeof(Hazmat) || gu.GetType() == typeof(HotSpot))
+            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI 
+                || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT 
+                || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT)
             {
                 return true;
             }
