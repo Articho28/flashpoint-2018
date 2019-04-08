@@ -71,14 +71,14 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             numOfActivePOI = 0;
             savedVictims = 0;
             lostVictims = 0;
-            isPickSpecialist = true;
+            isPickSpecialist = false;
             playersListNameCache = new ArrayList();
             isFamilyGame = RoomSetup.RM.getIsFamilyGame();
             Debug.Log("From GM: isFamilyGame parameter received to be" + isFamilyGame);
             if (!isFamilyGame)
             {
                 int difficultyIndex = RoomSetup.RM.getExperiencedModeDifficultyIndex();
-
+                isPickSpecialist = true;
                 switch (difficultyIndex)
                 {
                     case 0:
