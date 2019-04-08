@@ -2742,14 +2742,8 @@ public class Fireman : GameUnit
         SpaceKind destinationSpaceKind = dst.getSpaceKind();
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
-        if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
-            moveFirefighter(curr, dst, 2);
-
-            //update carried victim positions across the network
-            object[] data = {curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedVictim, data, sendToAllOptions, SendOptions.SendReliable);
-        }
-        else if (destinationSpaceKind == SpaceKind.Outdoor) {     //carry victim outside the building
+        if ((GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor) 
+        || (!GameManager.GM.isFamilyGame && dst.isAmbulanceSpot)) {     //carry victim outside the building
             moveFirefighter(curr, dst, 2);
             this.setVictim(null);
 
@@ -2770,6 +2764,15 @@ public class Fireman : GameUnit
                 }
             }
             return;
+        }
+        else if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor)
+                    || destinationSpaceStatus == SpaceStatus.Smoke
+                    || (!GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor)) {
+            moveFirefighter(curr, dst, 2);
+
+            //update carried victim positions across the network
+            object[] data = { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedVictim, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else //Fire
         {

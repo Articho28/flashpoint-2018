@@ -10,6 +10,7 @@ public class Space {
     public SpaceStatus status;
     public SpaceKind spaceKind;
     public Kind kind;
+    public bool isAmbulanceSpot;
 
     [SerializeField]
     Wall[] walls;
@@ -26,7 +27,7 @@ public class Space {
         doors = new Door[4];
         status = SpaceStatus.Safe;
         spaceKind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
-
+        isAmbulanceSpot = false;
     }
 
     //function to add walls at a certain index

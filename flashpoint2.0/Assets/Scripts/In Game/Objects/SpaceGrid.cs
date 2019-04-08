@@ -83,15 +83,19 @@ public class SpaceGrid : MonoBehaviourPun {
         ambulanceSpaces = new Space[4];
         engineSpaces = new Space[4];
 
-        ambulanceSpaces[0] = grid[5, 0];
-        ambulanceSpaces[1] = grid[9, 2];
-        ambulanceSpaces[2] = grid[4, 7];
-        ambulanceSpaces[3] = grid[0, 5];
+        engineSpaces[0] = grid[5, 0];
+        engineSpaces[1] = grid[9, 2];
+        engineSpaces[2] = grid[4, 7];
+        engineSpaces[3] = grid[0, 5];
 
-        engineSpaces[0] = grid[8, 0];
-        engineSpaces[1] = grid[9, 5];
-        engineSpaces[2] = grid[2, 7];
-        engineSpaces[3] = grid[0, 1];
+        ambulanceSpaces[0] = grid[8, 0];
+        ambulanceSpaces[1] = grid[9, 5];
+        ambulanceSpaces[2] = grid[2, 7];
+        ambulanceSpaces[3] = grid[0, 1];
+
+        for(int i = 0; i < 4; i++) {
+            ambulanceSpaces[i].isAmbulanceSpot = true;
+        }
     }
 
     public Space getClosestAmbulanceSpot(Space space) {
