@@ -2742,11 +2742,23 @@ public class Fireman : GameUnit
         SpaceKind destinationSpaceKind = dst.getSpaceKind();
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
+        bool isAmbulanceOnDest = false;
+
+        foreach (GameUnit gu in dst.getOccupants())
+        {
+            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+            {
+                isAmbulanceOnDest = true;
+                break;
+            }
+        }
+
         if ((GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor) 
-        || (!GameManager.GM.isFamilyGame && dst.isAmbulanceSpot)) {     //carry victim outside the building
+        || (!GameManager.GM.isFamilyGame && isAmbulanceOnDest)) {     //carry victim outside the building
+
             moveFirefighter(curr, dst, 2);
             this.setVictim(null);
-            
+
             object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
 
