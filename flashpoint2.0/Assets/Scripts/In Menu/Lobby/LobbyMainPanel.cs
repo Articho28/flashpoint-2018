@@ -256,6 +256,10 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
+        object[] data = new object[2] { RoomSetup.RM.getIsFamilyGame(), RoomSetup.RM.getExperiencedModeDifficultyIndex() };
+
+        PhotonNetwork.RaiseEvent( (byte) PhotonEventCodes.SendRoomOptions, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
+
         Debug.Log("Room Joined!");
         PhotonNetwork.LoadLevel("FamilyGame");
     }

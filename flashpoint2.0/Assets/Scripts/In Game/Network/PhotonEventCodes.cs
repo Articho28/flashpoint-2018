@@ -44,5 +44,6 @@ public enum PhotonEventCodes
     MoveCarriedHazmat = 37,
     RemoveVictim = 38,
     RemoveHazmat = 39,
-    InitializePOI
+    InitializePOI = 40, 
+    SendRoomOptions = 41
 }

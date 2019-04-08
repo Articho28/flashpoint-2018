@@ -1205,11 +1205,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             Turn++;
             Debug.Log("Turn is now " + Turn);
             Debug.Log("number of players is " + NumberOfPlayers);
+            Debug.Log("IN inc turn: status of isFamilyGame is :" + isFamilyGame);
             if (Turn > NumberOfPlayers)
             {
                 Debug.Log("resetting  turn");
 
-                if (isPickSpecialist)
+                if (!isFamilyGame && isPickSpecialist)
                 {
                     Debug.Log("changing pick specialist to false");
                     isPickSpecialist = false;
@@ -1766,6 +1767,33 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             {
                 Debug.Log("Received at " + i + " the name " + receivedData[i]);
                 playersListNameCache.Insert(i, receivedData[i]);
+            }
+        }
+
+        else if (evCode == (byte) PhotonEventCodes.SendRoomOptions)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+
+            bool receivedFamilyGame = (bool) receivedData[0];
+            int gameDifficulty = (int)receivedData[1];
+
+
+            isFamilyGame = receivedFamilyGame;
+
+            if (!isFamilyGame)
+            {
+                switch (gameDifficulty)
+                {
+                    case 0:
+                        difficulty = Difficulty.Recruit;
+                        break;
+                    case 1:
+                        difficulty = Difficulty.Veteran;
+                        break;
+                    case 2:
+                        difficulty = Difficulty.Heroic;
+                        break;
+                }
             }
         }
 
