@@ -42,7 +42,10 @@ public class GameManager : MonoBehaviourPun
     public static int NumFA = 5;
     public static int numVictim = 10;
     public static bool isDestroyingVictim;
-    public static Dictionary<int, Victim> carriedVictims;
+    public static int placeInitialPOI = 3;
+    public static int[] initialFireMarkerRows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
+    public static int[] initialFireMarkerColumns = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
+
 
 
 //Network Options
@@ -70,8 +73,25 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             lostVictims = 0;
             isPickSpecialist = true;
             playersListNameCache = new ArrayList();
-            isFamilyGame = false;
-            difficulty = Difficulty.Heroic;
+            isFamilyGame = RoomSetup.RM.getIsFamilyGame();
+            Debug.Log("From GM: isFamilyGame parameter received to be" + isFamilyGame);
+            if (!isFamilyGame)
+            {
+                int difficultyIndex = RoomSetup.RM.getExperiencedModeDifficultyIndex();
+
+                switch (difficultyIndex)
+                {
+                    case 0:
+                        difficulty = Difficulty.Recruit;
+                        break;
+                    case 1:
+                        difficulty = Difficulty.Veteran;
+                        break;
+                    case 2: difficulty = Difficulty.Heroic;
+                        break;
+                }
+
+            }
             isDestroyingVictim = false;
             availableSpecialists = new Specialist [10];
             availableSpecialists[0] = Specialist.Paramedic;
