@@ -31,4 +31,5 @@ Drive engine: T,
 Crew changes: W,
 Exit vehicle: X,
 Extinguish entire fire: Y,
-Remove hazmat: Z
+Remove hazmat: Z,
+Treat Victim: K
