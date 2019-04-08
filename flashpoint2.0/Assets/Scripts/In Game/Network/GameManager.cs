@@ -19,13 +19,6 @@ public class GameManager : MonoBehaviourPun
     public static string GameStatus;
     public int Turn = 1;
 
-    //array for getting ambulance parking spots
-    AmbulanceParkingSpot[] ambulanceParkingSpots;
-
-    int[] ambulanceParkingSpotX;
-    int[] ambulanceParkingSpotY;
-
-
     //Local store of Players.
 
     public static int NumberOfPlayers;
