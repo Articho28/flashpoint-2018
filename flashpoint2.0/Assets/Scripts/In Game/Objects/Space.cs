@@ -99,6 +99,19 @@ public class Space {
  
     }
 
+    public List<Fireman> getFiremen() {
+        List<Fireman> firemen = new List<Fireman>();
+
+        for (int i = 0; i < occupants.Count; i++) {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
+                firemen.Add(occupants[i].GetComponent<Fireman>());
+            }
+        }
+
+        return firemen;
+    }
+
+
     public void removeOccupant(Fireman fireman) {
         for(int i = 0; i < occupants.Count; i++) {
             if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN

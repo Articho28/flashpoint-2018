@@ -616,10 +616,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         Vector3 pos = new Vector3(ambulanceSpot.worldPosition.x, ambulanceSpot.worldPosition.y, -10);
 
-        List<GameUnit> occupants = targetSpace.occupants;
-        foreach (GameUnit gu in occupants) {
-            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN) {
-                Fireman fireman = gu.GetComponent<Fireman>();
+        List<Fireman> firemen = targetSpace.getFiremen();
+        foreach (Fireman fireman in firemen) {
                 Space currSpace = fireman.getCurrentSpace();
                 Fireman.moveFirefighter(fireman, currSpace, ambulanceSpot);
 
@@ -628,7 +626,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     object[] data = { currSpace.indexX, currSpace.indexY, fireman.PV.ViewID, false };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
                 }
-            }
         }
 
         removePOIFromSpace(targetSpace);
