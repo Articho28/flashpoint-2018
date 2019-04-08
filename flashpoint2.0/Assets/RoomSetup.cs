@@ -48,7 +48,7 @@ public class RoomSetup : MonoBehaviour
 
     public void setExperiencedModeDifficultyIndex(int index)
     {
-        if (index > 0 && index < 3)
+        if (index > -1 && index < 3)
         {
             experiencedModeDifficultyIndex = index;
         }
