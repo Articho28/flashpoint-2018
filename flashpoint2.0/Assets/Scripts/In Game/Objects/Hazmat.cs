@@ -4,5 +4,9 @@ using UnityEngine;
 
 public class Hazmat : GameUnit
 {
+    public bool carried;
 
+    private void Start() {
+        carried = true;
+    }
 }

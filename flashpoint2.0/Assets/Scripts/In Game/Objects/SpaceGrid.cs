@@ -67,27 +67,35 @@ public class SpaceGrid : MonoBehaviourPun {
 
     }
 
+    public void printStatus() {
+        string s = "";
+        for (int y = 0; y < gridSizeY; y++) {
+            for (int x = 0; x < gridSizeX; x++) {
+                s += grid[x, y].status + " ";
+            }
+            s += '\n';
+        }
+
+        Debug.Log(s);
+    }
+
     private void InitVehicleSpots() {
-        ambulanceSpaces = new Space[8];
-        engineSpaces = new Space[8];
+        ambulanceSpaces = new Space[4];
+        engineSpaces = new Space[4];
 
-        ambulanceSpaces[0] = grid[5, 0];
-        ambulanceSpaces[1] = grid[6, 0];
-        ambulanceSpaces[2] = grid[9, 3];
-        ambulanceSpaces[3] = grid[9, 4];
-        ambulanceSpaces[4] = grid[4, 7];
-        ambulanceSpaces[5] = grid[3, 7];
-        ambulanceSpaces[6] = grid[0, 4];
-        ambulanceSpaces[7] = grid[0, 3];
+        engineSpaces[0] = grid[5, 0];
+        engineSpaces[1] = grid[9, 2];
+        engineSpaces[2] = grid[4, 7];
+        engineSpaces[3] = grid[0, 5];
 
-        engineSpaces[0] = grid[7, 0];
-        engineSpaces[1] = grid[8, 0];
-        engineSpaces[2] = grid[9, 5];
-        engineSpaces[3] = grid[9, 6];
-        engineSpaces[4] = grid[2, 7];
-        engineSpaces[5] = grid[1, 7];
-        engineSpaces[6] = grid[0, 4];
-        engineSpaces[7] = grid[0, 3];
+        ambulanceSpaces[0] = grid[8, 0];
+        ambulanceSpaces[1] = grid[9, 5];
+        ambulanceSpaces[2] = grid[2, 7];
+        ambulanceSpaces[3] = grid[0, 1];
+
+        for(int i = 0; i < 4; i++) {
+            ambulanceSpaces[i].isAmbulanceSpot = true;
+        }
     }
 
     public Space getClosestAmbulanceSpot(Space space) {
@@ -259,7 +267,7 @@ public class SpaceGrid : MonoBehaviourPun {
     }
 
     private bool isValidNeighbour(int checkX, int checkY, int wallIndex) {
-        if (grid[checkX, checkX].spaceKind == SpaceKind.Outdoor) return false;
+       // if (grid[checkX, checkX].spaceKind == SpaceKind.Outdoor) return false;
     
         Space curr = grid[checkX, checkY];
         Wall dirWall = curr.getWalls()[wallIndex];

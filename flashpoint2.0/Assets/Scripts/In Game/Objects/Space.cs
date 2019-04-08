@@ -10,6 +10,7 @@ public class Space {
     public SpaceStatus status;
     public SpaceKind spaceKind;
     public Kind kind;
+    public bool isAmbulanceSpot;
 
     [SerializeField]
     Wall[] walls;
@@ -26,7 +27,7 @@ public class Space {
         doors = new Door[4];
         status = SpaceStatus.Safe;
         spaceKind = (_isOutside) ? SpaceKind.Outdoor : SpaceKind.Indoor;
-
+        isAmbulanceSpot = false;
     }
 
     //function to add walls at a certain index
@@ -98,18 +99,33 @@ public class Space {
  
     }
 
-    public bool removeOccupant(GameUnit u)
-    {
-        int index = 0; 
-        foreach (GameUnit current in occupants)
-        {
-            if (current == u)
-            {
-                occupants.RemoveAt(index);
-                return true;
+    public void removeOccupant(Fireman fireman) {
+        for(int i = 0; i < occupants.Count; i++) {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN
+            && occupants[i].GetComponent<Fireman>().Equals(fireman)) {
+                occupants.RemoveAt(i);
+                break;
             }
-            index++;
         }
-        return false;
+    }
+
+    public void removeOccupant(Victim victim) {
+        for (int i = 0; i < occupants.Count; i++) {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI
+            && occupants[i].GetComponent<Victim>().Equals(victim)) {
+                occupants.RemoveAt(i);
+                break;
+            }
+        }
+    }
+
+    public void removeOccupant(Hazmat hazmat) {
+        for (int i = 0; i < occupants.Count; i++) {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT
+            && occupants[i].GetComponent<Hazmat>().Equals(hazmat)) {
+                occupants.RemoveAt(i);
+                break;
+            }
+        }
     }
 } 
