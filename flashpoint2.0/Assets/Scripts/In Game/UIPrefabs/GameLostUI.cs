@@ -26,6 +26,9 @@ public class GameLostUI : MonoBehaviour
     {
         Debug.Log("RETURNING TO LOBBY");
         PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("Lobby");
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("StartScreen");
     }
+
+  
 }

@@ -92,7 +92,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 }
 
             }
-            //Destroy(GameObject.Find("Room Setup Transfer"));
+            Destroy(GameObject.Find("/RoomSetupTransfer"));
             isDestroyingVictim = false;
             availableSpecialists = new Specialist [10];
             availableSpecialists[0] = Specialist.Paramedic;
