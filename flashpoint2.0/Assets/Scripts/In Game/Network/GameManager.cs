@@ -227,7 +227,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 }
             }
             object[] data5 = new object[] { };
-            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.InitializePOI, data, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.InitializePOI, data5, sendToAllOptions, SendOptions.SendReliable);
 
         }
     }
