@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class QuitGame : MonoBehaviour
 {
     public void quitgame()
     {
-        Application.Quit();
         Debug.Log("You pressed Quit Game");
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("StartScreen");
     }
 }
