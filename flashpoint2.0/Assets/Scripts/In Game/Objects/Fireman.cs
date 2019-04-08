@@ -2746,7 +2746,7 @@ public class Fireman : GameUnit
         || (!GameManager.GM.isFamilyGame && dst.isAmbulanceSpot)) {     //carry victim outside the building
             moveFirefighter(curr, dst, 2);
             this.setVictim(null);
-
+            
             object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
 
@@ -2946,9 +2946,15 @@ public class Fireman : GameUnit
         }
         restoreAP();
         GameManager.advanceFire();
-        GameManager.replenishPOI();
+        if (GameManager.GM.isFamilyGame)
+        {
+            GameManager.replenishPOI();
+        }
+        else
+        {
+            GameManager.replenishPOIExperienced();
+        }
         GameManager.IncrementTurn();
-
     }
 
 
