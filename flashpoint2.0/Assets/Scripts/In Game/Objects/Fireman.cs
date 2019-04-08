@@ -67,6 +67,13 @@ public class Fireman : GameUnit
         isFiringDeckGun = false;
         driverRerolledRedDice = false;
         driverRerolledBlackDice = false;
+
+        if(GameManager.GM.isFamilyGame == true)
+        {
+            this.spec = Specialist.FamilyGame;
+            AP = 4;
+            FiremanUI.instance.SetAP(this.getAP());
+        }
     }
 
     void Update()
@@ -1562,13 +1569,11 @@ public class Fireman : GameUnit
 
     public void newSpecAP()
     {
-        int currentNumAP = this.getAP();
-        int newAP;
+
         if (this.spec == Specialist.FamilyGame)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1576,9 +1581,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.Paramedic)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1586,9 +1590,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.FireCaptain)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 2;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1596,9 +1599,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.ImagingTechnician)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1606,9 +1608,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.CAFSFirefighter)
         {
-            newAP = Mathf.Min(currentNumAP + 3, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(3);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 3;
             this.moveAP = 0;
@@ -1616,9 +1617,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.HazmatTechinician)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1626,9 +1626,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.Generalist)
         {
-            newAP = Mathf.Min(currentNumAP + 5, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(5);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1636,9 +1635,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.RescueSpecialist)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 3;
@@ -1646,9 +1644,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.DriverOperator)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1656,9 +1653,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.Veteran) //TODO
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
