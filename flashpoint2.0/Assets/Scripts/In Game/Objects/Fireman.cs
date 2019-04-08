@@ -16,7 +16,7 @@ public class Fireman : GameUnit
     Hazmat carriedHazmat;
     Ambulance movedAmbulance;
     Engine movedEngine;
-    private PhotonView PV;
+    public PhotonView PV;
     private bool isWaitingForInput;
     private bool isExtinguishingFire;
     private bool isChoppingWall;
