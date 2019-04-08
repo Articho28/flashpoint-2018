@@ -2714,14 +2714,14 @@ public class Fireman : GameUnit
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
 
             //update carried hazmat positions across the network
             object[] data = { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedHazmat, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else if (destinationSpaceKind == SpaceKind.Outdoor) {     //carry victim outside the building
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
             this.setHazmat(null);
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID };
@@ -2744,7 +2744,7 @@ public class Fireman : GameUnit
 
         if ((GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor) 
         || (!GameManager.GM.isFamilyGame && dst.isAmbulanceSpot)) {     //carry victim outside the building
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
             this.setVictim(null);
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
@@ -2768,7 +2768,7 @@ public class Fireman : GameUnit
         else if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor)
                     || destinationSpaceStatus == SpaceStatus.Smoke
                     || (!GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor)) {
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
 
             //update carried victim positions across the network
             object[] data = { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
@@ -2783,19 +2783,21 @@ public class Fireman : GameUnit
     }
 
     public static void moveFirefighter(Fireman fireman, Space curr, Space dst) {
-        fireman.moveFirefighter(curr, dst, 0);
+        fireman.moveFirefighter(curr, dst, 0, false);
     }
 
-    private void moveFirefighter(Space curr, Space dst, int apCost) {
+    private void moveFirefighter(Space curr, Space dst, int apCost, bool updateUIForAP) {
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         this.setCurrentSpace(dst);
         dst.addOccupant(this);
         this.decrementAP(apCost);
         this.GetComponent<Transform>().position = newPosition;
-        FiremanUI.instance.SetAP(this.AP);
+
 
         curr.removeOccupant(this);
+
+        if(updateUIForAP) FiremanUI.instance.SetAP(this.AP);
 
         object[] data = new object[] { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
@@ -2825,7 +2827,7 @@ public class Fireman : GameUnit
         if (sp == SpaceStatus.Fire) {
             if (ap >= 3 && v == null) //&&f has enough to move
             {
-                moveFirefighter(curr, destination, 2);
+                moveFirefighter(curr, destination, 2, true);
             }
             else if(ap >= 3 && v != null) //cannot carry a victim into a fire
             {
@@ -2856,7 +2858,7 @@ public class Fireman : GameUnit
 
             if (v == null && hazmat == null && ap >= 1) 
             {
-                moveFirefighter(curr, destination, 1);
+                moveFirefighter(curr, destination, 1, true);
             }
             else if (v != null && ap >= 2)//if the fireman is carrying a victim
             {
