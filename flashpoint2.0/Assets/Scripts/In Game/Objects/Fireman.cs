@@ -2786,21 +2786,21 @@ public class Fireman : GameUnit
         fireman.moveFirefighter(curr, dst, 0, false);
     }
 
-    private void moveFirefighter(Space curr, Space dst, int apCost, bool updateUIForAP) {
+    private void moveFirefighter(Space curr, Space dst, int apCost, bool isMyOwn) {
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         this.setCurrentSpace(dst);
-        dst.addOccupant(this);
         this.decrementAP(apCost);
         this.GetComponent<Transform>().position = newPosition;
 
-
+        dst.addOccupant(this);
         curr.removeOccupant(this);
 
-        if(updateUIForAP) FiremanUI.instance.SetAP(this.AP);
-
-        object[] data = new object[] { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+        if (isMyOwn) {
+            FiremanUI.instance.SetAP(this.AP);
+            object[] data = new object[] { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+        }
     }
 
     public void move(int direction) {
