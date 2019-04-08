@@ -2745,17 +2745,6 @@ public class Fireman : GameUnit
         if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
             moveFirefighter(curr, dst, 2);
 
-            //if has POI marker
-            List<GameUnit> destinationGameUnits = dst.getOccupants();
-            foreach (GameUnit gu in destinationGameUnits) {
-                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
-                    if (gu.GetComponent<POI>().getIsFlipped() == false) {
-                        GameManager.FlipPOI(dst);
-                        break;
-                    }
-                }
-            }
-
             //update carried victim positions across the network
             object[] data = {curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedVictim, data, sendToAllOptions, SendOptions.SendReliable);
@@ -2833,26 +2822,26 @@ public class Fireman : GameUnit
                 return;
             }
         }
-        else {
-            if(movedEngine != null || movedAmbulance != null)
-            {
+        else if(movedEngine != null || movedAmbulance != null) {
                 GameConsole.instance.UpdateFeedback("You cannot move while being in the vehicle. Exit the vehicle by pressing X");
                 return;
-            }
-            else if (v == null && hazmat == null && ap >= 1) 
-            {
-                moveFirefighter(curr, destination, 1);
-
-                //flip poi feature
-                List<GameUnit> gameUnits = destination.getOccupants();
-                foreach (GameUnit gu in gameUnits) {
-                    if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
-                        if (gu.GetComponent<POI>().getIsFlipped() == false) {
-                            GameManager.FlipPOI(destination);
-                            break;
-                        }
+        }
+        else {
+            //flip poi
+            List<GameUnit> gameUnits = destination.getOccupants();
+            foreach (GameUnit gu in gameUnits) {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                    if (gu.GetComponent<POI>().getIsFlipped() == false) {
+                        GameManager.FlipPOI(destination);
+                        break;
                     }
                 }
+            }
+
+
+            if (v == null && hazmat == null && ap >= 1) 
+            {
+                moveFirefighter(curr, destination, 1);
             }
             else if (v != null && ap >= 2)//if the fireman is carrying a victim
             {
