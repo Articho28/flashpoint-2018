@@ -89,6 +89,10 @@ public class GameUI : MonoBehaviour
     public void AddDamage(int newDamage)
     {
         damage += newDamage;
+        if (damage >= 24)
+        {
+            GameManager.GameLost();
+        }
         UpdateDamage();
     }
 

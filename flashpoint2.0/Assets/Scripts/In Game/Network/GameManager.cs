@@ -806,7 +806,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                         if (buildingDamage >= 24)
                         {
-                            Debug.Log("You lost bruh");
                             GameLost();
                         }
                     }
@@ -951,12 +950,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     }
     public static void GameWon()
     {
-        GameConsole.instance.UpdateFeedback("YOU WOOOOONNNNNN GANG GANG GANG");
+        Debug.Log("Game Won");
         GameManager.GM.setActivePrefabs("won", true);
     }
     public static void GameLost()
     {
-        GameConsole.instance.UpdateFeedback("YOU LOST YOU BEAUTIFUL!");
+        Debug.Log("Game Lost");
         GameManager.GM.setActivePrefabs("lost", true);
     }
 
@@ -1376,7 +1375,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             if (buildingDamage >= 24)
             {
                 //Building colapses
-                Debug.Log("u just lost YIKESSS");
                 GameLost();
 
             }
