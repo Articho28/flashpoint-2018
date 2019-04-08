@@ -111,6 +111,15 @@ public class Space {
         return firemen;
     }
 
+    public Fireman getFiremanWithId(int firemanId) {
+        List<Fireman> firemen = getFiremen();
+
+        for (int i = 0; i < firemen.Count; i++) {
+            if (firemen[i].PV.ViewID == firemanId) return firemen[i];
+        }
+
+        return null;
+    }
 
     public void removeOccupant(Fireman fireman) {
         for(int i = 0; i < occupants.Count; i++) {

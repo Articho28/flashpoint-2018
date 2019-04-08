@@ -67,6 +67,13 @@ public class Fireman : GameUnit
         isFiringDeckGun = false;
         driverRerolledRedDice = false;
         driverRerolledBlackDice = false;
+
+        if(GameManager.GM.isFamilyGame == true)
+        {
+            this.spec = Specialist.FamilyGame;
+            AP = 4;
+            FiremanUI.instance.SetAP(this.getAP());
+        }
     }
 
     void Update()
@@ -1562,13 +1569,11 @@ public class Fireman : GameUnit
 
     public void newSpecAP()
     {
-        int currentNumAP = this.getAP();
-        int newAP;
+
         if (this.spec == Specialist.FamilyGame)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1576,9 +1581,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.Paramedic)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1586,9 +1590,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.FireCaptain)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 2;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1596,9 +1599,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.ImagingTechnician)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1606,9 +1608,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.CAFSFirefighter)
         {
-            newAP = Mathf.Min(currentNumAP + 3, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(3);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 3;
             this.moveAP = 0;
@@ -1616,9 +1617,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.HazmatTechinician)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1626,9 +1626,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.Generalist)
         {
-            newAP = Mathf.Min(currentNumAP + 5, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(5);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1636,9 +1635,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.RescueSpecialist)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 3;
@@ -1646,9 +1644,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.DriverOperator)
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1656,9 +1653,8 @@ public class Fireman : GameUnit
         }
         else if (this.spec == Specialist.Veteran) //TODO
         {
-            newAP = Mathf.Min(currentNumAP + 4, 8);
-            this.setAP(newAP);
-            FiremanUI.instance.SetAP(newAP);
+            this.setAP(4);
+            FiremanUI.instance.SetAP(this.getAP());
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -1970,13 +1966,7 @@ public class Fireman : GameUnit
             //deck gun can only be fired at a quadrant where no firefighter is present.
             foreach(Space space in quadSpaces)
             {
-                foreach(GameUnit gu in space.getOccupants())
-                {
-                    if(gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
-                    {
-                        containsFiremen = true;
-                    }
-                }
+                if(space.getFiremen().Count != 0) containsFiremen = true;
             }
 
             if (containsFiremen)
@@ -2714,14 +2704,14 @@ public class Fireman : GameUnit
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor) || destinationSpaceStatus == SpaceStatus.Smoke) {
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
 
             //update carried hazmat positions across the network
             object[] data = { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedHazmat, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else if (destinationSpaceKind == SpaceKind.Outdoor) {     //carry victim outside the building
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
             this.setHazmat(null);
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID };
@@ -2744,7 +2734,7 @@ public class Fireman : GameUnit
 
         if ((GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor) 
         || (!GameManager.GM.isFamilyGame && dst.isAmbulanceSpot)) {     //carry victim outside the building
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
             this.setVictim(null);
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
@@ -2768,7 +2758,7 @@ public class Fireman : GameUnit
         else if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor)
                     || destinationSpaceStatus == SpaceStatus.Smoke
                     || (!GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor)) {
-            moveFirefighter(curr, dst, 2);
+            moveFirefighter(curr, dst, 2, true);
 
             //update carried victim positions across the network
             object[] data = { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
@@ -2783,19 +2773,24 @@ public class Fireman : GameUnit
     }
 
     public static void moveFirefighter(Fireman fireman, Space curr, Space dst) {
-        fireman.moveFirefighter(curr, dst, 0);
+        fireman.moveFirefighter(curr, dst, 0, false);
     }
 
-    private void moveFirefighter(Space curr, Space dst, int apCost) {
+    private void moveFirefighter(Space curr, Space dst, int apCost, bool isMyOwn) {
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         this.setCurrentSpace(dst);
-        dst.addOccupant(this);
         this.decrementAP(apCost);
         this.GetComponent<Transform>().position = newPosition;
-        FiremanUI.instance.SetAP(this.AP);
 
+        dst.addOccupant(this);
         curr.removeOccupant(this);
+
+        if (isMyOwn) {
+            FiremanUI.instance.SetAP(this.AP);
+            object[] data = new object[] { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+        }
     }
 
     public void move(int direction) {
@@ -2822,7 +2817,7 @@ public class Fireman : GameUnit
         if (sp == SpaceStatus.Fire) {
             if (ap >= 3 && v == null) //&&f has enough to move
             {
-                moveFirefighter(curr, destination, 2);
+                moveFirefighter(curr, destination, 2, true);
             }
             else if(ap >= 3 && v != null) //cannot carry a victim into a fire
             {
@@ -2853,7 +2848,7 @@ public class Fireman : GameUnit
 
             if (v == null && hazmat == null && ap >= 1) 
             {
-                moveFirefighter(curr, destination, 1);
+                moveFirefighter(curr, destination, 1, true);
             }
             else if (v != null && ap >= 2)//if the fireman is carrying a victim
             {
@@ -3372,7 +3367,17 @@ public class Fireman : GameUnit
 
             //update UI if any
         }
+        else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
+            object[] dataReceived = eventData.CustomData as object[];
+            Space oldSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+            Space newSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[2], (int)dataReceived[3]];
+            int firemanId = (int)dataReceived[4];
 
+            if(this.PV.ViewID != firemanId) {
+                Fireman firemanThatMoved = oldSpace.getFiremanWithId(firemanId);
+                moveFirefighter(firemanThatMoved, oldSpace, newSpace);
+            }
+        }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
 
