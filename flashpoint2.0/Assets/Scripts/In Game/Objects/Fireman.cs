@@ -1712,11 +1712,13 @@ public class Fireman : GameUnit
         if (movedAmbulance != null)
         {
             this.movedAmbulance = null;
+            isOnAmbulance = false;
             GameConsole.instance.UpdateFeedback("Exited ambulance successfully");
         }
         else if (movedEngine != null)
         {
             this.movedEngine = null;
+            isOnEngine = false;
             GameConsole.instance.UpdateFeedback("Exited engine successfully");
         }
         else
@@ -2384,6 +2386,15 @@ public class Fireman : GameUnit
                 }
             }
 
+            //getting the list of firemen
+            List<Fireman> listFiremen = curr.getFiremen();
+
+            foreach(Fireman f in listFiremen)
+            {
+                if (f.getAmbulance() != null)
+                    moveFirefighter(f, curr, destination);
+            }
+
             currGameUnits.Remove(this);
             currGameUnits.Remove(ambulance);
 
@@ -2507,6 +2518,14 @@ public class Fireman : GameUnit
                 }
             }
 
+            //getting the list of firemen
+            List<Fireman> listFiremen = AmbulanceCurrentSpace.getFiremen();
+
+            foreach (Fireman f in listFiremen)
+            {
+                if (f.getAmbulance() != null)
+                    moveFirefighter(f, AmbulanceCurrentSpace, destination);
+            }
 
             currGameUnits.Remove(ambulance);
 
@@ -2618,6 +2637,14 @@ public class Fireman : GameUnit
                     engine = gu;
                     break;
                 }
+            }
+
+            List<Fireman> listFiremen = curr.getFiremen();
+
+            foreach (Fireman f in listFiremen)
+            {
+                if (f.getEngine() != null)
+                    moveFirefighter(f, curr, destination);
             }
 
             currGameUnits.Remove(this);
@@ -2907,22 +2934,22 @@ public class Fireman : GameUnit
 
     private void sendDriveAmbulanceEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction, PV.ViewID};
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendDriveEngineEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction, PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendRideAmbulanceEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendRideEngineEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
@@ -3380,21 +3407,33 @@ public class Fireman : GameUnit
         }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
-
             int direction = (int)dataReceived[0];
-            driveAmbulance(direction);
+            int viewID = (int)dataReceived[1];
+
+            if (PV.ViewID == viewID)
+                driveAmbulance(direction);
         }
         else if (evCode == (byte)PhotonEventCodes.DriveEngine) {
             object[] dataReceived = eventData.CustomData as object[];
-
             int direction = (int)dataReceived[0];
-            driveEngine(direction);
+            int viewID = (int)dataReceived[1];
+
+            if (PV.ViewID == viewID)
+                driveEngine(direction);
         }
         else if (evCode == (byte)PhotonEventCodes.RideEngine) {
-            rideEngine();
+            object[] dataReceived = eventData.CustomData as object[];
+            int viewID = (int)dataReceived[0];
+
+            if (PV.ViewID == viewID)
+                rideEngine();
         }
         else if (evCode == (byte)PhotonEventCodes.RideAmbulance) {
-            rideAmbulance();
+            object[] dataReceived = eventData.CustomData as object[];
+            int viewID = (int)dataReceived[0];
+
+            if(PV.ViewID == viewID)
+                rideAmbulance();
         }
     }
 }
