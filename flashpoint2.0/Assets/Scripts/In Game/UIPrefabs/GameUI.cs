@@ -77,9 +77,18 @@ public class GameUI : MonoBehaviour
     public void AddSavedVictim()
     {
         savedVictim++;
-        if (savedVictim >= 7)
+        if (GameManager.savedVictims >= 7)
         {
-            GameManager.GameWon();
+            //check for a perfect game
+            if (GameManager.savedVictims == 10)
+            {
+                GameManager.GameWon();
+                GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
+            }
+            if (!GameWonUI.isCalled)
+            {
+                GameManager.GameWon();
+            }
         }
         UpdateSavedVictim();
     }
