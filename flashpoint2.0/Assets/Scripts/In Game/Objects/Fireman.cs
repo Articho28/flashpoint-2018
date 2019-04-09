@@ -2142,7 +2142,15 @@ public class Fireman : GameUnit
         if (numAP == 1 && currentSpaceStatus == SpaceStatus.Fire)
         {
             GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
-            this.setAP(numAP - 1);
+            if(this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 1)
+            {
+                this.extinguishAP = extinguishAP - 1;
+                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+            }
+            else
+            {
+                this.setAP(numAP - 1);
+            }
             FiremanUI.instance.SetAP(this.getAP());
             sendTurnFireMarkerToSmokeEvent(current);
             return;
@@ -3198,7 +3206,15 @@ public class Fireman : GameUnit
         }
         else
         {
-            this.setAP(this.getAP() - 1);
+            if(this.spec == Specialist.CAFSFirefighter && extinguishAP >= 1)
+            {
+                extinguishAP--;
+                FiremanUI.instance.SetSpecialistAP(extinguishAP);
+            }
+            else
+            {
+                this.setAP(this.getAP() - 1);
+            }
         }
     }
 
@@ -3211,7 +3227,15 @@ public class Fireman : GameUnit
         }
         else
         {
-            this.setAP(this.getAP() - 1);
+            if (this.spec == Specialist.CAFSFirefighter && extinguishAP >= 1)
+            {
+                extinguishAP--;
+                FiremanUI.instance.SetSpecialistAP(extinguishAP);
+            }
+            else
+            {
+                this.setAP(this.getAP() - 1);
+            }
         }
     }
 
@@ -3224,7 +3248,15 @@ public class Fireman : GameUnit
         }
         else
         {
-            this.setAP(this.getAP() - 2);
+            if (this.spec == Specialist.CAFSFirefighter && extinguishAP >= 2)
+            {
+                extinguishAP = extinguishAP - 2;
+                FiremanUI.instance.SetSpecialistAP(extinguishAP);
+            }
+            else
+            {
+                this.setAP(this.getAP() - 2);
+            }
         }
     }
 
