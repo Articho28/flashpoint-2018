@@ -10,6 +10,7 @@ public class QuitGame : MonoBehaviour
     {
         Debug.Log("You pressed Quit Game");
         PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene("StartScreen");
     }
 }
