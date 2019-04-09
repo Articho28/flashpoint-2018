@@ -741,6 +741,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
         newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
         targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>());
+        targetSpace.setSpaceStatus(SpaceStatus.Smoke);
         Debug.Log("Smokemarker was placed at " + newPosition);
     }
 
