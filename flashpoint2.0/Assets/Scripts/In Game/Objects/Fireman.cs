@@ -3163,7 +3163,7 @@ public class Fireman : GameUnit
         if (isMyOwn) {
             FiremanUI.instance.SetAP(this.AP);
             object[] data = new object[] { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
     }
 
@@ -3962,17 +3962,17 @@ public class Fireman : GameUnit
 
             //update UI if any
         }
-        else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
-            object[] dataReceived = eventData.CustomData as object[];
-            Space oldSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
-            Space newSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[2], (int)dataReceived[3]];
-            int firemanId = (int)dataReceived[4];
+        //else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
+        //    object[] dataReceived = eventData.CustomData as object[];
+        //    Space oldSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+        //    Space newSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[2], (int)dataReceived[3]];
+        //    int firemanId = (int)dataReceived[4];
 
-            if(this.PV.ViewID != firemanId) {
-                Fireman firemanThatMoved = oldSpace.getFiremanWithId(firemanId);
-                moveFirefighter(firemanThatMoved, oldSpace, newSpace);
-            }
-        }
+        //    if(this.PV.ViewID != firemanId) {
+        //        Fireman firemanThatMoved = oldSpace.getFiremanWithId(firemanId);
+        //        moveFirefighter(firemanThatMoved, oldSpace, newSpace);
+        //    }
+        //}
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
 
