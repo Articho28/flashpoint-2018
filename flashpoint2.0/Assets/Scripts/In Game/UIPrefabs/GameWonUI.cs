@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class GameWonUI : MonoBehaviour
 {
@@ -39,5 +40,8 @@ public class GameWonUI : MonoBehaviour
     public void returnToLobby()
     {
         Debug.Log("RETURNING TO LOBBY");
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+
     }
 }
