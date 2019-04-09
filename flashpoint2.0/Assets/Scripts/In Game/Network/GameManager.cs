@@ -329,7 +329,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         if (!isFamilyGame)
         {
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
-            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -545,6 +544,31 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         object[] data = { col, row };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, sendToAllOptions, SendOptions.SendReliable);
+    }
+
+    public void randomizePOIExperienced()
+    {
+        //randomize between 1 and 6
+        int col = UnityEngine.Random.Range(1, 8);
+        //randomize between 1 and 8
+        int row = UnityEngine.Random.Range(1, 6);
+
+        while (true)
+        {
+            if (GameManager.GM.containsFireOrSmoke(col, row) || GameManager.GM.alreadyPlaced(col, row))
+            {
+                int[] altSpace = GameManager.GM.replenishPOIAltSpace(col, row);
+                col = altSpace[0];
+                row = altSpace[1];
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        object[] data = { col, row, GameManager.numOfActivePOI };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     public void removeSmokeMarker(Space targetSpace)
@@ -1044,16 +1068,13 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 GameManager.GM.randomizePOI();
                 GameManager.GM.randomizePOI();
                 GameManager.GM.randomizePOI();
-                totalPOIs -= 3;
                 break;
             case 1:
                 GameManager.GM.randomizePOI();
                 GameManager.GM.randomizePOI();
-                totalPOIs -= 2;
                 break;
             case 2:
                 GameManager.GM.randomizePOI();
-                totalPOIs -= 1;
                 break;
             default:
                 break;
@@ -1063,32 +1084,51 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     //TODO add that in experienced game
     //add event in the network
-    public void replenishPOIExperienced() //experienced game
+    public static void replenishPOIExperienced() //experienced game
     {
-        //randomize between 1 and 6
-        int col = UnityEngine.Random.Range(1, 8);
-        //randomize between 1 and 8
-        int row = UnityEngine.Random.Range(1, 6);
-
-        while (true)
+        if (totalPOIs == 0)
         {
-
-            if (containsFireOrSmoke(col, row) || alreadyPlaced(col, row))
-            {
-                int[] altSpace = replenishPOIAltSpace(col, row);
-                col = altSpace[0];
-                row = altSpace[1];
-            }
-            else
-            {
-                break;
-            }
+            return;
         }
+        switch (numOfActivePOI)
+        {
+            case 0:
+                GameManager.GM.randomizePOI();
+                GameManager.GM.randomizePOI();
+                GameManager.GM.randomizePOI();
+                break;
+            case 1:
+                GameManager.GM.randomizePOI();
+                GameManager.GM.randomizePOI();
+                break;
+            case 2:
+                GameManager.GM.randomizePOI();
+                break;
+            default:
+                break;
+        }
+        ////randomize between 1 and 6
+        //int col = UnityEngine.Random.Range(1, 8);
+        ////randomize between 1 and 8
+        //int row = UnityEngine.Random.Range(1, 6);
 
-        object[] data = { col, row };
+        //while (true)
+        //{
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
+        //    if (GameManager.GM.containsFireOrSmoke(col, row) || GameManager.GM.alreadyPlaced(col, row))
+        //    {
+        //        int[] altSpace = GameManager.GM.replenishPOIAltSpace(col, row);
+        //        col = altSpace[0];
+        //        row = altSpace[1];
+        //    }
+        //    else
+        //    {
+        //        break;
+        //    }
+        //}
 
+        //object[] data = { col, row , GameManager.numOfActivePOI  };
+        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     public int[] replenishPOIAltSpace(int col, int row)
@@ -1206,11 +1246,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             Turn++;
             Debug.Log("Turn is now " + Turn);
             Debug.Log("number of players is " + NumberOfPlayers);
+            Debug.Log("IN inc turn: status of isFamilyGame is :" + isFamilyGame);
             if (Turn > NumberOfPlayers)
             {
                 Debug.Log("resetting  turn");
 
-                if (isPickSpecialist)
+                if (!isFamilyGame && isPickSpecialist)
                 {
                     Debug.Log("changing pick specialist to false");
                     isPickSpecialist = false;
@@ -1218,6 +1259,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 }
                 else if (isFirstReset)
                 {
+                    Debug.Log("Entered is First Reset");
                     //change the status to play game
                     GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
                     //FiremanUI.instance.SetAP(4);
@@ -1230,6 +1272,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 }
                 else
                 {
+                    Debug.Log("Simply resetting turn to player 1");
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
@@ -1237,6 +1280,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
             else
             {
+                Debug.Log("Increment turn");
                 if (isFirstReset)
                 {
                     DisplayToConsolePlaceFirefighter(Turn);
@@ -1602,18 +1646,23 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             object[] dataReceived = eventData.CustomData as object[];
             int col = (int)dataReceived[0];
             int row = (int)dataReceived[1];
+            int POICounter = (int)dataReceived[2];
 
-            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
-            Vector3 position = currentSpace.worldPosition;
-            GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
-            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+            if (POICounter < 3)
+            {
+                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
+                Vector3 position = currentSpace.worldPosition;
+                GameObject POI = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/POIs/POI")) as GameObject;
+                Vector3 newPosition = new Vector3(position.x, position.y, -5);
 
-            POI.GetComponent<Transform>().position = newPosition;
-            POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-            POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
-            POI.GetComponent<GameUnit>().setPhysicalObject(POI);
-            currentSpace.addOccupant(POI.GetComponent<POI>());
-            numOfActivePOI++;
+                POI.GetComponent<Transform>().position = newPosition;
+                POI.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+                POI.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_POI);
+                POI.GetComponent<GameUnit>().setPhysicalObject(POI);
+                currentSpace.addOccupant(POI.GetComponent<POI>());
+                numOfActivePOI++;
+                totalPOIs--;
+            }
         }
         else if (evCode == (byte)PhotonEventCodes.Door)
         {
@@ -1755,7 +1804,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         }
 
-        /*
+
         else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
         {
             object[] receivedData = eventData.CustomData as object[];
@@ -1765,7 +1814,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 Debug.Log("Received at " + i + " the name " + receivedData[i]);
                 playersListNameCache.Insert(i, receivedData[i]);
             }
-        }*/
+        }
+
+
 
     }
 }

@@ -48,5 +48,6 @@ public enum PhotonEventCodes
     UpdateSpaceReferenceToFireman = 41,
     UpdateTreatedVictimsState = 42,
     MoveTreatedVictim = 43,
-    RemoveTreatedVictim = 44
+    RemoveTreatedVictim = 44,
+    SendRoomOptions = 45
 }

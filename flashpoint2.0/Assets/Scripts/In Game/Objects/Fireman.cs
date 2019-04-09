@@ -34,6 +34,7 @@ public class Fireman : GameUnit
     private bool driverRerolledBlackDice;
     private bool driverRerolledRedDice;
     public bool isDoubleSpec; //for ap decrementing
+    public int actorNumber;
     public ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
@@ -46,6 +47,8 @@ public class Fireman : GameUnit
 
     void Start()
     {
+        //AP = 4;
+        actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
         savedAP = 0;
         carriedVictim = null;
         movedEngine = null;
@@ -80,7 +83,7 @@ public class Fireman : GameUnit
     {
 
 
-        if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+        if (PV.IsMine && GameManager.GM.Turn == actorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
         {
             //ADDITIONAL KEYS IN EXPERIENCED GAME
@@ -1286,7 +1289,8 @@ public class Fireman : GameUnit
                 carryHazmat();
             }
         }
-       else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+
+       else if (PV.IsMine && GameManager.GM.Turn == actorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST)
         {
             //if the user presses 0
@@ -1552,7 +1556,7 @@ public class Fireman : GameUnit
                 }
             }
         }
-        else if (GameManager.GM.Turn != PhotonNetwork.LocalPlayer.ActorNumber)
+        else if (GameManager.GM.Turn != actorNumber)
         {
             GameConsole.instance.UpdateFeedback("It's not your turn!");
         }
@@ -2776,11 +2780,22 @@ public class Fireman : GameUnit
         SpaceKind destinationSpaceKind = dst.getSpaceKind();
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
+        bool isAmbulanceOnDest = false;
+
+        foreach (GameUnit gu in dst.getOccupants())
+        {
+            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
+            {
+                isAmbulanceOnDest = true;
+                break;
+            }
+        }
         Victim carried = this.carriedVictim;
         Victim treated = this.treatedVictim;
 
         if ((GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor) 
-        || (!GameManager.GM.isFamilyGame && dst.isAmbulanceSpot)) {     //carry victim outside the building
+        || (!GameManager.GM.isFamilyGame && isAmbulanceOnDest)) {     //carry victim outside the building
+
             if(carried == v){
                 moveFirefighter(curr, dst, 2, true);
                 this.setVictim(null);
@@ -2790,9 +2805,6 @@ public class Fireman : GameUnit
                 moveFirefighter(curr, dst, 0, true); 
                 this.treatedVictim = null;
             }
-            //moveFirefighter(curr, dst, 2, true);
-            //this.setVictim(null);
-
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
@@ -3047,9 +3059,15 @@ public class Fireman : GameUnit
         }
         restoreAP();
         GameManager.advanceFire();
-        GameManager.replenishPOI();
+        if (GameManager.GM.isFamilyGame)
+        {
+            GameManager.replenishPOI();
+        }
+        else
+        {
+            GameManager.replenishPOIExperienced();
+        }
         GameManager.IncrementTurn();
-
     }
 
 
