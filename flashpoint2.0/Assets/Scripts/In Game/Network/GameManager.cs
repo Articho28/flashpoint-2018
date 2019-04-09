@@ -542,7 +542,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             break;
         }
 
-        object[] data = { col, row };
+        object[] data = { col, row , GameManager.numOfActivePOI };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlacePOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 

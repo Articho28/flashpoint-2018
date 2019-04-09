@@ -323,7 +323,7 @@ public class Game : MonoBehaviour
                 Game.rollDice();
                 Game.placeRandomPOIs();
                 numPOI = Game.getActivePOIs();
-            }
+        }
             int endBuildingDamage = Game.getBuildingDamage();
             int numVictimLost = Game.getNumLostVictims();
             if (endBuildingDamage >= 24 || numVictimLost >= 4)
