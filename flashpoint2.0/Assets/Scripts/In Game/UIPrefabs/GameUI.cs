@@ -77,18 +77,39 @@ public class GameUI : MonoBehaviour
     public void AddSavedVictim()
     {
         savedVictim++;
+        if (GameManager.savedVictims >= 7)
+        {
+            //check for a perfect game
+            if (GameManager.savedVictims == 10)
+            {
+                GameManager.GameWon();
+                GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
+            }
+            if (!GameWonUI.isCalled)
+            {
+                GameManager.GameWon();
+            }
+        }
         UpdateSavedVictim();
     }
 
     public void AddLostVictim()
     {
         lostVictim++;
+        if (lostVictim >=4)
+        {
+            GameManager.GameLost();
+        }
         UpdateLostVictim();
     }
 
     public void AddDamage(int newDamage)
     {
         damage += newDamage;
+        if (damage >= 24)
+        {
+            GameManager.GameLost();
+        }
         UpdateDamage();
     }
 
