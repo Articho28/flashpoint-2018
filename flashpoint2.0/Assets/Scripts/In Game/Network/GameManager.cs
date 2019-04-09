@@ -329,7 +329,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         if (!isFamilyGame)
         {
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PickSpecialist, null, sendToAllOptions, SendOptions.SendReliable);
-            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireFighter, null, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
@@ -1247,11 +1246,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             Turn++;
             Debug.Log("Turn is now " + Turn);
             Debug.Log("number of players is " + NumberOfPlayers);
+            Debug.Log("IN inc turn: status of isFamilyGame is :" + isFamilyGame);
             if (Turn > NumberOfPlayers)
             {
                 Debug.Log("resetting  turn");
 
-                if (isPickSpecialist)
+                if (!isFamilyGame && isPickSpecialist)
                 {
                     Debug.Log("changing pick specialist to false");
                     isPickSpecialist = false;
@@ -1259,6 +1259,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 }
                 else if (isFirstReset)
                 {
+                    Debug.Log("Entered is First Reset");
                     //change the status to play game
                     GameStatus = FlashPointGameConstants.GAME_STATUS_PLAY_GAME;
                     //FiremanUI.instance.SetAP(4);
@@ -1271,6 +1272,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 }
                 else
                 {
+                    Debug.Log("Simply resetting turn to player 1");
                     Turn = 1;
                     DisplayPlayerTurn();
                     DisplayToConsolePlayGame(Turn);
@@ -1278,6 +1280,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
             else
             {
+                Debug.Log("Increment turn");
                 if (isFirstReset)
                 {
                     DisplayToConsolePlaceFirefighter(Turn);
@@ -1801,7 +1804,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         }
 
-        /*
+
         else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
         {
             object[] receivedData = eventData.CustomData as object[];
@@ -1811,7 +1814,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 Debug.Log("Received at " + i + " the name " + receivedData[i]);
                 playersListNameCache.Insert(i, receivedData[i]);
             }
-        }*/
+        }
+
+
 
     }
 }

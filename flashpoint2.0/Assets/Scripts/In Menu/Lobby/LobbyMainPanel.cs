@@ -256,6 +256,10 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
 
+        object[] data = new object[2] { RoomSetup.RM.getIsFamilyGame(), RoomSetup.RM.getExperiencedModeDifficultyIndex() };
+
+        PhotonNetwork.RaiseEvent( (byte) PhotonEventCodes.SendRoomOptions, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
+
         Debug.Log("Room Joined!");
         PhotonNetwork.LoadLevel("FamilyGame");
     }
@@ -389,6 +393,35 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
     }
 
+    public void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+    }
+
+    public void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    public void OnEvent(EventData eventData)
+    {
+        byte evCode = eventData.Code;
+        if (evCode == (byte)PhotonEventCodes.SendRoomOptions)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+            bool receivedFamilyGame = (bool)receivedData[0];
+            int gameDifficulty = (int)receivedData[1];
 
 
+            RoomSetup.RM.setIsFamilyGame(receivedFamilyGame);
+
+
+            if (!receivedFamilyGame)
+            {
+                RoomSetup.RM.setExperiencedModeDifficultyIndex(gameDifficulty);
+            }
+
+
+        }
+    }
 }

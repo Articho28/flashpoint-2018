@@ -33,6 +33,7 @@ public class Fireman : GameUnit
     private bool driverRerolledBlackDice;
     private bool driverRerolledRedDice;
     public bool isDoubleSpec; //for ap decrementing
+    public int actorNumber;
     public ArrayList validInputOptions;
     Space locationArgument;
     Specialist spec;
@@ -46,6 +47,7 @@ public class Fireman : GameUnit
     void Start()
     {
         //AP = 4;
+        actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
         savedAP = 0;
         carriedVictim = null;
         movedEngine = null;
@@ -73,7 +75,7 @@ public class Fireman : GameUnit
     {
 
 
-        if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+        if (PV.IsMine && GameManager.GM.Turn == actorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
         {
             //ADDITIONAL KEYS IN EXPERIENCED GAME
@@ -1268,7 +1270,8 @@ public class Fireman : GameUnit
                 carryHazmat();
             }
         }
-       else if (PV.IsMine && GameManager.GM.Turn == PhotonNetwork.LocalPlayer.ActorNumber && GameManager.GameStatus ==
+
+       else if (PV.IsMine && GameManager.GM.Turn == actorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST)
         {
             //if the user presses 0
@@ -1534,7 +1537,7 @@ public class Fireman : GameUnit
                 }
             }
         }
-        else if (GameManager.GM.Turn != PhotonNetwork.LocalPlayer.ActorNumber)
+        else if (GameManager.GM.Turn != actorNumber)
         {
             GameConsole.instance.UpdateFeedback("It's not your turn!");
         }

@@ -199,6 +199,7 @@ MonoBehaviour:
   physicalObject: {fileID: 0}
   PV: {fileID: 0}
   isDoubleSpec: 0
+  actorNumber: 0
 --- !u!212 &3514466168452548589
 SpriteRenderer:
   m_ObjectHideFlags: 0
