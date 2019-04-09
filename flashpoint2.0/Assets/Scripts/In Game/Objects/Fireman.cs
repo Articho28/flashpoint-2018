@@ -96,36 +96,79 @@ public class Fireman : GameUnit
             {
                 if (Input.GetKeyDown(KeyCode.G))
                 {
-                    CallDeckGun(); 
-                }
-                else if (Input.GetKeyDown(KeyCode.H))
-                {
-                    CallAmbulance();
-                }
-                else if (Input.GetKeyDown(KeyCode.T))
-                {
-                    CallEngine();
-                }
-                else if (Input.GetKeyDown(KeyCode.R))
-                {
-                    GameConsole.instance.UpdateFeedback("Press 1 if you want to ride the ambulance \n" +
-                        "Press 2 if you want to ride the engine \n");
-                    isWaitingForInput = true;
-                    isRidingVehicle = true;
-                }
-                else if (Input.GetKeyDown(KeyCode.X))
-                {
-                    exitVehicle();
-                }
-                else if (Input.GetKeyDown(KeyCode.K))
-                {
-                    if(this.spec == Specialist.Paramedic)
+                    if (!GameManager.GM.isFamilyGame)
                     {
-                        treatVictim();
+                        CallDeckGun();
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("You have to be a Paramedic to do this move!");
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.H))
+                {
+                    if (!GameManager.GM.isFamilyGame)
+                    {
+                        CallAmbulance();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.T))
+                {
+                    if (!GameManager.GM.isFamilyGame)
+                    {
+                        CallEngine();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.R))
+                {
+                    if (!GameManager.GM.isFamilyGame)
+                    {
+                        GameConsole.instance.UpdateFeedback("Press 1 if you want to ride the ambulance \n" +
+                                                "Press 2 if you want to ride the engine \n");
+                        isWaitingForInput = true;
+                        isRidingVehicle = true;
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.X))
+                {
+                    if (!GameManager.GM.isFamilyGame)
+                    {
+                        exitVehicle();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                    }
+
+                }
+                else if (Input.GetKeyDown(KeyCode.K))
+                {
+                    if (!GameManager.GM.isFamilyGame)
+                    {
+                        if (this.spec == Specialist.Paramedic)
+                        {
+                            treatVictim();
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("You have to be a Paramedic to do this move!");
+                        }
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
                     }
                 }
                 else if (Input.GetKeyDown(KeyCode.I)) 
@@ -133,30 +176,37 @@ public class Fireman : GameUnit
                     //Identify POI anywhere on the board
                     //Only for imaging technicians
 
-                    identifyPOI();
+                    if (!GameManager.GM.isFamilyGame)
+                    {
+                        identifyPOI();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                    }
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha1))
+                else if (Input.GetKeyDown(KeyCode.Alpha1) && !GameManager.GM.isFamilyGame)
                 {
                     if(isWaitingForInput && isFiringDeckGun)
                     {
                         DriverReroll(1);
                     }
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
+                else if (Input.GetKeyDown(KeyCode.Alpha2) && !GameManager.GM.isFamilyGame)
                 {
                     if (isWaitingForInput && isFiringDeckGun)
                     {
                         DriverReroll(2);
                     }
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
+                else if (Input.GetKeyDown(KeyCode.Alpha3) && !GameManager.GM.isFamilyGame)
                 {
                     if (isWaitingForInput && isFiringDeckGun)
                     {
                         DriverReroll(3);
                     }
                 }
-                else if (Input.GetKeyDown(KeyCode.Alpha4))
+                else if (Input.GetKeyDown(KeyCode.Alpha4) && !GameManager.GM.isFamilyGame)
                 {
                     if (isWaitingForInput && isFiringDeckGun)
                     {
@@ -165,7 +215,7 @@ public class Fireman : GameUnit
                         fireDeckGun();
                     }
                 }
-                else if (Input.GetMouseButtonDown(0))
+                else if (Input.GetMouseButtonDown(0) && !GameManager.GM.isFamilyGame)
                 { // if left button pressed
                     Space spaceClicked = StateManager.instance.spaceGrid.getGrid()[0, 0]; //initialize it randomly hehe
                     if (isWaitingForInput && isIdentifyingPOI)
@@ -215,18 +265,39 @@ public class Fireman : GameUnit
                 else if (Input.GetKeyDown(KeyCode.L))
                 {
                     //reveal POI
-                    if (this.spec == Specialist.RescueDog)
+                    if (!GameManager.GM.isFamilyGame)
                     {
-                        revealPOI();
+                        if (this.spec == Specialist.RescueDog)
+                        {
+                            revealPOI();
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
+                        }
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
                     }
                 }
                 else if (Input.GetKeyDown(KeyCode.U))
                 {
-                    //squeeze
+                    if (!GameManager.GM.isFamilyGame)
+                    {
+                        if (this.spec == Specialist.RescueDog)
+                        {
+                            //squeeze();
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
+                        }
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                    }
 
                 }
             }
