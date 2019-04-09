@@ -2771,7 +2771,7 @@ public class Fireman : GameUnit
             }
             if(treated == v)
             {
-                moveFirefighter(curr, dst, 1, true);
+                moveFirefighter(curr, dst, 0, true); 
                 this.treatedVictim = null;
             }
             //moveFirefighter(curr, dst, 2, true);
@@ -2780,6 +2780,7 @@ public class Fireman : GameUnit
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveTreatedVictim, data, sendToAllOptions, SendOptions.SendReliable);
 
             GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
 
@@ -2805,7 +2806,7 @@ public class Fireman : GameUnit
             }
             if (treated == v)
             {
-                moveFirefighter(curr, dst, 1, true);
+                moveFirefighter(curr, dst, 0, true);
             }
 
             //update carried victim positions across the network
@@ -3476,6 +3477,39 @@ public class Fireman : GameUnit
                 GameUI.instance.AddSavedVictim();
             }
             else {
+                GameManager.numOfActivePOI--;
+                GameManager.lostVictims++;
+                GameUI.instance.AddLostVictim();
+                GameManager.numVictim--;
+                GameConsole.instance.UpdateFeedback("A victim just perished.");
+            }
+
+        }
+        else if (evCode == (byte)PhotonEventCodes.RemoveTreatedVictim)
+        {
+            //parse data
+            object[] dataReceived = eventData.CustomData as object[];
+            Space curr = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+            int firemanId = (int)dataReceived[2];
+            bool saved = (bool)dataReceived[3];
+
+            Victim victim = StateManager.instance.firemanTreatedVictims[firemanId];
+
+            //update game states
+            curr.removeOccupant(victim);
+            Destroy(victim.gameObject);
+            Destroy(victim);
+            StateManager.instance.firemanTreatedVictims.Remove(firemanId);
+
+            //update UI
+            if (saved)
+            {
+                GameManager.numOfActivePOI--;
+                GameManager.savedVictims++;
+                GameUI.instance.AddSavedVictim();
+            }
+            else
+            {
                 GameManager.numOfActivePOI--;
                 GameManager.lostVictims++;
                 GameUI.instance.AddLostVictim();
