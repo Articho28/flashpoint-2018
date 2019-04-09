@@ -33,6 +33,7 @@ public class Fireman : GameUnit
     private bool isFiringDeckGun;
     private bool driverRerolledBlackDice;
     private bool driverRerolledRedDice;
+    private bool isRevealingPOI;
     public bool isDoubleSpec; //for ap decrementing
     public int actorNumber;
     public ArrayList validInputOptions;
@@ -210,6 +211,23 @@ public class Fireman : GameUnit
                             isIdentifyingPOI = true;
                         }
                     }
+                }
+                else if (Input.GetKeyDown(KeyCode.L))
+                {
+                    //reveal POI
+                    if (this.spec == Specialist.RescueDog)
+                    {
+                        revealPOI();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.U))
+                {
+                    //squeeze
+
                 }
             }
 
@@ -454,7 +472,47 @@ public class Fireman : GameUnit
                         isChangingCrew = true;
                     }
 
-                } 
+                }
+                if (isWaitingForInput && isRevealingPOI)
+                {
+                    isWaitingForInput = false;
+                    isRevealingPOI = false;
+
+                    if (validInputOptions.Contains(0))
+                    {
+                        Debug.Log("This is a valid reveal option.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 0);
+                        List<GameUnit> gu = targetSpace.getOccupants();
+                        bool spaceHasPOI = false;
+                        foreach (GameUnit g in gu)
+                        {
+                            if (g.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                spaceHasPOI = true;
+                                break;
+                            }
+                        }
+
+                        if (spaceHasPOI == true)
+                        {
+                            GameManager.FlipPOI(targetSpace);
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
+                            isWaitingForInput = true;
+                            isRevealingPOI = true;
+                        }
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isRevealingPOI = true;
+                    }
+                }
 
 
             }
@@ -616,6 +674,46 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
                         isWaitingForInput = true;
                         isChangingCrew = true;
+                    }
+                }
+                if (isWaitingForInput && isRevealingPOI)
+                {
+                    isWaitingForInput = false;
+                    isRevealingPOI = false;
+
+                    if (validInputOptions.Contains(1))
+                    {
+                        Debug.Log("This is a valid reveal option.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 1);
+                        List<GameUnit> gu = targetSpace.getOccupants();
+                        bool spaceHasPOI = false;
+                        foreach (GameUnit g in gu)
+                        {
+                            if (g.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                spaceHasPOI = true;
+                                break;
+                            }
+                        }
+
+                        if (spaceHasPOI == true)
+                        {
+                            GameManager.FlipPOI(targetSpace);
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
+                            isWaitingForInput = true;
+                            isRevealingPOI = true;
+                        }
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isRevealingPOI = true;
                     }
                 }
             }
@@ -780,6 +878,46 @@ public class Fireman : GameUnit
                         isChangingCrew = true;
                     }
                 }
+                if (isWaitingForInput && isRevealingPOI)
+                {
+                    isWaitingForInput = false;
+                    isRevealingPOI = false;
+
+                    if (validInputOptions.Contains(2))
+                    {
+                        Debug.Log("This is a valid reveal option.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 2);
+                        List<GameUnit> gu = targetSpace.getOccupants();
+                        bool spaceHasPOI = false;
+                        foreach (GameUnit g in gu)
+                        {
+                            if (g.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                spaceHasPOI = true;
+                                break;
+                            }
+                        }
+
+                        if (spaceHasPOI == true)
+                        {
+                            GameManager.FlipPOI(targetSpace);
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
+                            isWaitingForInput = true;
+                            isRevealingPOI = true;
+                        }
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isRevealingPOI = true;
+                    }
+                }
 
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -934,6 +1072,46 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
                         isWaitingForInput = true;
                         isChangingCrew = true;
+                    }
+                }
+                if (isWaitingForInput && isRevealingPOI)
+                {
+                    isWaitingForInput = false;
+                    isRevealingPOI = false;
+
+                    if (validInputOptions.Contains(3))
+                    {
+                        Debug.Log("This is a valid reveal option.");
+                        validInputOptions = new ArrayList();
+                        Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 3);
+                        List<GameUnit> gu = targetSpace.getOccupants();
+                        bool spaceHasPOI = false;
+                        foreach (GameUnit g in gu)
+                        {
+                            if (g.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                            {
+                                spaceHasPOI = true;
+                                break;
+                            }
+                        }
+
+                        if (spaceHasPOI == true)
+                        {
+                            GameManager.FlipPOI(targetSpace);
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
+                            isWaitingForInput = true;
+                            isRevealingPOI = true;
+                        }
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isRevealingPOI = true;
                     }
                 }
 
@@ -1675,6 +1853,15 @@ public class Fireman : GameUnit
             this.moveAP = 0;
             FiremanUI.instance.SetSpecialistAP(0);
         }
+        else if (this.spec == Specialist.RescueDog)
+        {
+            this.setAP(12);
+            FiremanUI.instance.SetAP(this.getAP());
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
     }
 
     public int getSavedAP()
@@ -2155,6 +2342,23 @@ public class Fireman : GameUnit
             sendTurnFireMarkerToSmokeEvent(current);
             return;
         }
+        else if (numAP == 2 && currentSpaceStatus == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+            if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 2)
+            {
+                this.extinguishAP = extinguishAP - 2;
+                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+            }
+            else
+            {
+                this.setAP(numAP - 2);
+            }
+            FiremanUI.instance.SetAP(this.getAP());
+            sendFireMarkerExtinguishEvent(current);
+            return;
+
+        }
 
         //Get neighbors and their spacestatus. 
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
@@ -2170,7 +2374,7 @@ public class Fireman : GameUnit
         }
          
         //Check if sufficient AP.
-        if (numAP < 1)
+        if (numAP < 1 || (this.spec == Specialist.RescueSpecialist && extinguishAP < 1))
         {
             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
             GameConsole.instance.UpdateFeedback("Not enough AP!");
@@ -2866,7 +3070,20 @@ public class Fireman : GameUnit
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         this.setCurrentSpace(dst);
-        this.decrementAP(apCost);
+
+        if (this.spec == Specialist.RescueSpecialist && this.moveAP >= apCost)
+        {
+            this.moveAP = this.moveAP - apCost;
+            if (isMyOwn)
+            {
+                FiremanUI.instance.SetSpecialistAP(this.moveAP);
+            }
+        }
+        else
+        {
+            this.decrementAP(apCost);
+        }
+
         this.GetComponent<Transform>().position = newPosition;
 
         dst.addOccupant(this);
@@ -3159,6 +3376,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 3;
@@ -3168,6 +3386,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -3177,6 +3396,17 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
+            this.commandAP = 0;
+            this.extinguishAP = 0;
+            this.moveAP = 0;
+            FiremanUI.instance.SetSpecialistAP(0);
+        }
+        else if (this.spec == Specialist.RescueDog) 
+        {
+            newAP = Mathf.Min(currentNumAP + 12, 16);
+            this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -3362,6 +3592,67 @@ public class Fireman : GameUnit
         else
         {
             GameConsole.instance.UpdateFeedback("You can't do this move! You have to be an imaging technician.");
+        }
+    }
+
+    private ArrayList getNearbySpaces(Space s)
+    {
+        ArrayList nearbySpaces = new ArrayList();
+        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(this.getCurrentSpace());
+
+        //Collect directions in which there is a wall
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            if (neighbors[i] != null)
+            {
+                nearbySpaces.Add(i);
+            }
+        }
+        return nearbySpaces;
+    }
+
+
+    public void revealPOI()
+    {
+        if (!GameManager.GM.isFamilyGame && this.spec == Specialist.RescueDog)
+        {
+            //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
+            ArrayList nearbySpaces = getNearbySpaces(this.getCurrentSpace());
+            validInputOptions = nearbySpaces;
+
+            //Build string to show.
+            string optionsToUser = "";
+
+            foreach (int index in nearbySpaces)
+            {
+
+                if (index == 0)
+                {
+                    optionsToUser += "Press 0 for the Space on Top ";
+                }
+                else if (index == 1)
+                {
+                    optionsToUser += " Press 1 for the Space to Your Right";
+                }
+                else if (index == 2)
+                {
+                    optionsToUser += " Press 2 for the Space to the Bottom";
+                }
+                else if (index == 3)
+                {
+                    optionsToUser += " Press 3 for the Space to Your Left";
+
+                }
+            }
+
+            GameConsole.instance.UpdateFeedback(optionsToUser);
+
+            isWaitingForInput = true;
+            isRevealingPOI = true;
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You can't do this move! You have to be a Rescue Dog.");
         }
     }
 
