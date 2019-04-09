@@ -115,7 +115,14 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetKeyDown(KeyCode.K))
                 {
-                    treatVictim();
+                    if(this.spec == Specialist.Paramedic)
+                    {
+                        treatVictim();
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("You have to be a Paramedic to do this move!");
+                    }
                 }
                 else if (Input.GetKeyDown(KeyCode.I)) 
                 {
@@ -2233,25 +2240,34 @@ public class Fireman : GameUnit
     public void treatVictim()
     {
         Space current = this.getCurrentSpace();
-        List<GameUnit> gameUnits = current.getOccupants();
 
-        foreach (GameUnit gu in gameUnits)
+        if (treatedVictim != null)
         {
-            //if has POI marker
-            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-            {
-                Victim v = gu.GetComponent<Victim>();
-                this.treatedVictim = v;
-                GameConsole.instance.UpdateFeedback("Treated victim successfully!");
-
-                object[] data = { this.currentSpace.indexX, this.currentSpace.indexY, PV.ViewID };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateTreatedVictimsState, data, sendToAllOptions, SendOptions.SendReliable);
-
-                return;
-            }
+            GameConsole.instance.UpdateFeedback("You are already treating a victim!");
+            return;
         }
-        GameConsole.instance.UpdateFeedback("There is no victim to be treated!");
+        else
+        {
+            List<GameUnit> gameUnits = current.getOccupants();
 
+            foreach (GameUnit gu in gameUnits)
+            {
+                //if has POI marker
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                {
+                    Victim v = gu.GetComponent<Victim>();
+                    this.treatedVictim = v;
+                    GameConsole.instance.UpdateFeedback("Treated victim successfully!");
+
+                    object[] data = { this.currentSpace.indexX, this.currentSpace.indexY, PV.ViewID };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateTreatedVictimsState, data, sendToAllOptions, SendOptions.SendReliable);
+
+                    return;
+                }
+            }
+            GameConsole.instance.UpdateFeedback("There is no victim to be treated!");
+
+        }
     } 
     public void carryVictim()       //if ambulance carrying victim: 0AP && Victim is carried by ambulance in experienced game TODO
     {
