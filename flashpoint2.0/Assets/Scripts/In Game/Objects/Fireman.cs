@@ -92,8 +92,6 @@ public class Fireman : GameUnit
             //Drive vehicle "H"
             //Crew Change "W"
 
-            if (!GameManager.GM.isFamilyGame)
-            {
                 if (Input.GetKeyDown(KeyCode.G))
                 {
                     if (!GameManager.GM.isFamilyGame)
@@ -261,7 +259,7 @@ public class Fireman : GameUnit
                             isIdentifyingPOI = true;
                         }
                     }
-                }
+                
                 else if (Input.GetKeyDown(KeyCode.L))
                 {
                     //reveal POI
@@ -1560,6 +1558,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Paramedic is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
 
                     else
@@ -1587,6 +1586,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Fire Captain is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1613,6 +1613,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Imaging Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1639,6 +1640,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("CAFS Firefighter is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1665,6 +1667,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Hazmat Technician is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1691,6 +1694,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Generalist is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1717,6 +1721,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Rescue Specialist is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1743,6 +1748,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Driver Operator is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1769,6 +1775,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Rescue Dog is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -1795,6 +1802,7 @@ public class Fireman : GameUnit
                         newSpecAP();
                         GameConsole.instance.UpdateFeedback("Veteran is picked as Specialist.");
                         GameManager.IncrementTurn();
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
                     else
                     {
@@ -3345,6 +3353,7 @@ public class Fireman : GameUnit
         object[] data = new object[] { updatedIndexList };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ChangeCrew, data, GameManager.sendToAllOptions, SendOptions.SendReliable);
     }
+
     public void endTurn()
     {
         SpaceStatus currentSpaceStatus = currentSpace.getSpaceStatus();
