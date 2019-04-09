@@ -92,8 +92,6 @@ public class Fireman : GameUnit
             //Drive vehicle "H"
             //Crew Change "W"
 
-            if (!GameManager.GM.isFamilyGame)
-            {
                 if (Input.GetKeyDown(KeyCode.G))
                 {
                     if (!GameManager.GM.isFamilyGame)
@@ -261,7 +259,7 @@ public class Fireman : GameUnit
                             isIdentifyingPOI = true;
                         }
                     }
-                }
+                
                 else if (Input.GetKeyDown(KeyCode.L))
                 {
                     //reveal POI
