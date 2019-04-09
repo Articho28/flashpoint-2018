@@ -941,7 +941,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             //Handle door in that direction.
             else if (doorInExplosionDirection != null)
             {
-                destroyDoor(doorInExplosionDirection);
+                if (doorInExplosionDirection.getDoorStatus() == DoorStatus.Destroyed)
+                {
+                    Space nextSpace = StateManager.instance.spaceGrid.getNeighborInDirection(targetSpace, direction);
+                    resolveExplosionInDirection(nextSpace, direction);
+                }
+                else
+                {
+                    destroyDoor(doorInExplosionDirection);
+                }
             }
             else //Transmit explosion to next space otherwise
             {
