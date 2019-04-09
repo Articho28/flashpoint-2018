@@ -1081,9 +1081,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
     }
 
-
-    //TODO add that in experienced game
-    //add event in the network
     public static void replenishPOIExperienced() //experienced game
     {
         if (totalPOIs == 0)
@@ -1093,42 +1090,20 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         switch (numOfActivePOI)
         {
             case 0:
-                GameManager.GM.randomizePOI();
-                GameManager.GM.randomizePOI();
-                GameManager.GM.randomizePOI();
+                GameManager.GM.randomizePOIExperienced();
+                GameManager.GM.randomizePOIExperienced();
+                GameManager.GM.randomizePOIExperienced();
                 break;
             case 1:
-                GameManager.GM.randomizePOI();
-                GameManager.GM.randomizePOI();
+                GameManager.GM.randomizePOIExperienced();
+                GameManager.GM.randomizePOIExperienced();
                 break;
             case 2:
-                GameManager.GM.randomizePOI();
+                GameManager.GM.randomizePOIExperienced();
                 break;
             default:
                 break;
         }
-        ////randomize between 1 and 6
-        //int col = UnityEngine.Random.Range(1, 8);
-        ////randomize between 1 and 8
-        //int row = UnityEngine.Random.Range(1, 6);
-
-        //while (true)
-        //{
-
-        //    if (GameManager.GM.containsFireOrSmoke(col, row) || GameManager.GM.alreadyPlaced(col, row))
-        //    {
-        //        int[] altSpace = GameManager.GM.replenishPOIAltSpace(col, row);
-        //        col = altSpace[0];
-        //        row = altSpace[1];
-        //    }
-        //    else
-        //    {
-        //        break;
-        //    }
-        //}
-
-        //object[] data = { col, row , GameManager.numOfActivePOI  };
-        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     public int[] replenishPOIAltSpace(int col, int row)
