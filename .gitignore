@@ -37,3 +37,5 @@ sysinfo.txt
 
 # MacOS meta files
 *.DS_Store
+
+*ProjectVersion.txt
