@@ -393,6 +393,35 @@ public class LobbyMainPanel : MonoBehaviourPunCallbacks
 
     }
 
+    public void OnEnable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
+    }
+
+    public void OnDisable()
+    {
+        PhotonNetwork.NetworkingClient.EventReceived -= OnEvent;
+    }
+
+    public void OnEvent(EventData eventData)
+    {
+        byte evCode = eventData.Code;
+        if (evCode == (byte)PhotonEventCodes.SendRoomOptions)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+            bool receivedFamilyGame = (bool)receivedData[0];
+            int gameDifficulty = (int)receivedData[1];
 
 
+            RoomSetup.RM.setIsFamilyGame(receivedFamilyGame);
+
+
+            if (!receivedFamilyGame)
+            {
+                RoomSetup.RM.setExperiencedModeDifficultyIndex(gameDifficulty);
+            }
+
+
+        }
+    }
 }

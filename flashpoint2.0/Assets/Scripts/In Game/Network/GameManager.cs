@@ -1770,32 +1770,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
         }
 
-        else if (evCode == (byte) PhotonEventCodes.SendRoomOptions)
-        {
-            object[] receivedData = eventData.CustomData as object[];
 
-            bool receivedFamilyGame = (bool) receivedData[0];
-            int gameDifficulty = (int)receivedData[1];
-
-
-            isFamilyGame = receivedFamilyGame;
-
-            if (!isFamilyGame)
-            {
-                switch (gameDifficulty)
-                {
-                    case 0:
-                        difficulty = Difficulty.Recruit;
-                        break;
-                    case 1:
-                        difficulty = Difficulty.Veteran;
-                        break;
-                    case 2:
-                        difficulty = Difficulty.Heroic;
-                        break;
-                }
-            }
-        }
 
     }
 }
