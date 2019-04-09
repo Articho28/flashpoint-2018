@@ -2170,7 +2170,7 @@ public class Fireman : GameUnit
         }
          
         //Check if sufficient AP.
-        if (numAP < 1)
+        if (numAP < 1 || (this.spec == Specialist.RescueSpecialist && extinguishAP < 1))
         {
             Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
             GameConsole.instance.UpdateFeedback("Not enough AP!");
@@ -2866,7 +2866,20 @@ public class Fireman : GameUnit
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         this.setCurrentSpace(dst);
-        this.decrementAP(apCost);
+
+        if (this.spec == Specialist.RescueSpecialist && this.moveAP >= apCost)
+        {
+            this.moveAP = this.moveAP - apCost;
+            if (isMyOwn)
+            {
+                FiremanUI.instance.SetSpecialistAP(this.moveAP);
+            }
+        }
+        else
+        {
+            this.decrementAP(apCost);
+        }
+
         this.GetComponent<Transform>().position = newPosition;
 
         dst.addOccupant(this);
@@ -3159,6 +3172,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 3;
@@ -3168,6 +3182,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
@@ -3177,6 +3192,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
