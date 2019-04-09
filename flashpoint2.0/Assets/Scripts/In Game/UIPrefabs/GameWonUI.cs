@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class GameWonUI : MonoBehaviour
 {
@@ -42,6 +43,7 @@ public class GameWonUI : MonoBehaviour
         Debug.Log("RETURNING TO LOBBY");
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("StartScene");
 
     }
 }
