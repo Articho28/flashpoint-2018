@@ -411,13 +411,11 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     public static void rollDice()
     {
-        //TODO reset proper randomization
-
         System.Random r = new System.Random();
         blackDice = r.Next(1, 9);
         redDice = r.Next(1, 7);
-        //blackDice = 1; 
-        //redDice = 1;
+        blackDice = 3; 
+        redDice = 3;
 
     }
 
