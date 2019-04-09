@@ -2155,6 +2155,23 @@ public class Fireman : GameUnit
             sendTurnFireMarkerToSmokeEvent(current);
             return;
         }
+        else if (numAP == 2 && currentSpaceStatus == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+            if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 2)
+            {
+                this.extinguishAP = extinguishAP - 2;
+                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+            }
+            else
+            {
+                this.setAP(numAP - 2);
+            }
+            FiremanUI.instance.SetAP(this.getAP());
+            sendFireMarkerExtinguishEvent(current);
+            return;
+
+        }
 
         //Get neighbors and their spacestatus. 
         Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
