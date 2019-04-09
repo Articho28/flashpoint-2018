@@ -45,5 +45,7 @@ public enum PhotonEventCodes
     RemoveVictim = 38,
     RemoveHazmat = 39,
     InitializePOI = 40,
-    UpdateSpaceReferenceToFireman = 41
+    UpdateSpaceReferenceToFireman = 41,
+    UpdateTreatedVictimsState = 42,
+    MoveTreatedVictim = 43
 }
