@@ -201,7 +201,7 @@ MonoBehaviour:
   isDoubleSpec: 0
   actorNumber: 0
   spec: 0
---- !u!212 &305
+--- !u!212 &302
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

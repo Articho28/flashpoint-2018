@@ -1737,6 +1737,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             Debug.Log("Placing hazmats at " + hazmatIndexX3 + " and " + hazmatIndexY3);
 
+            placeHazmat(hazmatIndexX3, hazmatIndexY3);
+
 
             if (difficultyIndex == 1)
             {
