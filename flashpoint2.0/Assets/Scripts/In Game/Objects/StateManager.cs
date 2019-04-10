@@ -20,6 +20,7 @@ public class StateManager : MonoBehaviour {
     public Dictionary<int, Victim> firemanCarriedVictims;
     public Dictionary<int, Hazmat> firemanCarriedHazmats;
     public Dictionary<int, Victim> firemanTreatedVictims;
+    public Dictionary<int, Space> firemanCurrentSpaces;
 
     // Use this for initialization
     void Start() {
@@ -27,6 +28,7 @@ public class StateManager : MonoBehaviour {
         firemanCarriedVictims = new Dictionary<int, Victim>();
         firemanCarriedHazmats = new Dictionary<int, Hazmat>();
         firemanTreatedVictims = new Dictionary<int, Victim>();
+        firemanCurrentSpaces = new Dictionary<int, Space>();
     }
 
 }

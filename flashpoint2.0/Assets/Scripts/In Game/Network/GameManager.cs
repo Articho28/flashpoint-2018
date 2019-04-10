@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviourPun
     public int Turn = 1;
 
     //Local store of Players.
-
     public static int NumberOfPlayers;
     public bool isFirstReset;
     public bool isPickSpecialist;
