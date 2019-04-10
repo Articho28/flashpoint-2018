@@ -3495,21 +3495,25 @@ public class Fireman : GameUnit
                 return;
         }
         else {
-            //flip poi
-            List<GameUnit> gameUnits = destination.getOccupants();
-            foreach (GameUnit gu in gameUnits) {
-                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
-                    if (gu.GetComponent<POI>().getIsFlipped() == false) {
-                        GameManager.FlipPOI(destination);
-                        break;
-                    }
-                }
-            }
 
 
             if (v == null && hazmat == null && ap >= 1) //t does not have to be null because moving a treated victim does not incur AP costs
             {
                 moveFirefighter(curr, destination, 1, true);
+
+                //flip poi
+                List<GameUnit> gameUnits = destination.getOccupants();
+                foreach (GameUnit gu in gameUnits)
+                {
+                    if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                    {
+                        if (gu.GetComponent<POI>().getIsFlipped() == false)
+                        {
+                            GameManager.FlipPOI(destination);
+                            break;
+                        }
+                    }
+                }
             }
 
             //else if (v != null && ap >= 2)//if the fireman is carrying a victim
@@ -3530,6 +3534,20 @@ public class Fireman : GameUnit
                 if(ap >= 2)
                 {
                     this.move(v, curr, destination);
+
+                    //flip poi
+                    List<GameUnit> gameUnits = destination.getOccupants();
+                    foreach (GameUnit gu in gameUnits)
+                    {
+                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                        {
+                            if (gu.GetComponent<POI>().getIsFlipped() == false)
+                            {
+                                GameManager.FlipPOI(destination);
+                                break;
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -3541,6 +3559,19 @@ public class Fireman : GameUnit
                 if (ap >= 2)
                 {
                     this.move(hazmat, curr, destination);
+                    //flip poi
+                    List<GameUnit> gameUnits = destination.getOccupants();
+                    foreach (GameUnit gu in gameUnits)
+                    {
+                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                        {
+                            if (gu.GetComponent<POI>().getIsFlipped() == false)
+                            {
+                                GameManager.FlipPOI(destination);
+                                break;
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -3553,6 +3584,20 @@ public class Fireman : GameUnit
                 if(ap >= 1)
                 {
                     this.move(t, curr, destination);
+
+                    //flip poi
+                    List<GameUnit> gameUnits = destination.getOccupants();
+                    foreach (GameUnit gu in gameUnits)
+                    {
+                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                        {
+                            if (gu.GetComponent<POI>().getIsFlipped() == false)
+                            {
+                                GameManager.FlipPOI(destination);
+                                break;
+                            }
+                        }
+                    }
                 }
                 else
                 {
