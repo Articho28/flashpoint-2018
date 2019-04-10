@@ -815,6 +815,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     IEnumerator performVeteran(Fireman fireman, Space ambulanceSpot) {
         fireman.haltUserInput = true;
+        fireman.isDodging = true;
 
         string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down anyways";
         yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }, s, fireman));
@@ -844,6 +845,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         else if (input == KeyCode.Alpha1) {
             knockdownFireman(fireman, ambulanceSpot);
         }
+
+        fireman.isDodging = false;
         fireman.haltUserInput = false;
 
     }

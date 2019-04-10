@@ -47,7 +47,7 @@ public class Fireman : GameUnit
     Space locationArgument;
     public Specialist spec;
     public bool haltUserInput;
-
+    public bool isDodging;
     public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
         CachingOption = Photon.Realtime.EventCaching.DoNotCache,
@@ -2534,7 +2534,7 @@ public class Fireman : GameUnit
                 }
             }
         }
-        else if (GameManager.GM.Turn != actorNumber)
+        else if (GameManager.GM.Turn != actorNumber && !isDodging)
         {
             GameConsole.instance.UpdateFeedback("It's not your turn!");
         }
