@@ -541,6 +541,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     }
     public void placeInitialFireMarkerExperienced()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         int[] rows = new int[] {  3, 4, 4, 4 };
         int[] cols = new int[] {  6, 6, 5, 3 };
@@ -675,22 +677,24 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(targetSpace);
         List<Fireman> firemen = targetSpace.getFiremen();
         foreach (Fireman fireman in firemen) {
-            if (fireman.spec == Specialist.Generalist) {
-                GameConsole.instance.UpdateFeedback("press 0 if you would like to dodge\npress 1 if you would like to get knocked down");
-                StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 });
-            }
-
-            KeyCode input = UserInputManager.instance.validInput;
-            if(input == KeyCode.Alpha0) {
-                GameConsole.instance.UpdateFeedback("you pressed 0!");
-            }
-            else if(input == KeyCode.Alpha1) {
-                GameConsole.instance.UpdateFeedback("you pressed 1!");
-            }
-            knockdownFireman(fireman, ambulanceSpot);
+            if (fireman.spec == Specialist.Generalist) StartCoroutine(performVeteran());
+            else knockdownFireman(fireman, ambulanceSpot);
         }
 
         removePOIFromSpace(targetSpace);
+    }
+
+    IEnumerator performVeteran() {
+        GameConsole.instance.UpdateFeedback("Awaiting your choice...\npress 0 if you would like to dodge\npress 1 if you would like to get knocked down");
+        yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }));
+       
+        KeyCode input = UserInputManager.instance.validInput;
+        if (input == KeyCode.Alpha0) {
+            GameConsole.instance.UpdateFeedback("you pressed 0!");
+        }
+        else if (input == KeyCode.Alpha1) {
+            GameConsole.instance.UpdateFeedback("you pressed 1!");
+        }
     }
 
     private static void knockdownFireman(Fireman fireman, Space ambulanceSpot) {
