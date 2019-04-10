@@ -287,20 +287,22 @@ public class Fireman : GameUnit
                     isWaitingForInput = false;
                     isClickingFirefighter = false;
 
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        GameObject objectClicked = hit.transform.gameObject;
+                    //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    //RaycastHit hit;
+                    //if (Physics.Raycast(ray, out hit))
+                    //{
+                    //    GameObject objectClicked = hit.transform.gameObject;
 
-                        if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
-                        {
-                            Debug.Log("a tile was clicked");
-                            spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
-                            Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
-                        }
+                    //    if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
+                    //    {
+                    //        Debug.Log("a tile was clicked");
+                    //        spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
+                    //        Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
+                    //    }
 
-                    }
+                    //}
+
+                    spaceClicked = UserInputManager.instance.getLastSpaceClicked();
 
                     Debug.Log("click X " + spaceClicked.indexX);
                     Debug.Log("click Y " + spaceClicked.indexY);
