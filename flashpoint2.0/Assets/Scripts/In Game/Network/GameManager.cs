@@ -130,7 +130,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     void Start()
     {
-        //initialSetup();
+
     }
 
     // Update is called once per frame
@@ -1207,13 +1207,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         return coords;
 
-
-        //object[] data = { col, row };
-
-        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, data, sendToAllOptions, SendOptions.SendReliable);
-
-
-
     }
 
     public void placeHazmat(int x, int y)
@@ -1666,24 +1659,73 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             resolveExplosion(targetSpace);
 
         }
-        /*
+
         else if (evCode == (byte)PhotonEventCodes.PlaceHazmats)
         {
             object[] dataReceived = eventData.CustomData as object[];
-            int col = (int)dataReceived[0];
-            int row = (int)dataReceived[1];
 
-            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
-            Vector3 position = currentSpace.worldPosition;
-            GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
-            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+            int difficultyIndex = (int) dataReceived[0];
 
-            Hazmat.GetComponent<Transform>().position = newPosition;
-            Hazmat.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-            Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
-            Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
-            currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
-        }*/
+            int hazmatIndexX1 = (int) dataReceived[1];
+            int hazmatIndexY1 = (int) dataReceived[2];
+
+            placeHazmat(hazmatIndexX1, hazmatIndexY1);
+
+            int hazmatIndexX2 = (int)dataReceived[3];
+            int hazmatIndexY2 = (int)dataReceived[4];
+
+            placeHazmat(hazmatIndexX2, hazmatIndexY2);
+
+            int hazmatIndexX3 = (int)dataReceived[5];
+            int hazmatIndexY3 = (int)dataReceived[6];
+
+            placeHazmat(hazmatIndexX3, hazmatIndexY3);
+
+            if (difficultyIndex == 1)
+            {
+                int hazmatIndexX4 = (int)dataReceived[7];
+                int hazmatIndexY4 = (int)dataReceived[8];
+
+                placeHazmat(hazmatIndexX4, hazmatIndexY4);
+
+                
+            }
+
+            else if (difficultyIndex == 2)
+            {
+                int hazmatIndexX4 = (int)dataReceived[7];
+                int hazmatIndexY4 = (int)dataReceived[8];
+
+                placeHazmat(hazmatIndexX4, hazmatIndexY4);
+
+                int hazmatIndexX5 = (int)dataReceived[9];
+                int hazmatIndexY5 = (int)dataReceived[10];
+
+                placeHazmat(hazmatIndexX5, hazmatIndexY5);
+            }
+
+
+
+
+
+            //placeHazmat(hazmatCoords1[0], hazmatCoords1[1]);
+            //placeHazmat(hazmatCoords2[0], hazmatCoords1[1]);
+            //placeHazmat(hazmatCoords3[0], hazmatCoords3[1]);
+
+            //int col = (int)dataReceived[0];
+            //int row = (int)dataReceived[1];
+
+            //Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
+            //Vector3 position = currentSpace.worldPosition;
+            //GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
+            //Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            //Hazmat.GetComponent<Transform>().position = newPosition;
+            //Hazmat.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            //Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
+            //Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
+            //currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
+        }
 
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialHotSpot)
         {
@@ -2069,16 +2111,16 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 while ((hazmatCoords1[0] == hazmatCoords3[0] && hazmatCoords1[1] == hazmatCoords3[1])
                 || (hazmatCoords2[0] == hazmatCoords3[0] && hazmatCoords2[1] == hazmatCoords3[1]));
 
-                object[] hazmatLocations = new object[] {
+                object[] hazmatLocations = new object[] {difficultyIndex, 
                 hazmatCoords1[0], hazmatCoords1[1],
                 hazmatCoords2[0], hazmatCoords2[1],
                 hazmatCoords3[0], hazmatCoords3[1],
                 null, null,
                 null, null};
 
-                placeHazmat(hazmatCoords1[0], hazmatCoords1[1]);
-                placeHazmat(hazmatCoords2[0], hazmatCoords1[1]);
-                placeHazmat(hazmatCoords3[0], hazmatCoords3[1]);
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, hazmatLocations, sendToAllOptions, SendOptions.SendReliable);
+
+
 
                 Debug.Log("PLACED ALL HAZMATSSSSS");
             }
@@ -2094,6 +2136,4 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
 
 
-
-    }
 }
