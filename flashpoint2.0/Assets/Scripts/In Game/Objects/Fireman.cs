@@ -20,14 +20,14 @@ public class Fireman : GameUnit
     private List<Fireman> commandedFiremen;
     private Space commandedSpace;
     public PhotonView PV;
-    private bool isWaitingForInput;
+    private static bool isWaitingForInput;
     private bool isExtinguishingFire;
     private bool isChoppingWall;
     private bool isCallingAmbulance;
     private bool isCallingEngine;
     private bool isRidingVehicle;
     private bool isSelectingExtinguishOption;
-    private bool isSelectingSpecialist;
+    private static bool isSelectingSpecialist;
     private bool isChangingCrew;
     private bool isOnEngine;
     private bool isOnAmbulance;
@@ -2182,7 +2182,7 @@ public class Fireman : GameUnit
         carriedHazmat = h;
     }
 
-    public void selectSpecialist()
+    public static void selectSpecialist()
     {
         isWaitingForInput = true;
         isSelectingSpecialist = true;
