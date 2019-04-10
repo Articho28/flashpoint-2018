@@ -11,6 +11,7 @@ public class Fireman : GameUnit
     int commandAP;
     int extinguishAP;
     int moveAP;
+    int startOfTurnAP;
     FMStatus status;
     Victim carriedVictim;
     Victim treatedVictim;
@@ -4252,6 +4253,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(newAP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4262,6 +4264,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4272,6 +4275,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 2;
             this.extinguishAP = 0;
@@ -4282,6 +4286,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4292,6 +4297,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 3, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 3;
@@ -4302,6 +4308,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4312,6 +4319,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 5, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4322,6 +4330,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4332,6 +4341,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4342,6 +4352,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 4, 8);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4352,6 +4363,7 @@ public class Fireman : GameUnit
         {
             newAP = Mathf.Min(currentNumAP + 12, 16);
             this.setAP(newAP);
+            startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
             this.commandAP = 0;
             this.extinguishAP = 0;
@@ -4439,6 +4451,11 @@ public class Fireman : GameUnit
 
     public void changeCrew() //return the index of the specialist we want
     {
+        if(this.getAP() - startOfTurnAP != 0)
+        {
+            GameConsole.instance.UpdateFeedback("Crew change can only be the first move of the turn!");
+            return;
+        }
         if (this.getAP() >= 2)
         {
 
