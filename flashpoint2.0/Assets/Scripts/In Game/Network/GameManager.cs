@@ -158,9 +158,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 if (difficulty == Difficulty.Recruit) //3 hazmats + 3 initial explosions
                 {
                     Debug.Log("recruit difficulty");
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
+
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
@@ -176,15 +174,16 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     Space targetSpace3 = ExperiencedExplosion3();
                     object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
+
+                    placeHazmat();
+                    placeHazmat();
+                    placeHazmat();
                 }
 
                 else if (difficulty == Difficulty.Veteran) //4 hazmats + 3 initial explosions
                 {
                     Debug.Log("veteran difficulty");
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
+                   
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
@@ -200,16 +199,17 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     Space targetSpace3 = ExperiencedExplosion3();
                     object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
+
+                    placeHazmat();
+                    placeHazmat();
+                    placeHazmat();
+                    placeHazmat();
                 }
 
                 else if (difficulty == Difficulty.Heroic) //5 hazmats + 4 initial explosions
                 {
                     Debug.Log("heroic difficulty");
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
+
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
@@ -230,6 +230,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     Space targetSpace4 = ExperiencedExplosion2();
                     object[] data4 = new object[] { targetSpace4.worldPosition, targetSpace4.indexX, targetSpace4.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data4, sendToAllOptions, SendOptions.SendReliable);
+
+                    placeHazmat();
+                    placeHazmat();
+                    placeHazmat();
+                    placeHazmat();
+                    placeHazmat();
 
                 }
             }
@@ -402,7 +408,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         sendResolveFlashOverEvent();
 
+
     }
+
+   
 
     private static void sendResolveFlashOverEvent()
     {
@@ -469,6 +478,19 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT 
                 || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT
                 || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool alreadyPlacedHazmat(int col, int row)
+    {
+        List<GameUnit> occupants = StateManager.instance.spaceGrid.getGrid()[col, row].getOccupants();
+        foreach (GameUnit gu in occupants)
+        {
+            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT)
             {
                 return true;
             }
@@ -1049,7 +1071,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 continue;
             }
 
-            if (alreadyPlaced(col, row))
+            if (alreadyPlacedHazmat(col, row))
             {
                 continue;
             }
