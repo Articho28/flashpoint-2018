@@ -201,11 +201,7 @@ MonoBehaviour:
   isDoubleSpec: 0
   actorNumber: 0
   spec: 0
-<<<<<<< HEAD
---- !u!212 &305
-=======
 --- !u!212 &302
->>>>>>> 7a95bc6e79ca07f359858cf8f827256ab45b82c8
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
