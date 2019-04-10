@@ -4247,6 +4247,7 @@ public class Fireman : GameUnit
             {
                 moveFirefighter(f, curr, destination);
                 this.decrementAP(2);
+                FiremanUI.instance.SetAP(this.getAP());
             }
             else if (AP >= 3 && (v != null || t != null)) //cannot carry a victim into a fire
             {
@@ -4266,7 +4267,8 @@ public class Fireman : GameUnit
             if (v == null && hazmat == null && AP >= 1) //t does not have to be null because moving a treated victim does not incur AP costs
             {
                 moveFirefighter(f, curr, destination);
-                decrementAP(1);
+                this.decrementAP(1);
+                FiremanUI.instance.SetAP(this.getAP());
 
                 //flip poi
                 List<GameUnit> gameUnits = destination.getOccupants();
@@ -4288,7 +4290,8 @@ public class Fireman : GameUnit
                 if (AP >= 2)
                 {
                     this.moveVictimCommand(f, v, curr, destination);
-                    decrementAP(2);
+                    this.decrementAP(2);
+                    FiremanUI.instance.SetAP(this.getAP());
 
                     //flip poi
                     List<GameUnit> gameUnits = destination.getOccupants();
@@ -4317,7 +4320,9 @@ public class Fireman : GameUnit
                 if (AP >= 2)
                 {
                     this.moveHazmatCommand(f, hazmat, curr, destination); 
-                    decrementAP(2);
+                    this.decrementAP(2);
+                    FiremanUI.instance.SetAP(this.getAP());
+
                     //flip poi
                     List<GameUnit> gameUnits = destination.getOccupants();
                     foreach (GameUnit gu in gameUnits)
@@ -4345,7 +4350,8 @@ public class Fireman : GameUnit
                 if (AP >= 1)
                 {
                     this.moveVictimCommand(f, t, curr, destination);
-                    decrementAP(1);
+                    this.decrementAP(1);
+                    FiremanUI.instance.SetAP(this.getAP());
 
                     //flip poi
                     List<GameUnit> gameUnits = destination.getOccupants();
