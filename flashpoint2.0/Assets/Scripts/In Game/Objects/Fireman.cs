@@ -410,6 +410,7 @@ public class Fireman : GameUnit
                     foreach(Fireman f in commandedFiremen)
                     {
                         object[] data = { f.PV.ViewID , 0 };
+                        Debug.Log("we callin  ittttt");
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
                 }
@@ -421,23 +422,68 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                object[] data = { PV.ViewID, 2 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID, 2 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else
+                {
+                    object[] data = { PV.ViewID, 2 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                object[] data = { PV.ViewID , 1 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID, 1 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else
+                {
+                    object[] data = { PV.ViewID, 1 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                object[] data = { PV.ViewID, 3 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID, 3 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else
+                {
+                    object[] data = { PV.ViewID, 3 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.D)) //open/close door
             {
                 if (isWaitingForInput && isCommandingFirefighter)
                 {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
                     int commandedSpaceX = commandedSpace.indexX;
                     Debug.Log("command X" + commandedSpaceX);
                     int commandedSpaceY = commandedSpace.indexY;
@@ -1218,7 +1264,7 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 2);
-                        moveFirefighter(curr, destination, 1, true);
+                        //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 2 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
@@ -4162,6 +4208,7 @@ public class Fireman : GameUnit
 
         //Move = 5
         if (evCode == (byte)PhotonEventCodes.Move) {
+            Debug.Log("move on event!");
             object[] data = eventData.CustomData as object[];
             int direction = (int)data[1];
 
@@ -4383,8 +4430,10 @@ public class Fireman : GameUnit
         else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
             object[] dataReceived = eventData.CustomData as object[];
             Space space = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
-            space.addOccupant(this);
             int firemanId = (int)dataReceived[2];
+
+            if (space.getFiremanWithId(firemanId) == null)
+                space.addOccupant(this);
 
             Dictionary<int, Space> d = StateManager.instance.firemanCurrentSpaces;
             if (d.ContainsKey(firemanId))
