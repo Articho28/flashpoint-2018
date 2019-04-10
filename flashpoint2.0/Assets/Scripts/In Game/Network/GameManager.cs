@@ -670,22 +670,35 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         //knockdown placement - handles carried poi's
         Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(targetSpace);
-
-        Vector3 pos = new Vector3(ambulanceSpot.worldPosition.x, ambulanceSpot.worldPosition.y, -10);
-
         List<Fireman> firemen = targetSpace.getFiremen();
         foreach (Fireman fireman in firemen) {
-                Space currSpace = fireman.getCurrentSpace();
-                Fireman.moveFirefighter(fireman, currSpace, ambulanceSpot);
+            if (fireman.spec == Specialist.Generalist) {
+                GameConsole.instance.UpdateFeedback("press 0 if you would like to dodge\npress 1 if you would like to get knocked down");
+                StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 });
+            }
 
-                Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
-                if(d.ContainsKey(fireman.PV.ViewID)) {
-                    object[] data = { currSpace.indexX, currSpace.indexY, fireman.PV.ViewID, false };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
-                }
+            KeyCode input = UserInputManager.instance.validInput;
+            if(input == KeyCode.Alpha0) {
+                GameConsole.instance.UpdateFeedback("you pressed 0!");
+            }
+            else if(input == KeyCode.Alpha1) {
+                GameConsole.instance.UpdateFeedback("you pressed 1!");
+            }
+            knockdownFireman(fireman, ambulanceSpot);
         }
 
         removePOIFromSpace(targetSpace);
+    }
+
+    private static void knockdownFireman(Fireman fireman, Space ambulanceSpot) {
+        Space currSpace = fireman.getCurrentSpace();
+        Fireman.moveFirefighter(fireman, currSpace, ambulanceSpot);
+
+        Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
+        if (d.ContainsKey(fireman.PV.ViewID)) {
+            object[] data = { currSpace.indexX, currSpace.indexY, fireman.PV.ViewID, false };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
+        }
     }
 
     private void removePOIFromSpace(Space targetSpace)
