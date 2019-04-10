@@ -150,7 +150,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 Debug.Log("not family game");
 
                 placeInitialFireMarkerExperienced();
-                //placeInitialHotSpot();
                 placeInitialAmbulance();
                 placeInitialEngine();
 
@@ -436,8 +435,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         System.Random r = new System.Random();
         blackDice = r.Next(1, 9);
         redDice = r.Next(1, 7);
-        //blackDice = 3; 
-        //redDice = 3;
+        //blackDice = 1; 
+        //redDice = 1;
 
     }
 
@@ -686,6 +685,48 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
 
         removePOIFromSpace(targetSpace);
+
+
+        //Handle explosions due to Hazmats.
+        List<Hazmat> hazmats = targetSpace.GetHazmats();
+
+        if (hazmats.Count > 0)
+        {
+            Debug.Log("Found HAZMATS!!! in " + targetSpace.indexX + " and " + targetSpace.indexY + " and hazmat list size is " + hazmats.Count);
+            Debug.Log("Explosion due to hazmats at " + targetSpace.indexX + " and " + targetSpace.indexY);
+            resolveExplosion(targetSpace);
+            removeHazmats(targetSpace);
+
+        }
+        else
+        {
+            Debug.Log("Nah dog, no hazmats");
+        }
+
+
+    }
+
+    public void removeHazmats(Space targetSpace)
+    {
+        List<GameUnit> spaceOccupants = targetSpace.getOccupants();
+        GameUnit targetMarker = null;
+        foreach (GameUnit gm in spaceOccupants)
+        {
+            if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT)
+            {
+                Debug.Log("Found a hazmat marker");
+                targetMarker = gm;
+            }
+        }
+        if (targetMarker != null)
+        {
+            Debug.Log("Removing Hazmat at " + targetSpace.indexX + " and " + targetSpace.indexY + " )");
+            spaceOccupants.Remove(targetMarker);
+            Destroy(targetMarker.physicalObject);
+            Destroy(targetMarker);
+        }
+       
+
     }
 
     private void removePOIFromSpace(Space targetSpace)
@@ -1558,15 +1599,22 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             int hazmatIndexX1 = (int)dataReceived[1];
             int hazmatIndexY1 = (int)dataReceived[2];
 
+            Debug.Log("Placing hazmats at " + hazmatIndexX1 + " and " + hazmatIndexY1);
+
             placeHazmat(hazmatIndexX1, hazmatIndexY1);
 
             int hazmatIndexX2 = (int)dataReceived[3];
             int hazmatIndexY2 = (int)dataReceived[4];
 
+            Debug.Log("Placing hazmats at " + hazmatIndexX2 + " and " + hazmatIndexY2);
+
             placeHazmat(hazmatIndexX2, hazmatIndexY2);
 
             int hazmatIndexX3 = (int)dataReceived[5];
             int hazmatIndexY3 = (int)dataReceived[6];
+
+            Debug.Log("Placing hazmats at " + hazmatIndexX3 + " and " + hazmatIndexY3);
+
 
             placeHazmat(hazmatIndexX3, hazmatIndexY3);
 
@@ -1594,27 +1642,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
         }
 
-        else if (evCode == (byte)PhotonEventCodes.PlaceInitialHotSpot)
-        {
-            object[] dataReceived = eventData.CustomData as object[];
-            int[] cols = (int[])dataReceived[0];
-            int[] rows = (int[])dataReceived[1];
-
-            for (int i = 0; i < rows.Length; i++)
-            {
-                Space currentSpace = StateManager.instance.spaceGrid.getGrid()[cols[i], rows[i]];
-                Vector3 position = currentSpace.worldPosition;
-                GameObject newHotSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/HotSpot/hotspot")) as GameObject;
-                Vector3 newPosition = new Vector3(position.x, position.y, -5);
-
-                newHotSpot.GetComponent<Transform>().position = newPosition;
-                newHotSpot.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-                newHotSpot.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
-                newHotSpot.GetComponent<GameUnit>().setPhysicalObject(newHotSpot);
-                currentSpace.addOccupant(newHotSpot.GetComponent<GameUnit>());
-                currentSpace.setSpaceStatus(SpaceStatus.Fire);
-            }
-        }
         else if (evCode == (byte)PhotonEventCodes.PlaceAmbulanceParkingSpot)
         {
             object[] dataReceived = eventData.CustomData as object[];
@@ -1979,6 +2006,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
 
             int[] hazmatCoords1 = getRandomHazmatPlacementLocation();
+            //hazmatCoords1[0] = 1;
+            //hazmatCoords1[1] = 1;
 
             //Make sure we get different coordinates for each hazmat. 
             int[] hazmatCoords2;
