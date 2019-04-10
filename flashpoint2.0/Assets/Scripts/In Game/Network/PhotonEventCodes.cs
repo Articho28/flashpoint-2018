@@ -50,5 +50,6 @@ public enum PhotonEventCodes
     MoveTreatedVictim = 43,
     RemoveTreatedVictim = 44,
     SendRoomOptions = 45,
-    PlaceFireMarker = 46
+    PlaceFireMarker = 46,
+    ResolveInitialExplosionsExperienced = 47
 }
