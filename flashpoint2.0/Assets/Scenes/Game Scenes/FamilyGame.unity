@@ -237,7 +237,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 52
-  InstantiationId: 256
+  InstantiationId: 52
   isRuntimeInstantiated: 0
 --- !u!1 &18527177
 GameObject:
@@ -551,7 +551,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 140
-  InstantiationId: 234
+  InstantiationId: 140
   isRuntimeInstantiated: 0
 --- !u!4 &25203071 stripped
 Transform:
@@ -1039,7 +1039,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 111
-  InstantiationId: 241
+  InstantiationId: 111
   isRuntimeInstantiated: 0
 --- !u!1 &34451495
 GameObject:
@@ -1785,7 +1785,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 45
-  InstantiationId: 262
+  InstantiationId: 45
   isRuntimeInstantiated: 0
 --- !u!1 &60254984
 GameObject:
@@ -2243,7 +2243,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 114
-  InstantiationId: 201
+  InstantiationId: 114
   isRuntimeInstantiated: 0
 --- !u!1 &87244093
 GameObject:
@@ -2471,7 +2471,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 131
-  InstantiationId: 210
+  InstantiationId: 131
   isRuntimeInstantiated: 0
 --- !u!1 &88186964
 GameObject:
@@ -2835,7 +2835,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 53
-  InstantiationId: 316
+  InstantiationId: 53
   isRuntimeInstantiated: 0
 --- !u!1001 &104922581
 PrefabInstance:
@@ -2962,7 +2962,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 24
-  InstantiationId: 289
+  InstantiationId: 24
   isRuntimeInstantiated: 0
 --- !u!1 &105113803
 GameObject:
@@ -3186,7 +3186,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 122
-  InstantiationId: 245
+  InstantiationId: 122
   isRuntimeInstantiated: 0
 --- !u!1 &108841792
 GameObject:
@@ -3405,7 +3405,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 83
-  InstantiationId: 272
+  InstantiationId: 83
   isRuntimeInstantiated: 0
 --- !u!1 &113666864
 GameObject:
@@ -3630,7 +3630,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 88
-  InstantiationId: 203
+  InstantiationId: 88
   isRuntimeInstantiated: 0
 --- !u!1 &126901648
 GameObject:
@@ -4095,7 +4095,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 119
-  InstantiationId: 228
+  InstantiationId: 119
   isRuntimeInstantiated: 0
 --- !u!1001 &152224529
 PrefabInstance:
@@ -4353,7 +4353,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 107
-  InstantiationId: 229
+  InstantiationId: 107
   isRuntimeInstantiated: 0
 --- !u!1001 &180861719
 PrefabInstance:
@@ -4480,7 +4480,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 22
-  InstantiationId: 288
+  InstantiationId: 22
   isRuntimeInstantiated: 0
 --- !u!1001 &182282986
 PrefabInstance:
@@ -4879,7 +4879,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 28
-  InstantiationId: 325
+  InstantiationId: 28
   isRuntimeInstantiated: 0
 --- !u!1 &197144099
 GameObject:
@@ -5513,7 +5513,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 87
-  InstantiationId: 287
+  InstantiationId: 87
   isRuntimeInstantiated: 0
 --- !u!4 &223370916 stripped
 Transform:
@@ -5716,7 +5716,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 233568737}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.99, y: -2.89, z: 0}
+  m_LocalPosition: {x: 0.1, y: -0.98, z: 0}
   m_LocalScale: {x: 1.013625, y: 0.927, z: 1}
   m_Children:
   - {fileID: 160995241}
@@ -6104,7 +6104,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 86
-  InstantiationId: 324
+  InstantiationId: 86
   isRuntimeInstantiated: 0
 --- !u!1 &243487166
 GameObject:
@@ -6389,7 +6389,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 146
-  InstantiationId: 182
+  InstantiationId: 146
   isRuntimeInstantiated: 0
 --- !u!1001 &244796459
 PrefabInstance:
@@ -6935,7 +6935,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 85
-  InstantiationId: 280
+  InstantiationId: 85
   isRuntimeInstantiated: 0
 --- !u!1 &260198906
 GameObject:
@@ -7249,7 +7249,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 138
-  InstantiationId: 221
+  InstantiationId: 138
   isRuntimeInstantiated: 0
 --- !u!1001 &275973286
 PrefabInstance:
@@ -7376,7 +7376,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 9
-  InstantiationId: 261
+  InstantiationId: 9
   isRuntimeInstantiated: 0
 --- !u!1 &279610262
 GameObject:
@@ -7694,7 +7694,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 117
-  InstantiationId: 222
+  InstantiationId: 117
   isRuntimeInstantiated: 0
 --- !u!1001 &296238289
 PrefabInstance:
@@ -7826,7 +7826,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 132
-  InstantiationId: 209
+  InstantiationId: 132
   isRuntimeInstantiated: 0
 --- !u!1001 &298062249
 PrefabInstance:
@@ -8039,7 +8039,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 46
-  InstantiationId: 277
+  InstantiationId: 46
   isRuntimeInstantiated: 0
 --- !u!4 &305254277 stripped
 Transform:
@@ -8337,7 +8337,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 84
-  InstantiationId: 268
+  InstantiationId: 84
   isRuntimeInstantiated: 0
 --- !u!1001 &325570233
 PrefabInstance:
@@ -8465,7 +8465,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 47
-  InstantiationId: 292
+  InstantiationId: 47
   isRuntimeInstantiated: 0
 --- !u!1 &331822074
 GameObject:
@@ -8839,7 +8839,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 25
-  InstantiationId: 279
+  InstantiationId: 25
   isRuntimeInstantiated: 0
 --- !u!1 &341713628
 GameObject:
@@ -9053,7 +9053,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 124
-  InstantiationId: 208
+  InstantiationId: 124
   isRuntimeInstantiated: 0
 --- !u!4 &348728138 stripped
 Transform:
@@ -9481,7 +9481,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 81
-  InstantiationId: 263
+  InstantiationId: 81
   isRuntimeInstantiated: 0
 --- !u!1 &373100595
 GameObject:
@@ -9764,7 +9764,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 80
-  InstantiationId: 326
+  InstantiationId: 80
   isRuntimeInstantiated: 0
 --- !u!1 &389781155
 GameObject:
@@ -9975,7 +9975,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 113
-  InstantiationId: 227
+  InstantiationId: 113
   isRuntimeInstantiated: 0
 --- !u!1001 &392673931
 PrefabInstance:
@@ -10528,7 +10528,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 40
-  InstantiationId: 328
+  InstantiationId: 40
   isRuntimeInstantiated: 0
 --- !u!1 &437802848
 GameObject:
@@ -10982,7 +10982,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 41
-  InstantiationId: 265
+  InstantiationId: 41
   isRuntimeInstantiated: 0
 --- !u!1 &455147347
 GameObject:
@@ -11370,7 +11370,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 55
-  InstantiationId: 254
+  InstantiationId: 55
   isRuntimeInstantiated: 0
 --- !u!1 &462780753
 GameObject:
@@ -11543,7 +11543,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 17
-  InstantiationId: 315
+  InstantiationId: 17
   isRuntimeInstantiated: 0
 --- !u!1 &465101969
 GameObject:
@@ -12514,7 +12514,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 145
-  InstantiationId: 184
+  InstantiationId: 145
   isRuntimeInstantiated: 0
 --- !u!1 &530815061
 GameObject:
@@ -13005,7 +13005,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 134
-  InstantiationId: 204
+  InstantiationId: 134
   isRuntimeInstantiated: 0
 --- !u!1001 &562024839
 PrefabInstance:
@@ -13133,7 +13133,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 79
-  InstantiationId: 255
+  InstantiationId: 79
   isRuntimeInstantiated: 0
 --- !u!1 &567070690
 GameObject:
@@ -13529,7 +13529,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 121
-  InstantiationId: 224
+  InstantiationId: 121
   isRuntimeInstantiated: 0
 --- !u!1001 &574175335
 PrefabInstance:
@@ -13656,7 +13656,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 32
-  InstantiationId: 323
+  InstantiationId: 32
   isRuntimeInstantiated: 0
 --- !u!1 &577002879
 GameObject:
@@ -13991,7 +13991,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 133
-  InstantiationId: 250
+  InstantiationId: 133
   isRuntimeInstantiated: 0
 --- !u!1001 &585214009
 PrefabInstance:
@@ -14129,7 +14129,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 95
-  InstantiationId: 205
+  InstantiationId: 95
   isRuntimeInstantiated: 0
 --- !u!1 &588205219
 GameObject:
@@ -14442,7 +14442,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 123
-  InstantiationId: 247
+  InstantiationId: 123
   isRuntimeInstantiated: 0
 --- !u!1001 &605667270
 PrefabInstance:
@@ -14660,7 +14660,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 30
-  InstantiationId: 319
+  InstantiationId: 30
   isRuntimeInstantiated: 0
 --- !u!224 &615381582 stripped
 RectTransform:
@@ -14803,7 +14803,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 106
-  InstantiationId: 237
+  InstantiationId: 106
   isRuntimeInstantiated: 0
 --- !u!1001 &617679003
 PrefabInstance:
@@ -15099,7 +15099,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 78
-  InstantiationId: 298
+  InstantiationId: 78
   isRuntimeInstantiated: 0
 --- !u!1001 &637428357
 PrefabInstance:
@@ -15226,7 +15226,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 151
-  InstantiationId: 185
+  InstantiationId: 151
   isRuntimeInstantiated: 0
 --- !u!1001 &641547541
 PrefabInstance:
@@ -15354,7 +15354,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 77
-  InstantiationId: 327
+  InstantiationId: 77
   isRuntimeInstantiated: 0
 --- !u!1 &642285875
 GameObject:
@@ -15675,7 +15675,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 21
-  InstantiationId: 297
+  InstantiationId: 21
   isRuntimeInstantiated: 0
 --- !u!1 &665940001
 GameObject:
@@ -15903,7 +15903,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 100
-  InstantiationId: 198
+  InstantiationId: 100
   isRuntimeInstantiated: 0
 --- !u!1 &667952625
 GameObject:
@@ -16121,7 +16121,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 82
-  InstantiationId: 307
+  InstantiationId: 82
   isRuntimeInstantiated: 0
 --- !u!1 &674875039
 GameObject:
@@ -16525,7 +16525,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 23
-  InstantiationId: 295
+  InstantiationId: 23
   isRuntimeInstantiated: 0
 --- !u!1 &708524800
 GameObject:
@@ -17263,7 +17263,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 92
-  InstantiationId: 226
+  InstantiationId: 92
   isRuntimeInstantiated: 0
 --- !u!1 &742135059
 GameObject:
@@ -17486,7 +17486,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 26
-  InstantiationId: 314
+  InstantiationId: 26
   isRuntimeInstantiated: 0
 --- !u!1001 &755455048
 PrefabInstance:
@@ -17618,7 +17618,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 105
-  InstantiationId: 249
+  InstantiationId: 105
   isRuntimeInstantiated: 0
 --- !u!1001 &756658835
 PrefabInstance:
@@ -18016,7 +18016,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 149
-  InstantiationId: 181
+  InstantiationId: 149
   isRuntimeInstantiated: 0
 --- !u!1 &769480721
 GameObject:
@@ -18662,7 +18662,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 125
-  InstantiationId: 230
+  InstantiationId: 125
   isRuntimeInstantiated: 0
 --- !u!1 &796873059
 GameObject:
@@ -19335,7 +19335,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 76
-  InstantiationId: 282
+  InstantiationId: 76
   isRuntimeInstantiated: 0
 --- !u!1 &857831467
 GameObject:
@@ -19644,7 +19644,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 44
-  InstantiationId: 320
+  InstantiationId: 44
   isRuntimeInstantiated: 0
 --- !u!1 &863716800
 GameObject:
@@ -19959,7 +19959,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 75
-  InstantiationId: 303
+  InstantiationId: 75
   isRuntimeInstantiated: 0
 --- !u!1 &878798710
 GameObject:
@@ -20268,7 +20268,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 74
-  InstantiationId: 257
+  InstantiationId: 74
   isRuntimeInstantiated: 0
 --- !u!1 &897593783
 GameObject:
@@ -20492,7 +20492,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 103
-  InstantiationId: 217
+  InstantiationId: 103
   isRuntimeInstantiated: 0
 --- !u!1 &916179974
 GameObject:
@@ -21666,7 +21666,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 91
-  InstantiationId: 200
+  InstantiationId: 91
   isRuntimeInstantiated: 0
 --- !u!1001 &988938090
 PrefabInstance:
@@ -22308,7 +22308,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 13
-  InstantiationId: 310
+  InstantiationId: 13
   isRuntimeInstantiated: 0
 --- !u!1 &1004728456
 GameObject:
@@ -22701,7 +22701,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 120
-  InstantiationId: 231
+  InstantiationId: 120
   isRuntimeInstantiated: 0
 --- !u!1001 &1017293566
 PrefabInstance:
@@ -22828,7 +22828,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 144
-  InstantiationId: 187
+  InstantiationId: 144
   isRuntimeInstantiated: 0
 --- !u!1001 &1020012298
 PrefabInstance:
@@ -22955,7 +22955,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 31
-  InstantiationId: 311
+  InstantiationId: 31
   isRuntimeInstantiated: 0
 --- !u!1001 &1024294608
 PrefabInstance:
@@ -23082,7 +23082,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 147
-  InstantiationId: 179
+  InstantiationId: 147
   isRuntimeInstantiated: 0
 --- !u!1001 &1025211201
 PrefabInstance:
@@ -23219,7 +23219,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 90
-  InstantiationId: 242
+  InstantiationId: 90
   isRuntimeInstantiated: 0
 --- !u!1 &1026809502
 GameObject:
@@ -23430,7 +23430,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 127
-  InstantiationId: 248
+  InstantiationId: 127
   isRuntimeInstantiated: 0
 --- !u!1001 &1034591777
 PrefabInstance:
@@ -23557,7 +23557,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 73
-  InstantiationId: 285
+  InstantiationId: 73
   isRuntimeInstantiated: 0
 --- !u!114 &1043391000 stripped
 MonoBehaviour:
@@ -23866,7 +23866,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 16
-  InstantiationId: 259
+  InstantiationId: 16
   isRuntimeInstantiated: 0
 --- !u!1001 &1063116417
 PrefabInstance:
@@ -24435,7 +24435,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 72
-  InstantiationId: 251
+  InstantiationId: 72
   isRuntimeInstantiated: 0
 --- !u!1001 &1093756895
 PrefabInstance:
@@ -24567,7 +24567,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 99
-  InstantiationId: 214
+  InstantiationId: 99
   isRuntimeInstantiated: 0
 --- !u!1 &1106735878
 GameObject:
@@ -24757,6 +24757,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FiremanUIPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 1737030860860290934, guid: 8571a34456e164928923974b7405e8c7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9002676494666914329, guid: 8571a34456e164928923974b7405e8c7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -24879,17 +24884,32 @@ PrefabInstance:
     - target: {fileID: 3846493937614003724, guid: 8571a34456e164928923974b7405e8c7,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 25
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3846493937614003724, guid: 8571a34456e164928923974b7405e8c7,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7718754316594009982, guid: 8571a34456e164928923974b7405e8c7,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 25
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7718754316594009982, guid: 8571a34456e164928923974b7405e8c7,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6330945044303403187, guid: 8571a34456e164928923974b7405e8c7,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 25
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6330945044303403187, guid: 8571a34456e164928923974b7405e8c7,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 31286718048806311, guid: 8571a34456e164928923974b7405e8c7,
         type: 3}
@@ -25285,7 +25305,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 34
-  InstantiationId: 253
+  InstantiationId: 34
   isRuntimeInstantiated: 0
 --- !u!1 &1127787017
 GameObject:
@@ -25901,7 +25921,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 129
-  InstantiationId: 246
+  InstantiationId: 129
   isRuntimeInstantiated: 0
 --- !u!1 &1150537839
 GameObject:
@@ -26119,7 +26139,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 48
-  InstantiationId: 313
+  InstantiationId: 48
   isRuntimeInstantiated: 0
 --- !u!1 &1154277843
 GameObject:
@@ -26325,7 +26345,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 71
-  InstantiationId: 322
+  InstantiationId: 71
   isRuntimeInstantiated: 0
 --- !u!1001 &1157833634
 PrefabInstance:
@@ -26463,7 +26483,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 110
-  InstantiationId: 207
+  InstantiationId: 110
   isRuntimeInstantiated: 0
 --- !u!1001 &1167126232
 PrefabInstance:
@@ -28185,7 +28205,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 97
-  InstantiationId: 218
+  InstantiationId: 97
   isRuntimeInstantiated: 0
 --- !u!1 &1239886302
 GameObject:
@@ -28470,7 +28490,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 19
-  InstantiationId: 321
+  InstantiationId: 19
   isRuntimeInstantiated: 0
 --- !u!1001 &1264045206
 PrefabInstance:
@@ -28987,7 +29007,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 5.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -29011,7 +29031,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301166779}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.38, y: -2.02, z: -15}
+  m_LocalPosition: {x: 0, y: 0, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -29142,7 +29162,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 18
-  InstantiationId: 275
+  InstantiationId: 18
   isRuntimeInstantiated: 0
 --- !u!1 &1306845444
 GameObject:
@@ -29360,7 +29380,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 70
-  InstantiationId: 308
+  InstantiationId: 70
   isRuntimeInstantiated: 0
 --- !u!1 &1312344456
 GameObject:
@@ -29750,7 +29770,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 14
-  InstantiationId: 293
+  InstantiationId: 14
   isRuntimeInstantiated: 0
 --- !u!1 &1328516177
 GameObject:
@@ -30381,7 +30401,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 69
-  InstantiationId: 300
+  InstantiationId: 69
   isRuntimeInstantiated: 0
 --- !u!1001 &1376803725
 PrefabInstance:
@@ -30508,7 +30528,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 68
-  InstantiationId: 273
+  InstantiationId: 68
   isRuntimeInstantiated: 0
 --- !u!1 &1378184220
 GameObject:
@@ -30816,7 +30836,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 126
-  InstantiationId: 239
+  InstantiationId: 126
   isRuntimeInstantiated: 0
 --- !u!1001 &1383107529
 PrefabInstance:
@@ -30943,7 +30963,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 152
-  InstantiationId: 186
+  InstantiationId: 152
   isRuntimeInstantiated: 0
 --- !u!4 &1383672693 stripped
 Transform:
@@ -31173,7 +31193,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 67
-  InstantiationId: 283
+  InstantiationId: 67
   isRuntimeInstantiated: 0
 --- !u!1 &1389031686
 GameObject:
@@ -31540,7 +31560,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 98
-  InstantiationId: 202
+  InstantiationId: 98
   isRuntimeInstantiated: 0
 --- !u!1001 &1397770686
 PrefabInstance:
@@ -31667,7 +31687,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 15
-  InstantiationId: 312
+  InstantiationId: 15
   isRuntimeInstantiated: 0
 --- !u!1001 &1399377111
 PrefabInstance:
@@ -31794,7 +31814,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 39
-  InstantiationId: 284
+  InstantiationId: 39
   isRuntimeInstantiated: 0
 --- !u!1 &1400957936
 GameObject:
@@ -32092,7 +32112,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 148
-  InstantiationId: 180
+  InstantiationId: 148
   isRuntimeInstantiated: 0
 --- !u!1001 &1422185144
 PrefabInstance:
@@ -32224,7 +32244,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 116
-  InstantiationId: 225
+  InstantiationId: 116
   isRuntimeInstantiated: 0
 --- !u!1001 &1423499638
 PrefabInstance:
@@ -32362,7 +32382,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 93
-  InstantiationId: 238
+  InstantiationId: 93
   isRuntimeInstantiated: 0
 --- !u!1 &1426286818
 GameObject:
@@ -32933,7 +32953,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 27
-  InstantiationId: 269
+  InstantiationId: 27
   isRuntimeInstantiated: 0
 --- !u!1 &1441206153
 GameObject:
@@ -33139,7 +33159,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 49
-  InstantiationId: 276
+  InstantiationId: 49
   isRuntimeInstantiated: 0
 --- !u!1 &1451055297
 GameObject:
@@ -33635,7 +33655,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 141
-  InstantiationId: 243
+  InstantiationId: 141
   isRuntimeInstantiated: 0
 --- !u!1 &1460097360
 GameObject:
@@ -33712,10 +33732,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 012d1a7c2ae6b480da117993073ebcf0, type: 3}
-    m_FontSize: 25
+    m_FontSize: 15
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 1
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
@@ -33867,7 +33887,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 104
-  InstantiationId: 199
+  InstantiationId: 104
   isRuntimeInstantiated: 0
 --- !u!1 &1466417315
 GameObject:
@@ -34245,7 +34265,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 10
-  InstantiationId: 305
+  InstantiationId: 10
   isRuntimeInstantiated: 0
 --- !u!1001 &1477500403
 PrefabInstance:
@@ -34536,7 +34556,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 66
-  InstantiationId: 267
+  InstantiationId: 66
   isRuntimeInstantiated: 0
 --- !u!1001 &1524033386
 PrefabInstance:
@@ -34668,7 +34688,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 139
-  InstantiationId: 233
+  InstantiationId: 139
   isRuntimeInstantiated: 0
 --- !u!1 &1530111346
 GameObject:
@@ -34796,7 +34816,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 143
-  InstantiationId: 183
+  InstantiationId: 143
   isRuntimeInstantiated: 0
 --- !u!1001 &1531261568
 PrefabInstance:
@@ -34923,7 +34943,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 42
-  InstantiationId: 318
+  InstantiationId: 42
   isRuntimeInstantiated: 0
 --- !u!1 &1531436216
 GameObject:
@@ -35151,7 +35171,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 112
-  InstantiationId: 206
+  InstantiationId: 112
   isRuntimeInstantiated: 0
 --- !u!1001 &1540043256
 PrefabInstance:
@@ -35283,7 +35303,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 20
-  InstantiationId: 252
+  InstantiationId: 20
   isRuntimeInstantiated: 0
 --- !u!1 &1549501414
 GameObject:
@@ -35675,7 +35695,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 142
-  InstantiationId: 177
+  InstantiationId: 142
   isRuntimeInstantiated: 0
 --- !u!1 &1582378670
 GameObject:
@@ -35986,7 +36006,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 135
-  InstantiationId: 216
+  InstantiationId: 135
   isRuntimeInstantiated: 0
 --- !u!1001 &1588822520
 PrefabInstance:
@@ -36113,7 +36133,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 153
-  InstantiationId: 178
+  InstantiationId: 153
   isRuntimeInstantiated: 0
 --- !u!1001 &1589088537
 PrefabInstance:
@@ -36601,7 +36621,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 102
-  InstantiationId: 240
+  InstantiationId: 102
   isRuntimeInstantiated: 0
 --- !u!1 &1610828996
 GameObject:
@@ -37068,7 +37088,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 65
-  InstantiationId: 329
+  InstantiationId: 65
   isRuntimeInstantiated: 0
 --- !u!1 &1632142925
 GameObject:
@@ -37522,7 +37542,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 35
-  InstantiationId: 301
+  InstantiationId: 35
   isRuntimeInstantiated: 0
 --- !u!1 &1655428112
 GameObject:
@@ -38067,7 +38087,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 64
-  InstantiationId: 274
+  InstantiationId: 64
   isRuntimeInstantiated: 0
 --- !u!1 &1674243213
 GameObject:
@@ -38285,7 +38305,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 63
-  InstantiationId: 309
+  InstantiationId: 63
   isRuntimeInstantiated: 0
 --- !u!1 &1681135827
 GameObject:
@@ -38746,7 +38766,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 109
-  InstantiationId: 219
+  InstantiationId: 109
   isRuntimeInstantiated: 0
 --- !u!1 &1708867748
 GameObject:
@@ -39524,7 +39544,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 62
-  InstantiationId: 294
+  InstantiationId: 62
   isRuntimeInstantiated: 0
 --- !u!1 &1757493117
 GameObject:
@@ -40039,7 +40059,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 89
-  InstantiationId: 236
+  InstantiationId: 89
   isRuntimeInstantiated: 0
 --- !u!114 &1782206579 stripped
 MonoBehaviour:
@@ -40355,7 +40375,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 118
-  InstantiationId: 211
+  InstantiationId: 118
   isRuntimeInstantiated: 0
 --- !u!1001 &1793139191
 PrefabInstance:
@@ -40483,7 +40503,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 61
-  InstantiationId: 296
+  InstantiationId: 61
   isRuntimeInstantiated: 0
 --- !u!4 &1797137131 stripped
 Transform:
@@ -40616,7 +40636,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 38
-  InstantiationId: 270
+  InstantiationId: 38
   isRuntimeInstantiated: 0
 --- !u!1001 &1802666892
 PrefabInstance:
@@ -40748,7 +40768,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 108
-  InstantiationId: 235
+  InstantiationId: 108
   isRuntimeInstantiated: 0
 --- !u!1001 &1804501004
 PrefabInstance:
@@ -41227,7 +41247,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 60
-  InstantiationId: 271
+  InstantiationId: 60
   isRuntimeInstantiated: 0
 --- !u!1 &1845024544
 GameObject:
@@ -41988,7 +42008,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 136
-  InstantiationId: 223
+  InstantiationId: 136
   isRuntimeInstantiated: 0
 --- !u!1 &1885767196
 GameObject:
@@ -42360,7 +42380,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 12
-  InstantiationId: 306
+  InstantiationId: 12
   isRuntimeInstantiated: 0
 --- !u!1001 &1905020582
 PrefabInstance:
@@ -42492,7 +42512,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 128
-  InstantiationId: 197
+  InstantiationId: 128
   isRuntimeInstantiated: 0
 --- !u!1001 &1906560060
 PrefabInstance:
@@ -42619,7 +42639,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 54
-  InstantiationId: 291
+  InstantiationId: 54
   isRuntimeInstantiated: 0
 --- !u!1001 &1909957429
 PrefabInstance:
@@ -42746,7 +42766,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 150
-  InstantiationId: 188
+  InstantiationId: 150
   isRuntimeInstantiated: 0
 --- !u!1001 &1913420555
 PrefabInstance:
@@ -42879,7 +42899,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 96
-  InstantiationId: 220
+  InstantiationId: 96
   isRuntimeInstantiated: 0
 --- !u!1 &1918111801
 GameObject:
@@ -43210,7 +43230,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 33
-  InstantiationId: 281
+  InstantiationId: 33
   isRuntimeInstantiated: 0
 --- !u!1 &1932845239
 GameObject:
@@ -43598,7 +43618,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 59
-  InstantiationId: 264
+  InstantiationId: 59
   isRuntimeInstantiated: 0
 --- !u!1 &1964524246
 GameObject:
@@ -43816,7 +43836,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 43
-  InstantiationId: 302
+  InstantiationId: 43
   isRuntimeInstantiated: 0
 --- !u!1001 &1968733647
 PrefabInstance:
@@ -43943,7 +43963,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 58
-  InstantiationId: 278
+  InstantiationId: 58
   isRuntimeInstantiated: 0
 --- !u!1 &1985625248
 GameObject:
@@ -44331,7 +44351,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 36
-  InstantiationId: 258
+  InstantiationId: 36
   isRuntimeInstantiated: 0
 --- !u!1 &1988069302
 GameObject:
@@ -44549,7 +44569,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 50
-  InstantiationId: 290
+  InstantiationId: 50
   isRuntimeInstantiated: 0
 --- !u!4 &1997299006 stripped
 Transform:
@@ -45404,7 +45424,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 115
-  InstantiationId: 232
+  InstantiationId: 115
   isRuntimeInstantiated: 0
 --- !u!1001 &2050835835
 PrefabInstance:
@@ -45531,7 +45551,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 29
-  InstantiationId: 304
+  InstantiationId: 29
   isRuntimeInstantiated: 0
 --- !u!1 &2060576948
 GameObject:
@@ -45750,7 +45770,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 11
-  InstantiationId: 266
+  InstantiationId: 11
   isRuntimeInstantiated: 0
 --- !u!1 &2070431414
 GameObject:
@@ -46047,7 +46067,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 51
-  InstantiationId: 260
+  InstantiationId: 51
   isRuntimeInstantiated: 0
 --- !u!1001 &2079721396
 PrefabInstance:
@@ -46179,7 +46199,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 94
-  InstantiationId: 212
+  InstantiationId: 94
   isRuntimeInstantiated: 0
 --- !u!1 &2080114901
 GameObject:
@@ -46398,7 +46418,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 57
-  InstantiationId: 317
+  InstantiationId: 57
   isRuntimeInstantiated: 0
 --- !u!1 &2088488926
 GameObject:
@@ -46632,7 +46652,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 130
-  InstantiationId: 244
+  InstantiationId: 130
   isRuntimeInstantiated: 0
 --- !u!1 &2094438945
 GameObject:
@@ -47193,7 +47213,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 101
-  InstantiationId: 213
+  InstantiationId: 101
   isRuntimeInstantiated: 0
 --- !u!1 &2114810302
 GameObject:
@@ -47654,7 +47674,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   viewIdField: 137
-  InstantiationId: 215
+  InstantiationId: 137
   isRuntimeInstantiated: 0
 --- !u!1 &2135657376
 GameObject:
@@ -48032,7 +48052,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 37
-  InstantiationId: 299
+  InstantiationId: 37
   isRuntimeInstantiated: 0
 --- !u!1 &2144547896
 GameObject:
@@ -48142,6 +48162,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: QuitButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 3759470907061062899, guid: c1a0046b6d56747cb9902c3b3b6042ea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5530348736704257974, guid: c1a0046b6d56747cb9902c3b3b6042ea,
         type: 3}
@@ -48318,6 +48343,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameUIPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 766090536030252282, guid: 01f5bf62385644e2f99e128a0d650883,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 248408289348650559, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -48376,12 +48406,12 @@ PrefabInstance:
     - target: {fileID: 248408289348650559, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -219
+      value: -72.94
       objectReference: {fileID: 0}
     - target: {fileID: 248408289348650559, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -241.9
+      value: -486.17
       objectReference: {fileID: 0}
     - target: {fileID: 248408289348650559, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
@@ -48391,7 +48421,7 @@ PrefabInstance:
     - target: {fileID: 248408289348650559, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 219
+      value: 227.65
       objectReference: {fileID: 0}
     - target: {fileID: 248408289348650559, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
@@ -48441,122 +48471,122 @@ PrefabInstance:
     - target: {fileID: 5486959200766122963, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 106.3
+      value: 95.3
       objectReference: {fileID: 0}
     - target: {fileID: 5486959200766122963, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2.3
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: 5486959200766122963, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 39.8
+      value: 35.11
       objectReference: {fileID: 0}
     - target: {fileID: 5486959200766122963, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 157.7
+      value: 143.46
       objectReference: {fileID: 0}
     - target: {fileID: 3645534808767766986, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2.3
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: 3645534808767766986, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 63
+      value: 57.1
       objectReference: {fileID: 0}
     - target: {fileID: 3645534808767766986, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 157.7
+      value: 143.46
       objectReference: {fileID: 0}
     - target: {fileID: 3645534808767766986, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 46.8
+      value: 41.29
       objectReference: {fileID: 0}
     - target: {fileID: 5375013801023149625, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 17.6
+      value: 17.05
       objectReference: {fileID: 0}
     - target: {fileID: 5375013801023149625, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2.3
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: 5375013801023149625, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 157.7
+      value: 143.46
       objectReference: {fileID: 0}
     - target: {fileID: 5375013801023149625, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 44
+      value: 38.81
       objectReference: {fileID: 0}
     - target: {fileID: 5216387172334854667, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2.3
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: 5216387172334854667, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -26.7
+      value: -22.03
       objectReference: {fileID: 0}
     - target: {fileID: 5216387172334854667, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 157.7
+      value: 143.46
       objectReference: {fileID: 0}
     - target: {fileID: 5216387172334854667, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 44.6
+      value: 39.34
       objectReference: {fileID: 0}
     - target: {fileID: 4653179271747172403, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2.3
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: 4653179271747172403, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -69.2
+      value: -59.52
       objectReference: {fileID: 0}
     - target: {fileID: 4653179271747172403, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 157.7
+      value: 143.46
       objectReference: {fileID: 0}
     - target: {fileID: 4653179271747172403, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 40.4
+      value: 35.64
       objectReference: {fileID: 0}
     - target: {fileID: 5441899101996786135, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2.3
+      value: -0.52
       objectReference: {fileID: 0}
     - target: {fileID: 5441899101996786135, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -109.9
+      value: -95.42
       objectReference: {fileID: 0}
     - target: {fileID: 5441899101996786135, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 157.7
+      value: 143.46
       objectReference: {fileID: 0}
     - target: {fileID: 5441899101996786135, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 41.1
+      value: 36.25
       objectReference: {fileID: 0}
     - target: {fileID: 4854705944914578862, guid: 01f5bf62385644e2f99e128a0d650883,
         type: 3}
@@ -48810,7 +48840,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents: []
   viewIdField: 56
-  InstantiationId: 286
+  InstantiationId: 56
   isRuntimeInstantiated: 0
 --- !u!1001 &2036877058822293110
 PrefabInstance:
@@ -50260,6 +50290,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: KeyboardInfo
       objectReference: {fileID: 0}
+    - target: {fileID: 9172169551665638309, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -50318,22 +50353,22 @@ PrefabInstance:
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -766.2
+      value: -281.7
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -314.1
+      value: -66.075
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 352.1
+      value: 234.7
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 451.7
+      value: 467.9
       objectReference: {fileID: 0}
     - target: {fileID: 6397109445032685322, guid: 0bba52bed4af749e3b5e71e7e33e0ae8,
         type: 3}
@@ -50735,42 +50770,42 @@ PrefabInstance:
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 2.4796
+      value: -0.012741089
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 122
+      value: 112.92
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 303.6
+      value: 0.11999512
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 184.3
+      value: -226.15
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7285291262268150334, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
@@ -50785,7 +50820,7 @@ PrefabInstance:
     - target: {fileID: 7285291262268150321, guid: 6c0ba415193124b04b9731b28c1377f5,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c0ba415193124b04b9731b28c1377f5, type: 3}
@@ -50889,6 +50924,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GameConsole
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486117560911386239, guid: 4d950fa5103544e3ca762e22d32f781c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7486117560911386176, guid: 4d950fa5103544e3ca762e22d32f781c,
         type: 3}
@@ -51286,42 +51326,42 @@ PrefabInstance:
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -5.722
+      value: -0.00047302246
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -102.95
+      value: -98.00006
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 303.6
+      value: 0.1000061
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 265.6
+      value: -196.3
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8324872627357457692, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
@@ -51336,7 +51376,7 @@ PrefabInstance:
     - target: {fileID: 8324872627357457693, guid: 0d9d4047f12424668afc3a0842fa5147,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 20
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d9d4047f12424668afc3a0842fa5147, type: 3}
