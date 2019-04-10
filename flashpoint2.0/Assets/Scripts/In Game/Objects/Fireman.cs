@@ -317,25 +317,25 @@ public class Fireman : GameUnit
 
                     Debug.Log("click X " + spaceClicked.indexX);
                     Debug.Log("click Y " + spaceClicked.indexY);
+                    bool hasFireman = false;
 
                     //commandedSpace = spaceClicked;
                     if (commandedSpace != null)
                     {
                         Debug.Log("comm X " + commandedSpace.indexX);
                         Debug.Log("comm Y " + commandedSpace.indexY);
-                    }
-                    commandedFiremen = commandedSpace.getFiremen();
-                    bool hasFireman = false;
 
-                    foreach (Fireman f in commandedFiremen)
-                    {
-                        if (f.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                        commandedFiremen = commandedSpace.getFiremen();
+
+                        foreach (Fireman f in commandedFiremen)
                         {
-                            hasFireman = true;
-                            break;
+                            if (f.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                            {
+                                hasFireman = true;
+                                break;
+                            }
                         }
                     }
-
 
                     if (hasFireman == true)
                     {
@@ -992,7 +992,7 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 1);
-                        moveFirefighter(curr, destination, 1, true);
+                        //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 1 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
@@ -1438,7 +1438,7 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 3);
-                        moveFirefighter(curr, destination, 1, true);
+                        //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 3 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
@@ -4383,6 +4383,7 @@ public class Fireman : GameUnit
         else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
             object[] dataReceived = eventData.CustomData as object[];
             Space space = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+            space.addOccupant(this);
             int firemanId = (int)dataReceived[2];
 
             Dictionary<int, Space> d = StateManager.instance.firemanCurrentSpaces;
