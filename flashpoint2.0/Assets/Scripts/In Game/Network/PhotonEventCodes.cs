@@ -49,5 +49,6 @@ public enum PhotonEventCodes
     UpdateTreatedVictimsState = 42,
     MoveTreatedVictim = 43,
     RemoveTreatedVictim = 44,
-    SendRoomOptions = 45
+    SendRoomOptions = 45,
+    MoveRescueDog = 46
 }
