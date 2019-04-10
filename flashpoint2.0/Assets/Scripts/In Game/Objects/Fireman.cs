@@ -4323,6 +4323,7 @@ public class Fireman : GameUnit
         }
         restoreAP();
         GameManager.advanceFire();
+
         if (GameManager.GM.isFamilyGame)
         {
             GameManager.replenishPOI();
