@@ -4220,9 +4220,6 @@ public class Fireman : GameUnit
                 }
             }
         }
-                
-        //f.AP = 10;
-        Debug.Log("============AP: " + f.AP);
 
         Victim v = f.getVictim();
         Victim t = f.treatedVictim;
