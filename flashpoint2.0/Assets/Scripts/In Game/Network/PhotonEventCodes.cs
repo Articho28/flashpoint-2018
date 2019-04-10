@@ -56,5 +56,6 @@ public enum PhotonEventCodes
     PlaceExtraHotSpots = 49,
     MoveRescueDog = 50,
     MoveCommand = 51,
-    DisposeHazmat = 52
+    DisposeHazmat = 52,
+    SendMessage = 53
 }
