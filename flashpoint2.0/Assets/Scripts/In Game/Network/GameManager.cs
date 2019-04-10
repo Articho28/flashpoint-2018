@@ -51,10 +51,6 @@ public class GameManager : MonoBehaviourPun
 
     public int[] toTest = new int[2];
 
-
-    static bool testPlace = true;
-
-
 //Network Options
 
 public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
@@ -403,14 +399,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     public static void advanceFire()
     {
-
         rollDice();
 
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[blackDice, redDice];
-        if (testPlace) {
-            targetSpace = StateManager.instance.spaceGrid.grid[1, 3];
-            testPlace = false;
-        }
 
         Debug.Log("Advancing fire on " + targetSpace.indexX + " and " + targetSpace.indexY);
 
@@ -756,7 +747,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         foreach (Fireman fireman in firemen) {
             if (fireman.spec == Specialist.Veteran) {
                 StartCoroutine(performVeteran(fireman, ambulanceSpot));
-                Debug.Log("HI CALLING FROM FOREACH");
             }
             else {
                 knockdownFireman(fireman, ambulanceSpot);
@@ -812,10 +802,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down anyways";
         yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }, s, fireman));
         KeyCode input = UserInputManager.instance.validInput;
-        Debug.Log("first input is " + input);
-        Debug.Log("==========BETWEEN THE COROUTINE CALL=========");
 
-        Invoke(waiting(), 2);
         if (input == KeyCode.Alpha0) {
             GameConsole.instance.UpdateFeedback("u pressed 0!");
             s = "choose direction you would like to dodge in (dodging to fire tile will still knock you down!!!). 0: top, 1: right, 2: bottom, 3: left";
@@ -842,10 +829,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
         fireman.haltUserInput = false;
 
-    }
-
-    private static string waiting() {
-        return ""; 
     }
 
     private static void knockdownFireman(Fireman fireman, Space ambulanceSpot) {

@@ -3022,7 +3022,7 @@ public class Fireman : GameUnit
                 decrementAP(2);
 
                 GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 1 to reroll the " +
-                	"black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
+                    "black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
                 isWaitingForInput = true;
                 isFiringDeckGun = true;
             }
@@ -3140,7 +3140,7 @@ public class Fireman : GameUnit
             else
             {
                 optionsToUser += "press 1 to move the ambulance clockwise, press 2 to move the ambulance to the opposite place, press 3 to move " +
-                	"the ambulance counter-clockwise";
+                    "the ambulance counter-clockwise";
             }
 
             GameConsole.instance.UpdateFeedback(optionsToUser);
@@ -4096,6 +4096,9 @@ public class Fireman : GameUnit
 
         this.setCurrentSpace(dst);
 
+        if(this.spec == Specialist.Veteran && this.treatedVictim) { 
+            
+        }
         if (this.spec == Specialist.RescueSpecialist && this.moveAP >= apCost)
         {
             this.moveAP = this.moveAP - apCost;
