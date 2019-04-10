@@ -135,10 +135,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 GM = this;
             }
         }
+
     }
 
     void Start()
     {
+        GameObject.Find("InGame").GetComponent<AudioSource>().Play();
 
     }
 
@@ -257,6 +259,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveInitialExplosionsExperienced, experiencedSetupData, sendToAllOptions, SendOptions.SendReliable);
 
                 }
+               
             }
 
             object[] data5 = new object[] { };
