@@ -72,6 +72,7 @@ public class GameUI : MonoBehaviour
     {
         gameState = newGameState;
         UpdateGameState();
+
     }
 
     public void AddSavedVictim()
@@ -84,10 +85,15 @@ public class GameUI : MonoBehaviour
             {
                 GameManager.GameWon();
                 GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
+                GameObject.Find("InGame").GetComponent<AudioSource>().mute = true;
+                GameObject.Find("SoundManager").GetComponent<AudioScript>().playSound(0);
             }
             if (!GameWonUI.isCalled)
             {
                 GameManager.GameWon();
+                GameObject.Find("InGame").GetComponent<AudioSource>().mute = true;
+                GameObject.Find("SoundManager").GetComponent<AudioScript>().playSound(0);
+
             }
         }
         UpdateSavedVictim();
@@ -99,6 +105,8 @@ public class GameUI : MonoBehaviour
         if (lostVictim >=4)
         {
             GameManager.GameLost();
+            GameObject.Find("InGame").GetComponent<AudioSource>().mute = true;
+            GameObject.Find("SoundManager").GetComponent<AudioScript>().playSound(1);
         }
         UpdateLostVictim();
     }
@@ -109,6 +117,8 @@ public class GameUI : MonoBehaviour
         if (damage >= 24)
         {
             GameManager.GameLost();
+            GameObject.Find("InGame").GetComponent<AudioSource>().mute = true;
+            GameObject.Find("SoundManager").GetComponent<AudioScript>().playSound(1);
         }
         UpdateDamage();
     }
