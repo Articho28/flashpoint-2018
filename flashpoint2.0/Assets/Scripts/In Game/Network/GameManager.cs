@@ -377,8 +377,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     public void DisplayPlayerTurn()
     {
 
-        //string playerName = (string) playersListNameCache[Turn - 1];
-        string playerName = PhotonNetwork.PlayerList[Turn - 1].NickName;
+        string playerName = (string) playersListNameCache[Turn - 1];
         GameUI.instance.UpdatePlayerTurnName(playerName);
     }
 
@@ -389,16 +388,14 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     public void DisplayToConsolePlayGame(int turn)
     {
-        //string playerName = (string)playersListNameCache[Turn - 1];
-        string playerName = (string)PhotonNetwork.PlayerList[turn - 1].NickName;
+        string playerName = (string)playersListNameCache[Turn - 1];
         string message = "It's " + playerName + "'s turn!";
         GameConsole.instance.FeedbackText.text = message;
     }
 
     public void DisplayToConsolePlaceFirefighter(int turn)
     {
-        //string playerName = (string)playersListNameCache[Turn - 1];
-        string playerName = (string)PhotonNetwork.PlayerList[turn - 1].NickName;
+        string playerName = (string)playersListNameCache[Turn - 1];
 
         string message = "It's " + playerName + "'s turn to place their Firefighter";
         GameConsole.instance.FeedbackText.text = message;
@@ -618,6 +615,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     }
     public void placeInitialFireMarkerExperienced()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         int[] rows = new int[] {  3, 4, 4, 4 };
         int[] cols = new int[] {  6, 6, 5, 3 };
@@ -661,27 +660,28 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     public void randomizePOIExperienced()
     {
-        //randomize between 1 and 6
-        int col = UnityEngine.Random.Range(1, 8);
-        //randomize between 1 and 8
-        int row = UnityEngine.Random.Range(1, 6);
+        randomizePOI();
+        ////randomize between 1 and 6
+        //int col = UnityEngine.Random.Range(1, 8);
+        ////randomize between 1 and 8
+        //int row = UnityEngine.Random.Range(1, 6);
 
-        while (true)
-        {
-            if (GameManager.GM.containsFireOrSmoke(col, row) || GameManager.GM.alreadyPlaced(col, row))
-            {
-                int[] altSpace = GameManager.GM.replenishPOIAltSpace(col, row);
-                col = altSpace[0];
-                row = altSpace[1];
-            }
-            else
-            {
-                break;
-            }
-        }
+        //while (true)
+        //{
+        //    if (GameManager.GM.containsFireOrSmoke(col, row) || GameManager.GM.alreadyPlaced(col, row))
+        //    {
+        //        int[] altSpace = GameManager.GM.replenishPOIAltSpace(col, row);
+        //        col = altSpace[0];
+        //        row = altSpace[1];
+        //    }
+        //    else
+        //    {
+        //        break;
+        //    }
+        //}
 
-        object[] data = { col, row, GameManager.numOfActivePOI };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
+        //object[] data = { col, row, GameManager.numOfActivePOI };
+        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     public void removeSmokeMarker(Space targetSpace)
@@ -750,19 +750,14 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         //knockdown placement - handles carried poi's
         Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(targetSpace);
-
-        Vector3 pos = new Vector3(ambulanceSpot.worldPosition.x, ambulanceSpot.worldPosition.y, -10);
-
         List<Fireman> firemen = targetSpace.getFiremen();
         foreach (Fireman fireman in firemen) {
-                Space currSpace = fireman.getCurrentSpace();
-                Fireman.moveFirefighter(fireman, currSpace, ambulanceSpot);
-
-                Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
-                if(d.ContainsKey(fireman.PV.ViewID)) {
-                    object[] data = { currSpace.indexX, currSpace.indexY, fireman.PV.ViewID, false };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
-                }
+            if (fireman.spec == Specialist.Veteran) {
+                StartCoroutine(performVeteran());
+            }
+            else {
+                knockdownFireman(fireman, ambulanceSpot);
+            }
         }
 
         removePOIFromSpace(targetSpace);
@@ -808,6 +803,31 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
        
 
+    }
+
+    IEnumerator performVeteran() {
+        string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down";
+        GameConsole.instance.UpdateFeedback(s);
+        yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }));
+       
+        KeyCode input = UserInputManager.instance.validInput;
+        if (input == KeyCode.Alpha0) {
+            GameConsole.instance.UpdateFeedback("you pressed 0!");
+        }
+        else if (input == KeyCode.Alpha1) {
+            GameConsole.instance.UpdateFeedback("you pressed 1!");
+        }
+    }
+
+    private static void knockdownFireman(Fireman fireman, Space ambulanceSpot) {
+        Space currSpace = fireman.getCurrentSpace();
+        Fireman.moveFirefighter(fireman, currSpace, ambulanceSpot);
+
+        Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
+        if (d.ContainsKey(fireman.PV.ViewID)) {
+            object[] data = { currSpace.indexX, currSpace.indexY, fireman.PV.ViewID, false };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
+        }
     }
 
     private void removePOIFromSpace(Space targetSpace)
@@ -2058,18 +2078,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
         }
 
-        /*
-        else if (evCode == (byte) PhotonEventCodes.PlaceFireMarker)
-        {
-            object[] receivedData = eventData.CustomData as object[];
-
-            int indexX = (int) receivedData[0];
-            int indexY = (int)receivedData[1];
-
-            Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
-
-            placeFireMarker(targetSpace);
-        }*/
 
         else if (evCode == (byte)PhotonEventCodes.ResolveInitialExplosionsExperienced)
         {
@@ -2088,9 +2096,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 placeFireMarker(targetSpace1);
             }
 
+            placeHotSpot(targetSpace1.indexX, targetSpace1.indexY);
+
             resolveExplosion(targetSpace1);
 
-            placeHotSpot(targetSpace1.indexX, targetSpace1.indexY);
             hotSpotsToPlace--;
 
             //TODO REMOVE toTEST
@@ -2110,10 +2119,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 placeFireMarker(targetSpace2);
             }
 
+            placeHotSpot(targetSpace2.indexX, targetSpace2.indexY);
 
             resolveExplosion(targetSpace2);
 
-            placeHotSpot(targetSpace2.indexX, targetSpace2.indexY);
             hotSpotsToPlace--;
 
 
@@ -2130,9 +2139,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 placeFireMarker(targetSpace3);
             }
 
+            placeHotSpot(targetSpace3.indexX, targetSpace3.indexY);
+
             resolveExplosion(targetSpace3);
 
-            placeHotSpot(targetSpace3.indexX, targetSpace3.indexY);
             hotSpotsToPlace--;
 
 
@@ -2151,9 +2161,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     placeFireMarker(targetSpace4);
                 }
 
+                placeHotSpot(targetSpace4.indexX, targetSpace4.indexY);
+
                 resolveExplosion(targetSpace4);
 
-                placeHotSpot(targetSpace4.indexX, targetSpace4.indexY);
                 hotSpotsToPlace--;
 
             }

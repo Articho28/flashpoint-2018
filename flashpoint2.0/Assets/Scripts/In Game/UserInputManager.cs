@@ -17,6 +17,8 @@ public class UserInputManager : MonoBehaviour
     GameObject lastObjectClicked;
     Space lastSpaceClicked;
 
+    public KeyCode validInput; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +52,20 @@ public class UserInputManager : MonoBehaviour
     public Space getLastSpaceClicked()
     {
         return lastSpaceClicked;
+    }
+
+    public IEnumerator waitForValidUserInput(KeyCode[] codes) {
+        bool pressed = false;
+        while (!pressed) {
+            foreach (KeyCode k in codes) {
+                if (Input.GetKey(k)) {
+                    pressed = true;
+                    validInput = k;
+                    break;
+                }
+            }
+        }
+        yield break;
     }
 }
 

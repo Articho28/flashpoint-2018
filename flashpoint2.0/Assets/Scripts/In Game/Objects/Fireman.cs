@@ -44,7 +44,7 @@ public class Fireman : GameUnit
     public int actorNumber;
     public ArrayList validInputOptions;
     Space locationArgument;
-    Specialist spec;
+    public Specialist spec;
 
     public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
