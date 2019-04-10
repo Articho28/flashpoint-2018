@@ -734,8 +734,7 @@ public class Fireman : GameUnit
                     }
                 }
 
-
-                }
+            }
 
             else if (Input.GetKeyDown(KeyCode.E))
             {
