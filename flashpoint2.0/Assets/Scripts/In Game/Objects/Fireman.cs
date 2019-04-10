@@ -802,6 +802,14 @@ public class Fireman : GameUnit
                         {
                             GameManager.GM.freeSpecialistIndex[9] = 1;
                         }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
 
                     }
@@ -1029,6 +1037,14 @@ public class Fireman : GameUnit
                         {
                             GameManager.GM.freeSpecialistIndex[7] = 1;
                         }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
@@ -1255,6 +1271,14 @@ public class Fireman : GameUnit
                         {
                             GameManager.GM.freeSpecialistIndex[7] = 1;
                         }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
@@ -1475,6 +1499,14 @@ public class Fireman : GameUnit
                         {
                             GameManager.GM.freeSpecialistIndex[7] = 1;
                         }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
@@ -1651,6 +1683,14 @@ public class Fireman : GameUnit
                         {
                             GameManager.GM.freeSpecialistIndex[7] = 1;
                         }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
@@ -1717,6 +1757,14 @@ public class Fireman : GameUnit
                         else if (oldSpec == Specialist.DriverOperator)
                         {
                             GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
@@ -1785,6 +1833,14 @@ public class Fireman : GameUnit
                         {
                             GameManager.GM.freeSpecialistIndex[7] = 1;
                         }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
                     }
@@ -1847,6 +1903,165 @@ public class Fireman : GameUnit
                             GameManager.GM.freeSpecialistIndex[6] = 1;
                         }
                         else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a Driver/Operator. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
+
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 8 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[8] != 0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to Rescue Dog (8)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.RescueDog;
+                        FiremanUI.instance.SetSpecialist(Specialist.RescueDog);
+                        GameManager.GM.freeSpecialistIndex[8] = 0;
+                        newSpecAP();
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Rescue Dog.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            isWaitingForInput = true;
+                            isChangingCrew = true;
+                            GameConsole.instance.UpdateFeedback("You're already a Driver/Operator. \n" + oldMessage);
+                        }
+                        else if (oldSpec == Specialist.Veteran)
+                        {
+                            GameManager.GM.freeSpecialistIndex[9] = 1;
+                        }
+
+                        sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isChangingCrew = true;
+                    }
+                }
+            }
+
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                if (isWaitingForInput && isChangingCrew)
+                {
+                    Debug.Log("Input 9 Received");
+                    string oldMessage = GameConsole.instance.FeedbackText.text;
+                    isWaitingForInput = false;
+                    isChangingCrew = false;
+                    if (GameManager.GM.freeSpecialistIndex[9] != 0) //make sure that specialist is in there 
+                    {
+                        Debug.Log("changing specialist to Veteran (9)");
+                        Specialist oldSpec = this.spec;
+                        this.spec = Specialist.Veteran;
+                        FiremanUI.instance.SetSpecialist(Specialist.Veteran);
+                        GameManager.GM.freeSpecialistIndex[9] = 0;
+                        newSpecAP();
+                        this.setAP(this.getAP() - 2);
+                        FiremanUI.instance.SetAP(this.getAP());
+                        GameConsole.instance.UpdateFeedback("Updated Specialist to Veteran.");
+
+
+                        if (oldSpec == Specialist.Paramedic)
+                        {
+                            GameManager.GM.freeSpecialistIndex[0] = 1;
+                        }
+                        else if (oldSpec == Specialist.FireCaptain)
+                        {
+                            GameManager.GM.freeSpecialistIndex[1] = 1;
+                        }
+                        else if (oldSpec == Specialist.ImagingTechnician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[2] = 1;
+                        }
+                        else if (oldSpec == Specialist.CAFSFirefighter)
+                        {
+                            GameManager.GM.freeSpecialistIndex[3] = 1;
+                        }
+                        else if (oldSpec == Specialist.HazmatTechinician)
+                        {
+                            GameManager.GM.freeSpecialistIndex[4] = 1;
+                        }
+                        else if (oldSpec == Specialist.Generalist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[5] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueSpecialist)
+                        {
+                            GameManager.GM.freeSpecialistIndex[6] = 1;
+                        }
+                        else if (oldSpec == Specialist.DriverOperator)
+                        {
+                            GameManager.GM.freeSpecialistIndex[7] = 1;
+                        }
+                        else if (oldSpec == Specialist.RescueDog)
+                        {
+                            GameManager.GM.freeSpecialistIndex[8] = 1;
+                        }
+                        else if (oldSpec == Specialist.Veteran)
                         {
                             isWaitingForInput = true;
                             isChangingCrew = true;
