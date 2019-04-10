@@ -167,7 +167,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     if (!containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY))
                     {
                         //PhotonNetwork.RaiseEvent((byte) PhotonEventCodes.)
-                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexX };
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexY };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
 
                     }
@@ -180,7 +180,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     if (!containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY))
                     {
-                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexX };
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexY };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
 
                     }
@@ -196,7 +196,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     if (!containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY))
                     {
-                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexX };
+                        object[] data0 = new object[] { targetSpace3.indexX, targetSpace3.indexY };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
 
                     }
