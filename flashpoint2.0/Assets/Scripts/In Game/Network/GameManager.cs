@@ -1826,9 +1826,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
 
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceExtraHotSpots, dataHotspots, sendToAllOptions, SendOptions.SendReliable);
-
-
-
         }
 
         else if (evCode == (byte)PhotonEventCodes.PlaceAmbulanceParkingSpot)
@@ -1884,7 +1881,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
 
                 Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
-
 
                 Ambulance.GetComponent<Transform>().position = ambulancePosition;
                 Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
