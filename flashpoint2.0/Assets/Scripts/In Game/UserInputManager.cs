@@ -17,12 +17,13 @@ public class UserInputManager : MonoBehaviour
     GameObject lastObjectClicked;
     Space lastSpaceClicked;
 
-    public KeyCode validInput; 
+    public KeyCode validInput;
+    public bool crIsRunning;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        crIsRunning = false;
     }
 
     // Update is called once per frame
@@ -54,20 +55,33 @@ public class UserInputManager : MonoBehaviour
         return lastSpaceClicked;
     }
 
-    public IEnumerator waitForValidUserInput(KeyCode[] codes) {
+    public IEnumerator waitForValidUserInput(KeyCode[] codes, string message, Fireman fireman) {
         bool pressed = false;
         while (!pressed) {
-            string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down";
-            GameConsole.instance.UpdateFeedback(s);
+            crIsRunning = true;
 
+            GameConsole.instance.UpdateFeedback(message);
             foreach (KeyCode k in codes) {
                 if (Input.GetKey(k)) {
                     pressed = true;
                     validInput = k;
+
+                    crIsRunning = false;
                     break;
                 }
             }
-            yield return null; //you might want to only do this check once per frame -> yield return new WaitForEndOfFrame();
+
+            yield return new WaitForSeconds(0.15f);
+        }
+    }
+
+    public int keyCodeToIntKey(KeyCode keyCode) { 
+        switch(keyCode) {
+            case (KeyCode.Alpha0): return 0;
+            case (KeyCode.Alpha1): return 1;
+            case (KeyCode.Alpha2): return 2;
+            case (KeyCode.Alpha3): return 3;
+            default : return -1;
         }
     }
 }

@@ -756,6 +756,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         foreach (Fireman fireman in firemen) {
             if (fireman.spec == Specialist.Veteran) {
                 StartCoroutine(performVeteran(fireman, ambulanceSpot));
+                Debug.Log("HI CALLING FROM FOREACH");
             }
             else {
                 knockdownFireman(fireman, ambulanceSpot);
@@ -806,19 +807,45 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     }
 
     IEnumerator performVeteran(Fireman fireman, Space ambulanceSpot) {
-
         fireman.haltUserInput = true;
-        yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }));
-        fireman.haltUserInput = false;
 
+        string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down anyways";
+        yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }, s, fireman));
         KeyCode input = UserInputManager.instance.validInput;
+        Debug.Log("first input is " + input);
+        Debug.Log("==========BETWEEN THE COROUTINE CALL=========");
+
+        Invoke(waiting(), 2);
         if (input == KeyCode.Alpha0) {
-            GameConsole.instance.UpdateFeedback("you pressed 0!");
+            GameConsole.instance.UpdateFeedback("u pressed 0!");
+            s = "choose direction you would like to dodge in (dodging to fire tile will still knock you down!!!). 0: top, 1: right, 2: bottom, 3: left";
+            while (true) {
+                yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3 }, s, fireman));
+
+                while (UserInputManager.instance.crIsRunning) { }
+                input = UserInputManager.instance.validInput;
+                int x = UserInputManager.instance.keyCodeToIntKey(input);
+
+                Space neighbour = StateManager.instance.spaceGrid.getVeteranDodgeSpace(fireman.getCurrentSpace(), x);
+                if(neighbour != null) {
+                    Space curr = fireman.getCurrentSpace();
+                    Fireman.moveFirefighter(fireman, fireman.getCurrentSpace(), neighbour, 1);
+                    break;
+                }
+                else {
+                    s = "cannot dodge that way! " + s;
+                }
+            }
         }
         else if (input == KeyCode.Alpha1) {
-            GameConsole.instance.UpdateFeedback("you pressed 1!");
+            knockdownFireman(fireman, ambulanceSpot);
         }
+        fireman.haltUserInput = false;
 
+    }
+
+    private static string waiting() {
+        return ""; 
     }
 
     private static void knockdownFireman(Fireman fireman, Space ambulanceSpot) {

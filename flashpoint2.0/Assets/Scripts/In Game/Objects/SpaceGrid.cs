@@ -372,7 +372,37 @@ public class SpaceGrid : MonoBehaviourPun {
         }
     }
 
-    //TODO Don't use
+    private bool isValidDodgeSpace(Space curr, Space target, int direction) {
+        Wall wall = curr.getWalls()[direction];
+        Door door = curr.getDoors()[direction];
+
+        bool isValid = (wall != null && wall.getWallStatus() == WallStatus.Intact)
+            || (door != null && door.getDoorStatus() == DoorStatus.Closed);
+
+        return isValid;
+    }
+
+    public Space getVeteranDodgeSpace(Space curr, int direction) {
+        Space target = getNeighborInDirection(curr, direction);
+
+        switch (direction) {
+            case (0):
+                if (curr.indexY - 1 < 0 && !isValidDodgeSpace(curr, target, direction)) return null;
+                else return target;
+            case (1):
+                if (curr.indexX + 1 >= gridSizeX && !isValidDodgeSpace(curr, target, direction)) return null;
+                else return target;
+            case (2):
+                if (curr.indexY + 1 >= gridSizeY && !isValidDodgeSpace(curr, target, direction)) return null;
+                else return target;
+            case (3):
+                if (curr.indexX - 1 < 0 && !isValidDodgeSpace(curr, target, direction)) return null;
+                else return target;
+            default:
+                return null;
+        }
+    }
+
     public Space getNeighborInDirection(Space currentLocation, int direction)
     {
         int currentX = currentLocation.indexX;

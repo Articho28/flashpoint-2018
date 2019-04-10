@@ -4085,7 +4085,12 @@ public class Fireman : GameUnit
     public static void moveFirefighter(Fireman fireman, Space curr, Space dst) {
         fireman.moveFirefighter(curr, dst, 0, false);
     }
-    
+
+    //don't use dis. I used it for veteran fireman hax
+    public static void moveFirefighter(Fireman fireman, Space curr, Space dst, int apCost) {
+        fireman.moveFirefighter(curr, dst, apCost, true);
+    }
+
     private void moveFirefighter(Space curr, Space dst, int apCost, bool isMyOwn) {
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
