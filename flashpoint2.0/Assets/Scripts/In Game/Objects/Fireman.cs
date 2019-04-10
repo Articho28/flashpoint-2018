@@ -2244,10 +2244,16 @@ public class Fireman : GameUnit
                 return;
             }
 
+            Dictionary<int, Space> x = StateManager.instance.firemanCurrentSpaces;
+
             //deck gun can only be fired at a quadrant where no firefighter is present.
-            foreach(Space space in quadSpaces)
+            foreach (Space space in quadSpaces)
             {
-                if(space.getFiremen().Count != 0) containsFiremen = true;
+                foreach (KeyValuePair<int, Space> firemanSpace in StateManager.instance.firemanCurrentSpaces)
+                {
+                    if (space.indexX == firemanSpace.Value.indexX && space.indexY == firemanSpace.Value.indexY)
+                        containsFiremen = true;
+                }
             }
 
             if (containsFiremen)
@@ -3162,15 +3168,18 @@ public class Fireman : GameUnit
         {
             this.decrementAP(apCost);
         }
-
+        
         this.GetComponent<Transform>().position = newPosition;
 
         dst.addOccupant(this);
         curr.removeOccupant(this);
 
+        object[] data = new object[] {dst.indexX, dst.indexY, PV.ViewID };
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+
+
         if (isMyOwn) {
             FiremanUI.instance.SetAP(this.AP);
-            object[] data = new object[] { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
             //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
     }
@@ -3971,17 +3980,19 @@ public class Fireman : GameUnit
 
             //update UI if any
         }
-        //else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
-        //    object[] dataReceived = eventData.CustomData as object[];
-        //    Space oldSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
-        //    Space newSpace = StateManager.instance.spaceGrid.grid[(int)dataReceived[2], (int)dataReceived[3]];
-        //    int firemanId = (int)dataReceived[4];
+        else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
+            object[] dataReceived = eventData.CustomData as object[];
+            Space space = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
+            int firemanId = (int)dataReceived[2];
 
-        //    if(this.PV.ViewID != firemanId) {
-        //        Fireman firemanThatMoved = oldSpace.getFiremanWithId(firemanId);
-        //        moveFirefighter(firemanThatMoved, oldSpace, newSpace);
-        //    }
-        //}
+            Dictionary<int, Space> d = StateManager.instance.firemanCurrentSpaces;
+            if (d.ContainsKey(firemanId))
+            {
+                d[firemanId] = space;
+            }
+            else d.Add(firemanId, space);
+
+        }
         else if (evCode == (byte)PhotonEventCodes.DriveAmbulance) {
             object[] dataReceived = eventData.CustomData as object[];
 
