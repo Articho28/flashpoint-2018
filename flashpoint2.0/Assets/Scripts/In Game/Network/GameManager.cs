@@ -1747,21 +1747,34 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             int[] hotspotCoords3 = getRandomHotSpotPlacementLocation();
 
             object dataHotspots;
-          
-            if (NumberOfPlayers < 3)
+
+            if (difficultyIndex == 0)
             {
-                dataHotspots = new object[] { false,
+                if (NumberOfPlayers < 3)
+                {
+                    dataHotspots = new object[] { false,
 
-                hotspotCoords1[0], hotspotCoords1[1],
-                hotspotCoords2[0], hotspotCoords2[1],
-                null, null
+                    hotspotCoords1[0], hotspotCoords1[1],
+                    hotspotCoords2[0], hotspotCoords2[1],
+                    null, null
 
-                };
+                    };
+                }
+                else
+                {
+                    dataHotspots = new object[] {true,
+
+                    hotspotCoords1[0], hotspotCoords1[1],
+                    hotspotCoords2[0], hotspotCoords2[1],
+                    hotspotCoords3[0], hotspotCoords3[1]
+
+                    };
+                }
             }
 
             else
             {
-                dataHotspots = new object[] {true, 
+                dataHotspots = new object[] {true,
 
                 hotspotCoords1[0], hotspotCoords1[1],
                 hotspotCoords2[0], hotspotCoords2[1],
