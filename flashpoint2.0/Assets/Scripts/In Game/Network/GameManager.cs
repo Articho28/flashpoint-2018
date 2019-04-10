@@ -125,10 +125,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 GM = this;
             }
         }
+
     }
 
     void Start()
     {
+        GameObject.Find("InGame").GetComponent<AudioSource>().Play();
 
     }
 
@@ -312,6 +314,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                     //placeHazmat();*/
 
                 }
+               
             }
 
             object[] data5 = new object[] { };
