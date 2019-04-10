@@ -306,15 +306,25 @@ public class Fireman : GameUnit
 
                     spaceClicked = UserInputManager.instance.getLastSpaceClicked();
 
+                    Dictionary<int, Space> firemenSpaces = StateManager.instance.firemanCurrentSpaces;
+                    foreach(KeyValuePair<int, Space> space in firemenSpaces)
+                    {
+                        if(spaceClicked.indexX == space.Value.indexX && spaceClicked.indexY == space.Value.indexY)
+                        {
+                            commandedSpace = space.Value;
+                        }
+                    }
+
                     Debug.Log("click X " + spaceClicked.indexX);
                     Debug.Log("click Y " + spaceClicked.indexY);
 
-                    commandedSpace = spaceClicked;
-
-                    Debug.Log("comm X " + commandedSpace.indexX);
-                    Debug.Log("comm Y " + commandedSpace.indexY);
-
-                    commandedFiremen = spaceClicked.getFiremen();
+                    //commandedSpace = spaceClicked;
+                    if (commandedSpace != null)
+                    {
+                        Debug.Log("comm X " + commandedSpace.indexX);
+                        Debug.Log("comm Y " + commandedSpace.indexY);
+                    }
+                    commandedFiremen = commandedSpace.getFiremen();
                     bool hasFireman = false;
 
                     foreach (Fireman f in commandedFiremen)
@@ -756,7 +766,7 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 0);
-                        moveFirefighter(curr, destination, 1, true);
+                        //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 0 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
