@@ -26,8 +26,8 @@ public class KeyboardInfoUI : MonoBehaviour
         if (!GameManager.GM.isFamilyGame)
         {
             keyboardInfoExperienced.text = "EXPERIENCED GAME\n" + "Deck gun: G\n" + "Drive ambulance: H\n"+ "Identify POI: I\n" +
-        "Carry Hazmat: M\n" + "Ride vehicle: R\n" + "Exit vehicle: X\n " + "Drive engine: T\n" 
-                        + "Crew changes: W\n" + "Remove hazmat: Z\n";
+        "Carry Hazmat: M\n" + "Ride vehicle: R\n" + "Exit vehicle: X\n" + "Drive engine: T\n" + "Crew changes: W\n" + 
+        "Remove hazmat: Z\n" + "Treat victim: K\n" + "Reveal POI: L\n" + "Squeeze: U\n" + "Dispose: P\n";
         }
     }
 

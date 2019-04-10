@@ -119,6 +119,13 @@ public class Fireman : GameUnit
                     GameConsole.instance.UpdateFeedback("This is not available in family game!");
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.P))
+            {
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    dispose();
+                }
+            }
             else if (Input.GetKeyDown(KeyCode.H))
             {
                 if (this.spec == Specialist.RescueDog)
@@ -2857,6 +2864,40 @@ public class Fireman : GameUnit
                 decrementAP(4);
             }
             FiremanUI.instance.SetAP(this.getAP());
+        }
+    }
+    public void dispose()
+    {
+        int numAP = getAP();
+
+        if (numAP >= 2 && this.spec == Specialist.HazmatTechinician)
+        {
+            this.setAP(numAP - 2);
+            FiremanUI.instance.SetAP(this.getAP());
+
+            //Remove a Hazmat from the Firefighter’s space and place in the rescued spot: 2 AP
+            Space curr = this.getCurrentSpace();
+            List<GameUnit> gameUnits = curr.getOccupants();
+            GameUnit hazmat = null;
+            foreach (GameUnit gu in gameUnits)
+            {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT)
+                {
+                    hazmat = gu;
+                    break;
+                }
+            }
+            Vector3 position = new Vector3(curr.worldPosition.x, curr.worldPosition.y, -5);
+            gameUnits.Remove(hazmat);
+            Destroy(hazmat.physicalObject);
+            Destroy(hazmat);
+            GameConsole.instance.UpdateFeedback("Removed hazmat successfully.");
+            return;
+        }
+        else if (numAP < 2 && this.spec == Specialist.HazmatTechinician)
+        {
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            GameConsole.instance.UpdateFeedback("Not enough AP!");
         }
     }
     public void fireDeckGun()
