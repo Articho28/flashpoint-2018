@@ -64,8 +64,8 @@ public class UserInputManager : MonoBehaviour
                     break;
                 }
             }
+            yield return null; //you might want to only do this check once per frame -> yield return new WaitForEndOfFrame();
         }
-        yield break;
     }
 }
 
