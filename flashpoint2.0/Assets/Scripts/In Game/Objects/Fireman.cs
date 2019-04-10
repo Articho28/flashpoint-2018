@@ -12,6 +12,7 @@ public class Fireman : GameUnit
     int extinguishAP;
     int moveAP;
     int startOfTurnAP;
+    int commandCounter;
     FMStatus status;
     Victim carriedVictim;
     Victim treatedVictim;
@@ -57,6 +58,7 @@ public class Fireman : GameUnit
         //AP = 4;
         actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
         savedAP = 0;
+        commandCounter = 0;
         carriedVictim = null;
         movedEngine = null;
         movedAmbulance = null;
@@ -446,8 +448,16 @@ public class Fireman : GameUnit
             {
                 if (isWaitingForInput && isCommandingFirefighter)
                 {
+
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
+
+                    if (commandCounter >= 3)
+                    {
+                        GameConsole.instance.UpdateFeedback("You cannot control firemen more than 3 times per turn!");
+                        return;
+                    }
+
 
                     Fireman f = null;
 
@@ -465,23 +475,8 @@ public class Fireman : GameUnit
                         object[] data = { f.PV.ViewID, 0 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCommand, data, sendToAllOptions, SendOptions.SendReliable);
 
-
-                        //Space curr = f.getCurrentSpace();
-                        //Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-                        //Space destination = neighbors[0];
-
-                        //Debug.Log("we callin ittttt 0");
-                        ////if(destination != null) {
-                        //    //moveFirefighter(f, curr, destination);
-                        //this.commandMove(f, 0);
-                        //}
-                        //else
-                        //{
-                        //    GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
-                        //    isWaitingForInput = true;
-                        //    isCommandingFirefighter = true;
-                        //}
                     }
+                    commandCounter++;
                 }
                 else //normal move
                 {
@@ -496,6 +491,12 @@ public class Fireman : GameUnit
                 {
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
+
+                    if (commandCounter >= 3)
+                    {
+                        GameConsole.instance.UpdateFeedback("You cannot control firemen more than 3 times per turn!");
+                        return;
+                    }
 
                     Fireman f = null;
 
@@ -513,23 +514,8 @@ public class Fireman : GameUnit
                         object[] data = { f.PV.ViewID, 2 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCommand, data, sendToAllOptions, SendOptions.SendReliable);
 
-
-                        //Space curr = f.getCurrentSpace();
-                        //Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-                        //Space destination = neighbors[0];
-
-                        //Debug.Log("we callin ittttt 0");
-                        ////if(destination != null) {
-                        //    //moveFirefighter(f, curr, destination);
-                        //this.commandMove(f, 0);
-                        //}
-                        //else
-                        //{
-                        //    GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
-                        //    isWaitingForInput = true;
-                        //    isCommandingFirefighter = true;
-                        //}
                     }
+                    commandCounter++;
                 }
                 else
                 {
@@ -543,6 +529,12 @@ public class Fireman : GameUnit
                 {
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
+
+                    if (commandCounter >= 3)
+                    {
+                        GameConsole.instance.UpdateFeedback("You cannot control firemen more than 3 times per turn!");
+                        return;
+                    }
 
                     Fireman f = null;
 
@@ -560,23 +552,8 @@ public class Fireman : GameUnit
                         object[] data = { f.PV.ViewID, 1 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCommand, data, sendToAllOptions, SendOptions.SendReliable);
 
-
-                        //Space curr = f.getCurrentSpace();
-                        //Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-                        //Space destination = neighbors[0];
-
-                        //Debug.Log("we callin ittttt 0");
-                        ////if(destination != null) {
-                        //    //moveFirefighter(f, curr, destination);
-                        //this.commandMove(f, 0);
-                        //}
-                        //else
-                        //{
-                        //    GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
-                        //    isWaitingForInput = true;
-                        //    isCommandingFirefighter = true;
-                        //}
                     }
+                    commandCounter++;
                 }
                 else
                 {
@@ -590,6 +567,12 @@ public class Fireman : GameUnit
                 {
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
+
+                    if (commandCounter >= 3)
+                    {
+                        GameConsole.instance.UpdateFeedback("You cannot control firemen more than 3 times per turn!");
+                        return;
+                    }
 
                     Fireman f = null;
 
@@ -607,23 +590,8 @@ public class Fireman : GameUnit
                         object[] data = { f.PV.ViewID, 3 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCommand, data, sendToAllOptions, SendOptions.SendReliable);
 
-
-                        //Space curr = f.getCurrentSpace();
-                        //Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-                        //Space destination = neighbors[0];
-
-                        //Debug.Log("we callin ittttt 0");
-                        ////if(destination != null) {
-                        //    //moveFirefighter(f, curr, destination);
-                        //this.commandMove(f, 0);
-                        //}
-                        //else
-                        //{
-                        //    GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
-                        //    isWaitingForInput = true;
-                        //    isCommandingFirefighter = true;
-                        //}
                     }
+                    commandCounter++;
                 }
                 else
                 {
@@ -637,6 +605,12 @@ public class Fireman : GameUnit
                 {
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
+
+                    if (commandCounter >= 3)
+                    {
+                        GameConsole.instance.UpdateFeedback("You cannot control firemen more than 3 times per turn!");
+                        return;
+                    }
 
                     int commandedSpaceX = commandedSpace.indexX;
                     Debug.Log("command X" + commandedSpaceX);
@@ -690,7 +664,7 @@ public class Fireman : GameUnit
                                 return;
                             }
                         }
-
+                        commandCounter++;
                     }
                     else
                     {
@@ -4859,6 +4833,7 @@ public class Fireman : GameUnit
             GameManager.replenishPOIExperienced();
         }
         GameManager.IncrementTurn();
+        commandCounter = 0;
     }
 
 
@@ -5277,7 +5252,7 @@ public class Fireman : GameUnit
     {
         if (!GameManager.GM.isFamilyGame && this.spec == Specialist.FireCaptain)
         {
-            GameConsole.instance.UpdateFeedback("Click on any firefighter to command it.");
+            GameConsole.instance.UpdateFeedback("Click on any firefighter to command it. You can command firefighters on the board 3 times!");
             isWaitingForInput = true;
             isClickingFirefighter = true;
         }
