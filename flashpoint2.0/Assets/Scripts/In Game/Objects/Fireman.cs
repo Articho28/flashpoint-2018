@@ -105,7 +105,12 @@ public class Fireman : GameUnit
 
             if (Input.GetKeyDown(KeyCode.G))
             {
-                if (!GameManager.GM.isFamilyGame)
+                if(this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+                else if (!GameManager.GM.isFamilyGame)
                 {
                     CallDeckGun();
                 }
@@ -123,7 +128,12 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.H))
             {
-                if (!GameManager.GM.isFamilyGame)
+                if (this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+                else if (!GameManager.GM.isFamilyGame)
                 {
                     CallAmbulance();
                 }
@@ -134,7 +144,12 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
-                if (!GameManager.GM.isFamilyGame)
+                if (this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+                else if (!GameManager.GM.isFamilyGame)
                 {
                     CallEngine();
                 }
@@ -145,7 +160,12 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.R))
             {
-                if (!GameManager.GM.isFamilyGame)
+                if (this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+                else if (!GameManager.GM.isFamilyGame)
                 {
                     GameConsole.instance.UpdateFeedback("Press 1 if you want to ride the ambulance \n" +
                                             "Press 2 if you want to ride the engine \n");
@@ -159,7 +179,12 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.X))
             {
-                if (!GameManager.GM.isFamilyGame)
+                if (this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+                else if (!GameManager.GM.isFamilyGame)
                 {
                     exitVehicle();
                 }
@@ -171,7 +196,12 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.K))
             {
-                if (!GameManager.GM.isFamilyGame)
+                if (this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+                else if (!GameManager.GM.isFamilyGame)
                 {
                     if (this.spec == Specialist.Paramedic)
                     {
@@ -191,7 +221,6 @@ public class Fireman : GameUnit
             {
                 //Identify POI anywhere on the board
                 //Only for imaging technicians
-
                 if (!GameManager.GM.isFamilyGame)
                 {
                     identifyPOI();
@@ -618,11 +647,23 @@ public class Fireman : GameUnit
 
             else if (Input.GetKeyDown(KeyCode.E))
             {
+                if (this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+                
                 Debug.Log("Extinguish Fire Detected");
                 extinguishFire();
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
+                if (this.spec == Specialist.RescueDog)
+                {
+                    GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
+                    return;
+                }
+
                 Debug.Log("Chop Wall Detected");
                 chopWall();
             }
@@ -822,8 +863,8 @@ public class Fireman : GameUnit
                         Debug.Log("This is a valid squeeze through wall option.");
                         GameConsole.instance.UpdateFeedback("Squeezing through wall.");
                         validInputOptions = new ArrayList();
-                        Space curr = this.getCurrentSpace();
-                        Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 0);
+                        //Space curr = this.getCurrentSpace();
+                        //Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 0);
                         //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 0 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
@@ -3479,7 +3520,28 @@ public class Fireman : GameUnit
         || (!GameManager.GM.isFamilyGame && isAmbulanceOnDest)) {     //carry victim outside the building
 
             if(carried == v){
-                moveFirefighter(curr, dst, 2, true);
+                if(this.spec == Specialist.RescueDog)
+                {
+                    if (AP >= 4)
+                    {
+                        moveFirefighter(curr, dst, 4, true);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not enough AP");
+                    }
+                }
+                else
+                {
+                    if (AP >= 2)
+                    {
+                        moveFirefighter(curr, dst, 2, true);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not enough AP");
+                    }
+                }
                 this.setVictim(null);
             }
             if(treated == v)
@@ -3512,7 +3574,28 @@ public class Fireman : GameUnit
                     || (!GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor)) {
             if (carried == v)
             {
-                moveFirefighter(curr, dst, 2, true);
+                if (this.spec == Specialist.RescueDog)
+                {
+                    if (AP >= 4)
+                    {
+                        moveFirefighter(curr, dst, 4, true);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not enough AP");
+                    }
+                }
+                else
+                {
+                    if (AP >= 2)
+                    {
+                        moveFirefighter(curr, dst, 2, true);
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("Not enough AP");
+                    }
+                }
             }
             if (treated == v)
             {
@@ -3531,6 +3614,38 @@ public class Fireman : GameUnit
             return;
         }
     }
+
+    //public void moveRescueDog(int direction) {
+    //    Space curr = this.getCurrentSpace();
+    //    Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
+    //    Space destination = neighbors[direction];
+
+    //    if (destination == null)
+    //    {
+    //        GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
+    //        return;
+    //    }
+
+    //    if(destination.getSpaceStatus() == SpaceStatus.Fire)
+    //    {
+    //        GameConsole.instance.UpdateFeedback("Rescue dog cannot move to a fire!");
+    //        return;
+    //    }
+
+    //    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+    //    Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
+
+    //    if(AP < 1)
+    //    {
+    //        GameConsole.instance.UpdateFeedback("Not enough AP to move dawg");
+    //    }
+    //    else
+    //    {
+    //        moveFirefighter(curr, destination, 1, true);
+    //    }
+
+    //}
+
 
     public static void moveFirefighter(Fireman fireman, Space curr, Space dst) {
         fireman.moveFirefighter(curr, dst, 0, false);
@@ -3586,12 +3701,18 @@ public class Fireman : GameUnit
             return;
         }
 
+        if(this.spec == Specialist.RescueDog && destination.getSpaceStatus() == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("Rescue Dog cannot move to a place with fire");
+            return;
+        }
+
         SpaceStatus sp = destination.getSpaceStatus();
 
         Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
         Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
 
-        if (sp == SpaceStatus.Fire) 
+        if (sp == SpaceStatus.Fire && !(this.spec == Specialist.RescueDog)) 
         {
             if (ap >= 3 && v == null && t == null) //&&f has enough to move
             {
@@ -3648,7 +3769,25 @@ public class Fireman : GameUnit
 
             if (v != null)//if the fireman is carrying a victim
             {
-                if(ap >= 2)
+                if(this.spec == Specialist.RescueDog && ap>=4)
+                {
+                    this.move(v, curr, destination);
+
+                    //flip poi
+                    List<GameUnit> gameUnits = destination.getOccupants();
+                    foreach (GameUnit gu in gameUnits)
+                    {
+                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                        {
+                            if (gu.GetComponent<POI>().getIsFlipped() == false)
+                            {
+                                GameManager.FlipPOI(destination);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if(ap >= 2)
                 {
                     this.move(v, curr, destination);
 
@@ -4288,6 +4427,15 @@ public class Fireman : GameUnit
             }
 
         }
+        //else if(evCode == (byte)PhotonEventCodes.MoveRescueDog)
+        //{
+        //    object[] data = eventData.CustomData as object[];
+        //    int direction = (int)data[1];
+        //    if ((int)data[0] == PV.ViewID)
+        //    {
+        //        moveRescueDog(direction);
+        //    }
+        //}
         else if (evCode == (byte)PhotonEventCodes.PickSpecialist) {
             GameManager.GM.Turn = 1;
             GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
