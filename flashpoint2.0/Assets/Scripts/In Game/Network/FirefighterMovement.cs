@@ -55,12 +55,10 @@ public class FirefighterMovement : MonoBehaviourPun
                 if (kind == SpaceKind.Outdoor) {
                     initialPosition.position = position;
 
-                    Fireman curr = this.GetComponentInParent<Fireman>();
-                    curr.setCurrentSpace(UserTargetInitialSpace);
-                    UserTargetInitialSpace.addOccupant(curr);
 
                     object[] data = { UserTargetInitialSpace.indexX, UserTargetInitialSpace.indexY, PV.ViewID };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.FireFighterPlacedProperly, data, sendToAllOptions, SendOptions.SendReliable);
 
                     return true;
                 }
@@ -93,23 +91,23 @@ public class FirefighterMovement : MonoBehaviourPun
         byte evCode = eventData.Code;
 
         //0: placing a firefighter
-        if (evCode == (byte) PhotonEventCodes.fireFighterPlaced)
+        if (evCode == (byte) PhotonEventCodes.FireFighterPlacedProperly)
         {
-            //object[] data = eventData.CustomData as object[];
+            object[] receivedData = eventData.CustomData as object[];
+            int col = (int)receivedData[0];
+            int row = (int)receivedData[1];
+            int viewID = (int)receivedData[2];
 
-            //if (data.Length == 3)
-            //{
-            //    if ((int)data[0] == PV.ViewID)
-            //    {
-            //        SpaceKind kind = (SpaceKind)data[1];
-            //        Vector3 position = (Vector3)data[2];
-            //        if (kind == SpaceKind.Outdoor)
-            //        {
-            //            initialPosition.position = position;
-            //        }
-            //    }
-            //}
-            fireFighterHasBeenPlaced();
+            if (viewID == PV.ViewID)
+            {
+                Space space = StateManager.instance.spaceGrid.getGrid()[col, row];
+                Fireman curr = this.GetComponentInParent<Fireman>();
+                curr.setCurrentSpace(space);
+                space.addOccupant(curr);
+
+                object[] dataToSend = { col, row, viewID };
+                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, dataToSend, sendToAllOptions, SendOptions.SendReliable);
+            }
         }
     }
 
