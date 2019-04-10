@@ -124,7 +124,8 @@ public class Fireman : GameUnit
             {
                 if (!GameManager.GM.isFamilyGame)
                 {
-                    dispose();
+                    object[] data = { this.currentSpace.indexX, this.currentSpace.indexY };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DisposeHazmat, data, sendToAllOptions, SendOptions.SendReliable);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.H))
@@ -3035,7 +3036,7 @@ public class Fireman : GameUnit
             FiremanUI.instance.SetAP(this.getAP());
         }
     }
-    public void dispose()
+    public void dispose(Space targetspace)
     {
         int numAP = getAP();
 
@@ -5138,6 +5139,17 @@ public class Fireman : GameUnit
             {
                 rideAmbulance();
             }
+        }
+        else if (evCode == (byte)PhotonEventCodes.DisposeHazmat)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            dispose(targetSpace);
+
         }
     }
 }
