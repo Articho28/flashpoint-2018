@@ -301,6 +301,77 @@ public class SpaceGrid : MonoBehaviourPun {
         }
     }
 
+
+    //list index: 0 top, 1 right, 2 bottom, 3 left
+    public Space[] GetRescueDogNeighbours(Space space)
+    {
+        Space[] neighbours = new Space[4];
+        int currentX = space.indexX;
+        int currentY = space.indexY;
+
+        //  _________
+        // |__|_x|__|
+        // |_x|_c|_x| 
+        // |__|_x|__| 
+        //search neighbour tiles x of c
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+
+                if (x == y || x == -y)
+                {
+                    continue; //continue if its the middle and corner tile
+                }
+
+                int checkX = space.indexX + x;
+                int checkY = space.indexY + y;
+
+                //check if neighbouring node is valid
+                if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY)
+                { //within boundaries
+
+                    if (y == -1 && isValidRescueDogSqueezeNeighbour(currentX, currentY, 0))
+                    {
+                        neighbours[0] = grid[checkX, checkY];
+                    }
+                    else if (x == 1 && isValidRescueDogSqueezeNeighbour(currentX, currentY, 1))
+                    {
+                        neighbours[1] = grid[checkX, checkY];
+                    }
+                    else if (y == 1 && isValidRescueDogSqueezeNeighbour(currentX, currentY, 2))
+                    {
+                        neighbours[2] = grid[checkX, checkY];
+                    }
+                    else if (x == -1 && isValidRescueDogSqueezeNeighbour(currentX, currentY, 3))
+                    {
+                        neighbours[3] = grid[checkX, checkY];
+                    }
+                }
+            }
+        }
+
+        return neighbours;
+    }
+
+    private bool isValidRescueDogSqueezeNeighbour(int checkX, int checkY, int wallIndex)
+    {
+        // if (grid[checkX, checkX].spaceKind == SpaceKind.Outdoor) return false;
+
+        Space curr = grid[checkX, checkY];
+        Wall dirWall = curr.getWalls()[wallIndex];
+        Door dirDoor = curr.getDoors()[wallIndex];
+
+        if(dirWall.getWallStatus() == WallStatus.Damaged)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //TODO Don't use
     public Space getNeighborInDirection(Space currentLocation, int direction)
     {

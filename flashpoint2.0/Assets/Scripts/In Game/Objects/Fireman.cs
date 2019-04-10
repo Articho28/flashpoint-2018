@@ -822,6 +822,7 @@ public class Fireman : GameUnit
                     }
 
                 }
+
                 if (isWaitingForInput && isRevealingPOI)
                 {
                     isWaitingForInput = false;
@@ -872,11 +873,11 @@ public class Fireman : GameUnit
                         Debug.Log("This is a valid squeeze through wall option.");
                         GameConsole.instance.UpdateFeedback("Squeezing through wall.");
                         validInputOptions = new ArrayList();
-                        //Space curr = this.getCurrentSpace();
-                        //Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 0);
-                        //moveFirefighter(curr, destination, 1, true);
-                        object[] data = { PV.ViewID, 0 };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        Space curr = this.getCurrentSpace();
+                        Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 0);
+                        moveFirefighter(curr, destination, 1, true);
+                        //object[] data = { PV.ViewID, 0 };
+                        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveRescueDog, data, sendToAllOptions, SendOptions.SendReliable);
                     }
                     else
                     {
@@ -1108,9 +1109,9 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 1);
-                        //moveFirefighter(curr, destination, 1, true);
-                        object[] data = { PV.ViewID, 1 };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        moveFirefighter(curr, destination, 1, true);
+                        //object[] data = { PV.ViewID, 1 };
+                        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveRescueDog, data, sendToAllOptions, SendOptions.SendReliable);
                     }
                     else
                     {
@@ -1342,9 +1343,9 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 2);
-                        //moveFirefighter(curr, destination, 1, true);
-                        object[] data = { PV.ViewID, 2 };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        moveFirefighter(curr, destination, 1, true);
+                        //object[] data = { PV.ViewID, 2 };
+                        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveRescueDog, data, sendToAllOptions, SendOptions.SendReliable);
                     }
                     else
                     {
@@ -1570,9 +1571,9 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 3);
-                        //moveFirefighter(curr, destination, 1, true);
-                        object[] data = { PV.ViewID, 3 };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        moveFirefighter(curr, destination, 1, true);
+                        //object[] data = { PV.ViewID, 3 };
+                        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveRescueDog, data, sendToAllOptions, SendOptions.SendReliable);
                     }
                     else
                     {
@@ -3831,36 +3832,36 @@ public class Fireman : GameUnit
         }
     }
 
-    //public void moveRescueDog(int direction) {
-    //    Space curr = this.getCurrentSpace();
-    //    Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
-    //    Space destination = neighbors[direction];
+    public void moveRescueDog(int direction) {
+        Space curr = this.getCurrentSpace();
+        Space[] neighbors = StateManager.instance.spaceGrid.GetRescueDogNeighbours(curr);
+        Space destination = neighbors[direction];
 
-    //    if (destination == null)
-    //    {
-    //        GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
-    //        return;
-    //    }
+        if (destination == null)
+        {
+            GameConsole.instance.UpdateFeedback("Invalid move. Please try again");
+            return;
+        }
 
-    //    if(destination.getSpaceStatus() == SpaceStatus.Fire)
-    //    {
-    //        GameConsole.instance.UpdateFeedback("Rescue dog cannot move to a fire!");
-    //        return;
-    //    }
+        if(destination.getSpaceStatus() == SpaceStatus.Fire)
+        {
+            GameConsole.instance.UpdateFeedback("Rescue dog cannot move to a fire!");
+            return;
+        }
 
-    //    Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
-    //    Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
+        Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
+        Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
 
-    //    if(AP < 1)
-    //    {
-    //        GameConsole.instance.UpdateFeedback("Not enough AP to move dawg");
-    //    }
-    //    else
-    //    {
-    //        moveFirefighter(curr, destination, 1, true);
-    //    }
+        if(AP < 1)
+        {
+            GameConsole.instance.UpdateFeedback("Not enough AP to move dawg");
+        }
+        else
+        {
+            moveFirefighter(curr, destination, 1, true);
+        }
 
-    //}
+    }
 
 
     public static void moveFirefighter(Fireman fireman, Space curr, Space dst) {
@@ -4659,15 +4660,15 @@ public class Fireman : GameUnit
             }
 
         }
-        //else if(evCode == (byte)PhotonEventCodes.MoveRescueDog)
-        //{
-        //    object[] data = eventData.CustomData as object[];
-        //    int direction = (int)data[1];
-        //    if ((int)data[0] == PV.ViewID)
-        //    {
-        //        moveRescueDog(direction);
-        //    }
-        //}
+        else if(evCode == (byte)PhotonEventCodes.MoveRescueDog)
+        {
+            object[] data = eventData.CustomData as object[];
+            int direction = (int)data[1];
+            if ((int)data[0] == PV.ViewID)
+            {
+                moveRescueDog(direction);
+            }
+        }
         else if (evCode == (byte)PhotonEventCodes.PickSpecialist) {
             GameManager.GM.Turn = 1;
             GameManager.GameStatus = FlashPointGameConstants.GAME_STATUS_PICK_SPECIALIST;
