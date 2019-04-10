@@ -166,7 +166,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     if (!containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY))
                     {
-                        placeFireMarker(targetSpace1);
+                        //PhotonNetwork.RaiseEvent((byte) PhotonEventCodes.)
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexX };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+
                     }
 
                     object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
@@ -177,7 +180,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     if (!containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY))
                     {
-                        placeFireMarker(targetSpace2);
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexX };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+
                     }
 
 
@@ -191,7 +196,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     if (!containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY))
                     {
-                        placeFireMarker(targetSpace3);
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexX };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+
                     }
 
                     Debug.Log("Explosion3 one target space " + targetSpace3.indexX + " and " + targetSpace3.indexY);
@@ -1844,6 +1851,18 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 Debug.Log("Received at " + i + " the name " + receivedData[i]);
                 playersListNameCache.Insert(i, receivedData[i]);
             }
+        }
+
+        else if (evCode == (byte) PhotonEventCodes.PlaceFireMarker)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+
+            int indexX = (int) receivedData[0];
+            int indexY = (int)receivedData[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
+
+            placeFireMarker(targetSpace);
         }
 
 
