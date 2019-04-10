@@ -4871,10 +4871,10 @@ public class Fireman : GameUnit
             this.setAP(newAP);
             startOfTurnAP = newAP;
             FiremanUI.instance.SetAP(this.AP);
-            this.commandAP = 2;
+            this.commandAP = 0;
             this.extinguishAP = 0;
             this.moveAP = 0;
-            FiremanUI.instance.SetSpecialistAP(2);
+            FiremanUI.instance.SetSpecialistAP(0);
         }
         else if (this.spec == Specialist.ImagingTechnician)
         {
