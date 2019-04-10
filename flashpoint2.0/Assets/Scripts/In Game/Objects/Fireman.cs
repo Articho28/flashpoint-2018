@@ -3461,14 +3461,28 @@ public class Fireman : GameUnit
                 }
             }
 
-            currGameUnits.Remove(this);
+            List<Fireman> firemenInCurrentSpace = curr.getFiremen();
+
+            foreach(Fireman fireman in firemenInCurrentSpace)
+            {
+                if(fireman.getAmbulance() != null)
+                {
+                    currGameUnits.Remove(fireman);
+                    destination.addOccupant(fireman);
+
+                    fireman.setCurrentSpace(destination);
+                    fireman.GetComponent<Transform>().position = destinationPosition;
+                }
+            }
+
+            //currGameUnits.Remove(this);
             currGameUnits.Remove(ambulance);
 
-            destination.addOccupant(this);
+            //destination.addOccupant(this);
             destination.addOccupant(ambulance);
 
-            this.setCurrentSpace(destination);
-            this.GetComponent<Transform>().position = destinationPosition;
+            //this.setCurrentSpace(destination);
+            //this.GetComponent<Transform>().position = destinationPosition;
 
             h.setCurrentSpace(destination);
             h.GetComponent<Transform>().position = destinationPosition;
@@ -3581,6 +3595,20 @@ public class Fireman : GameUnit
                 {
                     ambulance = gu;
                     break;
+                }
+            }
+
+            List<Fireman> firemenInCurrentSpace = AmbulanceCurrentSpace.getFiremen();
+
+            foreach (Fireman fireman in firemenInCurrentSpace)
+            {
+                if (fireman.getAmbulance() != null)
+                {
+                    currGameUnits.Remove(fireman);
+                    destination.addOccupant(fireman);
+
+                    fireman.setCurrentSpace(destination);
+                    fireman.GetComponent<Transform>().position = destinationPosition;
                 }
             }
 
@@ -3697,14 +3725,28 @@ public class Fireman : GameUnit
                 }
             }
 
-            currGameUnits.Remove(this);
+            List<Fireman> firemenInCurrentSpace = curr.getFiremen();
+
+            foreach (Fireman fireman in firemenInCurrentSpace)
+            {
+                if (fireman.getEngine() != null)
+                {
+                    currGameUnits.Remove(fireman);
+                    destination.addOccupant(fireman);
+
+                    fireman.setCurrentSpace(destination);
+                    fireman.GetComponent<Transform>().position = destinationPosition;
+                }
+            }
+
+            //currGameUnits.Remove(this);
             currGameUnits.Remove(engine);
 
-            destination.addOccupant(this);
+            //destination.addOccupant(this);
             destination.addOccupant(engine);
 
-            this.setCurrentSpace(destination);
-            this.GetComponent<Transform>().position = destinationPosition;
+            //this.setCurrentSpace(destination);
+            //this.GetComponent<Transform>().position = destinationPosition;
 
             n.setCurrentSpace(destination);
             n.GetComponent<Transform>().position = destinationPosition;
@@ -4287,22 +4329,22 @@ public class Fireman : GameUnit
 
     private void sendDriveAmbulanceEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction , PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendDriveEngineEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction, PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DriveEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendRideAmbulanceEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction, PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideAmbulance, data, sendToAllOptions, SendOptions.SendReliable);
     }
     private void sendRideEngineEvent(int direction)
     {
-        object[] data = { direction };
+        object[] data = { direction, PV.ViewID };
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RideEngine, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
@@ -4987,19 +5029,38 @@ public class Fireman : GameUnit
             object[] dataReceived = eventData.CustomData as object[];
 
             int direction = (int)dataReceived[0];
-            driveAmbulance(direction);
+            int viewId = (int)dataReceived[1];
+            if (viewId == PV.ViewID)
+            {
+                driveAmbulance(direction);
+            }
         }
         else if (evCode == (byte)PhotonEventCodes.DriveEngine) {
             object[] dataReceived = eventData.CustomData as object[];
 
             int direction = (int)dataReceived[0];
-            driveEngine(direction);
+            int viewId = (int)dataReceived[1];
+            if (viewId == PV.ViewID)
+            {
+                driveEngine(direction);
+            }
         }
         else if (evCode == (byte)PhotonEventCodes.RideEngine) {
-            rideEngine();
+            object[] dataReceived = eventData.CustomData as object[];
+            int viewId = (int)dataReceived[1];
+            if (viewId == PV.ViewID)
+            {
+                rideEngine();
+            }
+
         }
         else if (evCode == (byte)PhotonEventCodes.RideAmbulance) {
-            rideAmbulance();
+            object[] dataReceived = eventData.CustomData as object[]; 
+            int viewId = (int)dataReceived[1];
+            if (viewId == PV.ViewID)
+            {
+                rideAmbulance();
+            }
         }
     }
 }
