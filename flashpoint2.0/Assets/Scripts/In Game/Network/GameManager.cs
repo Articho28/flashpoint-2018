@@ -218,16 +218,48 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
+
+                    Debug.Log("Explosion1 one target space " + targetSpace1.indexX + " and " + targetSpace1.indexY);
+
+                    if (!containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+
+                    }
+
                     object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data1, sendToAllOptions, SendOptions.SendReliable);
 
+                 
+           
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
+
+                    Debug.Log("Explosion2 one target space " + targetSpace2.indexX + " and " + targetSpace2.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace2.indexX,  targetSpace2.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace2.indexX, targetSpace2.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
+
                     object[] data2 = new object[] { targetSpace2.worldPosition, targetSpace2.indexX, targetSpace2.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data2, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
+
+                    Debug.Log("Explosion3 one target space " + targetSpace3.indexX + " and " + targetSpace3.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace3.indexX, targetSpace3.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
+
                     object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
 
@@ -244,21 +276,55 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
+
+                    Debug.Log("Explosion1 one target space " + targetSpace1.indexX + " and " + targetSpace1.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data1, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
+
+                    Debug.Log("Explosion2 one target space " + targetSpace2.indexX + " and " + targetSpace2.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace2.indexX, targetSpace2.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data2 = new object[] { targetSpace2.worldPosition, targetSpace2.indexX, targetSpace2.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data2, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
+
+                    Debug.Log("Explosion3 one target space " + targetSpace3.indexX + " and " + targetSpace3.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace3.indexX, targetSpace3.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 4 uses the same function as explosion 2
                     Space targetSpace4 = ExperiencedExplosion2();
+
+                    Debug.Log("Explosion 4 has location :" + targetSpace4.indexX + " and "  + targetSpace4.indexY);
+                    if (!containsFireOrSmoke(targetSpace4.indexX, targetSpace4.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace4.indexX, targetSpace4.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data4 = new object[] { targetSpace4.worldPosition, targetSpace4.indexX, targetSpace4.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data4, sendToAllOptions, SendOptions.SendReliable);
 
