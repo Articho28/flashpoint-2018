@@ -640,10 +640,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     public void randomizePOI()
     {
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
 
         int col;
         int row;
