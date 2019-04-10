@@ -2183,6 +2183,8 @@ public class Fireman : GameUnit
                 GameManager.rollDice();
                 rollDiceInQuadrant(quadSpaces,GameManager.blackDice,GameManager.redDice);
 
+                decrementAP(2);
+
                 GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 1 to reroll the " +
                 	"black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
                 isWaitingForInput = true;
@@ -2193,7 +2195,9 @@ public class Fireman : GameUnit
                 GameManager.rollDice();
                 rollDiceInQuadrant(quadSpaces, GameManager.blackDice, GameManager.redDice);
                 fireDeckGun();
+                decrementAP(4);
             }
+            FiremanUI.instance.SetAP(this.getAP());
         }
     }
     public void fireDeckGun()
@@ -2242,15 +2246,6 @@ public class Fireman : GameUnit
                 }
             }
         }
-        if(this.GetSpecialist() == Specialist.DriverOperator)
-        {
-            decrementAP(2);
-        }
-        else
-        {
-            decrementAP(4);
-        }
-        FiremanUI.instance.SetAP(this.getAP());
     }
     public void CallAmbulance()
     {
@@ -2316,48 +2311,198 @@ public class Fireman : GameUnit
 
         }
     }
+    //    public void extinguishFire()
+    //    {
+    //        int numAP = getAP(); //returns the number of action points
+    //        isDoubleSpec = this.spec == Specialist.RescueSpecialist || this.spec == Specialist.Paramedic;
+
+    //        //Get current space and spacestatus. 
+
+    //        Space current = this.getCurrentSpace();
+    //        SpaceStatus currentSpaceStatus = current.getSpaceStatus();
+    //        if (numAP == 1 && currentSpaceStatus == SpaceStatus.Fire)
+    //        {
+    //            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+    //            if(this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 1)
+    //            {
+    //                this.extinguishAP = extinguishAP - 1;
+    //                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+    //            }
+    //            else
+    //            {
+    //                this.setAP(numAP - 1);
+    //            }
+    //            FiremanUI.instance.SetAP(this.getAP());
+    //            sendTurnFireMarkerToSmokeEvent(current);
+    //            return;
+    //        }
+    //        else if (numAP == 2 && currentSpaceStatus == SpaceStatus.Fire)
+    //        {
+    //            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+    //            if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 2)
+    //            {
+    //                this.extinguishAP = extinguishAP - 2;
+    //                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+    //            }
+    //            else
+    //            {
+    //                this.setAP(numAP - 2);
+    //            }
+    //            FiremanUI.instance.SetAP(this.getAP());
+    //            sendFireMarkerExtinguishEvent(current);
+    //            return;
+
+    //        }
+    //        else if (numAP == 4 && currentSpaceStatus == SpaceStatus.Fire)
+    //        {
+    //            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+    //            if (this.spec == Specialist.Paramedic && this.extinguishAP >= 4)
+    //            {
+    //                this.extinguishAP = extinguishAP - 4;
+    //                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+    //            }
+    //            else
+    //            {
+    //                this.setAP(numAP - 4);
+    //            }
+    //            FiremanUI.instance.SetAP(this.getAP());
+    //            sendFireMarkerExtinguishEvent(current);
+    //            return;
+
+    //        }
+    //        //Get neighbors and their spacestatus. 
+    //        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(current);
+    //        SpaceStatus[] neighborsStatuses = new SpaceStatus[4];
+
+    //        for (int i = 0; i < neighbors.Length; i++)
+    //        {
+    //            if (neighbors[i] != null)
+    //            {
+    //                neighborsStatuses[i] = neighbors[i].getSpaceStatus();
+    //            }
+
+    //        }
+
+    //        //Check if sufficient AP.
+    //        if (numAP < 1 || (this.spec == Specialist.RescueSpecialist && extinguishAP < 1))
+    //        {
+    //            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+    //            GameConsole.instance.UpdateFeedback("Not enough AP!");
+    //        }
+    //    else
+    //    {
+    //        //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
+    //        ArrayList extinguishOptions = getUnsafeSpacesIndecies(currentSpaceStatus, neighborsStatuses);
+    //        validInputOptions = extinguishOptions;
+
+    //        //Build string to show.
+    //        string optionsToUser = "";
+
+    //        foreach (int index in extinguishOptions) {
+
+
+    //            if (index == 0)
+    //            {
+    //                optionsToUser += "Press 0 for Tile on Top ";
+    //            }
+    //            else if (index == 1)
+    //            {
+    //                optionsToUser += " Press 1 for Tile to Your Right";
+    //            }
+    //            else if (index == 2)
+    //            {
+    //                optionsToUser += " Press 2 for the Tile to the Bottom";
+    //            }
+    //            else if (index == 3)
+    //            {
+    //                optionsToUser += " Press 3 for the Tile to Your Left";
+
+    //            }
+    //            else
+    //            {
+    //                optionsToUser += " Press 4 for the current Tile";
+
+    //            }
+    //        }
+
+    //        GameConsole.instance.UpdateFeedback(optionsToUser);
+
+    //        isWaitingForInput = true;
+    //        isExtinguishingFire = true;
+
+    //    }
+    //}
     public void extinguishFire()
     {
-        int numAP = getAP(); //returns the number of action points
-        isDoubleSpec = this.spec == Specialist.RescueSpecialist || this.spec == Specialist.Paramedic;
+        int numAP = getAP(); //returns the number of action points
+        isDoubleSpec = (this.spec == Specialist.RescueSpecialist || this.spec == Specialist.Paramedic);
 
         //Get current space and spacestatus. 
 
         Space current = this.getCurrentSpace();
         SpaceStatus currentSpaceStatus = current.getSpaceStatus();
-
-        if (numAP == 1 && currentSpaceStatus == SpaceStatus.Fire)
+        if(currentSpaceStatus == SpaceStatus.Fire)
         {
-            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
-            if(this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 1)
+            if (numAP == 1)
             {
-                this.extinguishAP = extinguishAP - 1;
-                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+                if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 1)
+                {
+                    this.extinguishAP = extinguishAP - 1;
+                    FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                }
+                else
+                {
+                    this.setAP(numAP - 1);
+                }
+                    FiremanUI.instance.SetAP(this.getAP());
+                    sendTurnFireMarkerToSmokeEvent(current);
+                    return;
             }
-            else
+            else if (numAP == 2)
             {
-                this.setAP(numAP - 1);
-            }
-            FiremanUI.instance.SetAP(this.getAP());
-            sendTurnFireMarkerToSmokeEvent(current);
-            return;
-        }
-        else if (numAP == 2 && currentSpaceStatus == SpaceStatus.Fire)
-        {
-            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
-            if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 2)
-            {
-                this.extinguishAP = extinguishAP - 2;
-                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
-            }
-            else
-            {
-                this.setAP(numAP - 2);
-            }
-            FiremanUI.instance.SetAP(this.getAP());
-            sendFireMarkerExtinguishEvent(current);
-            return;
+                GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+                if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 2)
+                {
+                    this.extinguishAP = extinguishAP - 2;
+                    FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                    FiremanUI.instance.SetAP(this.getAP());
+                    sendFireMarkerExtinguishEvent(current);
+                }
+                else if (isDoubleSpec && numAP >= 2)
+                {
+                    GameConsole.instance.UpdateFeedback("You don't have enough AP to extinguish at your location. Safely end the turn.");
+                    sendTurnFireMarkerToSmokeEvent(current);
+                    this.setAP(numAP - 2);
+                    FiremanUI.instance.SetAP(this.getAP());
+                }
+                else
+                {
+                    this.setAP(numAP - 2);
+                    FiremanUI.instance.SetAP(this.getAP());
+                    sendFireMarkerExtinguishEvent(current);
+                }
 
+                return;
+
+            }
+            else if (numAP == 4)
+            {
+                GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+                if (isDoubleSpec && this.extinguishAP >= 4)
+                {
+                    this.extinguishAP = extinguishAP - 4;
+                    FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                }
+                else
+                {
+                    this.setAP(numAP - 4);
+                }
+                FiremanUI.instance.SetAP(this.getAP());
+                sendFireMarkerExtinguishEvent(current);
+                return;
+
+            }
         }
 
         //Get neighbors and their spacestatus. 
@@ -2372,13 +2517,13 @@ public class Fireman : GameUnit
             }
 
         }
-         
+
         //Check if sufficient AP.
-        if (numAP < 1 || (this.spec == Specialist.RescueSpecialist && extinguishAP < 1))
+        if (numAP < 1)
         {
-            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
             GameConsole.instance.UpdateFeedback("Not enough AP!");
-        }
+        }
         else
         {
             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
@@ -2388,9 +2533,10 @@ public class Fireman : GameUnit
             //Build string to show.
             string optionsToUser = "";
 
-            foreach (int index in extinguishOptions) {
+            foreach (int index in extinguishOptions)
+            {
 
-               
+
                 if (index == 0)
                 {
                     optionsToUser += "Press 0 for Tile on Top ";
@@ -3585,7 +3731,7 @@ public class Fireman : GameUnit
     {
         if(!GameManager.GM.isFamilyGame && this.spec == Specialist.ImagingTechnician)
         {
-            GameConsole.instance.UpdateFeedback("Click anywhere on the bpard to flip a POI.");
+            GameConsole.instance.UpdateFeedback("Click anywhere on the board to flip a POI.");
             isWaitingForInput = true;
             isIdentifyingPOI = true;
         }
