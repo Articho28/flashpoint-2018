@@ -17,23 +17,27 @@ public class Fireman : GameUnit
     Hazmat carriedHazmat;
     Ambulance movedAmbulance;
     Engine movedEngine;
+    private List<Fireman> commandedFiremen;
+    private Space commandedSpace;
     public PhotonView PV;
-    private bool isWaitingForInput;
+    private static bool isWaitingForInput;
     private bool isExtinguishingFire;
     private bool isChoppingWall;
     private bool isCallingAmbulance;
     private bool isCallingEngine;
     private bool isRidingVehicle;
     private bool isSelectingExtinguishOption;
-    private bool isSelectingSpecialist;
+    private static bool isSelectingSpecialist;
     private bool isChangingCrew;
     private bool isOnEngine;
     private bool isOnAmbulance;
     private bool isIdentifyingPOI;
     private bool isFiringDeckGun;
+    private bool isClickingFirefighter;
     private bool driverRerolledBlackDice;
     private bool driverRerolledRedDice;
     private bool isRevealingPOI;
+    private bool isCommandingFirefighter;
     public bool isDoubleSpec; //for ap decrementing
     public int actorNumber;
     public ArrayList validInputOptions;
@@ -54,6 +58,7 @@ public class Fireman : GameUnit
         carriedVictim = null;
         movedEngine = null;
         movedAmbulance = null;
+        commandedFiremen = new List<Fireman> { };
         PV = GetComponent<PhotonView>();
         isWaitingForInput = false;
         isExtinguishingFire = false;
@@ -68,11 +73,15 @@ public class Fireman : GameUnit
         isChangingCrew = false;
         isSelectingSpecialist = false;
         isIdentifyingPOI = false;
+        isCommandingFirefighter = false;
+        isRevealingPOI = false;
         isFiringDeckGun = false;
         driverRerolledRedDice = false;
         driverRerolledBlackDice = false;
+        isDoubleSpec = false;
+        isClickingFirefighter = false;
 
-        if(GameManager.GM.isFamilyGame == true)
+        if (GameManager.GM.isFamilyGame == true)
         {
             this.spec = Specialist.FamilyGame;
             AP = 4;
@@ -92,212 +101,284 @@ public class Fireman : GameUnit
             //Drive vehicle "H"
             //Crew Change "W"
 
-                if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                if (!GameManager.GM.isFamilyGame)
                 {
-                    if (!GameManager.GM.isFamilyGame)
+                    CallDeckGun();
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.H))
+            {
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    CallAmbulance();
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.T))
+            {
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    CallEngine();
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    GameConsole.instance.UpdateFeedback("Press 1 if you want to ride the ambulance \n" +
+                                            "Press 2 if you want to ride the engine \n");
+                    isWaitingForInput = true;
+                    isRidingVehicle = true;
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.X))
+            {
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    exitVehicle();
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+
+            }
+            else if (Input.GetKeyDown(KeyCode.K))
+            {
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    if (this.spec == Specialist.Paramedic)
                     {
-                        CallDeckGun();
+                        treatVictim();
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                        GameConsole.instance.UpdateFeedback("You have to be a Paramedic to do this move!");
                     }
                 }
-                else if (Input.GetKeyDown(KeyCode.H))
+                else
                 {
-                    if (!GameManager.GM.isFamilyGame)
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.I))
+            {
+                //Identify POI anywhere on the board
+                //Only for imaging technicians
+
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    identifyPOI();
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {
+                //command any firefighter to move and/or open/close door
+                //Only for fire captain
+
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    command();
+                }
+                else
+                {
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha1) && !GameManager.GM.isFamilyGame)
+            {
+                if (isWaitingForInput && isFiringDeckGun)
+                {
+                    DriverReroll(1);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2) && !GameManager.GM.isFamilyGame)
+            {
+                if (isWaitingForInput && isFiringDeckGun)
+                {
+                    DriverReroll(2);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3) && !GameManager.GM.isFamilyGame)
+            {
+                if (isWaitingForInput && isFiringDeckGun)
+                {
+                    DriverReroll(3);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4) && !GameManager.GM.isFamilyGame)
+            {
+                if (isWaitingForInput && isFiringDeckGun)
+                {
+                    isWaitingForInput = false;
+                    isFiringDeckGun = false;
+                    fireDeckGun();
+                }
+            }
+            else if (Input.GetMouseButtonDown(0) && !GameManager.GM.isFamilyGame)
+            { // if left button pressed
+                Space spaceClicked = null; //initialize it randomly hehe
+                if (isWaitingForInput && isIdentifyingPOI)
+                {
+                    isWaitingForInput = false;
+                    isIdentifyingPOI = false;
+
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
                     {
-                        CallAmbulance();
+                        GameObject objectClicked = hit.transform.gameObject;
+
+                        if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
+                        {
+                            Debug.Log("a tile was clicked");
+                            spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
+                            Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
+                        }
+
+                    }
+                    List<GameUnit> gameUnits = spaceClicked.getOccupants();
+                    bool hasPOI = false;
+                    foreach (GameUnit gu in gameUnits)
+                    {
+                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                        {
+                            hasPOI = true;
+                            break;
+                        }
+                    }
+
+                    if (hasPOI == true)
+                    {
+                        GameManager.FlipPOI(spaceClicked);
+                        this.setAP(this.getAP() - 1);
+                        FiremanUI.instance.SetAP(this.getAP());
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.T))
-                {
-                    if (!GameManager.GM.isFamilyGame)
-                    {
-                        CallEngine();
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.R))
-                {
-                    if (!GameManager.GM.isFamilyGame)
-                    {
-                        GameConsole.instance.UpdateFeedback("Press 1 if you want to ride the ambulance \n" +
-                                                "Press 2 if you want to ride the engine \n");
+                        GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
                         isWaitingForInput = true;
-                        isRidingVehicle = true;
+                        isIdentifyingPOI = true;
+                    }
+                }
+                else if (isWaitingForInput && isClickingFirefighter)
+                {
+                    isWaitingForInput = false;
+                    isClickingFirefighter = false;
+
+                    //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    //RaycastHit hit;
+                    //if (Physics.Raycast(ray, out hit))
+                    //{
+                    //    GameObject objectClicked = hit.transform.gameObject;
+
+                    //    if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
+                    //    {
+                    //        Debug.Log("a tile was clicked");
+                    //        spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
+                    //        Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
+                    //    }
+
+                    //}
+
+                    spaceClicked = UserInputManager.instance.getLastSpaceClicked();
+
+                    Debug.Log("click X " + spaceClicked.indexX);
+                    Debug.Log("click Y " + spaceClicked.indexY);
+
+                    commandedSpace = spaceClicked;
+
+                    Debug.Log("comm X " + commandedSpace.indexX);
+                    Debug.Log("comm Y " + commandedSpace.indexY);
+
+                    commandedFiremen = spaceClicked.getFiremen();
+                    bool hasFireman = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        if (f.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                        {
+                            hasFireman = true;
+                            break;
+                        }
+                    }
+
+
+                    if (hasFireman == true)
+                    {
+                        GameConsole.instance.UpdateFeedback("You clicked on a fireman! You can now Move (click the arrows) and/or Open/Close Doors (click D) with that fireman");
+                        //command it
+                        isWaitingForInput = true;
+                        isCommandingFirefighter = true;
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                        GameConsole.instance.UpdateFeedback("This space doesn't have a Firefighter! Try again");
+                        isWaitingForInput = true;
+                        isClickingFirefighter = true;
                     }
+
                 }
-                else if (Input.GetKeyDown(KeyCode.X))
+            }
+
+            else if (Input.GetKeyDown(KeyCode.L))
+            {
+                //reveal POI
+                if (!GameManager.GM.isFamilyGame)
                 {
-                    if (!GameManager.GM.isFamilyGame)
+                    if (this.spec == Specialist.RescueDog)
                     {
-                        exitVehicle();
+                        revealPOI();
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                        GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
                     }
-
                 }
-                else if (Input.GetKeyDown(KeyCode.K))
+                else
                 {
-                    if (!GameManager.GM.isFamilyGame)
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.U))
+            {
+                if (!GameManager.GM.isFamilyGame)
+                {
+                    if (this.spec == Specialist.RescueDog)
                     {
-                        if (this.spec == Specialist.Paramedic)
-                        {
-                            treatVictim();
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("You have to be a Paramedic to do this move!");
-                        }
+                        //squeeze();
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                        GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
                     }
                 }
-                else if (Input.GetKeyDown(KeyCode.I)) 
+                else
                 {
-                    //Identify POI anywhere on the board
-                    //Only for imaging technicians
+                    GameConsole.instance.UpdateFeedback("This is not available in family game!");
+                }
 
-                    if (!GameManager.GM.isFamilyGame)
-                    {
-                        identifyPOI();
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha1) && !GameManager.GM.isFamilyGame)
-                {
-                    if(isWaitingForInput && isFiringDeckGun)
-                    {
-                        DriverReroll(1);
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2) && !GameManager.GM.isFamilyGame)
-                {
-                    if (isWaitingForInput && isFiringDeckGun)
-                    {
-                        DriverReroll(2);
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha3) && !GameManager.GM.isFamilyGame)
-                {
-                    if (isWaitingForInput && isFiringDeckGun)
-                    {
-                        DriverReroll(3);
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha4) && !GameManager.GM.isFamilyGame)
-                {
-                    if (isWaitingForInput && isFiringDeckGun)
-                    {
-                        isWaitingForInput = false;
-                        isFiringDeckGun = false;
-                        fireDeckGun();
-                    }
-                }
-                else if (Input.GetMouseButtonDown(0) && !GameManager.GM.isFamilyGame)
-                { // if left button pressed
-                    Space spaceClicked = StateManager.instance.spaceGrid.getGrid()[0, 0]; //initialize it randomly hehe
-                    if (isWaitingForInput && isIdentifyingPOI)
-                    {
-                        isWaitingForInput = false;
-                        isIdentifyingPOI = false;
-
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit hit;
-                        if (Physics.Raycast(ray, out hit))
-                        {
-                            GameObject objectClicked = hit.transform.gameObject;
-
-                            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
-                            {
-                                Debug.Log("a tile was clicked");
-                                spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
-                                Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
-                            }
-
-                        }
-                        List<GameUnit> gameUnits = spaceClicked.getOccupants();
-                        bool hasPOI = false;
-                        foreach (GameUnit gu in gameUnits)
-                        {
-                            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                            {
-                                hasPOI = true;
-                                break;
-                            }
-                        }
-
-                        if (hasPOI == true)
-                        {
-                            GameManager.FlipPOI(spaceClicked);
-                            this.setAP(this.getAP() - 1);
-                            FiremanUI.instance.SetAP(this.getAP());
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
-                            isWaitingForInput = true;
-                            isIdentifyingPOI = true;
-                        }
-                    }
-                
-                else if (Input.GetKeyDown(KeyCode.L))
-                {
-                    //reveal POI
-                    if (!GameManager.GM.isFamilyGame)
-                    {
-                        if (this.spec == Specialist.RescueDog)
-                        {
-                            revealPOI();
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
-                        }
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.U))
-                {
-                    if (!GameManager.GM.isFamilyGame)
-                    {
-                        if (this.spec == Specialist.RescueDog)
-                        {
-                            //squeeze();
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("You have to be a rescue dog to do this!");
-                        }
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("This is not available in family game!");
-                    }
-
-                }
             }
 
             //MOVE: ARROWS WITH DIRECTION
@@ -309,8 +390,19 @@ public class Fireman : GameUnit
             //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                object[] data = { PV.ViewID, 0 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    foreach(Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID , 0 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else //normal move
+                {
+                    object[] data = { PV.ViewID, 0 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
@@ -329,62 +421,127 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.D)) //open/close door
             {
-                int currentSpaceX = this.getCurrentSpace().indexX;
-                int currentSpaceY = this.getCurrentSpace().indexY;
-                object[] data = { currentSpaceX, currentSpaceY };
-
-                int doorDir = 4;//forbidden value
-                Door[] doors = this.getCurrentSpace().getDoors();
-
-                for (int i = 0; i < 4; i++)
+                if (isWaitingForInput && isCommandingFirefighter)
                 {
-                    if (doors[i] != null)
+                    int commandedSpaceX = commandedSpace.indexX;
+                    Debug.Log("command X" + commandedSpaceX);
+                    int commandedSpaceY = commandedSpace.indexY;
+                    Debug.Log("command Y" + commandedSpaceY);
+                    object[] data = { commandedSpaceX, commandedSpaceY };
+
+                    int doorDir = 4;//forbidden value
+                    Door[] doors = commandedSpace.getDoors();
+
+                    for (int i = 0; i < 4; i++)
                     {
-                        doorDir = i;
+                        if (doors[i] != null)
+                        {
+                            doorDir = i;
+                            Debug.Log("door dir" + doorDir);
+                        }
+                    }
+                    if (doorDir >= 0 && doorDir <= 3)
+                    {
+                        Door door = doors[doorDir];
+
+                        if (door.getDoorStatus() == DoorStatus.Open)
+                        {
+                            if (this.getAP() >= 1)
+                            {
+                                decrementAP(1);
+                                FiremanUI.instance.SetAP(this.getAP());
+                                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
+                                GameConsole.instance.UpdateFeedback("Door closed successfully!");
+                            }
+                            else
+                            {
+                                GameConsole.instance.UpdateFeedback("Insufficient AP 1");
+                                return;
+                            }
+
+                        }
+                        else if (door.getDoorStatus() == DoorStatus.Closed)
+                        {
+                            if (this.getAP() >= 1)
+                            {
+                                decrementAP(1);
+                                FiremanUI.instance.SetAP(this.getAP());
+                                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
+                                GameConsole.instance.UpdateFeedback("Door opened successfully!");
+                            }
+                            else
+                            {
+                                GameConsole.instance.UpdateFeedback("Insufficient AP 2");
+                                return;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("there are no doors near the Fireman!");
                     }
                 }
-                if (doorDir >= 0 && doorDir <= 3)
-                {
-                    Door door = doors[doorDir];
 
-                    if (door.getDoorStatus() == DoorStatus.Open)
-                    {
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            FiremanUI.instance.SetAP(this.getAP());
-                            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
-                            GameConsole.instance.UpdateFeedback("Door closed successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP 1");
-                            return;
-                        }
-
-                    }
-                    else if (door.getDoorStatus() == DoorStatus.Closed)
-                    {
-                        if (this.getAP() >= 1)
-                        {
-                            decrementAP(1);
-                            FiremanUI.instance.SetAP(this.getAP());
-                            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
-                            GameConsole.instance.UpdateFeedback("Door opened successfully!");
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("Insufficient AP 2");
-                            return;
-                        }
-                    }
-                }
                 else
                 {
-                    GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
+                    int currentSpaceX = this.getCurrentSpace().indexX;
+                    int currentSpaceY = this.getCurrentSpace().indexY;
+                    object[] data = { currentSpaceX, currentSpaceY };
+
+                    int doorDir = 4;//forbidden value
+                    Door[] doors = this.getCurrentSpace().getDoors();
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (doors[i] != null)
+                        {
+                            doorDir = i;
+                        }
+                    }
+                    if (doorDir >= 0 && doorDir <= 3)
+                    {
+                        Door door = doors[doorDir];
+
+                        if (door.getDoorStatus() == DoorStatus.Open)
+                        {
+                            if (this.getAP() >= 1)
+                            {
+                                decrementAP(1);
+                                FiremanUI.instance.SetAP(this.getAP());
+                                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
+                                GameConsole.instance.UpdateFeedback("Door closed successfully!");
+                            }
+                            else
+                            {
+                                GameConsole.instance.UpdateFeedback("Insufficient AP 1");
+                                return;
+                            }
+
+                        }
+                        else if (door.getDoorStatus() == DoorStatus.Closed)
+                        {
+                            if (this.getAP() >= 1)
+                            {
+                                decrementAP(1);
+                                FiremanUI.instance.SetAP(this.getAP());
+                                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
+                                GameConsole.instance.UpdateFeedback("Door opened successfully!");
+                            }
+                            else
+                            {
+                                GameConsole.instance.UpdateFeedback("Insufficient AP 2");
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
+                    }
                 }
 
-            }
+                }
 
             else if (Input.GetKeyDown(KeyCode.E))
             {
@@ -2025,7 +2182,7 @@ public class Fireman : GameUnit
         carriedHazmat = h;
     }
 
-    public void selectSpecialist()
+    public static void selectSpecialist()
     {
         isWaitingForInput = true;
         isSelectingSpecialist = true;
@@ -3071,6 +3228,7 @@ public class Fireman : GameUnit
         }
     }
 
+
     private void move(Victim v, Space curr, Space dst) {
         SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
 
@@ -3742,6 +3900,20 @@ public class Fireman : GameUnit
         else
         {
             GameConsole.instance.UpdateFeedback("You can't do this move! You have to be a Rescue Dog.");
+        }
+    }
+
+    public void command()
+    {
+        if (!GameManager.GM.isFamilyGame && this.spec == Specialist.FireCaptain)
+        {
+            GameConsole.instance.UpdateFeedback("Click on any firefighter to command it.");
+            isWaitingForInput = true;
+            isClickingFirefighter = true;
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You can't do this move! You have to be a fire captain.");
         }
     }
 

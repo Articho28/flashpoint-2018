@@ -1266,6 +1266,11 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 {
                     DisplayToConsolePlaceFirefighter(Turn);
                 }
+                else if (isPickSpecialist)
+                {
+                    Fireman.selectSpecialist();
+
+                }
                 else
                 {
                     DisplayToConsolePlayGame(Turn);
@@ -1747,7 +1752,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         {
             object[] dataReceived = eventData.CustomData as object[];
             int[] updatedIndexList = (int[])dataReceived[0];
-
             freeSpecialistIndex = updatedIndexList;
 
 
