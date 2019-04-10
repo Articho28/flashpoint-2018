@@ -3484,6 +3484,7 @@ public class Fireman : GameUnit
             //this.setCurrentSpace(destination);
             //this.GetComponent<Transform>().position = destinationPosition;
 
+            //TODO if h is not null
             h.setCurrentSpace(destination);
             h.GetComponent<Transform>().position = destinationPosition;
         }

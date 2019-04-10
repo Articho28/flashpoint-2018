@@ -200,6 +200,7 @@ MonoBehaviour:
   PV: {fileID: 0}
   isDoubleSpec: 0
   actorNumber: 0
+  spec: 0
 --- !u!212 &302
 SpriteRenderer:
   m_ObjectHideFlags: 0
