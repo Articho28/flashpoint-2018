@@ -41,6 +41,7 @@ public enum Kind
     AmbulanceParkingSpot,
     EngineParkingSpot,
     Victim,
+
     FalseAlarm
 }
 
