@@ -4197,12 +4197,11 @@ public class Fireman : GameUnit
         curr.removeOccupant(this);
 
         object[] data = new object[] {dst.indexX, dst.indexY, PV.ViewID };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.FireFighterPlacedProperly, data, sendToAllOptions, SendOptions.SendReliable);
 
 
         if (isMyOwn) {
             FiremanUI.instance.SetAP(this.AP);
-            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
     }
 
@@ -4222,7 +4221,7 @@ public class Fireman : GameUnit
             }
         }
                 
-        f.AP = 10;
+        //f.AP = 10;
         Debug.Log("============AP: " + f.AP);
 
         Victim v = f.getVictim();
