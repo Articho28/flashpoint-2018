@@ -4676,6 +4676,41 @@ public class Fireman : GameUnit
             GameConsole.instance.UpdateFeedback("Crew change can only be the first move of the turn!");
             return;
         }
+
+        Space engineCurrentSpace = null;
+        bool canChangeCrew = false;
+        //find the space of the ambulance
+        foreach (Space s in StateManager.instance.spaceGrid.getGrid())
+        {
+            foreach (GameUnit gu in s.getOccupants())
+            {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                {
+                    engineCurrentSpace = s;
+                    break;
+                }
+            }
+        }
+
+        if(engineCurrentSpace != null)
+        {
+            List<Fireman> listOfFiremen = engineCurrentSpace.getFiremen();
+            foreach(Fireman fireman in listOfFiremen)
+            {
+                if(fireman != null && PV.ViewID == fireman.PV.ViewID)
+                {
+                    canChangeCrew = true;
+                    break;
+                }
+            }
+        }
+
+        if (!canChangeCrew)
+        {
+            GameConsole.instance.UpdateFeedback("You have to be on the engine to be able to change crew");
+            return;
+        }
+
         if (this.getAP() >= 2)
         {
 
