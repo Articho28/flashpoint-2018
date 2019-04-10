@@ -238,51 +238,51 @@ public class Fireman : GameUnit
                 }
                 else if (Input.GetMouseButtonDown(0) && !GameManager.GM.isFamilyGame)
                 { // if left button pressed
-                    Space spaceClicked = StateManager.instance.spaceGrid.getGrid()[0, 0]; //initialize it randomly hehe
-                    if (isWaitingForInput && isIdentifyingPOI)
+                    Space spaceClicked = null; //initialize it randomly hehe
+                if (isWaitingForInput && isIdentifyingPOI)
+                {
+                    isWaitingForInput = false;
+                    isIdentifyingPOI = false;
+
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit))
                     {
-                        isWaitingForInput = false;
-                        isIdentifyingPOI = false;
+                        GameObject objectClicked = hit.transform.gameObject;
 
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit hit;
-                        if (Physics.Raycast(ray, out hit))
+                        if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
                         {
-                            GameObject objectClicked = hit.transform.gameObject;
-
-                            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Board"))
-                            {
-                                Debug.Log("a tile was clicked");
-                                spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
-                                Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
-                            }
-
-                        }
-                        List<GameUnit> gameUnits = spaceClicked.getOccupants();
-                        bool hasPOI = false;
-                        foreach (GameUnit gu in gameUnits)
-                        {
-                            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
-                            {
-                                hasPOI = true;
-                                break;
-                            }
+                            Debug.Log("a tile was clicked");
+                            spaceClicked = StateManager.instance.spaceGrid.WorldPointToSpace(objectClicked.transform.position);
+                            Debug.Log("space clicked x: " + spaceClicked.indexX + "space clicked y: " + spaceClicked.indexY);
                         }
 
-                        if (hasPOI == true)
+                    }
+                    List<GameUnit> gameUnits = spaceClicked.getOccupants();
+                    bool hasPOI = false;
+                    foreach (GameUnit gu in gameUnits)
+                    {
+                        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
                         {
-                            GameManager.FlipPOI(spaceClicked);
-                            this.setAP(this.getAP() - 1);
-                            FiremanUI.instance.SetAP(this.getAP());
-                        }
-                        else
-                        {
-                            GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
-                            isWaitingForInput = true;
-                            isIdentifyingPOI = true;
+                            hasPOI = true;
+                            break;
                         }
                     }
-                    else if (isWaitingForInput && isClickingFirefighter)
+
+                    if (hasPOI == true)
+                    {
+                        GameManager.FlipPOI(spaceClicked);
+                        this.setAP(this.getAP() - 1);
+                        FiremanUI.instance.SetAP(this.getAP());
+                    }
+                    else
+                    {
+                        GameConsole.instance.UpdateFeedback("This space doesn't have a POI! Try again");
+                        isWaitingForInput = true;
+                        isIdentifyingPOI = true;
+                    }
+                }
+                else if (isWaitingForInput && isClickingFirefighter)
                 {
                     isWaitingForInput = false;
                     isClickingFirefighter = false;
@@ -307,11 +307,23 @@ public class Fireman : GameUnit
 
                     commandedSpace = spaceClicked;
 
-                    Debug.Log("comm X "+ commandedSpace.indexX);
-                    Debug.Log("comm Y "+ commandedSpace.indexY);
-                    commandedFiremen = spaceClicked.getFiremen();
+                    Debug.Log("comm X " + commandedSpace.indexX);
+                    Debug.Log("comm Y " + commandedSpace.indexY);
 
-                    if (commandedFiremen != null)
+                    commandedFiremen = spaceClicked.getFiremen();
+                    bool hasFireman = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        if (f.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                        {
+                            hasFireman = true;
+                            break;
+                        }
+                    }
+
+
+                    if (hasFireman == true)
                     {
                         GameConsole.instance.UpdateFeedback("You clicked on a fireman! You can now Move (click the arrows) and/or Open/Close Doors (click D) with that fireman");
                         //command it
@@ -376,8 +388,19 @@ public class Fireman : GameUnit
             //NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                object[] data = { PV.ViewID, 0 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    foreach(Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID , 0 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else //normal move
+                {
+                    object[] data = { PV.ViewID, 0 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
