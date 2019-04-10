@@ -586,27 +586,28 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     public void randomizePOIExperienced()
     {
-        //randomize between 1 and 6
-        int col = UnityEngine.Random.Range(1, 8);
-        //randomize between 1 and 8
-        int row = UnityEngine.Random.Range(1, 6);
+        randomizePOI();
+        ////randomize between 1 and 6
+        //int col = UnityEngine.Random.Range(1, 8);
+        ////randomize between 1 and 8
+        //int row = UnityEngine.Random.Range(1, 6);
 
-        while (true)
-        {
-            if (GameManager.GM.containsFireOrSmoke(col, row) || GameManager.GM.alreadyPlaced(col, row))
-            {
-                int[] altSpace = GameManager.GM.replenishPOIAltSpace(col, row);
-                col = altSpace[0];
-                row = altSpace[1];
-            }
-            else
-            {
-                break;
-            }
-        }
+        //while (true)
+        //{
+        //    if (GameManager.GM.containsFireOrSmoke(col, row) || GameManager.GM.alreadyPlaced(col, row))
+        //    {
+        //        int[] altSpace = GameManager.GM.replenishPOIAltSpace(col, row);
+        //        col = altSpace[0];
+        //        row = altSpace[1];
+        //    }
+        //    else
+        //    {
+        //        break;
+        //    }
+        //}
 
-        object[] data = { col, row, GameManager.numOfActivePOI };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
+        //object[] data = { col, row, GameManager.numOfActivePOI };
+        //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ReplenishPOI, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
     public void removeSmokeMarker(Space targetSpace)
@@ -677,15 +678,20 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         Space ambulanceSpot = StateManager.instance.spaceGrid.getClosestAmbulanceSpot(targetSpace);
         List<Fireman> firemen = targetSpace.getFiremen();
         foreach (Fireman fireman in firemen) {
-            if (fireman.spec == Specialist.Generalist) StartCoroutine(performVeteran());
-            else knockdownFireman(fireman, ambulanceSpot);
+            if (fireman.spec == Specialist.Veteran) {
+                StartCoroutine(performVeteran());
+            }
+            else {
+                knockdownFireman(fireman, ambulanceSpot);
+            }
         }
 
         removePOIFromSpace(targetSpace);
     }
 
     IEnumerator performVeteran() {
-        GameConsole.instance.UpdateFeedback("Awaiting your choice...\npress 0 if you would like to dodge\npress 1 if you would like to get knocked down");
+        string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down";
+        GameConsole.instance.UpdateFeedback(s);
         yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }));
        
         KeyCode input = UserInputManager.instance.validInput;
