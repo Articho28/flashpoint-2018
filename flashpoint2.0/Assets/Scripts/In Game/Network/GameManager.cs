@@ -159,19 +159,43 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 {
                     Debug.Log("recruit difficulty");
 
-
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
+
+                    Debug.Log("Explosion1 one target space " + targetSpace1.indexX + " and " + targetSpace1.indexY);
+
+                    if (!containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY))
+                    {
+                        placeFireMarker(targetSpace1);
+                    }
+
                     object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data1, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
+
+                    if (!containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY))
+                    {
+                        placeFireMarker(targetSpace2);
+                    }
+
+
+                    Debug.Log("Explosion2 one target space " + targetSpace2.indexX + " and " + targetSpace2.indexY);
+
                     object[] data2 = new object[] { targetSpace2.worldPosition, targetSpace2.indexX, targetSpace2.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data2, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
+
+                    if (!containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY))
+                    {
+                        placeFireMarker(targetSpace3);
+                    }
+
+                    Debug.Log("Explosion3 one target space " + targetSpace3.indexX + " and " + targetSpace3.indexY);
+
                     object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
 
@@ -248,6 +272,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     public Space ExperiencedExplosion1()
     {
         rollDice();
+
+        Debug.Log("This is explosion 1");
         Debug.Log("red: " + redDice);
         Debug.Log("black: " + blackDice);
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[3, 3]; //random value for start hehe
@@ -423,8 +449,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         System.Random r = new System.Random();
         blackDice = r.Next(1, 9);
         redDice = r.Next(1, 7);
-        blackDice = 3; 
-        redDice = 3;
+        //blackDice = 3; 
+        //redDice = 3;
 
     }
 
