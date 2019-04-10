@@ -4124,7 +4124,7 @@ public class Fireman : GameUnit
         this.setCurrentSpace(dst);
 
         if(this.spec == Specialist.Veteran && this.treatedVictim != null) {
-            moveTreated(this.treatedVictim, curr, dst);
+            move(this.treatedVictim, curr, dst);
         }
         if (this.spec == Specialist.RescueSpecialist && this.moveAP >= apCost)
         {
