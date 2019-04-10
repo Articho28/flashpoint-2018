@@ -330,16 +330,15 @@ public class Fireman : GameUnit
                         Debug.Log("comm X " + commandedSpace.indexX);
                         Debug.Log("comm Y " + commandedSpace.indexY);
 
-                        commandedFiremen = commandedSpace.getFiremen();
-
-                        foreach (Fireman f in commandedFiremen)
+                        foreach(GameUnit gu in commandedSpace.getOccupants())
                         {
-                            if (f.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+                            if(gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN || gu.GetType() == typeof(Fireman))
                             {
                                 hasFireman = true;
                                 break;
                             }
                         }
+
                     }
 
                     if (hasFireman == true)
@@ -412,11 +411,31 @@ public class Fireman : GameUnit
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
 
-                    foreach(Fireman f in commandedFiremen)
+                    Fireman f = null;
+
+                    foreach (GameUnit gu in commandedSpace.getOccupants())
                     {
-                        object[] data = { f.PV.ViewID , 0 };
-                        Debug.Log("we callin  ittttt");
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        if (gu != null && (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN || gu.GetType() == typeof(Fireman)))
+                        {
+                            f = gu.GetComponent<Fireman>();
+                        }
+                    }
+
+                    if (f != null)
+                    {
+                        Space curr = f.getCurrentSpace();
+                        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
+                        Space destination = neighbors[0];
+
+                        Debug.Log("we callin ittttt 0");
+                        if(destination != null)
+                            moveFirefighter(f, curr, destination);
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
+                            isWaitingForInput = true;
+                            isCommandingFirefighter = true;
+                        }
                     }
                 }
                 else //normal move
@@ -432,10 +451,31 @@ public class Fireman : GameUnit
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
 
-                    foreach (Fireman f in commandedFiremen)
+                    Fireman f = null;
+
+                    foreach (GameUnit gu in commandedSpace.getOccupants())
                     {
-                        object[] data = { f.PV.ViewID, 2 };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        if (gu != null && (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN || gu.GetType() == typeof(Fireman)))
+                        {
+                            f = gu.GetComponent<Fireman>();
+                        }
+                    }
+
+                    if (f != null)
+                    {
+                        Space curr = f.getCurrentSpace();
+                        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
+                        Space destination = neighbors[2];
+
+                        Debug.Log("we callin  ittttt 2");
+                        if(destination != null)
+                            moveFirefighter(f, curr, destination);
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
+                            isWaitingForInput = true;
+                            isCommandingFirefighter = true;
+                        }
                     }
                 }
                 else
@@ -451,10 +491,31 @@ public class Fireman : GameUnit
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
 
-                    foreach (Fireman f in commandedFiremen)
+                    Fireman f = null;
+
+                    foreach (GameUnit gu in commandedSpace.getOccupants())
                     {
-                        object[] data = { f.PV.ViewID, 1 };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        if (gu != null && (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN || gu.GetType() == typeof(Fireman)))
+                        {
+                            f = gu.GetComponent<Fireman>();
+                        }
+                    }
+
+                    if (f != null)
+                    {
+                        Space curr = f.getCurrentSpace();
+                        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
+                        Space destination = neighbors[1];
+
+                        Debug.Log("we callin  ittttt 1");
+                        if(destination != null)
+                            moveFirefighter(f, curr, destination);
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
+                            isWaitingForInput = true;
+                            isCommandingFirefighter = true;
+                        }
                     }
                 }
                 else
@@ -469,12 +530,33 @@ public class Fireman : GameUnit
                 {
                     isWaitingForInput = false;
                     isCommandingFirefighter = false;
+                    Fireman f = null;
 
-                    foreach (Fireman f in commandedFiremen)
+                    foreach(GameUnit gu in commandedSpace.getOccupants())
                     {
-                        object[] data = { f.PV.ViewID, 3 };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                        if (gu != null && (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN || gu.GetType() == typeof(Fireman) ) )
+                        {
+                            f = gu.GetComponent<Fireman>();
+                        }
                     }
+
+                    if (f != null)
+                    {
+                        Space curr = f.getCurrentSpace();
+                        Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(curr);
+                        Space destination = neighbors[3];
+
+                        Debug.Log("we callin  ittttt 3");
+                        if(destination != null)
+                            f.moveFirefighter(curr, destination,0,true);
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
+                            isWaitingForInput = true;
+                            isCommandingFirefighter = true;
+                        }
+                    }
+                
                 }
                 else
                 {
@@ -3494,7 +3576,7 @@ public class Fireman : GameUnit
     public static void moveFirefighter(Fireman fireman, Space curr, Space dst) {
         fireman.moveFirefighter(curr, dst, 0, false);
     }
-
+    
     private void moveFirefighter(Space curr, Space dst, int apCost, bool isMyOwn) {
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
@@ -4461,9 +4543,6 @@ public class Fireman : GameUnit
             object[] dataReceived = eventData.CustomData as object[];
             Space space = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
             int firemanId = (int)dataReceived[2];
-
-            if (space.getFiremanWithId(firemanId) == null)
-                space.addOccupant(this);
 
             Dictionary<int, Space> d = StateManager.instance.firemanCurrentSpaces;
             if (d.ContainsKey(firemanId))
