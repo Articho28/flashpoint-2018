@@ -57,6 +57,9 @@ public class UserInputManager : MonoBehaviour
     public IEnumerator waitForValidUserInput(KeyCode[] codes) {
         bool pressed = false;
         while (!pressed) {
+            string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down";
+            GameConsole.instance.UpdateFeedback(s);
+
             foreach (KeyCode k in codes) {
                 if (Input.GetKey(k)) {
                     pressed = true;

@@ -330,8 +330,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         int oldBlack = blackDice;
         int otherSideBlack = 9 - oldBlack;
         rollDice();
-        Debug.Log("red2: " + redDice);
-        Debug.Log("black2: " + otherSideBlack);
+        //Debug.Log("red2: " + redDice);
+        //Debug.Log("black2: " + otherSideBlack);
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[otherSideBlack, redDice];
         while (targetSpace.getSpaceStatus() == SpaceStatus.Fire)
         {
@@ -429,17 +429,17 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         if (sp == SpaceStatus.Fire)
         {
-            Debug.Log("It's an explosion");
+            //Debug.Log("It's an explosion");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else if (sp == SpaceStatus.Smoke)
         {
-            Debug.Log("It's turned to Fire.");
+            //Debug.Log("It's turned to Fire.");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else
         {
-            Debug.Log("It's turned to Smoke");
+            //Debug.Log("It's turned to Smoke");
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.AdvanceSmokeMarker, data, sendToAllOptions, SendOptions.SendReliable);
 
         }
@@ -516,7 +516,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             if (status == SpaceStatus.Smoke)
             {
-                Debug.Log("Found a Smoke marker at " + space.indexX + " and " + space.indexY);
+                //Debug.Log("Found a Smoke marker at " + space.indexX + " and " + space.indexY);
 
                 Space[] neighbors = StateManager.instance.spaceGrid.GetNeighbours(space);
                 foreach (Space neighbor in neighbors)
@@ -722,13 +722,13 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         {
             if (gm.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMARKER)
             {
-                Debug.Log("Found a firemarker");
+                //Debug.Log("Found a firemarker");
                 targetMarker = gm;
             }
         }
         if (targetMarker != null)
         {
-            Debug.Log("Removing targetMarker");
+            //Debug.Log("Removing targetMarker");
             string message = "Removing Fire at (" + indexX + "," + indexY + ")";
             GameConsole.instance.UpdateFeedback(message);
             spaceOccupants.Remove(targetMarker);
@@ -755,10 +755,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         List<Fireman> firemen = targetSpace.getFiremen();
         foreach (Fireman fireman in firemen) {
             if (fireman.spec == Specialist.Veteran) {
-                GameConsole.instance.UpdateFeedback("calling coroutine");
-                Debug.Log("on space " + targetSpace.indexX + " " + targetSpace.indexY);
-                Debug.Log("size of firemen on space is " + targetSpace.getFiremen().Count);
-                //StartCoroutine(performVeteran());
+                StartCoroutine(performVeteran(fireman, ambulanceSpot));
             }
             else {
                 knockdownFireman(fireman, ambulanceSpot);
@@ -808,11 +805,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
     }
 
-    IEnumerator performVeteran() {
-        string s = "awaiting your choice...press 0 if you would like to dodge, press 1 if you would like to get knocked down";
-        GameConsole.instance.UpdateFeedback("HI");
+    IEnumerator performVeteran(Fireman fireman, Space ambulanceSpot) {
+
+        fireman.haltUserInput = true;
         yield return StartCoroutine(UserInputManager.instance.waitForValidUserInput(new KeyCode[] { KeyCode.Alpha0, KeyCode.Alpha1 }));
-       
+        fireman.haltUserInput = false;
+
         KeyCode input = UserInputManager.instance.validInput;
         if (input == KeyCode.Alpha0) {
             GameConsole.instance.UpdateFeedback("you pressed 0!");
@@ -820,6 +818,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         else if (input == KeyCode.Alpha1) {
             GameConsole.instance.UpdateFeedback("you pressed 1!");
         }
+
     }
 
     private static void knockdownFireman(Fireman fireman, Space ambulanceSpot) {
@@ -922,7 +921,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
         targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>());
         targetSpace.setSpaceStatus(SpaceStatus.Smoke);
-        Debug.Log("Smokemarker was placed at " + newPosition);
+        //Debug.Log("Smokemarker was placed at " + newPosition);
     }
 
     void resolveExplosion(Space targetSpace)
@@ -1667,12 +1666,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             if (PhotonNetwork.IsMasterClient)
             {
-                Debug.Log("========INITIALIZING POI WITH THIS GRID========");
-                StateManager.instance.spaceGrid.printStatus();
+                //Debug.Log("========INITIALIZING POI WITH THIS GRID========");
+                //StateManager.instance.spaceGrid.printStatus();
                 randomizePOI();
                 randomizePOI();
                 randomizePOI();
-                Debug.Log("===============================================");
+                //Debug.Log("===============================================");
             }
 
 
@@ -1724,21 +1723,21 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             int hazmatIndexX1 = (int)dataReceived[1];
             int hazmatIndexY1 = (int)dataReceived[2];
 
-            Debug.Log("Placing hazmats at " + hazmatIndexX1 + " and " + hazmatIndexY1);
+            //Debug.Log("Placing hazmats at " + hazmatIndexX1 + " and " + hazmatIndexY1);
 
             placeHazmat(hazmatIndexX1, hazmatIndexY1);
 
             int hazmatIndexX2 = (int)dataReceived[3];
             int hazmatIndexY2 = (int)dataReceived[4];
 
-            Debug.Log("Placing hazmats at " + hazmatIndexX2 + " and " + hazmatIndexY2);
+            //Debug.Log("Placing hazmats at " + hazmatIndexX2 + " and " + hazmatIndexY2);
 
             placeHazmat(hazmatIndexX2, hazmatIndexY2);
 
             int hazmatIndexX3 = (int)dataReceived[5];
             int hazmatIndexY3 = (int)dataReceived[6];
 
-            Debug.Log("Placing hazmats at " + hazmatIndexX3 + " and " + hazmatIndexY3);
+            //Debug.Log("Placing hazmats at " + hazmatIndexX3 + " and " + hazmatIndexY3);
 
             placeHazmat(hazmatIndexX3, hazmatIndexY3);
 

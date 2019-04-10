@@ -45,6 +45,7 @@ public class Fireman : GameUnit
     public ArrayList validInputOptions;
     Space locationArgument;
     public Specialist spec;
+    public bool haltUserInput;
 
     public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
@@ -94,7 +95,7 @@ public class Fireman : GameUnit
 
     void Update()
     {
-
+        if (haltUserInput) return;
 
         if (PV.IsMine && GameManager.GM.Turn == actorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
@@ -995,7 +996,7 @@ public class Fireman : GameUnit
                     isExtinguishingFire = false;
                     if (validInputOptions.Contains(1))
                     {
-                        Debug.Log("This is a valid extinguish option.");
+                        //Debug.Log("This is a valid extinguish option.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 1);
                         int numAP = this.getAP();
