@@ -38,6 +38,7 @@ public class Fireman : GameUnit
     private bool driverRerolledRedDice;
     private bool isRevealingPOI;
     private bool isCommandingFirefighter;
+    private bool isSqueezing;
     public bool isDoubleSpec; //for ap decrementing
     public int actorNumber;
     public ArrayList validInputOptions;
@@ -75,6 +76,7 @@ public class Fireman : GameUnit
         isIdentifyingPOI = false;
         isCommandingFirefighter = false;
         isRevealingPOI = false;
+        isSqueezing = false;
         isFiringDeckGun = false;
         driverRerolledRedDice = false;
         driverRerolledBlackDice = false;
@@ -367,7 +369,7 @@ public class Fireman : GameUnit
                 {
                     if (this.spec == Specialist.RescueDog)
                     {
-                        //squeeze();
+                        squeeze();
                     }
                     else
                     {
@@ -392,6 +394,9 @@ public class Fireman : GameUnit
             {
                 if (isWaitingForInput && isCommandingFirefighter)
                 {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
                     foreach(Fireman f in commandedFiremen)
                     {
                         object[] data = { f.PV.ViewID , 0 };
@@ -739,7 +744,30 @@ public class Fireman : GameUnit
                         isRevealingPOI = true;
                     }
                 }
+                else if(isWaitingForInput && isSqueezing)
+                {
+                    isWaitingForInput = false;
+                    isSqueezing = false;
 
+                    if (validInputOptions.Contains(0))
+                    {
+                        Debug.Log("This is a valid squeeze through wall option.");
+                        GameConsole.instance.UpdateFeedback("Squeezing through wall.");
+                        validInputOptions = new ArrayList();
+                        Space curr = this.getCurrentSpace();
+                        Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 0);
+                        moveFirefighter(curr, destination, 1, true);
+                        object[] data = { PV.ViewID, 0 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSqueezing = true;
+                    }
+                }
 
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -940,6 +968,30 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
                         isWaitingForInput = true;
                         isRevealingPOI = true;
+                    }
+                }
+                else if (isWaitingForInput && isSqueezing)
+                {
+                    isWaitingForInput = false;
+                    isSqueezing = false;
+
+                    if (validInputOptions.Contains(1))
+                    {
+                        Debug.Log("This is a valid squeeze through wall option.");
+                        GameConsole.instance.UpdateFeedback("Squeezing through wall.");
+                        validInputOptions = new ArrayList();
+                        Space curr = this.getCurrentSpace();
+                        Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 1);
+                        moveFirefighter(curr, destination, 1, true);
+                        object[] data = { PV.ViewID, 1 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSqueezing = true;
                     }
                 }
             }
@@ -1144,6 +1196,30 @@ public class Fireman : GameUnit
                         isRevealingPOI = true;
                     }
                 }
+                else if (isWaitingForInput && isSqueezing)
+                {
+                    isWaitingForInput = false;
+                    isSqueezing = false;
+
+                    if (validInputOptions.Contains(2))
+                    {
+                        Debug.Log("This is a valid squeeze through wall option.");
+                        GameConsole.instance.UpdateFeedback("Squeezing through wall.");
+                        validInputOptions = new ArrayList();
+                        Space curr = this.getCurrentSpace();
+                        Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 2);
+                        moveFirefighter(curr, destination, 1, true);
+                        object[] data = { PV.ViewID, 2 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSqueezing = true;
+                    }
+                }
 
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -1338,6 +1414,30 @@ public class Fireman : GameUnit
                         GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
                         isWaitingForInput = true;
                         isRevealingPOI = true;
+                    }
+                }
+                else if (isWaitingForInput && isSqueezing)
+                {
+                    isWaitingForInput = false;
+                    isSqueezing = false;
+
+                    if (validInputOptions.Contains(3))
+                    {
+                        Debug.Log("This is a valid squeeze through wall option.");
+                        GameConsole.instance.UpdateFeedback("Squeezing through wall.");
+                        validInputOptions = new ArrayList();
+                        Space curr = this.getCurrentSpace();
+                        Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 3);
+                        moveFirefighter(curr, destination, 1, true);
+                        object[] data = { PV.ViewID, 3 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                    else
+                    {
+                        string oldMessage = GameConsole.instance.FeedbackText.text;
+                        GameConsole.instance.UpdateFeedback("Not a valid input. \n" + oldMessage);
+                        isWaitingForInput = true;
+                        isSqueezing = true;
                     }
                 }
 
@@ -3364,7 +3464,8 @@ public class Fireman : GameUnit
         Vector3 newPosition = new Vector3(destination.worldPosition.x, destination.worldPosition.y, -10);
         Space newSpace = StateManager.instance.spaceGrid.WorldPointToSpace(newPosition);
 
-        if (sp == SpaceStatus.Fire) {
+        if (sp == SpaceStatus.Fire) 
+        {
             if (ap >= 3 && v == null && t == null) //&&f has enough to move
             {
                 moveFirefighter(curr, destination, 2, true);
@@ -3450,6 +3551,78 @@ public class Fireman : GameUnit
 
                 }
             }
+        }
+    }
+
+    private ArrayList getNearbyDamagedWalls(Space s)
+    {
+        ArrayList nearbyWalls = new ArrayList();
+        Wall[] wallArray = s.getWalls();
+
+        //Collect directions in which there is a wall
+        for (int i = 0; i < wallArray.Length; i++)
+        {
+            if (wallArray[i] != null && wallArray[i].getWallStatus() == WallStatus.Damaged)
+            {
+                nearbyWalls.Add(i);
+            }
+        }
+        return nearbyWalls;
+    }
+
+
+    public void squeeze()
+    {
+        if (this.getVictim() == null)
+        {
+            int numAP = getAP(); //returns the number of action point
+
+            //Check if sufficient AP.
+            if (numAP < 2)
+            {
+                Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+                GameConsole.instance.UpdateFeedback("Not enough AP!");
+            }
+            else
+            {
+                //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
+                ArrayList nearbyDamagedWalls = getNearbyDamagedWalls(this.getCurrentSpace());
+                validInputOptions = nearbyDamagedWalls;
+
+                //Build string to show.
+                string optionsToUser = "";
+
+                foreach (int index in nearbyDamagedWalls)
+                {
+
+                    if (index == 0)
+                    {
+                        optionsToUser += "Press 0 to squeeze though the Wall on Top ";
+                    }
+                    else if (index == 1)
+                    {
+                        optionsToUser += " Press 1 to squeeze though the Wall to Your Right";
+                    }
+                    else if (index == 2)
+                    {
+                        optionsToUser += " Press 2 to squeeze though the Wall to the Bottom";
+                    }
+                    else if (index == 3)
+                    {
+                        optionsToUser += " Press 3 to squeeze though the Wall to Your Left";
+
+                    }
+                }
+
+                GameConsole.instance.UpdateFeedback(optionsToUser);
+
+                isWaitingForInput = true;
+                isSqueezing = true;
+            }
+        }
+        else
+        {
+            GameConsole.instance.UpdateFeedback("You cannot squeeze through a wall with a victim!");
         }
     }
 
