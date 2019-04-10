@@ -125,10 +125,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 GM = this;
             }
         }
+
     }
 
     void Start()
     {
+        GameObject.Find("InGame").GetComponent<AudioSource>().Play();
 
     }
 
@@ -150,7 +152,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 Debug.Log("not family game");
 
                 placeInitialFireMarkerExperienced();
-                placeInitialHotSpot();
+                //placeInitialHotSpot();
                 placeInitialAmbulance();
                 placeInitialEngine();
 
@@ -247,71 +249,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveInitialExplosionsExperienced, experiencedSetupData, sendToAllOptions, SendOptions.SendReliable);
 
-
-
-                    /*
-
-                    //explosion 1
-                    Space targetSpace1 = ExperiencedExplosion1();
-
-                    Debug.Log("Explosion1 one target space " + targetSpace1.indexX + " and " + targetSpace1.indexY);
-
-
-                    if (!containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY))
-                    {
-                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexY };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
-                    }
-                    object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data1, sendToAllOptions, SendOptions.SendReliable);
-
-                    //explosion 2
-                    Space targetSpace2 = ExperiencedExplosion2();
-
-                    Debug.Log("Explosion2 one target space " + targetSpace2.indexX + " and " + targetSpace2.indexY);
-
-
-                    if (!containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY))
-                    {
-                        object[] data0 = new object[] { targetSpace2.indexX, targetSpace2.indexY };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
-                    }
-                    object[] data2 = new object[] { targetSpace2.worldPosition, targetSpace2.indexX, targetSpace2.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data2, sendToAllOptions, SendOptions.SendReliable);
-
-                    //explosion 3
-                    Space targetSpace3 = ExperiencedExplosion3();
-
-                    Debug.Log("Explosion3 one target space " + targetSpace3.indexX + " and " + targetSpace3.indexY);
-
-
-                    if (!containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY))
-                    {
-                        object[] data0 = new object[] { targetSpace3.indexX, targetSpace3.indexY };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
-                    }
-                    object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
-
-                    //explosion 4 uses the same function as explosion 2
-                    Space targetSpace4 = ExperiencedExplosion2();
-
-                    Debug.Log("Explosion 4 has location :" + targetSpace4.indexX + " and "  + targetSpace4.indexY);
-                    if (!containsFireOrSmoke(targetSpace4.indexX, targetSpace4.indexY))
-                    {
-                        object[] data0 = new object[] { targetSpace4.indexX, targetSpace4.indexY };
-                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
-                    }
-                    object[] data4 = new object[] { targetSpace4.worldPosition, targetSpace4.indexX, targetSpace4.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data4, sendToAllOptions, SendOptions.SendReliable);
-
-                    //placeHazmat();
-                    //placeHazmat();
-                    //placeHazmat();
-                    //placeHazmat();
-                    //placeHazmat();*/
-
                 }
+               
             }
 
             object[] data5 = new object[] { };
@@ -1175,6 +1114,20 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
     }
 
+    public void placeHotSpot(int x, int y)
+    {
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[x, y];
+        Vector3 position = currentSpace.worldPosition;
+        GameObject newHotSpot = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/HotSpot/hotspot")) as GameObject;
+        Vector3 newPosition = new Vector3(position.x, position.y, -6);
+
+        newHotSpot.GetComponent<Transform>().position = newPosition;
+        newHotSpot.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        newHotSpot.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT);
+        newHotSpot.GetComponent<GameUnit>().setPhysicalObject(newHotSpot);
+        currentSpace.addOccupant(newHotSpot.GetComponent<GameUnit>());
+    }
+
     public static void replenishPOI()
     {
 
@@ -1525,26 +1478,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             }
 
-            /*
-            if (targetWall.getWallStatus() == WallStatus.Damaged)
-            {
-                //place damage marker
-                GameObject newDamageMarker = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/DamageMarker/damageMarker")) as GameObject;
-                Vector3 wallPosition = targetWall.GetComponent<Transform>().position;
-                Vector3 newPosition = new Vector3(wallPosition.x, wallPosition.y, -5);
-                newDamageMarker.GetComponent<Transform>().position = newPosition;
-                Debug.Log("It was placed at " + newPosition);
-
-            }
-            else if (targetWall.getWallStatus() == WallStatus.Destroyed)
-            {
-                //destroy wall
-                Debug.Log("destroy wall");
-
-            }
-            //}
-            */
-
         }
 
         else if (evCode == (byte)PhotonEventCodes.PlacePOI)
@@ -1662,28 +1595,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                 placeHazmat(hazmatIndexX5, hazmatIndexY5);
             }
-
-
-
-
-
-            //placeHazmat(hazmatCoords1[0], hazmatCoords1[1]);
-            //placeHazmat(hazmatCoords2[0], hazmatCoords1[1]);
-            //placeHazmat(hazmatCoords3[0], hazmatCoords3[1]);
-
-            //int col = (int)dataReceived[0];
-            //int row = (int)dataReceived[1];
-
-            //Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
-            //Vector3 position = currentSpace.worldPosition;
-            //GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
-            //Vector3 newPosition = new Vector3(position.x, position.y, -5);
-
-            //Hazmat.GetComponent<Transform>().position = newPosition;
-            //Hazmat.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-            //Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
-            //Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
-            //currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
         }
 
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialHotSpot)
@@ -1998,12 +1909,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             Space targetSpace1 = StateManager.instance.spaceGrid.getGrid()[indexX1, indexY1];
 
-            if (hasFire1)
+            if (!hasFire1)
             {
                 placeFireMarker(targetSpace1);
             }
 
             resolveExplosion(targetSpace1);
+
+            placeHotSpot(targetSpace1.indexX, targetSpace1.indexY);
+
 
             int indexX2 = (int)receivedData[4];
             int indexY2 = (int)receivedData[5];
@@ -2011,12 +1925,16 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             Space targetSpace2 = StateManager.instance.spaceGrid.getGrid()[indexX2, indexY2];
 
-            if (hasFire2)
+            if (!hasFire2)
             {
                 placeFireMarker(targetSpace2);
             }
 
+
             resolveExplosion(targetSpace2);
+
+            placeHotSpot(targetSpace2.indexX, targetSpace2.indexY);
+
 
 
             int indexX3 = (int)receivedData[7];
@@ -2025,12 +1943,16 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             Space targetSpace3 = StateManager.instance.spaceGrid.getGrid()[indexX3, indexY3];
 
-            if (hasFire3)
+
+            if (!hasFire3)
             {
                 placeFireMarker(targetSpace3);
             }
 
             resolveExplosion(targetSpace3);
+
+            placeHotSpot(targetSpace3.indexX, targetSpace3.indexY);
+
 
             if (receivedData[9] != null && receivedData[10] != null && receivedData[11] != null)
             {
@@ -2040,12 +1962,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                 Space targetSpace4 = StateManager.instance.spaceGrid.getGrid()[indexX4, indexY4];
 
-                if (hasFire4)
+                if (!hasFire4)
                 {
                     placeFireMarker(targetSpace4);
                 }
 
                 resolveExplosion(targetSpace4);
+
+                placeHotSpot(targetSpace4.indexX, targetSpace4.indexY);
+
             }
 
             if (!PhotonNetwork.IsMasterClient)
