@@ -4104,6 +4104,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2109590837}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4158,11 +4163,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -4967,6 +4967,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1312344457}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5021,11 +5026,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -9985,6 +9985,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1734189784}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10039,11 +10044,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -12374,6 +12374,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 225468942}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12428,11 +12433,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -27800,6 +27800,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 437802849}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -27854,11 +27859,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -27875,6 +27875,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 873022161}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -27929,11 +27934,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -34721,6 +34721,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1530111347}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -34775,11 +34780,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -36027,6 +36027,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1782846841}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -36081,11 +36086,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -42561,6 +42561,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1235477748}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: DoorCollider
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -42615,11 +42620,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: DoorCollider
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}
@@ -51503,7 +51503,7 @@ PrefabInstance:
     - target: {fileID: 7486117560552529291, guid: 4d950fa5103544e3ca762e22d32f781c,
         type: 3}
       propertyPath: m_FontData.m_FontSize
-      value: 20
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 7486117560552529291, guid: 4d950fa5103544e3ca762e22d32f781c,
         type: 3}
@@ -51514,8 +51514,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_FontData.m_Font
       value: 
-      objectReference: {fileID: 12800000, guid: 012d1a7c2ae6b480da117993073ebcf0,
-        type: 3}
+      objectReference: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 7486117560552529290, guid: 4d950fa5103544e3ca762e22d32f781c,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -51576,6 +51575,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1560180786}
     m_Modifications:
+    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
+        type: 3}
+      propertyPath: m_Name
+      value: Sphere
+      objectReference: {fileID: 0}
     - target: {fileID: 358439415600304767, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -51630,11 +51634,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2066088881352682686, guid: 56fcef83c6a9c48cd91ac39e3c20cd04,
-        type: 3}
-      propertyPath: m_Name
-      value: Sphere
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56fcef83c6a9c48cd91ac39e3c20cd04, type: 3}

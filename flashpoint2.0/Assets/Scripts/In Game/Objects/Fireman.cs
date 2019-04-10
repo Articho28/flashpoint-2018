@@ -3474,6 +3474,7 @@ public class Fireman : GameUnit
             GameConsole.instance.UpdateFeedback("There is no victim to be carried!");
         }
     }
+
     public void carryHazmat() {
         Space current = this.getCurrentSpace();
 
@@ -3993,7 +3994,7 @@ public class Fireman : GameUnit
         }
     }
 
-    private void moveTreated(Victim v, Space curr, Space dst)
+    private void move(Victim v, Space curr, Space dst)
     {
         SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
 
@@ -4010,13 +4011,18 @@ public class Fireman : GameUnit
                 break;
             }
         }
-
+        Victim carried = this.carriedVictim;
         Victim treated = this.treatedVictim;
 
         if ((GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor)
         || (!GameManager.GM.isFamilyGame && isAmbulanceOnDest))
         {     //carry victim outside the building
 
+            if (carried == v)
+            {
+                moveFirefighter(curr, dst, 2, true);
+                this.setVictim(null);
+            }
             if (treated == v)
             {
                 moveFirefighter(curr, dst, 0, true);
@@ -4024,6 +4030,7 @@ public class Fireman : GameUnit
             }
 
             object[] data = { curr.indexX, curr.indexY, PV.ViewID, true };
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveTreatedVictim, data, sendToAllOptions, SendOptions.SendReliable);
 
             GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
@@ -4043,12 +4050,15 @@ public class Fireman : GameUnit
                 }
             }
             return;
-
         }
         else if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor)
                     || destinationSpaceStatus == SpaceStatus.Smoke
                     || (!GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor))
         {
+            if (carried == v)
+            {
+                moveFirefighter(curr, dst, 2, true);
+            }
             if (treated == v)
             {
                 moveFirefighter(curr, dst, 0, true);
@@ -4056,112 +4066,8 @@ public class Fireman : GameUnit
 
             //update carried victim positions across the network
             object[] data = { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveTreatedVictim, data, sendToAllOptions, SendOptions.SendReliable);
-
-        }
-    }
-
-    private void move(Victim v, Space curr, Space dst) 
-    {
-        SpaceStatus destinationSpaceStatus = dst.getSpaceStatus();
-
-        SpaceKind destinationSpaceKind = dst.getSpaceKind();
-        Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
-
-        bool isAmbulanceOnDest = false;
-
-        foreach (GameUnit gu in dst.getOccupants())
-        {
-            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_AMBULANCE)
-            {
-                isAmbulanceOnDest = true;
-                break;
-            }
-        }
-        Victim carried = this.carriedVictim;
-
-        if ((GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor) 
-        || (!GameManager.GM.isFamilyGame && isAmbulanceOnDest)) 
-            {     //carry victim outside the building
-
-            if(carried == v)
-            {
-                if(this.spec == Specialist.RescueDog)
-                {
-                    if (AP >= 4)
-                    {
-                        moveFirefighter(curr, dst, 4, true);
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("Not enough AP");
-                    }
-                }
-                else
-                {
-                    if (AP >= 2)
-                    {
-                        moveFirefighter(curr, dst, 2, true);
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("Not enough AP");
-                    }
-                }
-                this.setVictim(null);
-            }
-
-
-            object[] data = { curr.indexX, curr.indexY, PV.ViewID, true};
-            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.RemoveVictim, data, sendToAllOptions, SendOptions.SendReliable);
-
-            GameConsole.instance.UpdateFeedback("You have successfully rescued a victim");
-
-            //check if we won the game.
-            if (GameManager.savedVictims >= 7) {
-                //check for a perfect game
-                if (GameManager.savedVictims == 10) {
-                    GameManager.GameWon();
-                    GameObject.Find("/Canvas/GameWonUIPanel/ContinuePlayingButton").SetActive(false);
-                }
-                if (!GameWonUI.isCalled) {
-                    GameManager.GameWon();
-                }
-            }
-            return;
-        }
-        else if ((destinationSpaceStatus == SpaceStatus.Safe && destinationSpaceKind == SpaceKind.Indoor)
-                    || destinationSpaceStatus == SpaceStatus.Smoke
-                    || (!GameManager.GM.isFamilyGame && destinationSpaceKind == SpaceKind.Outdoor)) {
-            if (carried == v)
-            {
-                if (this.spec == Specialist.RescueDog)
-                {
-                    if (AP >= 4)
-                    {
-                        moveFirefighter(curr, dst, 4, true);
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("Not enough AP");
-                    }
-                }
-                else
-                {
-                    if (AP >= 2)
-                    {
-                        moveFirefighter(curr, dst, 2, true);
-                    }
-                    else
-                    {
-                        GameConsole.instance.UpdateFeedback("Not enough AP");
-                    }
-                }
-            }
-
-            //update carried victim positions across the network
-            object[] data = { curr.indexX, curr.indexY, dst.indexX, dst.indexY, PV.ViewID };
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveCarriedVictim, data, sendToAllOptions, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.MoveTreatedVictim, data, sendToAllOptions, SendOptions.SendReliable);
         }
         else //Fire
         {
@@ -4715,7 +4621,7 @@ public class Fireman : GameUnit
             if (t != null){
                 if(ap >= 1)
                 {
-                    this.moveTreated(t, curr, destination);
+                    this.move(t, curr, destination);
 
                     //flip poi
                     List<GameUnit> gameUnits = destination.getOccupants();
