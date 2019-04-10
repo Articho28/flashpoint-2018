@@ -3560,9 +3560,11 @@ public class Fireman : GameUnit
 
             //this.setCurrentSpace(destination);
             //this.GetComponent<Transform>().position = destinationPosition;
-
-            h.setCurrentSpace(destination);
-            h.GetComponent<Transform>().position = destinationPosition;
+            if (h != null)
+            {
+                h.setCurrentSpace(destination);
+                h.GetComponent<Transform>().position = destinationPosition;
+            }
         }
         else
         {
@@ -3694,8 +3696,11 @@ public class Fireman : GameUnit
 
             destination.addOccupant(ambulance);
 
-            ambulance.setCurrentSpace(destination);
-            ambulance.GetComponent<Transform>().position = destinationPosition;
+            if (ambulance != null)
+            {
+                ambulance.setCurrentSpace(destination);
+                ambulance.GetComponent<Transform>().position = destinationPosition;
+            }
         
         }
     }
@@ -3824,9 +3829,11 @@ public class Fireman : GameUnit
 
             //this.setCurrentSpace(destination);
             //this.GetComponent<Transform>().position = destinationPosition;
-
-            n.setCurrentSpace(destination);
-            n.GetComponent<Transform>().position = destinationPosition;
+            if (n != null)
+            {
+                n.setCurrentSpace(destination);
+                n.GetComponent<Transform>().position = destinationPosition;
+            }
         }
         else
         {
