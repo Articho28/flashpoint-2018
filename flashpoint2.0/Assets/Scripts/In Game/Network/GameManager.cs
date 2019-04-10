@@ -2112,8 +2112,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                    || (hazmatCoords3[0] == hazmatCoords5[0] && hazmatCoords3[1] == hazmatCoords5[1])
                    || (hazmatCoords4[0] == hazmatCoords5[0] && hazmatCoords4[1] == hazmatCoords5[1]));
 
-                    hazmatLocations[9] = hazmatCoords4[0];
-                    hazmatLocations[10] = hazmatCoords4[1];
+                    hazmatLocations[9] = hazmatCoords5[0];
+                    hazmatLocations[10] = hazmatCoords5[1];
 
                 }
             }
