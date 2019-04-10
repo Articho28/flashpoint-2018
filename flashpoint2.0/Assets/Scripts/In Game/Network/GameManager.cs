@@ -2050,7 +2050,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 return;
             }
 
-            //Three hazmats to place
+            //Always at least three hazmats to place
+
 
             int[] hazmatCoords1 = getRandomHazmatPlacementLocation();
 
@@ -2070,39 +2071,52 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             while ((hazmatCoords1[0] == hazmatCoords3[0] && hazmatCoords1[1] == hazmatCoords3[1])
             || (hazmatCoords2[0] == hazmatCoords3[0] && hazmatCoords2[1] == hazmatCoords3[1]));
 
-            int[] hazmatCoords4 = null;
-            int[] hazmatCoords5 = null;
+
+            //Start loading locations to send to clients;
+            object[] hazmatLocations = new object[] {difficultyIndex,
+            hazmatCoords1[0], hazmatCoords1[1],
+            hazmatCoords2[0], hazmatCoords2[1],
+            hazmatCoords3[0], hazmatCoords3[1],
+            null, null,
+            null, null };
+
+
+            //If the difficulty is at least greater than Recruit, we will have 4 hazmats.
+            //Get another location and load it into the data to send.
+            int[] hazmatCoords4;
 
             if (difficultyIndex > 0)
             {
                 do
                 {
-                    hazmatCoords4 = getRandomHazmatPlacementLocation();
+                     hazmatCoords4 = getRandomHazmatPlacementLocation();
                 }
                 while ((hazmatCoords1[0] == hazmatCoords4[0] && hazmatCoords1[1] == hazmatCoords4[1])
                || (hazmatCoords2[0] == hazmatCoords4[0] && hazmatCoords2[1] == hazmatCoords4[1])
                || (hazmatCoords3[0] == hazmatCoords4[0] && hazmatCoords3[1] == hazmatCoords4[1]));
 
-            }
+                hazmatLocations[7] = hazmatCoords4[0];
+                hazmatLocations[8] = hazmatCoords4[1];
 
-            if (difficultyIndex > 1)
-            {
-                do
+                int[] hazmatCoords5;
+
+                //If difficulty is Heroic, load another hazmat location.
+                if (difficultyIndex > 1)
                 {
-                    hazmatCoords5 = getRandomHazmatPlacementLocation();
-                }
-                while ((hazmatCoords1[0] == hazmatCoords5[0] && hazmatCoords1[1] == hazmatCoords5[1])
-               || (hazmatCoords2[0] == hazmatCoords5[0] && hazmatCoords2[1] == hazmatCoords5[1])
-               || (hazmatCoords3[0] == hazmatCoords5[0] && hazmatCoords3[1] == hazmatCoords5[1])
-               || (hazmatCoords4[0] == hazmatCoords5[0] && hazmatCoords4[1] == hazmatCoords5[1]));
-            }
+                    do
+                    {
+                        hazmatCoords5 = getRandomHazmatPlacementLocation();
+                    }
+                    while ((hazmatCoords1[0] == hazmatCoords5[0] && hazmatCoords1[1] == hazmatCoords5[1])
+                   || (hazmatCoords2[0] == hazmatCoords5[0] && hazmatCoords2[1] == hazmatCoords5[1])
+                   || (hazmatCoords3[0] == hazmatCoords5[0] && hazmatCoords3[1] == hazmatCoords5[1])
+                   || (hazmatCoords4[0] == hazmatCoords5[0] && hazmatCoords4[1] == hazmatCoords5[1]));
 
-            object[] hazmatLocations = new object[] {difficultyIndex,
-            hazmatCoords1[0], hazmatCoords1[1],
-            hazmatCoords2[0], hazmatCoords2[1],
-            hazmatCoords3[0], hazmatCoords3[1],
-            hazmatCoords4[0], hazmatCoords4[1],
-            hazmatCoords5[0], hazmatCoords5[1]};
+                    hazmatLocations[9] = hazmatCoords4[0];
+                    hazmatLocations[10] = hazmatCoords4[1];
+
+                }
+            }
 
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, hazmatLocations, sendToAllOptions, SendOptions.SendReliable);
         }
