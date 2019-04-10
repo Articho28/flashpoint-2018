@@ -273,9 +273,14 @@ public class Fireman : GameUnit
 
                     if (hasPOI == true)
                     {
-                        GameManager.FlipPOI(spaceClicked);
-                        this.setAP(this.getAP() - 1);
-                        FiremanUI.instance.SetAP(this.getAP());
+                        if (this.getAP() >= 1)
+                        {
+                            GameManager.FlipPOI(spaceClicked);
+                            this.setAP(this.getAP() - 1);
+                            FiremanUI.instance.SetAP(this.getAP());
+                        }
+                        Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+                        GameConsole.instance.UpdateFeedback("Not enough AP!");
                     }
                     else
                     {
@@ -410,6 +415,7 @@ public class Fireman : GameUnit
                     foreach(Fireman f in commandedFiremen)
                     {
                         object[] data = { f.PV.ViewID , 0 };
+                        Debug.Log("we callin  ittttt");
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
                 }
@@ -421,23 +427,68 @@ public class Fireman : GameUnit
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                object[] data = { PV.ViewID, 2 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID, 2 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else
+                {
+                    object[] data = { PV.ViewID, 2 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                object[] data = { PV.ViewID , 1 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID, 1 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else
+                {
+                    object[] data = { PV.ViewID, 1 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                object[] data = { PV.ViewID, 3 };
-                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                if (isWaitingForInput && isCommandingFirefighter)
+                {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
+                    foreach (Fireman f in commandedFiremen)
+                    {
+                        object[] data = { f.PV.ViewID, 3 };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                    }
+                }
+                else
+                {
+                    object[] data = { PV.ViewID, 3 };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
+                }
             }
             else if (Input.GetKeyDown(KeyCode.D)) //open/close door
             {
                 if (isWaitingForInput && isCommandingFirefighter)
                 {
+                    isWaitingForInput = false;
+                    isCommandingFirefighter = false;
+
                     int commandedSpaceX = commandedSpace.indexX;
                     Debug.Log("command X" + commandedSpaceX);
                     int commandedSpaceY = commandedSpace.indexY;
@@ -470,7 +521,7 @@ public class Fireman : GameUnit
                             }
                             else
                             {
-                                GameConsole.instance.UpdateFeedback("Insufficient AP 1");
+                                GameConsole.instance.UpdateFeedback("Insufficient AP");
                                 return;
                             }
 
@@ -486,7 +537,7 @@ public class Fireman : GameUnit
                             }
                             else
                             {
-                                GameConsole.instance.UpdateFeedback("Insufficient AP 2");
+                                GameConsole.instance.UpdateFeedback("Insufficient AP");
                                 return;
                             }
                         }
@@ -529,7 +580,7 @@ public class Fireman : GameUnit
                             }
                             else
                             {
-                                GameConsole.instance.UpdateFeedback("Insufficient AP 1");
+                                GameConsole.instance.UpdateFeedback("Insufficient AP");
                                 return;
                             }
 
@@ -545,7 +596,7 @@ public class Fireman : GameUnit
                             }
                             else
                             {
-                                GameConsole.instance.UpdateFeedback("Insufficient AP 2");
+                                GameConsole.instance.UpdateFeedback("Insufficient AP");
                                 return;
                             }
                         }
@@ -1218,7 +1269,7 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 2);
-                        moveFirefighter(curr, destination, 1, true);
+                        //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 2 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
@@ -2489,7 +2540,7 @@ public class Fireman : GameUnit
         if(s == Specialist.DriverOperator && numAP < 2 || s != Specialist.DriverOperator && numAP < 4)
         {
             Debug.Log("Insufficient AP");
-            GameConsole.instance.UpdateFeedback("Insufficient AP!");
+            GameConsole.instance.UpdateFeedback("Insufficient AP");
         }
         else
         {
@@ -2535,6 +2586,8 @@ public class Fireman : GameUnit
                 GameManager.rollDice();
                 rollDiceInQuadrant(quadSpaces,GameManager.blackDice,GameManager.redDice);
 
+                decrementAP(2);
+
                 GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 1 to reroll the " +
                 	"black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
                 isWaitingForInput = true;
@@ -2545,7 +2598,9 @@ public class Fireman : GameUnit
                 GameManager.rollDice();
                 rollDiceInQuadrant(quadSpaces, GameManager.blackDice, GameManager.redDice);
                 fireDeckGun();
+                decrementAP(4);
             }
+            FiremanUI.instance.SetAP(this.getAP());
         }
     }
     public void fireDeckGun()
@@ -2594,15 +2649,6 @@ public class Fireman : GameUnit
                 }
             }
         }
-        if(this.GetSpecialist() == Specialist.DriverOperator)
-        {
-            decrementAP(2);
-        }
-        else
-        {
-            decrementAP(4);
-        }
-        FiremanUI.instance.SetAP(this.getAP());
     }
     public void CallAmbulance()
     {
@@ -2670,46 +2716,75 @@ public class Fireman : GameUnit
     }
     public void extinguishFire()
     {
-        int numAP = getAP(); //returns the number of action points
-        isDoubleSpec = this.spec == Specialist.RescueSpecialist || this.spec == Specialist.Paramedic;
+        int numAP = getAP(); //returns the number of action points
+        isDoubleSpec = (this.spec == Specialist.RescueSpecialist || this.spec == Specialist.Paramedic);
 
         //Get current space and spacestatus. 
 
         Space current = this.getCurrentSpace();
         SpaceStatus currentSpaceStatus = current.getSpaceStatus();
-
-        if (numAP == 1 && currentSpaceStatus == SpaceStatus.Fire)
+        if(currentSpaceStatus == SpaceStatus.Fire)
         {
-            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
-            if(this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 1)
+            if (numAP == 1)
             {
-                this.extinguishAP = extinguishAP - 1;
-                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+                if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 1)
+                {
+                    this.extinguishAP = extinguishAP - 1;
+                    FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                }
+                else
+                {
+                    this.setAP(numAP - 1);
+                }
+                    FiremanUI.instance.SetAP(this.getAP());
+                    sendTurnFireMarkerToSmokeEvent(current);
+                    return;
             }
-            else
+            else if (numAP == 2)
             {
-                this.setAP(numAP - 1);
-            }
-            FiremanUI.instance.SetAP(this.getAP());
-            sendTurnFireMarkerToSmokeEvent(current);
-            return;
-        }
-        else if (numAP == 2 && currentSpaceStatus == SpaceStatus.Fire)
-        {
-            GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
-            if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 2)
-            {
-                this.extinguishAP = extinguishAP - 2;
-                FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
-            }
-            else
-            {
-                this.setAP(numAP - 2);
-            }
-            FiremanUI.instance.SetAP(this.getAP());
-            sendFireMarkerExtinguishEvent(current);
-            return;
+                GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+                if (this.spec == Specialist.CAFSFirefighter && this.extinguishAP >= 2)
+                {
+                    this.extinguishAP = extinguishAP - 2;
+                    FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                    FiremanUI.instance.SetAP(this.getAP());
+                    sendFireMarkerExtinguishEvent(current);
+                }
+                else if (isDoubleSpec && numAP >= 2)
+                {
+                    GameConsole.instance.UpdateFeedback("You don't have enough AP to extinguish at your location. Safely end the turn.");
+                    sendTurnFireMarkerToSmokeEvent(current);
+                    this.setAP(numAP - 2);
+                    FiremanUI.instance.SetAP(this.getAP());
+                }
+                else
+                {
+                    this.setAP(numAP - 2);
+                    FiremanUI.instance.SetAP(this.getAP());
+                    sendFireMarkerExtinguishEvent(current);
+                }
 
+                return;
+
+            }
+            else if (numAP == 4)
+            {
+                GameConsole.instance.UpdateFeedback("You only have enough AP to extinguish at your location and safely end the turn.");
+                if (isDoubleSpec && this.extinguishAP >= 4)
+                {
+                    this.extinguishAP = extinguishAP - 4;
+                    FiremanUI.instance.SetSpecialistAP(this.extinguishAP);
+                }
+                else
+                {
+                    this.setAP(numAP - 4);
+                }
+                FiremanUI.instance.SetAP(this.getAP());
+                sendFireMarkerExtinguishEvent(current);
+                return;
+
+            }
         }
 
         //Get neighbors and their spacestatus. 
@@ -2724,13 +2799,13 @@ public class Fireman : GameUnit
             }
 
         }
-         
+
         //Check if sufficient AP.
-        if (numAP < 1 || (this.spec == Specialist.RescueSpecialist && extinguishAP < 1))
+        if (numAP < 1)
         {
-            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
             GameConsole.instance.UpdateFeedback("Not enough AP!");
-        }
+        }
         else
         {
             //Get indices of all spaces accessible that are not safe (valid neighbors + current Space).
@@ -2740,9 +2815,10 @@ public class Fireman : GameUnit
             //Build string to show.
             string optionsToUser = "";
 
-            foreach (int index in extinguishOptions) {
+            foreach (int index in extinguishOptions)
+            {
 
-               
+
                 if (index == 0)
                 {
                     optionsToUser += "Press 0 for Tile on Top ";
@@ -3551,7 +3627,7 @@ public class Fireman : GameUnit
                 }
                 else
                 {
-                    GameConsole.instance.UpdateFeedback("Insufficient AP 4");
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
                     return;
                 }
             }
@@ -3575,7 +3651,7 @@ public class Fireman : GameUnit
                 }
                 else
                 {
-                    GameConsole.instance.UpdateFeedback("Insufficient AP 4");
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
                     return;
                 }
             }
@@ -3601,7 +3677,7 @@ public class Fireman : GameUnit
                 }
                 else
                 {
-                    GameConsole.instance.UpdateFeedback("Insufficient AP 4");
+                    GameConsole.instance.UpdateFeedback("Insufficient AP");
                     return;
 
                 }
@@ -4060,7 +4136,7 @@ public class Fireman : GameUnit
     {
         if(!GameManager.GM.isFamilyGame && this.spec == Specialist.ImagingTechnician)
         {
-            GameConsole.instance.UpdateFeedback("Click anywhere on the bpard to flip a POI.");
+            GameConsole.instance.UpdateFeedback("Click anywhere on the board to flip a POI.");
             isWaitingForInput = true;
             isIdentifyingPOI = true;
         }
@@ -4162,6 +4238,7 @@ public class Fireman : GameUnit
 
         //Move = 5
         if (evCode == (byte)PhotonEventCodes.Move) {
+            Debug.Log("move on event!");
             object[] data = eventData.CustomData as object[];
             int direction = (int)data[1];
 
@@ -4383,8 +4460,10 @@ public class Fireman : GameUnit
         else if (evCode == (byte)PhotonEventCodes.UpdateSpaceReferenceToFireman) { 
             object[] dataReceived = eventData.CustomData as object[];
             Space space = StateManager.instance.spaceGrid.grid[(int)dataReceived[0], (int)dataReceived[1]];
-            space.addOccupant(this);
             int firemanId = (int)dataReceived[2];
+
+            if (space.getFiremanWithId(firemanId) == null)
+                space.addOccupant(this);
 
             Dictionary<int, Space> d = StateManager.instance.firemanCurrentSpaces;
             if (d.ContainsKey(firemanId))
