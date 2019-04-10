@@ -465,8 +465,9 @@ public class Fireman : GameUnit
                         Space destination = neighbors[0];
 
                         Debug.Log("we callin ittttt 0");
-                        if(destination != null)
+                        if(destination != null) {
                             moveFirefighter(f, curr, destination);
+                        }
                         else
                         {
                             GameConsole.instance.UpdateFeedback("Invalid move. Try again.");
@@ -670,61 +671,69 @@ public class Fireman : GameUnit
 
                 else
                 {
-                    int currentSpaceX = this.getCurrentSpace().indexX;
-                    int currentSpaceY = this.getCurrentSpace().indexY;
-                    object[] data = { currentSpaceX, currentSpaceY };
-
-                    int doorDir = 4;//forbidden value
-                    Door[] doors = this.getCurrentSpace().getDoors();
-
-                    for (int i = 0; i < 4; i++)
+                    if(this.spec == Specialist.RescueDog)
                     {
-                        if (doors[i] != null)
-                        {
-                            doorDir = i;
-                        }
-                    }
-                    if (doorDir >= 0 && doorDir <= 3)
-                    {
-                        Door door = doors[doorDir];
-
-                        if (door.getDoorStatus() == DoorStatus.Open)
-                        {
-                            if (this.getAP() >= 1)
-                            {
-                                decrementAP(1);
-                                FiremanUI.instance.SetAP(this.getAP());
-                                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
-                                GameConsole.instance.UpdateFeedback("Door closed successfully!");
-                            }
-                            else
-                            {
-                                GameConsole.instance.UpdateFeedback("Insufficient AP");
-                                return;
-                            }
-
-                        }
-                        else if (door.getDoorStatus() == DoorStatus.Closed)
-                        {
-                            if (this.getAP() >= 1)
-                            {
-                                decrementAP(1);
-                                FiremanUI.instance.SetAP(this.getAP());
-                                PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
-                                GameConsole.instance.UpdateFeedback("Door opened successfully!");
-                            }
-                            else
-                            {
-                                GameConsole.instance.UpdateFeedback("Insufficient AP");
-                                return;
-                            }
-                        }
+                        GameConsole.instance.UpdateFeedback("Rescue dog cannot do this DAWG!");
                     }
                     else
                     {
-                        GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
+                        int currentSpaceX = this.getCurrentSpace().indexX;
+                        int currentSpaceY = this.getCurrentSpace().indexY;
+                        object[] data = { currentSpaceX, currentSpaceY };
+
+                        int doorDir = 4;//forbidden value
+                        Door[] doors = this.getCurrentSpace().getDoors();
+
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (doors[i] != null)
+                            {
+                                doorDir = i;
+                            }
+                        }
+                        if (doorDir >= 0 && doorDir <= 3)
+                        {
+                            Door door = doors[doorDir];
+
+                            if (door.getDoorStatus() == DoorStatus.Open)
+                            {
+                                if (this.getAP() >= 1)
+                                {
+                                    decrementAP(1);
+                                    FiremanUI.instance.SetAP(this.getAP());
+                                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
+                                    GameConsole.instance.UpdateFeedback("Door closed successfully!");
+                                }
+                                else
+                                {
+                                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                                    return;
+                                }
+
+                            }
+                            else if (door.getDoorStatus() == DoorStatus.Closed)
+                            {
+                                if (this.getAP() >= 1)
+                                {
+                                    decrementAP(1);
+                                    FiremanUI.instance.SetAP(this.getAP());
+                                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Door, data, sendToAllOptions, SendOptions.SendReliable);
+                                    GameConsole.instance.UpdateFeedback("Door opened successfully!");
+                                }
+                                else
+                                {
+                                    GameConsole.instance.UpdateFeedback("Insufficient AP");
+                                    return;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("there are no doors near the space you're on!");
+                        }
                     }
                 }
+
 
                 }
 
