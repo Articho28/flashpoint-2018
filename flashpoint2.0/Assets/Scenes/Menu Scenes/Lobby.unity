@@ -1034,8 +1034,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000038146973, y: -0.0000009536743}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 2, y: -0.0000009536743}
+  m_SizeDelta: {x: -4, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &264181713
 MonoBehaviour:
@@ -1070,7 +1070,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: maximum of 6 players
+  m_Text: max 6 players
 --- !u!222 &264181714
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2629,8 +2629,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000019073, y: -0.00000095367}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 2.4175034, y: -0.0000009536743}
+  m_SizeDelta: {x: -4.835, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &715063023
 MonoBehaviour:
@@ -4624,7 +4624,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1170606517
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5869,8 +5869,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.772499, y: -0.0000009536743}
-  m_SizeDelta: {x: -5.545, y: 0}
+  m_AnchoredPosition: {x: 2, y: -0.0000009536743}
+  m_SizeDelta: {x: -4, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1682473169
 MonoBehaviour:
@@ -7146,8 +7146,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -47.200012, y: -26.350006}
-  m_SizeDelta: {x: -94.39, y: -51.11}
+  m_AnchoredPosition: {x: -0.0025177002, y: -26.350006}
+  m_SizeDelta: {x: 0.0050049, y: -51.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2078589585
 MonoBehaviour:
@@ -7171,7 +7171,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 012d1a7c2ae6b480da117993073ebcf0, type: 3}
-    m_FontSize: 5
+    m_FontSize: 10
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -7361,7 +7361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2092009327
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7571,8 +7571,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.3274994, y: 0}
-  m_SizeDelta: {x: -4.655, y: 0}
+  m_AnchoredPosition: {x: 2.4199982, y: 0}
+  m_SizeDelta: {x: -4.83, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2134802751
 MonoBehaviour:
@@ -7627,6 +7627,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: RoomList
+      objectReference: {fileID: 0}
+    - target: {fileID: 1953209315484590079, guid: 9693d0a74ebd149dbba0865b534dba57,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1953209315484590076, guid: 9693d0a74ebd149dbba0865b534dba57,
         type: 3}
