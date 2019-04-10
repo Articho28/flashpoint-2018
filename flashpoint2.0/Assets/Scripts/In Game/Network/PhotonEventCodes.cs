@@ -52,5 +52,7 @@ public enum PhotonEventCodes
     SendRoomOptions = 45,
     PlaceFireMarker = 46,
     ResolveInitialExplosionsExperienced = 47,
-    MoveRescueDog = 48
+    FlareUp = 48,
+    PlaceExtraHotSpots = 49,
+    MoveRescueDog = 50
 }

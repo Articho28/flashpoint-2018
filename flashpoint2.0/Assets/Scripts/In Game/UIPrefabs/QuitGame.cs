@@ -8,9 +8,9 @@ public class QuitGame : MonoBehaviour
 {
     public void quitgame()
     {
-        Debug.Log("You pressed Quit Game");
         PhotonNetwork.LeaveRoom();
-        PhotonNetwork.Disconnect();
-        SceneManager.LoadScene("StartScreen");
+        //PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("Lobby");
     }
+
 }
