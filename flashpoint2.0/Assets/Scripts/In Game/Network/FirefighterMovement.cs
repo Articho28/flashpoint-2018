@@ -58,6 +58,10 @@ public class FirefighterMovement : MonoBehaviourPun
                     Fireman curr = this.GetComponentInParent<Fireman>();
                     curr.setCurrentSpace(UserTargetInitialSpace);
                     UserTargetInitialSpace.addOccupant(curr);
+
+                    object[] data = { UserTargetInitialSpace.indexX, UserTargetInitialSpace.indexY, PV.ViewID };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+
                     return true;
                 }
                 else {

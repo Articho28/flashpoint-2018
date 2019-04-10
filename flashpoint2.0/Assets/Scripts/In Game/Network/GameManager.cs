@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviourPun
     public int Turn = 1;
 
     //Local store of Players.
-
     public static int NumberOfPlayers;
     public bool isFirstReset;
     public bool isPickSpecialist;
@@ -130,7 +129,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
     void Start()
     {
-        //initialSetup();
+
     }
 
     // Update is called once per frame
@@ -155,84 +154,166 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 placeInitialAmbulance();
                 placeInitialEngine();
 
+                int difficultyIndex;
+
                 if (difficulty == Difficulty.Recruit) //3 hazmats + 3 initial explosions
                 {
                     Debug.Log("recruit difficulty");
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
+
+                    difficultyIndex = 0;
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
-                    object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data1, sendToAllOptions, SendOptions.SendReliable);
+                    bool hasFire1 = containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
-                    object[] data2 = new object[] { targetSpace2.worldPosition, targetSpace2.indexX, targetSpace2.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data2, sendToAllOptions, SendOptions.SendReliable);
+                    bool hasFire2 = containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
-                    object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
+                    bool hasFire3 = containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY);
+
+                    object[] experiencedSetupData = new object[] { difficultyIndex, 
+                    targetSpace1.indexX, targetSpace1.indexY, hasFire1, 
+                    targetSpace2.indexX, targetSpace2.indexY, hasFire2, 
+                    targetSpace3.indexX, targetSpace3.indexY, hasFire3, 
+                    null, null, null };
+
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveInitialExplosionsExperienced, experiencedSetupData, sendToAllOptions, SendOptions.SendReliable);
+
+
                 }
 
                 else if (difficulty == Difficulty.Veteran) //4 hazmats + 3 initial explosions
                 {
                     Debug.Log("veteran difficulty");
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
+
+                    difficultyIndex = 1;
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
-                    object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data1, sendToAllOptions, SendOptions.SendReliable);
+                    bool hasFire1 = containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
-                    object[] data2 = new object[] { targetSpace2.worldPosition, targetSpace2.indexX, targetSpace2.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data2, sendToAllOptions, SendOptions.SendReliable);
+                    bool hasFire2 = containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
-                    object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
-                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
+                    bool hasFire3 = containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY);
+
+                    object[] experiencedSetupData = new object[] { difficultyIndex,
+                    targetSpace1.indexX, targetSpace1.indexY, hasFire1,
+                    targetSpace2.indexX, targetSpace2.indexY, hasFire2,
+                    targetSpace3.indexX, targetSpace3.indexY, hasFire3,
+                    null, null, null };
+
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveInitialExplosionsExperienced, experiencedSetupData, sendToAllOptions, SendOptions.SendReliable);
+
+
                 }
 
                 else if (difficulty == Difficulty.Heroic) //5 hazmats + 4 initial explosions
                 {
                     Debug.Log("heroic difficulty");
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
-                    placeHazmat();
+
+                    difficultyIndex = 2;
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
+                    bool hasFire1 = containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY);
+
+                    //explosion 2
+                    Space targetSpace2 = ExperiencedExplosion2();
+                    bool hasFire2 = containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY);
+
+                    //explosion 3
+                    Space targetSpace3 = ExperiencedExplosion3();
+                    bool hasFire3 = containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY);
+
+                    //explosion 4
+                    Space targetSpace4 = ExperiencedExplosion2();
+                    bool hasFire4 = containsFireOrSmoke(targetSpace4.indexX, targetSpace4.indexY);
+
+
+                    object[] experiencedSetupData = new object[] { difficultyIndex,
+                    targetSpace1.indexX, targetSpace1.indexY, hasFire1,
+                    targetSpace2.indexX, targetSpace2.indexY, hasFire2,
+                    targetSpace3.indexX, targetSpace3.indexY, hasFire3,
+                    targetSpace4.indexX, targetSpace4.indexY, hasFire4 };
+
+
+
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveInitialExplosionsExperienced, experiencedSetupData, sendToAllOptions, SendOptions.SendReliable);
+
+
+
+                    /*
+
+                    //explosion 1
+                    Space targetSpace1 = ExperiencedExplosion1();
+
+                    Debug.Log("Explosion1 one target space " + targetSpace1.indexX + " and " + targetSpace1.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace1.indexX, targetSpace1.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data1 = new object[] { targetSpace1.worldPosition, targetSpace1.indexX, targetSpace1.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data1, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
+
+                    Debug.Log("Explosion2 one target space " + targetSpace2.indexX + " and " + targetSpace2.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace2.indexX, targetSpace2.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data2 = new object[] { targetSpace2.worldPosition, targetSpace2.indexX, targetSpace2.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data2, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
+
+                    Debug.Log("Explosion3 one target space " + targetSpace3.indexX + " and " + targetSpace3.indexY);
+
+
+                    if (!containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace3.indexX, targetSpace3.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data3 = new object[] { targetSpace3.worldPosition, targetSpace3.indexX, targetSpace3.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data3, sendToAllOptions, SendOptions.SendReliable);
 
                     //explosion 4 uses the same function as explosion 2
                     Space targetSpace4 = ExperiencedExplosion2();
+
+                    Debug.Log("Explosion 4 has location :" + targetSpace4.indexX + " and "  + targetSpace4.indexY);
+                    if (!containsFireOrSmoke(targetSpace4.indexX, targetSpace4.indexY))
+                    {
+                        object[] data0 = new object[] { targetSpace4.indexX, targetSpace4.indexY };
+                        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceFireMarker, data0, sendToAllOptions, SendOptions.SendReliable);
+                    }
                     object[] data4 = new object[] { targetSpace4.worldPosition, targetSpace4.indexX, targetSpace4.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.ResolveExplosion, data4, sendToAllOptions, SendOptions.SendReliable);
 
+                    //placeHazmat();
+                    //placeHazmat();
+                    //placeHazmat();
+                    //placeHazmat();
+                    //placeHazmat();*/
+
                 }
             }
+
             object[] data5 = new object[] { };
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.InitializePOI, data5, sendToAllOptions, SendOptions.SendReliable);
 
@@ -242,6 +323,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     public Space ExperiencedExplosion1()
     {
         rollDice();
+
+        Debug.Log("This is explosion 1");
         Debug.Log("red: " + redDice);
         Debug.Log("black: " + blackDice);
         Space targetSpace = StateManager.instance.spaceGrid.getGrid()[3, 3]; //random value for start hehe
@@ -402,7 +485,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
         sendResolveFlashOverEvent();
 
+
     }
+
+   
 
     private static void sendResolveFlashOverEvent()
     {
@@ -414,8 +500,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         System.Random r = new System.Random();
         blackDice = r.Next(1, 9);
         redDice = r.Next(1, 7);
-        blackDice = 3; 
-        redDice = 3;
+        //blackDice = 3; 
+        //redDice = 3;
 
     }
 
@@ -469,6 +555,19 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT 
                 || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT
                 || gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_FIREMAN)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool alreadyPlacedHazmat(int col, int row)
+    {
+        List<GameUnit> occupants = StateManager.instance.spaceGrid.getGrid()[col, row].getOccupants();
+        foreach (GameUnit gu in occupants)
+        {
+            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT)
             {
                 return true;
             }
@@ -741,6 +840,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         newSmokeMarker.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_SMOKEMARKER);
         newSmokeMarker.GetComponent<GameUnit>().setPhysicalObject(newSmokeMarker);
         targetSpace.addOccupant(newSmokeMarker.GetComponent<GameUnit>());
+        targetSpace.setSpaceStatus(SpaceStatus.Smoke);
         Debug.Log("Smokemarker was placed at " + newPosition);
     }
 
@@ -940,7 +1040,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             //Handle door in that direction.
             else if (doorInExplosionDirection != null)
             {
-                destroyDoor(doorInExplosionDirection);
+                if (doorInExplosionDirection.getDoorStatus() == DoorStatus.Destroyed)
+                {
+                    Space nextSpace = StateManager.instance.spaceGrid.getNeighborInDirection(targetSpace, direction);
+                    resolveExplosionInDirection(nextSpace, direction);
+                }
+                else
+                {
+                    destroyDoor(doorInExplosionDirection);
+                }
             }
             else //Transmit explosion to next space otherwise
             {
@@ -1023,7 +1131,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     }
 
 
-    public void placeHazmat()
+    public int[] getRandomHazmatPlacementLocation()
     {
 
         int col;
@@ -1040,17 +1148,31 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 continue;
             }
 
-            if (alreadyPlaced(col, row))
+            if (alreadyPlacedHazmat(col, row))
             {
                 continue;
             }
             break;
         }
 
-        object[] data = { col, row };
+        int[] coords = new int[] { col, row };
 
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, data, sendToAllOptions, SendOptions.SendReliable);
+        return coords;
 
+    }
+
+    public void placeHazmat(int x, int y)
+    {
+        Space currentSpace = StateManager.instance.spaceGrid.getGrid()[x, y];
+        Vector3 position = currentSpace.worldPosition;
+        GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
+        Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+        Hazmat.GetComponent<Transform>().position = newPosition;
+        Hazmat.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+        Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
+        Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
+        currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
     }
 
     public static void replenishPOI()
@@ -1258,6 +1380,11 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 {
                     DisplayToConsolePlaceFirefighter(Turn);
                 }
+                else if (isPickSpecialist)
+                {
+                    Fireman.selectSpecialist();
+
+                }
                 else
                 {
                     DisplayToConsolePlayGame(Turn);
@@ -1439,9 +1566,11 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             numOfActivePOI++;
             totalPOIs--;
         }
-        else if (evCode == (byte)PhotonEventCodes.InitializePOI) {
+        else if (evCode == (byte)PhotonEventCodes.InitializePOI)
+        {
 
-            if(PhotonNetwork.IsMasterClient) {
+            if (PhotonNetwork.IsMasterClient)
+            {
                 Debug.Log("========INITIALIZING POI WITH THIS GRID========");
                 StateManager.instance.spaceGrid.printStatus();
                 randomizePOI();
@@ -1489,23 +1618,74 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             resolveExplosion(targetSpace);
 
         }
+
         else if (evCode == (byte)PhotonEventCodes.PlaceHazmats)
         {
             object[] dataReceived = eventData.CustomData as object[];
-            int col = (int)dataReceived[0];
-            int row = (int)dataReceived[1];
 
-            Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
-            Vector3 position = currentSpace.worldPosition;
-            GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
-            Vector3 newPosition = new Vector3(position.x, position.y, -5);
+            int difficultyIndex = (int)dataReceived[0];
 
-            Hazmat.GetComponent<Transform>().position = newPosition;
-            Hazmat.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
-            Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
-            Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
-            currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
+            int hazmatIndexX1 = (int)dataReceived[1];
+            int hazmatIndexY1 = (int)dataReceived[2];
+
+            placeHazmat(hazmatIndexX1, hazmatIndexY1);
+
+            int hazmatIndexX2 = (int)dataReceived[3];
+            int hazmatIndexY2 = (int)dataReceived[4];
+
+            placeHazmat(hazmatIndexX2, hazmatIndexY2);
+
+            int hazmatIndexX3 = (int)dataReceived[5];
+            int hazmatIndexY3 = (int)dataReceived[6];
+
+            placeHazmat(hazmatIndexX3, hazmatIndexY3);
+
+            if (difficultyIndex == 1)
+            {
+                int hazmatIndexX4 = (int)dataReceived[7];
+                int hazmatIndexY4 = (int)dataReceived[8];
+
+                placeHazmat(hazmatIndexX4, hazmatIndexY4);
+
+
+            }
+
+            else if (difficultyIndex == 2)
+            {
+                int hazmatIndexX4 = (int)dataReceived[7];
+                int hazmatIndexY4 = (int)dataReceived[8];
+
+                placeHazmat(hazmatIndexX4, hazmatIndexY4);
+
+                int hazmatIndexX5 = (int)dataReceived[9];
+                int hazmatIndexY5 = (int)dataReceived[10];
+
+                placeHazmat(hazmatIndexX5, hazmatIndexY5);
+            }
+
+
+
+
+
+            //placeHazmat(hazmatCoords1[0], hazmatCoords1[1]);
+            //placeHazmat(hazmatCoords2[0], hazmatCoords1[1]);
+            //placeHazmat(hazmatCoords3[0], hazmatCoords3[1]);
+
+            //int col = (int)dataReceived[0];
+            //int row = (int)dataReceived[1];
+
+            //Space currentSpace = StateManager.instance.spaceGrid.getGrid()[col, row];
+            //Vector3 position = currentSpace.worldPosition;
+            //GameObject Hazmat = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Hazmat/hazmat")) as GameObject;
+            //Vector3 newPosition = new Vector3(position.x, position.y, -5);
+
+            //Hazmat.GetComponent<Transform>().position = newPosition;
+            //Hazmat.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
+            //Hazmat.GetComponent<GameUnit>().setType(FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT);
+            //Hazmat.GetComponent<GameUnit>().setPhysicalObject(Hazmat);
+            //currentSpace.addOccupant(Hazmat.GetComponent<Hazmat>());
         }
+
         else if (evCode == (byte)PhotonEventCodes.PlaceInitialHotSpot)
         {
             object[] dataReceived = eventData.CustomData as object[];
@@ -1724,7 +1904,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
 
 
-            
+
 
 
             if (questionMark != null)
@@ -1735,11 +1915,11 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
 
 
-        } else if (evCode == (byte)PhotonEventCodes.SpecialistIsPicked)
+        }
+        else if (evCode == (byte)PhotonEventCodes.SpecialistIsPicked)
         {
             object[] dataReceived = eventData.CustomData as object[];
             int[] updatedIndexList = (int[])dataReceived[0];
-
             freeSpecialistIndex = updatedIndexList;
 
 
@@ -1748,12 +1928,13 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         else if (evCode == (byte)PhotonEventCodes.ChangeCrew)
         {
             object[] dataReceived = eventData.CustomData as object[];
-            int[] updatedIndexList = (int[]) dataReceived[0];
+            int[] updatedIndexList = (int[])dataReceived[0];
 
             freeSpecialistIndex = updatedIndexList;
 
         }
-        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState) { //0: indexX, 1: indexY, 2: index in state dictionary/fireman unique network id
+        else if (evCode == (byte)PhotonEventCodes.UpdateCarriedVictimsState)
+        { //0: indexX, 1: indexY, 2: index in state dictionary/fireman unique network id
             object[] dataReceived = eventData.CustomData as object[];
             int indexX = (int)dataReceived[0];
             int indexY = (int)dataReceived[1];
@@ -1761,16 +1942,19 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             Space space = StateManager.instance.spaceGrid.grid[indexX, indexY];
             Victim victim = null;
-            foreach (GameUnit gu in space.getOccupants()) {
+            foreach (GameUnit gu in space.getOccupants())
+            {
                 //TODO check if victim is carried by another fireman after drop functionality is implemented
-                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI) {
+                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_POI)
+                {
                     Victim v = gu.GetComponent<Victim>();
                     victim = v;
                 }
             }
 
             Dictionary<int, Victim> d = StateManager.instance.firemanCarriedVictims;
-            if (d.ContainsKey(firemanId)) {
+            if (d.ContainsKey(firemanId))
+            {
                 d[firemanId] = victim;
             }
             else d.Add(firemanId, victim);
@@ -1778,7 +1962,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         }
 
 
-        else if (evCode == (byte) PhotonEventCodes.CachePlayerNames)
+        else if (evCode == (byte)PhotonEventCodes.CachePlayerNames)
         {
             object[] receivedData = eventData.CustomData as object[];
 
@@ -1789,7 +1973,158 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
         }
 
+        /*
+        else if (evCode == (byte) PhotonEventCodes.PlaceFireMarker)
+        {
+            object[] receivedData = eventData.CustomData as object[];
 
+            int indexX = (int) receivedData[0];
+            int indexY = (int)receivedData[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.getGrid()[indexX, indexY];
+
+            placeFireMarker(targetSpace);
+        }*/
+
+        else if (evCode == (byte)PhotonEventCodes.ResolveInitialExplosionsExperienced)
+        {
+            object[] receivedData = eventData.CustomData as object[];
+
+            int difficultyIndex = (int)receivedData[0];
+
+            int indexX1 = (int)receivedData[1];
+            int indexY1 = (int)receivedData[2];
+            bool hasFire1 = (bool)receivedData[3];
+
+            Space targetSpace1 = StateManager.instance.spaceGrid.getGrid()[indexX1, indexY1];
+
+            if (hasFire1)
+            {
+                placeFireMarker(targetSpace1);
+            }
+
+            resolveExplosion(targetSpace1);
+
+            int indexX2 = (int)receivedData[4];
+            int indexY2 = (int)receivedData[5];
+            bool hasFire2 = (bool)receivedData[6];
+
+            Space targetSpace2 = StateManager.instance.spaceGrid.getGrid()[indexX2, indexY2];
+
+            if (hasFire2)
+            {
+                placeFireMarker(targetSpace2);
+            }
+
+            resolveExplosion(targetSpace2);
+
+
+            int indexX3 = (int)receivedData[7];
+            int indexY3 = (int)receivedData[8];
+            bool hasFire3 = (bool)receivedData[9];
+
+            Space targetSpace3 = StateManager.instance.spaceGrid.getGrid()[indexX3, indexY3];
+
+            if (hasFire3)
+            {
+                placeFireMarker(targetSpace3);
+            }
+
+            resolveExplosion(targetSpace3);
+
+            if (receivedData[9] != null && receivedData[10] != null && receivedData[11] != null)
+            {
+                int indexX4 = (int)receivedData[10];
+                int indexY4 = (int)receivedData[11];
+                bool hasFire4 = (bool)receivedData[12];
+
+                Space targetSpace4 = StateManager.instance.spaceGrid.getGrid()[indexX4, indexY4];
+
+                if (hasFire4)
+                {
+                    placeFireMarker(targetSpace4);
+                }
+
+                resolveExplosion(targetSpace4);
+            }
+
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                return;
+            }
+
+            //Always at least three hazmats to place
+
+
+            int[] hazmatCoords1 = getRandomHazmatPlacementLocation();
+
+            //Make sure we get different coordinates for each hazmat. 
+            int[] hazmatCoords2;
+            do
+            {
+                hazmatCoords2 = getRandomHazmatPlacementLocation();
+            }
+            while (hazmatCoords1[0] == hazmatCoords2[0] && hazmatCoords1[1] == hazmatCoords2[1]);
+
+            int[] hazmatCoords3;
+            do
+            {
+                hazmatCoords3 = getRandomHazmatPlacementLocation();
+            }
+            while ((hazmatCoords1[0] == hazmatCoords3[0] && hazmatCoords1[1] == hazmatCoords3[1])
+            || (hazmatCoords2[0] == hazmatCoords3[0] && hazmatCoords2[1] == hazmatCoords3[1]));
+
+
+            //Start loading locations to send to clients;
+            object[] hazmatLocations = new object[] {difficultyIndex,
+            hazmatCoords1[0], hazmatCoords1[1],
+            hazmatCoords2[0], hazmatCoords2[1],
+            hazmatCoords3[0], hazmatCoords3[1],
+            null, null,
+            null, null };
+
+
+            //If the difficulty is at least greater than Recruit, we will have 4 hazmats.
+            //Get another location and load it into the data to send.
+            int[] hazmatCoords4;
+
+            if (difficultyIndex > 0)
+            {
+                do
+                {
+                     hazmatCoords4 = getRandomHazmatPlacementLocation();
+                }
+                while ((hazmatCoords1[0] == hazmatCoords4[0] && hazmatCoords1[1] == hazmatCoords4[1])
+               || (hazmatCoords2[0] == hazmatCoords4[0] && hazmatCoords2[1] == hazmatCoords4[1])
+               || (hazmatCoords3[0] == hazmatCoords4[0] && hazmatCoords3[1] == hazmatCoords4[1]));
+
+                hazmatLocations[7] = hazmatCoords4[0];
+                hazmatLocations[8] = hazmatCoords4[1];
+
+                int[] hazmatCoords5;
+
+                //If difficulty is Heroic, load another hazmat location.
+                if (difficultyIndex > 1)
+                {
+                    do
+                    {
+                        hazmatCoords5 = getRandomHazmatPlacementLocation();
+                    }
+                    while ((hazmatCoords1[0] == hazmatCoords5[0] && hazmatCoords1[1] == hazmatCoords5[1])
+                   || (hazmatCoords2[0] == hazmatCoords5[0] && hazmatCoords2[1] == hazmatCoords5[1])
+                   || (hazmatCoords3[0] == hazmatCoords5[0] && hazmatCoords3[1] == hazmatCoords5[1])
+                   || (hazmatCoords4[0] == hazmatCoords5[0] && hazmatCoords4[1] == hazmatCoords5[1]));
+
+                    hazmatLocations[9] = hazmatCoords5[0];
+                    hazmatLocations[10] = hazmatCoords5[1];
+
+                }
+            }
+
+            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceHazmats, hazmatLocations, sendToAllOptions, SendOptions.SendReliable);
+        }
 
     }
+
+
 }
