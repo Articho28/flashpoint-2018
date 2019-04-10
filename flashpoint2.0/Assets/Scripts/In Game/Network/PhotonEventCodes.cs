@@ -51,5 +51,7 @@ public enum PhotonEventCodes
     RemoveTreatedVictim = 44,
     SendRoomOptions = 45,
     PlaceFireMarker = 46,
-    ResolveInitialExplosionsExperienced = 47
+    ResolveInitialExplosionsExperienced = 47,
+    FlareUp = 48,
+    PlaceExtraHotSpots = 49
 }

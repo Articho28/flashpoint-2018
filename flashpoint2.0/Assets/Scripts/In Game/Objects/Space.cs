@@ -128,7 +128,23 @@ public class Space {
         return hazmats;
     }
 
-        public Fireman getFiremanWithId(int firemanId) {
+    public List<HotSpot> GetHotSpots()
+    {
+        List<HotSpot> hotspots = new List<HotSpot>();
+
+        for (int i = 0; i < occupants.Count; i++)
+        {
+            if (occupants[i].getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HOTSPOT)
+            {
+                hotspots.Add(occupants[i].GetComponent<HotSpot>());
+            }
+
+        }
+
+        return hotspots;
+    }
+
+    public Fireman getFiremanWithId(int firemanId) {
         List<Fireman> firemen = getFiremen();
 
         for (int i = 0; i < firemen.Count; i++) {
