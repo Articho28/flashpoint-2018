@@ -46,7 +46,8 @@ public class Fireman : GameUnit
     public ArrayList validInputOptions;
     Space locationArgument;
     public Specialist spec;
-
+    public bool haltUserInput;
+    public bool isDodging;
     public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Realtime.RaiseEventOptions()
     {
         CachingOption = Photon.Realtime.EventCaching.DoNotCache,
@@ -96,7 +97,7 @@ public class Fireman : GameUnit
 
     void Update()
     {
-
+        if (haltUserInput) return;
 
         if (PV.IsMine && GameManager.GM.Turn == actorNumber && GameManager.GameStatus ==
        FlashPointGameConstants.GAME_STATUS_PLAY_GAME)
@@ -126,6 +127,65 @@ public class Fireman : GameUnit
             {
                 if (!GameManager.GM.isFamilyGame)
                 {
+                    int numAP = this.getAP();
+
+                    if (numAP >= 2 && this.spec == Specialist.HazmatTechinician)
+                    {
+                       
+
+                        Space currentSpace = this.getCurrentSpace();
+
+                        //Remove a Hazmat from the Firefighter’s space and place in the rescued spot: 2 AP
+                        List<GameUnit> gameUnits = currentSpace.getOccupants();
+                        GameUnit hazmat = null;
+                        foreach (GameUnit gu in gameUnits)
+                        {
+                            if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT)
+                            {
+                                Debug.Log("Found hazmat in your location.");
+                                hazmat = gu;
+                                break;
+                            }
+                        }
+
+                        if (hazmat != null)
+                        {
+                            //Send data
+                            this.setAP(numAP - 2);
+                            FiremanUI.instance.SetAP(this.getAP());
+
+                            object[] hazmatLocation = new object[] { currentSpace.indexX, currentSpace.indexY };
+                            PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DisposeHazmat, hazmatLocation, sendToAllOptions, SendOptions.SendReliable);
+
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("There are no hazmats on your current location.");
+                            return;
+                        }
+
+                        //Vector3 position = new Vector3(targetspace.worldPosition.x, targetpace.worldPosition.y, -5);
+                        //gameUnits.Remove(hazmat);
+                        //Destroy(hazmat.physicalObject);
+                        //Destroy(hazmat);
+                        //GameConsole.instance.UpdateFeedback("Removed hazmat successfully.");
+                        //return;
+                    }
+                    else 
+                    {
+                        if (this.spec == Specialist.HazmatTechinician)
+                        {
+                            GameConsole.instance.UpdateFeedback("Not enough AP!");
+                        }
+                        else
+                        {
+                            GameConsole.instance.UpdateFeedback("You are not a Hazmat Technician!");
+                        }
+                      
+                    }
+
+
+
                     object[] data = { this.currentSpace.indexX, this.currentSpace.indexY };
                     PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DisposeHazmat, data, sendToAllOptions, SendOptions.SendReliable);
                 }
@@ -998,7 +1058,7 @@ public class Fireman : GameUnit
                     isExtinguishingFire = false;
                     if (validInputOptions.Contains(1))
                     {
-                        Debug.Log("This is a valid extinguish option.");
+                        //Debug.Log("This is a valid extinguish option.");
                         validInputOptions = new ArrayList();
                         Space targetSpace = StateManager.instance.spaceGrid.getNeighborInDirection(this.currentSpace, 1);
                         int numAP = this.getAP();
@@ -2533,7 +2593,7 @@ public class Fireman : GameUnit
                 }
             }
         }
-        else if (GameManager.GM.Turn != actorNumber)
+        else if (GameManager.GM.Turn != actorNumber && !isDodging)
         {
             GameConsole.instance.UpdateFeedback("It's not your turn!");
         }
@@ -3024,7 +3084,7 @@ public class Fireman : GameUnit
                 decrementAP(2);
 
                 GameConsole.instance.UpdateFeedback("Target Space is at " + GameManager.blackDice + ", " + GameManager.redDice + "\n Press 1 to reroll the " +
-                	"black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
+                    "black die. Press 2 to reroll the red die. Press 3 to reroll both. Press 4 to keep what you have.");
                 isWaitingForInput = true;
                 isFiringDeckGun = true;
             }
@@ -3038,40 +3098,40 @@ public class Fireman : GameUnit
             FiremanUI.instance.SetAP(this.getAP());
         }
     }
-    public void dispose(Space targetspace)
-    {
-        int numAP = getAP();
 
-        if (numAP >= 2 && this.spec == Specialist.HazmatTechinician)
-        {
-            this.setAP(numAP - 2);
-            FiremanUI.instance.SetAP(this.getAP());
+    //public void dispose(Space targetspace)
+    //{
+        //int numAP = getAP();
 
-            //Remove a Hazmat from the Firefighter’s space and place in the rescued spot: 2 AP
-            Space curr = this.getCurrentSpace();
-            List<GameUnit> gameUnits = curr.getOccupants();
-            GameUnit hazmat = null;
-            foreach (GameUnit gu in gameUnits)
-            {
-                if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT)
-                {
-                    hazmat = gu;
-                    break;
-                }
-            }
-            Vector3 position = new Vector3(curr.worldPosition.x, curr.worldPosition.y, -5);
-            gameUnits.Remove(hazmat);
-            Destroy(hazmat.physicalObject);
-            Destroy(hazmat);
-            GameConsole.instance.UpdateFeedback("Removed hazmat successfully.");
-            return;
-        }
-        else if (numAP < 2 && this.spec == Specialist.HazmatTechinician)
-        {
-            Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
-            GameConsole.instance.UpdateFeedback("Not enough AP!");
-        }
-    }
+        //if (numAP >= 2 && this.spec == Specialist.HazmatTechinician)
+        //{
+        //    this.setAP(numAP - 2);
+        //    FiremanUI.instance.SetAP(this.getAP());
+
+        //    //Remove a Hazmat from the Firefighter’s space and place in the rescued spot: 2 AP
+        //    List<GameUnit> gameUnits = targetspace.getOccupants();
+        //    GameUnit hazmat = null;
+        //    foreach (GameUnit gu in gameUnits)
+        //    {
+        //        if (gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_HAZMAT)
+        //        {
+        //            hazmat = gu;
+        //            break;
+        //        }
+        //    }
+        //    Vector3 position = new Vector3(targetspace.worldPosition.x, targetpace.worldPosition.y, -5);
+        //    gameUnits.Remove(hazmat);
+        //    Destroy(hazmat.physicalObject);
+        //    Destroy(hazmat);
+        //    GameConsole.instance.UpdateFeedback("Removed hazmat successfully.");
+        //    return;
+        //}
+        //else if (numAP < 2 && this.spec == Specialist.HazmatTechinician)
+        //{
+        //    Debug.Log("Not enough AP!");  //Used to show the player why he can’t perform an action in case of failure
+        //    GameConsole.instance.UpdateFeedback("Not enough AP!");
+        //}
+    //}
     public void fireDeckGun()
     {
         driverRerolledRedDice = false;
@@ -3142,7 +3202,7 @@ public class Fireman : GameUnit
             else
             {
                 optionsToUser += "press 1 to move the ambulance clockwise, press 2 to move the ambulance to the opposite place, press 3 to move " +
-                	"the ambulance counter-clockwise";
+                    "the ambulance counter-clockwise";
             }
 
             GameConsole.instance.UpdateFeedback(optionsToUser);
@@ -4052,12 +4112,20 @@ public class Fireman : GameUnit
     public static void moveFirefighter(Fireman fireman, Space curr, Space dst) {
         fireman.moveFirefighter(curr, dst, 0, false);
     }
-    
+
+    //don't use dis. I used it for veteran fireman hax
+    public static void moveFirefighter(Fireman fireman, Space curr, Space dst, int apCost) {
+        fireman.moveFirefighter(curr, dst, apCost, true);
+    }
+
     private void moveFirefighter(Space curr, Space dst, int apCost, bool isMyOwn) {
         Vector3 newPosition = new Vector3(dst.worldPosition.x, dst.worldPosition.y, -10);
 
         this.setCurrentSpace(dst);
 
+        if(this.spec == Specialist.Veteran && this.treatedVictim != null) {
+            moveTreated(this.treatedVictim, curr, dst);
+        }
         if (this.spec == Specialist.RescueSpecialist && this.moveAP >= apCost)
         {
             this.moveAP = this.moveAP - apCost;
@@ -5485,7 +5553,9 @@ public class Fireman : GameUnit
 
             Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
 
-            dispose(targetSpace);
+            //dispose(targetSpace);
+
+            GameManager.GM.removeHazmats(targetSpace);
 
         }
     }
