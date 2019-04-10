@@ -55,5 +55,7 @@ public enum PhotonEventCodes
     FlareUp = 48,
     PlaceExtraHotSpots = 49,
     MoveRescueDog = 50,
-    MoveCommand = 51
+    MoveCommand = 51,
+    DisposeHazmat = 52,
+    SendMessage = 53
 }

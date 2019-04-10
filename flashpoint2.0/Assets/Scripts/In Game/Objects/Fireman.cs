@@ -124,7 +124,8 @@ public class Fireman : GameUnit
             {
                 if (!GameManager.GM.isFamilyGame)
                 {
-                    dispose();
+                    object[] data = { this.currentSpace.indexX, this.currentSpace.indexY };
+                    PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.DisposeHazmat, data, sendToAllOptions, SendOptions.SendReliable);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.H))
@@ -3063,7 +3064,7 @@ public class Fireman : GameUnit
             FiremanUI.instance.SetAP(this.getAP());
         }
     }
-    public void dispose()
+    public void dispose(Space targetspace)
     {
         int numAP = getAP();
 
@@ -3589,8 +3590,11 @@ public class Fireman : GameUnit
             //this.setCurrentSpace(destination);
             //this.GetComponent<Transform>().position = destinationPosition;
 
-            h.setCurrentSpace(destination);
-            h.GetComponent<Transform>().position = destinationPosition;
+            if (h != null)
+            {
+                h.setCurrentSpace(destination);
+                h.GetComponent<Transform>().position = destinationPosition;
+            }
         }
         else
         {
@@ -3722,8 +3726,11 @@ public class Fireman : GameUnit
 
             destination.addOccupant(ambulance);
 
-            ambulance.setCurrentSpace(destination);
-            ambulance.GetComponent<Transform>().position = destinationPosition;
+            if (ambulance != null)
+            {
+                ambulance.setCurrentSpace(destination);
+                ambulance.GetComponent<Transform>().position = destinationPosition;
+            }
         
         }
     }
@@ -3852,9 +3859,11 @@ public class Fireman : GameUnit
 
             //this.setCurrentSpace(destination);
             //this.GetComponent<Transform>().position = destinationPosition;
-
-            n.setCurrentSpace(destination);
-            n.GetComponent<Transform>().position = destinationPosition;
+            if (n != null)
+            {
+                n.setCurrentSpace(destination);
+                n.GetComponent<Transform>().position = destinationPosition;
+            }
         }
         else
         {
@@ -4188,12 +4197,11 @@ public class Fireman : GameUnit
         curr.removeOccupant(this);
 
         object[] data = new object[] {dst.indexX, dst.indexY, PV.ViewID };
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
+        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.FireFighterPlacedProperly, data, sendToAllOptions, SendOptions.SendReliable);
 
 
         if (isMyOwn) {
             FiremanUI.instance.SetAP(this.AP);
-            //PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.UpdateSpaceReferenceToFireman, data, sendToAllOptions, SendOptions.SendReliable);
         }
     }
 
@@ -5061,6 +5069,41 @@ public class Fireman : GameUnit
             GameConsole.instance.UpdateFeedback("Crew change can only be the first move of the turn!");
             return;
         }
+
+        Space engineCurrentSpace = null;
+        bool canChangeCrew = false;
+        //find the space of the ambulance
+        foreach (Space s in StateManager.instance.spaceGrid.getGrid())
+        {
+            foreach (GameUnit gu in s.getOccupants())
+            {
+                if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE)
+                {
+                    engineCurrentSpace = s;
+                    break;
+                }
+            }
+        }
+
+        if(engineCurrentSpace != null)
+        {
+            List<Fireman> listOfFiremen = engineCurrentSpace.getFiremen();
+            foreach(Fireman fireman in listOfFiremen)
+            {
+                if(fireman != null && PV.ViewID == fireman.PV.ViewID)
+                {
+                    canChangeCrew = true;
+                    break;
+                }
+            }
+        }
+
+        if (!canChangeCrew)
+        {
+            GameConsole.instance.UpdateFeedback("You have to be on the engine to be able to change crew");
+            return;
+        }
+
         if (this.getAP() >= 2)
         {
 
@@ -5541,6 +5584,17 @@ public class Fireman : GameUnit
             {
                 rideAmbulance();
             }
+        }
+        else if (evCode == (byte)PhotonEventCodes.DisposeHazmat)
+        {
+            object[] dataReceived = eventData.CustomData as object[];
+            int indexX = (int)dataReceived[0];
+            int indexY = (int)dataReceived[1];
+
+            Space targetSpace = StateManager.instance.spaceGrid.grid[indexX, indexY];
+
+            dispose(targetSpace);
+
         }
     }
 }

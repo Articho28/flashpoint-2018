@@ -161,7 +161,7 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             {
                 Debug.Log("not family game");
 
-                placeInitialFireMarkerExperienced();
+                //placeInitialFireMarkerExperienced();
                 placeInitialAmbulance();
                 placeInitialEngine();
 
@@ -175,15 +175,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
-                    bool hasFire1 = containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY);
+                    bool hasFire1 = ContainsFireAfterInitialSetup(targetSpace1);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
-                    bool hasFire2 = containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY);
+                    bool hasFire2 = ContainsFireAfterInitialSetup(targetSpace2);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
-                    bool hasFire3 = containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY);
+                    bool hasFire3 = ContainsFireAfterInitialSetup(targetSpace3);
 
                     object[] experiencedSetupData = new object[] { difficultyIndex, 
                     targetSpace1.indexX, targetSpace1.indexY, hasFire1, 
@@ -204,15 +204,15 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
-                    bool hasFire1 = containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY);
+                    bool hasFire1 = ContainsFireAfterInitialSetup(targetSpace1);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
-                    bool hasFire2 = containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY);
+                    bool hasFire2 = ContainsFireAfterInitialSetup(targetSpace2);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
-                    bool hasFire3 = containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY);
+                    bool hasFire3 = ContainsFireAfterInitialSetup(targetSpace3);
 
                     object[] experiencedSetupData = new object[] { difficultyIndex,
                     targetSpace1.indexX, targetSpace1.indexY, hasFire1,
@@ -233,19 +233,19 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
                     //explosion 1
                     Space targetSpace1 = ExperiencedExplosion1();
-                    bool hasFire1 = containsFireOrSmoke(targetSpace1.indexX, targetSpace1.indexY);
+                    bool hasFire1 = ContainsFireAfterInitialSetup(targetSpace1);
 
                     //explosion 2
                     Space targetSpace2 = ExperiencedExplosion2();
-                    bool hasFire2 = containsFireOrSmoke(targetSpace2.indexX, targetSpace2.indexY);
+                    bool hasFire2 = ContainsFireAfterInitialSetup(targetSpace2);
 
                     //explosion 3
                     Space targetSpace3 = ExperiencedExplosion3();
-                    bool hasFire3 = containsFireOrSmoke(targetSpace3.indexX, targetSpace3.indexY);
+                    bool hasFire3 = ContainsFireAfterInitialSetup(targetSpace3);
 
                     //explosion 4
                     Space targetSpace4 = ExperiencedExplosion2();
-                    bool hasFire4 = containsFireOrSmoke(targetSpace4.indexX, targetSpace4.indexY);
+                    bool hasFire4 = ContainsFireAfterInitialSetup(targetSpace4);
 
 
                     object[] experiencedSetupData = new object[] { difficultyIndex,
@@ -323,6 +323,26 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             targetSpace = StateManager.instance.spaceGrid.getGrid()[blackDice, redDice];
         }
         return targetSpace;
+    }
+
+    public bool ContainsFireAfterInitialSetup(Space targetSpace)
+    {
+        bool result = false;
+        int x = targetSpace.indexX;
+        int y = targetSpace.indexY;
+
+        int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
+        int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
+
+        for (int i = 0; i < rows.Length; i++)
+        {
+            if (rows[i] == y && cols[i] == x)
+            {
+                return true;
+            }
+
+        }
+        return false;
     }
 
     public Space ExperiencedExplosion3()
@@ -593,7 +613,10 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
     public void placeInitialFireMarker()
     {
         if (!PhotonNetwork.IsMasterClient)
+        {
             return;
+        }
+
 
         int[] rows = new int[] { 2, 2, 3, 3, 3, 3, 4, 5, 5, 6 };
         int[] cols = new int[] { 2, 3, 2, 3, 4, 5, 4, 5, 6, 5 };
@@ -603,20 +626,14 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialFireMarker, data, sendToAllOptions, SendOptions.SendReliable);
     }
 
-    public void placeInitialHotSpot()
-    {
 
-        int[] rows = new int[] { 3, 3, 3, 3, 4, 4, 4, 4 };
-        int[] cols = new int[] { 3, 4, 5, 6, 6, 5, 4, 3 };
-
-        object[] data = { cols, rows };
-
-        PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceInitialHotSpot, data, sendToAllOptions, SendOptions.SendReliable);
-    }
     public void placeInitialFireMarkerExperienced()
     {
         if (!PhotonNetwork.IsMasterClient)
+        {
             return;
+        }
+       
 
         int[] rows = new int[] {  3, 4, 4, 4 };
         int[] cols = new int[] {  6, 6, 5, 3 };
@@ -1737,6 +1754,8 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             Debug.Log("Placing hazmats at " + hazmatIndexX3 + " and " + hazmatIndexY3);
 
+            placeHazmat(hazmatIndexX3, hazmatIndexY3);
+
 
             if (difficultyIndex == 1)
             {
@@ -1807,9 +1826,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             }
 
             PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.PlaceExtraHotSpots, dataHotspots, sendToAllOptions, SendOptions.SendReliable);
-
-
-
         }
 
         else if (evCode == (byte)PhotonEventCodes.PlaceAmbulanceParkingSpot)
@@ -1865,7 +1881,6 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
                 GameObject Ambulance = Instantiate(Resources.Load("PhotonPrefabs/Prefabs/Vehicles/ambulance")) as GameObject;
 
                 Vector3 ambulancePosition = new Vector3(position.x, position.y, -5);
-
 
                 Ambulance.GetComponent<Transform>().position = ambulancePosition;
                 Ambulance.GetComponent<GameUnit>().setCurrentSpace(currentSpace);
@@ -2090,6 +2105,9 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             bool hasFire1 = (bool)receivedData[3];
 
             Space targetSpace1 = StateManager.instance.spaceGrid.getGrid()[indexX1, indexY1];
+            Debug.Log("Resolving explosion 1 from space " + indexX1 + " and " + indexY1);
+            Debug.Log("the has fire for targetSpace 1 is " + hasFire1);
+
 
             if (!hasFire1)
             {
@@ -2114,6 +2132,12 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
 
             Space targetSpace2 = StateManager.instance.spaceGrid.getGrid()[indexX2, indexY2];
 
+            Debug.Log("Resolving explosion 2 from space " + indexX2 + " and " + indexY2);
+
+            Debug.Log("the has fire for targetSpace 2 is " + hasFire2);
+
+
+
             if (!hasFire2)
             {
                 placeFireMarker(targetSpace2);
@@ -2132,6 +2156,11 @@ public static Photon.Realtime.RaiseEventOptions sendToAllOptions = new Photon.Re
             bool hasFire3 = (bool)receivedData[9];
 
             Space targetSpace3 = StateManager.instance.spaceGrid.getGrid()[indexX3, indexY3];
+
+            Debug.Log("Resolving explosion 3 from space " + indexX3 + " and " + indexY3);
+
+            Debug.Log("the has fire for targetSpace 3 is " + hasFire3);
+
 
 
             if (!hasFire3)
