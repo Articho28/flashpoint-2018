@@ -903,6 +903,13 @@ public class Fireman : GameUnit
                         }
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
 
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
+
+
+
                     }
                     else
                     {
@@ -1139,6 +1146,11 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -1373,6 +1385,10 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -1601,6 +1617,10 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -1785,6 +1805,10 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -1860,6 +1884,10 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -1935,6 +1963,10 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -2011,6 +2043,10 @@ public class Fireman : GameUnit
 
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -2086,6 +2122,10 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -2161,6 +2201,10 @@ public class Fireman : GameUnit
                         }
 
                         sendChangeCrewEvent(GameManager.GM.freeSpecialistIndex);
+
+                        Space curr = this.getCurrentSpace();
+                        Space destination = getEngineSpaces();
+                        moveFirefighter(curr, destination, 0, true);
                     }
                     else
                     {
@@ -2659,6 +2703,39 @@ public class Fireman : GameUnit
     public void setEngine(Engine n)
     {
         this.movedEngine = n;
+    }
+
+    public Space getEngineSpaces()
+    {
+        Space engine1 = StateManager.instance.spaceGrid.getGrid()[9, 5];
+
+        foreach (GameUnit gu in engine1.getOccupants())
+        {
+            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE) return engine1;
+        }
+
+        Space engine2 = StateManager.instance.spaceGrid.getGrid()[0, 1];
+
+        foreach (GameUnit gu in engine2.getOccupants())
+        {
+            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE) return engine2;
+        }
+
+        Space engine3 = StateManager.instance.spaceGrid.getGrid()[8, 0];
+
+        foreach (GameUnit gu in engine3.getOccupants())
+        {
+            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE) return engine3;
+        }
+
+        Space engine4 = StateManager.instance.spaceGrid.getGrid()[2, 7];
+
+        foreach (GameUnit gu in engine4.getOccupants())
+        {
+            if (gu != null && gu.getType() == FlashPointGameConstants.GAMEUNIT_TYPE_ENGINE) return engine4;
+        }
+
+        return engine1;
     }
 
     public void exitVehicle()
@@ -3484,9 +3561,11 @@ public class Fireman : GameUnit
             //this.setCurrentSpace(destination);
             //this.GetComponent<Transform>().position = destinationPosition;
 
-            //TODO if h is not null
-            h.setCurrentSpace(destination);
-            h.GetComponent<Transform>().position = destinationPosition;
+            if (h != null)
+            {
+                h.setCurrentSpace(destination);
+                h.GetComponent<Transform>().position = destinationPosition;
+            }
         }
         else
         {
@@ -3618,8 +3697,11 @@ public class Fireman : GameUnit
 
             destination.addOccupant(ambulance);
 
-            ambulance.setCurrentSpace(destination);
-            ambulance.GetComponent<Transform>().position = destinationPosition;
+            if (ambulance != null)
+            {
+                ambulance.setCurrentSpace(destination);
+                ambulance.GetComponent<Transform>().position = destinationPosition;
+            }
         
         }
     }
@@ -3748,9 +3830,11 @@ public class Fireman : GameUnit
 
             //this.setCurrentSpace(destination);
             //this.GetComponent<Transform>().position = destinationPosition;
-
-            n.setCurrentSpace(destination);
-            n.GetComponent<Transform>().position = destinationPosition;
+            if (n != null)
+            {
+                n.setCurrentSpace(destination);
+                n.GetComponent<Transform>().position = destinationPosition;
+            }
         }
         else
         {
