@@ -992,7 +992,7 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 1);
-                        moveFirefighter(curr, destination, 1, true);
+                        //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 1 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
@@ -1438,7 +1438,7 @@ public class Fireman : GameUnit
                         validInputOptions = new ArrayList();
                         Space curr = this.getCurrentSpace();
                         Space destination = StateManager.instance.spaceGrid.getNeighborInDirection(curr, 3);
-                        moveFirefighter(curr, destination, 1, true);
+                        //moveFirefighter(curr, destination, 1, true);
                         object[] data = { PV.ViewID, 3 };
                         PhotonNetwork.RaiseEvent((byte)PhotonEventCodes.Move, data, sendToAllOptions, SendOptions.SendReliable);
                     }
