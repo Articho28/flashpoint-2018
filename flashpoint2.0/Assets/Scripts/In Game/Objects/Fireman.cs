@@ -5448,8 +5448,13 @@ public class Fireman : GameUnit
 
             //update game states
             curr.removeOccupant(victim);
-            Destroy(victim.gameObject);
-            Destroy(victim);
+
+            if (victim != null)
+            {
+                Destroy(victim.gameObject);
+                Destroy(victim);
+            }
+           
             StateManager.instance.firemanCarriedVictims.Remove(firemanId);
 
             //update UI
