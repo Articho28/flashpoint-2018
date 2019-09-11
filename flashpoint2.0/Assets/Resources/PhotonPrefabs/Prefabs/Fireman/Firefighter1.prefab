@@ -201,6 +201,8 @@ MonoBehaviour:
   isDoubleSpec: 0
   actorNumber: 0
   spec: 0
+  haltUserInput: 0
+  isDodging: 0
 --- !u!212 &302
 SpriteRenderer:
   m_ObjectHideFlags: 0
