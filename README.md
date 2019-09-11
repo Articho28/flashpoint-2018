@@ -1,34 +1,12 @@
-# THIS IS THE NEW MASTER
+# FLASHPOINT FIRE RESCUE ONLINE GAME
 
-## NUMBERING THE DIRECTIONS, NORTH = 0; EAST = 1; SOUTH = 2; WEST = 3.
+### Multiplayer game developed in a team in the context of COMP 361: Software Engineering Project using C# and Unity. 
 
-### ==== HOW TO AVOID MERGE CONFLICTS WHILE WORKING ON GAME SCENE ====
+Went through the entire development process of the game: from class diagrams to sequence diagrams to implementation! 
 
-##### 1) In Unity, Duplicate the current FamilyGame Scene.
-##### 2) Using the duplicated scene, work on your tast
-##### 3) Once your done with your task. Manually add your changes to the main scene (FamilyGame).
-##### 4) Delete the duplicated scene.
-##### 3) BEFORE MERGING,
-  - LET EVERYONE KNOW THAT YOU WILL MEREGE.
-  - MAKE SURE YOU PULL THE RECENT CHANGES BEFORE MERGING.
-  - MERGE.
-  
-### PLEASE DO NOT REPEAT THE SAME KEYCODE - THANKSSS
-Move: arrows,
-Chop wall: C,
-Open/close door: D,
-Extinguish fire: E,
-Flip POI: F,
-Carry victim: V,
-End Turn: Q,
-Deck gun: G,
-Drive ambulance: H,,
-Identify POI: I,
-Carry Hazmat: M,
-Turn fire to smoke: N,
-Ride vehicle: R,
-Drive engine: T,
-Crew changes: W,
-Exit vehicle: X,
-Extinguish entire fire: Y,
-Remove hazmat: Z
+My contributions: 
+- Redacted the Operations Model
+- Created Concept Model 
+- Implemented lobby matchmaking, integration with cloud services
+- Implemented all rules related to initial placement, fire advancement, and explosions. 
+
