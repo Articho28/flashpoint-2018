@@ -15,11 +15,11 @@ My contributions:
 
 ![alt text](./screenshots/main-menu.png)
 
+![alt text](./screenshots/fire.png)
+
 ![alt text](./screenshots/create-game.png)
 
 ![alt text](./screenshots/join-room.png)
-
-![alt text](./screenshots/fire.png)
 
 ![alt text](./screenshots/extinguish.png)
 
